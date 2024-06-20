@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
@@ -16,6 +17,7 @@ class MakingQuiz extends StatefulWidget {
 class _MakingQuizState extends State<MakingQuiz> {
   @override
   Widget build(BuildContext context) {
+    double screenShortestSide = MediaQuery.of(context).size.shortestSide;
     return Scaffold(
       appBar: widget.quizLayout.getIsTopBarVisible()
           ? PreferredSize(
@@ -51,14 +53,70 @@ class _MakingQuizState extends State<MakingQuiz> {
                   fit: BoxFit.cover,
                 ),
               ),
-        child: Stack(
-          children: [
-            FilpStyle12(
-              quizLayout: widget.quizLayout,
-              onPressedBack: () {},
-              onPressedForward: () {},
-            ),
-          ],
+        child: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            print("Drag update: ${details.delta.dx}");
+            // Update the position of the widget here
+          },
+          child: Stack(
+            children: [
+              FilpStyle12(
+                quizLayout: widget.quizLayout,
+                onPressedBack: () {},
+                onPressedForward: () {},
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 8.0), // Adjust the value as needed
+                  child: Text(
+                    '${widget.quizLayout.getCurQuizIndex()} / ${widget.quizLayout.getQuizCount()}',
+                    style: TextStyle(
+                      fontSize: 36, // Adjust as needed
+                      color: Colors.black, // Adjust as needed
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                      0.1 * screenShortestSide), // Adjust as needed
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        print("Tap update");
+                        // Handle tap event here
+                      },
+                      child: DottedBorder(
+                        borderType: BorderType.RRect,
+                        radius: Radius.circular(
+                            0.1 * screenShortestSide), // Adjust as needed
+                        padding: EdgeInsets.all(
+                            0.05 * screenShortestSide), // Adjust as needed
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(12)), // Adjust as needed
+                          child: Container(
+                            width: 0.7 * screenShortestSide, // Adjust as needed
+                            height:
+                                0.7 * screenShortestSide, // Adjust as needed
+                            color: Colors.transparent, // Adjust as needed
+                            child: Icon(
+                              Icons.add,
+                              size: 0.7 * screenShortestSide,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()

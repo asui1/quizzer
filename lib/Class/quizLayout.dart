@@ -12,6 +12,7 @@ class QuizLayout {
   int highlightedIndex = 0;
   int selectedLayout = 0;
   List<Quiz> quizzes = [];
+  int curQuizIndex = 0;
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
   bool isWidgetSizeSet = false;
@@ -23,6 +24,26 @@ class QuizLayout {
   ImageColor buttonColor = ImageColor(color: Color.fromARGB(255, 180, 147, 243));
 
   QuizLayout({this.highlightedIndex = 0});
+
+  void addQuiz(Quiz quiz) {
+    quizzes.add(quiz);
+  }
+
+  Quiz getQuiz(int index) {
+    return quizzes[index];
+  }
+
+  void removeQuiz(int index) {
+    quizzes.removeAt(index);
+  }
+
+  int getQuizCount() {
+    return quizzes.length;
+  }
+
+  int getCurQuizIndex() {
+    return curQuizIndex;
+  }
 
   ImageColor getButtonColor() {
     return buttonColor;
