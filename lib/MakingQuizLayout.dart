@@ -19,9 +19,6 @@ class _MakingQuizState extends State<MakingQuizscreen> {
   QuizLayout quizLayout = QuizLayout();
   double tempAppBarHeight = 30.0;
   double tempBottomBarHeight = 30.0;
-  bool isAppBarVisible = false;
-  bool isBottomBarVisible = false;
-  int selectedLayout = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +94,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         child: Stack(
           children: [
             FilpStyle12(
-                quizLayout: quizLayout,),
+                quizLayout: quizLayout,
+                onPressedBack: () {},
+                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
+            ),
             Positioned(
               top: 30.0,
               left: MediaQuery.of(context).size.width / 2 -
@@ -159,7 +159,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               actions: <Widget>[
                                 ConfirmButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(selectedLayout);
+                                    Navigator.of(context).pop(quizLayout
+                                        .getSelectedLayout());
                                   },
                                   selection: quizLayout.getSelectedLayout(),
                                 ),
@@ -310,7 +311,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       ? Container(
                           color: quizLayout.getImage(2).getColor(),
                           height: quizLayout.getBottomBarHeight(),
-                          child: BottomBarStack(quizLayout: quizLayout),
+                          child: BottomBarStack(quizLayout: quizLayout,
+                onPressedBack: () {},
+                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
+                          ),
                         )
                       : Container(
                           height: quizLayout.getBottomBarHeight(),
@@ -321,7 +325,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: BottomBarStack(quizLayout: quizLayout),
+                          child: BottomBarStack(quizLayout: quizLayout,
+                                          onPressedBack: () {},
+                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
+),
                         )),
             )
           : null,
@@ -494,3 +501,11 @@ class CustomRow extends StatelessWidget {
   }
 }
 
+void navigateToMakingQuizPage(BuildContext context, QuizLayout quizLayout) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MakingQuiz(quizLayout: quizLayout),
+    ),
+  );
+}
