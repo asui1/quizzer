@@ -6,6 +6,8 @@ import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Strings.dart';
 
+import 'Widgets/FlipWidgets.dart';
+import 'makingQuiz.dart';
 import 'myColorPicker.dart';
 
 class MakingQuizscreen extends StatefulWidget {
@@ -95,8 +97,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         child: Stack(
           children: [
             FilpStyle12(
-                imageColor: quizLayout.getButtonColor(),
-                flipStyle: quizLayout.getSelectedLayout()),
+                quizLayout: quizLayout,),
             Positioned(
               top: 30.0,
               left: MediaQuery.of(context).size.width / 2 -
@@ -493,105 +494,3 @@ class CustomRow extends StatelessWidget {
   }
 }
 
-class FilpStyle12 extends StatelessWidget {
-  final ImageColor imageColor;
-  final int flipStyle;
-
-  FilpStyle12({required this.imageColor, required this.flipStyle});
-
-  @override
-  Widget build(BuildContext context) {
-    Color textColor = imageColor.getColor();
-    if (flipStyle != 1 && flipStyle != 2) {
-      return SizedBox.shrink(); // or Container()
-    }
-    Widget child = Stack(
-      children: <Widget>[
-        Align(
-          alignment:
-              flipStyle == 2 ? Alignment.bottomLeft : Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
-            child: FloatingActionButton(
-              heroTag: 'prevButtonBody',
-              backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
-              child: Icon(Icons.arrow_back),
-              onPressed: () {
-                // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-              },
-            ),
-          ),
-        ),
-        Align(
-          alignment:
-              flipStyle == 2 ? Alignment.bottomRight : Alignment.centerRight,
-          child: Padding(
-            padding: EdgeInsets.all(8.0), // Adjust the padding as needed
-            child: FloatingActionButton(
-              heroTag: 'nextButtonBody',
-              backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
-              child: Icon(Icons.arrow_forward),
-              onPressed: () {
-                // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-              },
-            ),
-          ),
-        ),
-      ],
-    );
-
-    return flipStyle == 2
-        ? Padding(padding: EdgeInsets.only(bottom: 8.0), child: child)
-        : child;
-  }
-}
-
-class BottomBarStack extends StatelessWidget {
-  final QuizLayout quizLayout;
-
-  BottomBarStack({required this.quizLayout});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        Icon(Icons.drag_handle, color: Colors.white),
-        if (quizLayout.getSelectedLayout() == 3) ...{
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8.0), // Adjust the padding as needed
-              child: FloatingActionButton(
-                heroTag: 'prevButtonBottomBar',
-                backgroundColor: quizLayout
-                    .getButtonColor()
-                    .getColor(), // 하이라이트 여부에 따라 색상 변경
-                child: Icon(Icons.arrow_back),
-                onPressed: () {
-                  // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-                },
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.all(8.0), // Adjust the padding as needed
-              child: FloatingActionButton(
-                heroTag: 'nextButtonBottomBar',
-                backgroundColor: quizLayout
-                    .getButtonColor()
-                    .getColor(), // 하이라이트 여부에 따라 색상 변경
-                child: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-                },
-              ),
-            ),
-          ),
-        },
-      ],
-    );
-  }
-}
