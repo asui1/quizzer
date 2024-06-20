@@ -2,14 +2,21 @@
 - 상단바, 하단바에 드래거블 보여주는 무언가 추가하기.
 - 칼라 스킴(title color, text color, button color 우선 이 3개.) 추가할 수 있는 버튼 추가하기.
 - page layout 값에 따라 화면에 버튼 추가하고, button color에 따라 색이 바뀌게 만들기.
+- 페이지 넘기는 textbutton 전부 FloatingActionButton 으로 변경하기.
+- 퀴즈 페이지 생성
 
 
 # TODO
 
 !코어기능
+- 퀴즈 페이지 상세 설정.
+    1. 가장 기본 퀴즈 : n개 답변 중 하나/여러개를 고르는 것.
+    2. 달력 : 달력에서 정해진 날/날들을 고르는 것.
+    3. 이미지 선택형: 주어진 n개 이미지 중에서 하나/여러개를 고르는 것.
+    4. 
+
+
 - 예시로 사용할 수 있는 title text 추가, body text color를 설정에 따라 바꾸게 하기.
-- textbutton 전부 FloatingActionButton 으로 변경하기.
-- 퀴즈 페이지 생성
 - UI 크기 설계할 수 있는 페이지 추가하기.(이후 퀴즈 생성 페이지 작업 후 작업)
 - 색상 설정에 alpha값 추가하기
 - 하단 넘기기 버튼인 경우 하단 바 추가하기.

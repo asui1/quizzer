@@ -86,7 +86,54 @@ class _MakingQuizState extends State<MakingQuiz> {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Container(
+                                width: double.maxFinite,
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  physics: ScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1,
+                                  children: List.generate(10, (index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context, 'Item $index');
+                                      },
+                                      child: Card(
+                                        child: Column(
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 3,
+                                              child: Image.asset(
+                                                  'images/one.jpg',
+                                                  fit: BoxFit.cover),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text('Item $index'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            );
+                          },
+                        ).then((value) {
+                          print('User selected: $value');
+                          setState(() {
+                            
+                          });
+                        });
+
                         print("Tap update");
                         // Handle tap event here
                       },
