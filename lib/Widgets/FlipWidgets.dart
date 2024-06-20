@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 import '../Class/ImageColor.dart';
 import '../Class/quizLayout.dart';
-import '../makingQuiz.dart';
 
 class FilpStyle12 extends StatelessWidget {
   final QuizLayout quizLayout;
+  final VoidCallback onPressedBack;
+  final VoidCallback onPressedForward;
 
-  FilpStyle12({required this.quizLayout});
+  FilpStyle12({required this.quizLayout, required this.onPressedBack, required this.onPressedForward});
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +32,7 @@ class FilpStyle12 extends StatelessWidget {
               heroTag: 'prevButtonBody',
               backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
               child: Icon(Icons.arrow_back),
-              onPressed: () {
-                // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-              },
+              onPressed: onPressedBack,
             ),
           ),
         ),
@@ -46,10 +45,7 @@ class FilpStyle12 extends StatelessWidget {
               heroTag: 'nextButtonBody',
               backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
               child: Icon(Icons.arrow_forward),
-              onPressed: () {
-                  navigateToMakingQuizPage(context, quizLayout);
-                // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-              },
+              onPressed: onPressedForward,
             ),
           ),
         ),
@@ -64,8 +60,10 @@ class FilpStyle12 extends StatelessWidget {
 
 class BottomBarStack extends StatelessWidget {
   final QuizLayout quizLayout;
+  final VoidCallback onPressedBack;
+  final VoidCallback onPressedForward;
 
-  BottomBarStack({required this.quizLayout});
+  BottomBarStack({required this.quizLayout, required this.onPressedBack, required this.onPressedForward});
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +82,7 @@ class BottomBarStack extends StatelessWidget {
                     .getButtonColor()
                     .getColor(), // 하이라이트 여부에 따라 색상 변경
                 child: Icon(Icons.arrow_back),
-                onPressed: () {
-
-                },
+                onPressed: onPressedBack,
               ),
             ),
           ),
@@ -100,10 +96,7 @@ class BottomBarStack extends StatelessWidget {
                     .getButtonColor()
                     .getColor(), // 하이라이트 여부에 따라 색상 변경
                 child: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  navigateToMakingQuizPage(context, quizLayout);
-                  // 다음으로 넘어가는 버튼의 동작을 여기에 구현합니다.
-                },
+                onPressed: onPressedForward,
               ),
             ),
           ),
@@ -114,11 +107,3 @@ class BottomBarStack extends StatelessWidget {
 }
 
 
-void navigateToMakingQuizPage(BuildContext context, QuizLayout quizLayout) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => MakingQuiz(quizLayout: quizLayout),
-    ),
-  );
-}
