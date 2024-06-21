@@ -98,7 +98,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                   physics: ScrollPhysics(),
                                   crossAxisCount: 2,
                                   childAspectRatio: 1,
-                                  children: List.generate(10, (index) {
+                                  children: List.generate(8, (index) {
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.pop(context, 'Item $index');
