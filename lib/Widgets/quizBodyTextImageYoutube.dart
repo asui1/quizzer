@@ -6,14 +6,12 @@ import 'package:quizzer/Class/quiz1.dart';
 
 class ContentWidget extends StatefulWidget {
   final BuildContext context;
-  final int input;
   final Function(int value) updateStateCallback;
   final Quiz1 quiz1;
 
   ContentWidget({
     Key? key,
     required this.context,
-    required this.input,
     required this.updateStateCallback,
     required this.quiz1,
   }) : super(key: key);
@@ -25,7 +23,7 @@ class ContentWidget extends StatefulWidget {
 class _ContentWidgetState extends State<ContentWidget> {
   @override
   Widget build(BuildContext context) {
-    switch (widget.input) {
+    switch (widget.quiz1.getBodyType()) {
       case 0:
         return ElevatedButton(
           child: Text('본문 추가.'),

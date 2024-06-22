@@ -10,17 +10,37 @@ class QuizWidget1 extends StatefulWidget {
 }
 
 class _QuizWidget1State extends State<QuizWidget1> {
-  final questionController = TextEditingController();
-  List<String> answers = ['', '', '', '', ''];
-  List<bool> correctAnswers = <bool>[false, false, false, false, false];
-  bool shuffleAnswers = false;
-  int maxAnswerSelection = 1;
-  int bodyWidget = 0;
-  Quiz1 quiz = Quiz1();
+  Quiz1 quiz = Quiz1(
+      answers: ['', '', '', '', ''],
+      ans: [false, false, false, false, false],
+      question: '');
+  late TextEditingController questionController;
+  late List<TextEditingController> _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    questionController = TextEditingController(text: quiz.getQuestion());
+    _controllers = quiz.answers
+        .map((answer) => TextEditingController(text: answer))
+        .toList();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controllers when the widget is disposed
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    int trueCount = correctAnswers.where((item) => item == true).length;
+    List<String> answers = quiz.getAnswers();
+    int trueCount = quiz.getAnsLength();
+    bool shuffleAnswers = quiz.getShuffleAnswers();
+    int maxAnswerSelection = quiz.getMaxAnswerSelection();
     TextEditingController controller =
         TextEditingController(text: maxAnswerSelection.toString());
     return Column(
@@ -30,14 +50,16 @@ class _QuizWidget1State extends State<QuizWidget1> {
           decoration: InputDecoration(
             hintText: '질문을 입력해주세요.',
           ),
+          onChanged: (value) {
+            quiz.setQuestion(value);
+          },
         ),
         SizedBox(height: 20.0),
         ContentWidget(
           context: context,
-          input: bodyWidget,
           updateStateCallback: (int value) {
             setState(() {
-              bodyWidget = value;
+              quiz.setBodyType(value);
             });
           },
           quiz1: quiz,
@@ -54,8 +76,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                       child: Text('정답 추가.'),
                       onPressed: () {
                         setState(() {
-                          answers.add('');
-                          correctAnswers.add(false);
+                          quiz.addAnswer('');
+                          _controllers.add(TextEditingController(text: ''));
                         });
                       },
                     ),
@@ -65,21 +87,24 @@ class _QuizWidget1State extends State<QuizWidget1> {
               } else {
                 return ListTile(
                   leading: Checkbox(
-                    value: correctAnswers[index],
+                    value: quiz.isCorrectAns(index),
                     onChanged: (bool? newValue) {
+                      print("CLICKED CHECKBOX");
                       setState(() {
                         if (newValue != null) {
                           if (trueCount < maxAnswerSelection ||
-                              newValue == false)
-                            correctAnswers[index] = newValue;
+                              newValue == false) {
+                            quiz.changeCorrectAns(index, newValue);
+                          }
                         }
                       });
                     },
                   ),
                   title: TextField(
+                    controller: _controllers[index],
                     onChanged: (value) {
                       setState(() {
-                        answers[index] = value;
+                        quiz.setAnswer(index, value);
                       });
                     },
                     decoration: InputDecoration(
@@ -90,8 +115,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
-                        answers.removeAt(index);
-                        correctAnswers.removeAt(index);
+                        quiz.removeAnswerAt(index);
+                        _controllers.removeAt(index);
                       });
                     },
                   ),
@@ -109,7 +134,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
               onChanged: (bool? newValue) {
                 setState(() {
                   if (newValue != null) {
-                    shuffleAnswers = newValue;
+                    quiz.setShuffleAnswers(newValue);
                   }
                 });
               },
@@ -125,8 +150,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                 ], // Only numbers can be entered
                 onChanged: (value) {
                   setState(() {
-                    maxAnswerSelection =
-                        int.tryParse(value) ?? maxAnswerSelection;
+                    quiz.setMaxAnswerSelection(
+                        int.tryParse(value) ?? maxAnswerSelection);
                   });
                 },
                 textAlign: TextAlign.center,
