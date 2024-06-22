@@ -5,22 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
 
-class Quiz1 extends AbstractQuiz {
-  int bodyType = 0;
-  XFile? imageFile;
-  String bodyText = '';
-  bool shuffleAnswers = false;
+class Quiz2 extends AbstractQuiz {
   int maxAnswerSelection = 1;
+  List<int> centerDate = [2024, 6, 22];
+  int yearRange = 10;
+  List<List<int>> answerDate = [];
 
-  Quiz1({
-    int layoutType = 1,
+  Quiz2({
+    int layoutType = 2,
     required List<String> answers,
     required List<bool> ans,
     required String question,
-    this.bodyType = 0,
-    this.imageFile,
-    this.bodyText = '',
-    this.shuffleAnswers = false,
     this.maxAnswerSelection = 1,
   }) : super(
             layoutType: layoutType,
@@ -28,82 +23,41 @@ class Quiz1 extends AbstractQuiz {
             ans: ans,
             question: question);
 
-
-  void setAnswer(int index, String newAnswer) {
-    if (index >= answers.length) {
-      return;
-    }
-    answers[index] = newAnswer;
+  int getYearRange() {
+    return yearRange;
   }
 
-  String getAnswerAt(int index) {
-    if (index >= answers.length) {
-      return '';
-    }
-    return answers[index];
+  void setYearRange(int newYearRange) {
+    yearRange = newYearRange;
+  }
+
+  List<int> getCenterDate() {
+    return centerDate;
+  }
+
+  void setCenterDate(List<int> newCenterDate) {
+    centerDate = newCenterDate;
+  }
+
+  void setCenterYear(int newYear) {
+    centerDate[0] = newYear;
+  }
+
+  void setCenterMonth(int newMonth) {
+    centerDate[1] = newMonth;
+  }
+
+  void setCenterDay(int newDay) {
+    centerDate[2] = newDay;
   }
 
   void setMaxAnswerSelection(int newMaxAnswerSelection) {
     maxAnswerSelection = newMaxAnswerSelection;
   }
-
   int getMaxAnswerSelection() {
     return maxAnswerSelection;
   }
 
-  void changeCorrectAns(int index, bool value) {
-    ans[index] = value;
-  }
-
-  void setShuffleAnswers(bool newShuffleAnswers) {
-    shuffleAnswers = newShuffleAnswers;
-  }
-
-  bool getShuffleAnswers() {
-    return shuffleAnswers;
-  }
-
-  int getAnsLength() {
-    int trueCount = ans.where((element) => element == true).length;
-    return trueCount;
-  }
-
-  bool isCorrectAns(int newAns) {
-    return ans[newAns];
-  }
-
-  bool isImageSet() {
-    return imageFile != null;
-  }
-
-  XFile getImageFile() {
-    return imageFile!;
-  }
-
-  String getBodyText() {
-    return bodyText;
-  }
-
-  void setBodyText(String newBodyText) {
-    bodyText = newBodyText;
-  }
-
-  void setImageFile(XFile newImageFile) {
-    imageFile = newImageFile;
-  }
-
-  void setBodyType(int newBodyType) {
-    bodyType = newBodyType;
-  }
-
-  int getBodyType() {
-    return bodyType;
-  }
-
-  void removeAnswerAt(int index) {
-    answers.removeAt(index);
-    ans.removeAt(index);
-  }
 
   @override
   void setLayoutType(int newLayoutType) {
@@ -161,11 +115,7 @@ class Quiz1 extends AbstractQuiz {
         throw Exception('Quiz not found');
       }
       final jsonData = quizzes[tag.toString()];
-      return Quiz1(
-          bodyType: jsonData['bodyType'],
-          imageFile: jsonData['imageFile'],
-          bodyText: jsonData['bodyText'],
-          shuffleAnswers: jsonData['shuffleAnswers'],
+      return Quiz2(
           maxAnswerSelection: jsonData['maxAnswerSelection'],
           answers: jsonData['answers'],
           ans: jsonData['ans'],
@@ -188,10 +138,6 @@ class Quiz1 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "bodyType": bodyType,
-      "imageFile": imageFile?.path,
-      "bodyText": bodyText,
-      "shuffleAnswers": shuffleAnswers,
       "maxAnswerSelection": maxAnswerSelection,
       "answers": answers,
       "ans": ans,
