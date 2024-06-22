@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Widgets/quizBodyTextImageYoutube.dart';
 
 class QuizWidget1 extends StatefulWidget {
   @override
@@ -13,6 +15,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
   List<bool> correctAnswers = <bool>[false, false, false, false, false];
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
+  int bodyWidget = 0;
+  Quiz1 quiz = Quiz1();
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +32,15 @@ class _QuizWidget1State extends State<QuizWidget1> {
           ),
         ),
         SizedBox(height: 20.0),
-        ElevatedButton(
-          child: Text('보기 추가.'),
-          onPressed: () {
+        ContentWidget(
+          context: context,
+          input: bodyWidget,
+          updateStateCallback: (int value) {
             setState(() {
-              answers.add('');
-              correctAnswers.add(false);
+              bodyWidget = value;
             });
           },
+          quiz1: quiz,
         ),
         Expanded(
           child: ListView.builder(

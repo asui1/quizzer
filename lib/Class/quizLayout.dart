@@ -11,7 +11,7 @@ class QuizLayout {
   double bottomBarHeight = 50.0;
   int highlightedIndex = 0;
   int selectedLayout = 0;
-  List<Quiz> quizzes = [];
+  List<AbstractQuiz> quizzes = [];
   int curQuizIndex = 0;
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
@@ -25,11 +25,11 @@ class QuizLayout {
 
   QuizLayout({this.highlightedIndex = 0});
 
-  void addQuiz(Quiz quiz) {
+  void addQuiz(AbstractQuiz quiz) {
     quizzes.add(quiz);
   }
 
-  Quiz getQuiz(int index) {
+  AbstractQuiz getQuiz(int index) {
     return quizzes[index];
   }
 
