@@ -4,13 +4,12 @@
 - page layout 값에 따라 화면에 버튼 추가하고, button color에 따라 색이 바뀌게 만들기.
 - 페이지 넘기는 textbutton 전부 FloatingActionButton 으로 변경하기.
 - 퀴즈 페이지 생성
-
+- Quiz Generator1 완성
 
 # TODO
 !코어기능
+- 상단 바 비활성화 필요.
 
-quizBodyTextImage 에 클릭 이벤트 처리할 수 있게 해야함.
-클릭되면 generator쪽 업데이트가 되도록.( onclick 이벤트 받아가야될듯)
 
 - 퀴즈 페이지 상세 설정.
     1. 가장 기본 퀴즈 : n개 답변 중 하나/여러개를 고르는 것.

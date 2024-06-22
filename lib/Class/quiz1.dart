@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
@@ -9,12 +12,21 @@ class Quiz1 extends AbstractQuiz {
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
 
-  Quiz1(
-        {int layoutType = 1,
-        required List<String> answers,
-        required List<bool> ans,
-        required String question})
-        : super(layoutType: layoutType, answers: answers, ans: ans, question: question);
+  Quiz1({
+    int layoutType = 1,
+    required List<String> answers,
+    required List<bool> ans,
+    required String question,
+    this.bodyType = 0,
+    this.imageFile,
+    this.bodyText = '',
+    this.shuffleAnswers = false,
+    this.maxAnswerSelection = 1,
+  }) : super(
+            layoutType: layoutType,
+            answers: answers,
+            ans: ans,
+            question: question);
 
   void setQuestion(String newQuestion) {
     question = newQuestion;
@@ -48,7 +60,6 @@ class Quiz1 extends AbstractQuiz {
 
   void changeCorrectAns(int index, bool value) {
     ans[index] = value;
-    print(ans);
   }
 
   void setShuffleAnswers(bool newShuffleAnswers) {
@@ -111,7 +122,6 @@ class Quiz1 extends AbstractQuiz {
     return layoutType;
   }
 
-
   @override
   void addAnswer(String newString) {
     answers.add(newString);
@@ -146,5 +156,53 @@ class Quiz1 extends AbstractQuiz {
   @override
   void setImage(Image newImage) {
     image = newImage;
+  }
+
+  @override
+  Future<AbstractQuiz> loadQuiz(int tag) async {
+    try {
+      final file = await getlocalFile();
+      final contents = await file.readAsString();
+      final Map<String, dynamic> quizzes = json.decode(contents);
+      if (!quizzes.containsKey(tag.toString())) {
+        throw Exception('Quiz not found');
+      }
+      final jsonData = quizzes[tag.toString()];
+      return Quiz1(
+          bodyType: jsonData['bodyType'],
+          imageFile: jsonData['imageFile'],
+          bodyText: jsonData['bodyText'],
+          shuffleAnswers: jsonData['shuffleAnswers'],
+          maxAnswerSelection: jsonData['maxAnswerSelection'],
+          answers: jsonData['answers'],
+          ans: jsonData['ans'],
+          question: jsonData['question']);
+    } catch (e) {
+      throw Exception('Failed to load quiz');
+    }
+  }
+
+  @override
+  Future<File> saveQuiz(int tag) async {
+    final file = await getlocalFile();
+    String contents = await file.readAsString();
+    Map<String, dynamic> quizzes =
+        contents.isNotEmpty ? json.decode(contents) : {};
+    quizzes[tag.toString()] = toJson(); // 태그를 키로 사용하여 퀴즈 저장
+    return file.writeAsString(json.encode(quizzes));
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "bodyType": bodyType,
+      "imageFile": imageFile?.path,
+      "bodyText": bodyText,
+      "shuffleAnswers": shuffleAnswers,
+      "maxAnswerSelection": maxAnswerSelection,
+      "answers": answers,
+      "ans": ans,
+      "question": question
+    };
   }
 }

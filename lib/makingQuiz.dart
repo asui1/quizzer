@@ -55,7 +55,6 @@ class _MakingQuizState extends State<MakingQuiz> {
               ),
         child: GestureDetector(
           onHorizontalDragUpdate: (details) {
-            print("Drag update: ${details.delta.dx}");
             // Update the position of the widget here
           },
           child: Stack(
@@ -128,13 +127,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                             );
                           },
                         ).then((value) {
-                          print('User selected: $value');
                           setState(() {
                             
                           });
                         });
-
-                        print("Tap update");
                         // Handle tap event here
                       },
                       child: DottedBorder(

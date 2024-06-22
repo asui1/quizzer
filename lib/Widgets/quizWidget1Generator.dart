@@ -89,7 +89,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                   leading: Checkbox(
                     value: quiz.isCorrectAns(index),
                     onChanged: (bool? newValue) {
-                      print("CLICKED CHECKBOX");
                       setState(() {
                         if (newValue != null) {
                           if (trueCount < maxAnswerSelection ||
@@ -164,8 +163,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
           child: ElevatedButton(
             child: Text('완료'),
             onPressed: () {
-              // Handle 'done' action here
-            },
+              quiz.saveQuiz(9999);
+              Navigator.pop(context);
+              },
           ),
         ),
       ],

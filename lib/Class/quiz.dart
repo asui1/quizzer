@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 
 abstract class AbstractQuiz {
   int layoutType;
@@ -18,5 +21,22 @@ abstract class AbstractQuiz {
   bool checkAns(String userAns);
   Image? getImage();
   void setImage(Image newImage);
+
+  Future<String> getLocalPath() async {
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
+  }
+
+  Future<File> getlocalFile() async {
+  final path = await getLocalPath();
+  return File('$path/quiz.json');
+  }
+
+Future<File> saveQuiz(int tag);
+
+Future<AbstractQuiz> loadQuiz(int tag);
+
+Map<String, dynamic> toJson();
+
 }
 

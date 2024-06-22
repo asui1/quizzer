@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Widgets/quizWidgetsViewer.dart';
 import 'package:quizzer/testpage.dart';
 import 'searchScreen.dart';
 import 'dart:math' as math;
@@ -165,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => TestScreen()),
+                      MaterialPageRoute(builder: (context) => QuizPage(quizTag: 11,)),
                     );
                     },
                     // Handle scroll down action
