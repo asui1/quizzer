@@ -5,5 +5,10 @@ const Map<String, String> stringResources = {
   'imageSet3': '제목 텍스트 색 설정',
   'imageSet4': '본문 텍스트 색 설정',
   'imageSet5': '버튼 색 설정',
+  'quiz1' : '퀴즈 1 생성',
+  'quiz2' : '퀴즈 1 뷰어',
+  'quiz3' : '퀴즈 2 생성',
+  'quiz4' : '퀴즈 2 뷰어',
+
 
 };

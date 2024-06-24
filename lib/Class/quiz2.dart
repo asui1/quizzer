@@ -6,29 +6,69 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
 
 class Quiz2 extends AbstractQuiz {
-  int maxAnswerSelection = 1;
+  // Remove the duplicate declaration of maxAnswerSelection
   List<int> centerDate = [2024, 6, 22];
   int yearRange = 10;
   List<List<int>> answerDate = [];
+  int maxAnswerSelection = 1;
 
   Quiz2({
     int layoutType = 2,
     required List<String> answers,
     required List<bool> ans,
     required String question,
-    this.maxAnswerSelection = 1,
+    required this.maxAnswerSelection,
   }) : super(
-            layoutType: layoutType,
-            answers: answers,
-            ans: ans,
-            question: question);
+          layoutType: layoutType,
+          answers: answers,
+          ans: ans,
+          question: question,
+        );
 
   int getYearRange() {
     return yearRange;
   }
 
+  List<List<int>> getAnswerDate() {
+    return answerDate;
+  }
+
+  void updateAnswerDateAt(int index, List<int> newAnswerDate) {
+    List<int> nextDay = newAnswerDate;
+    while (answerDate.contains(nextDay)) {
+      nextDay[2] += 1;
+    }
+    answerDate[index] = nextDay;
+  }
+
+  void updateAnserDate(List<int> originalDate, List<int> newDate) {
+    int index = answerDate.indexOf(originalDate);
+    List<int> nextDay = newDate;
+    while (answerDate.contains(nextDay)) {
+      nextDay[2] += 1;
+    }
+    answerDate[index] = nextDay;
+  }
+
+  void addAnswerDate(List<int> newAnswerDate) {
+    answerDate.add(newAnswerDate);
+    maxAnswerSelection = answerDate.length;
+  }
+  void setAnswerDate(List<List<int>> newAnswerDate) {
+    answerDate = newAnswerDate;
+    maxAnswerSelection = answerDate.length;
+  }
+
+  void removeAnswerDateAt(int index) {
+    answerDate.removeAt(index);
+  }
+
   void setYearRange(int newYearRange) {
     yearRange = newYearRange;
+  }
+
+  List<int> getAnswerDateAt(int index) {
+    return answerDate[index];
   }
 
   List<int> getCenterDate() {
@@ -54,10 +94,10 @@ class Quiz2 extends AbstractQuiz {
   void setMaxAnswerSelection(int newMaxAnswerSelection) {
     maxAnswerSelection = newMaxAnswerSelection;
   }
+
   int getMaxAnswerSelection() {
     return maxAnswerSelection;
   }
-
 
   @override
   void setLayoutType(int newLayoutType) {
@@ -138,6 +178,9 @@ class Quiz2 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
+      "centerDate": centerDate,
+      "yearRange": yearRange,
+      "answerDate": answerDate,
       "maxAnswerSelection": maxAnswerSelection,
       "answers": answers,
       "ans": ans,

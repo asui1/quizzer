@@ -43,132 +43,134 @@ class _QuizWidget1State extends State<QuizWidget1> {
     int maxAnswerSelection = quiz.getMaxAnswerSelection();
     TextEditingController controller =
         TextEditingController(text: maxAnswerSelection.toString());
-    return Column(
-      children: <Widget>[
-        TextField(
-          controller: questionController,
-          decoration: InputDecoration(
-            hintText: '질문을 입력해주세요.',
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          TextField(
+            controller: questionController,
+            decoration: InputDecoration(
+              hintText: '질문을 입력해주세요.',
+            ),
+            onChanged: (value) {
+              quiz.setQuestion(value);
+            },
           ),
-          onChanged: (value) {
-            quiz.setQuestion(value);
-          },
-        ),
-        SizedBox(height: 20.0),
-        ContentWidget(
-          context: context,
-          updateStateCallback: (int value) {
-            setState(() {
-              quiz.setBodyType(value);
-            });
-          },
-          quiz1: quiz,
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: answers.length + 1,
-            itemBuilder: (context, index) {
-              if (index == answers.length) {
-                return Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    ElevatedButton(
-                      child: Text('정답 추가.'),
-                      onPressed: () {
+          SizedBox(height: 20.0),
+          ContentWidget(
+            context: context,
+            updateStateCallback: (int value) {
+              setState(() {
+                quiz.setBodyType(value);
+              });
+            },
+            quiz1: quiz,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: answers.length + 1,
+              itemBuilder: (context, index) {
+                if (index == answers.length) {
+                  return Column(
+                    children: [
+                      SizedBox(height: 20.0),
+                      ElevatedButton(
+                        child: Text('정답 추가.'),
+                        onPressed: () {
+                          setState(() {
+                            quiz.addAnswer('');
+                            _controllers.add(TextEditingController(text: ''));
+                          });
+                        },
+                      ),
+                      // Add this line
+                    ],
+                  );
+                } else {
+                  return ListTile(
+                    leading: Checkbox(
+                      value: quiz.isCorrectAns(index),
+                      onChanged: (bool? newValue) {
                         setState(() {
-                          quiz.addAnswer('');
-                          _controllers.add(TextEditingController(text: ''));
+                          if (newValue != null) {
+                            if (trueCount < maxAnswerSelection ||
+                                newValue == false) {
+                              quiz.changeCorrectAns(index, newValue);
+                            }
+                          }
                         });
                       },
                     ),
-                    // Add this line
-                  ],
-                );
-              } else {
-                return ListTile(
-                  leading: Checkbox(
-                    value: quiz.isCorrectAns(index),
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        if (newValue != null) {
-                          if (trueCount < maxAnswerSelection ||
-                              newValue == false) {
-                            quiz.changeCorrectAns(index, newValue);
-                          }
-                        }
-                      });
-                    },
-                  ),
-                  title: TextField(
-                    controller: _controllers[index],
-                    onChanged: (value) {
-                      setState(() {
-                        quiz.setAnswer(index, value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Answer ${index + 1}',
+                    title: TextField(
+                      controller: _controllers[index],
+                      onChanged: (value) {
+                        setState(() {
+                          quiz.setAnswer(index, value);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Answer ${index + 1}',
+                      ),
                     ),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      setState(() {
-                        quiz.removeAnswerAt(index);
-                        _controllers.removeAt(index);
-                      });
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('정답 섞기 여부 : '),
-            Checkbox(
-              value: shuffleAnswers,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  if (newValue != null) {
-                    quiz.setShuffleAnswers(newValue);
-                  }
-                });
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          quiz.removeAnswerAt(index);
+                          _controllers.removeAt(index);
+                        });
+                      },
+                    ),
+                  );
+                }
               },
             ),
-            Text('선택 가능한 정답 수 : '),
-            Container(
-              width: 50.0,
-              child: TextField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ], // Only numbers can be entered
-                onChanged: (value) {
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('정답 섞기 여부 : '),
+              Checkbox(
+                value: shuffleAnswers,
+                onChanged: (bool? newValue) {
                   setState(() {
-                    quiz.setMaxAnswerSelection(
-                        int.tryParse(value) ?? maxAnswerSelection);
+                    if (newValue != null) {
+                      quiz.setShuffleAnswers(newValue);
+                    }
                   });
                 },
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: ElevatedButton(
-            child: Text('완료'),
-            onPressed: () {
-              quiz.saveQuiz(9999);
-              Navigator.pop(context);
-              },
+              Text('선택 가능한 정답 수 : '),
+              Container(
+                width: 50.0,
+                child: TextField(
+                  controller: controller,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ], // Only numbers can be entered
+                  onChanged: (value) {
+                    setState(() {
+                      quiz.setMaxAnswerSelection(
+                          int.tryParse(value) ?? maxAnswerSelection);
+                    });
+                  },
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+          Align(
+            alignment: Alignment.bottomRight,
+            child: ElevatedButton(
+              child: Text('완료'),
+              onPressed: () {
+                quiz.saveQuiz(9999);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

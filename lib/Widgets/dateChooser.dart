@@ -3,10 +3,16 @@ import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz2.dart'; // Add this line to import DateFormat
 
-Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
-  int selectedYear = quiz.getCenterDate()[0];
-  int selectedMonth = quiz.getCenterDate()[1];
-  int selectedDay = quiz.getCenterDate()[2];
+Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState, bool getInputYearText, bool getDeleteButton, Function deleteThis, int inputType) {
+  List<int> selectedDate = [];
+  if (inputType == -1) {
+    selectedDate = quiz.getCenterDate();
+  } else if (inputType >= 0) {
+    selectedDate = quiz.getAnswerDateAt(inputType);
+  }
+  int selectedYear = selectedDate[0];
+  int selectedMonth = selectedDate[1];
+  int selectedDay = selectedDate[2];
   int range = quiz.getYearRange();
   List<int> years =
       List<int>.generate(range * 2, (index) => selectedYear - range + index);
@@ -21,7 +27,8 @@ Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
+
+      getInputYearText ? Container(
         width: 100, // Adjust the width as needed
         child: TextField(
           controller: yearController,
@@ -38,7 +45,7 @@ Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
             border: OutlineInputBorder(),
           ),
         ),
-      ),
+      ) : Container(),
       SizedBox(width: 20), // Space between the text field and the dropdown
       DropdownButton<int>(
         value: selectedYear,
@@ -51,7 +58,6 @@ Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
         onChanged: (newValue) {
           selectedYear = newValue!;
           // Update days based on the selected year and month
-          quiz.setCenterYear(selectedYear);
           updateState([selectedYear, selectedMonth, selectedDay]);
         },
       ),
@@ -65,8 +71,6 @@ Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
         }).toList(),
         onChanged: (newValue) {
           selectedMonth = newValue!;
-          // Update days based on the selected year and month
-          quiz.setCenterMonth(selectedMonth);
           updateState([selectedYear, selectedMonth, selectedDay]);
         },
       ),
@@ -80,10 +84,17 @@ Widget buildDatePicker(BuildContext context, Quiz2 quiz, Function updateState) {
         }).toList(),
         onChanged: (newValue) {
           selectedDay = newValue!;
-          quiz.setCenterDay(selectedDay);
-          updateState();
+          updateState([selectedYear, selectedMonth, selectedDay]);
         },
       ),
+
+
+      getDeleteButton ? IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () {
+          deleteThis();
+        },
+      ) : Container(),
     ],
   );
 }

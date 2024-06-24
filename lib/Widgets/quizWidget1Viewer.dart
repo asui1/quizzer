@@ -3,16 +3,16 @@ import 'package:quizzer/Class/quiz1.dart';
 
 double fontSizeBase = 10.0;
 
-class QuizPage extends StatefulWidget {
+class QuizView1 extends StatefulWidget {
   final int quizTag; // 퀴즈 태그
 
-  QuizPage({Key? key, required this.quizTag}) : super(key: key);
+  QuizView1({Key? key, required this.quizTag}) : super(key: key);
 
   @override
-  _QuizPageState createState() => _QuizPageState();
+  _QuizView1State createState() => _QuizView1State();
 }
 
-class _QuizPageState extends State<QuizPage> {
+class _QuizView1State extends State<QuizView1> {
   Quiz1 quizData = Quiz1(
     answers: [],
     ans: [],

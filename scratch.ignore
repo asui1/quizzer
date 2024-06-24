@@ -4,8 +4,8 @@
 - page layout 값에 따라 화면에 버튼 추가하고, button color에 따라 색이 바뀌게 만들기.
 - 페이지 넘기는 textbutton 전부 FloatingActionButton 으로 변경하기.
 - 퀴즈 페이지 생성
-- Quiz Generator1 완성
-
+- Quiz Generator1, View2 완성
+- Quiz Generator2, View2 완성
 # TODO
 !코어기능
 - 상단 바 비활성화 필요.
@@ -44,6 +44,6 @@
 !메이저 버그
 
 
-
 !마이너 버그
 - 2번하고 -> 1번하면 -> 하이라이트가 3번으로 가야되는데 2번으로감 마이너 버그 수정 필
+

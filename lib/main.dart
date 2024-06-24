@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Strings.dart';
+import 'package:quizzer/Widgets/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/quizWidget1Viewer.dart';
+import 'package:quizzer/Widgets/quizWidget2Viewer.dart';
 import 'package:quizzer/testpage.dart';
 import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
@@ -154,30 +157,72 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 6,
               ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2.0,
-                  ),
+              GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // 2열로 버튼 배치
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 50, // 가로 간격
+                  mainAxisSpacing: 10, // 세로 간격
                 ),
-                child: IconButton(
-                    onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => QuizWidget2()),
-                    );
-                    },
-                    // Handle scroll down action
-                  icon: Icon(Icons.arrow_downward),
-                ),
+                itemCount: 4, // 예시로 4개의 버튼을 생성, 필요에 따라 조정
+                shrinkWrap: true, // GridView의 높이를 자동으로 조정
+                itemBuilder: (context, index) {
+                  int n = (index + 1); // N 값을 결정
+                  return InkWell(
+                    onTap: () => navigateToQuizPage(context, n),
+                    child: Card(
+                      child: Center(
+                        child: Text(stringResources['quiz$n']!),
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void navigateToQuizPage(BuildContext context, int n) {
+    // Navigator를 사용하여 QuizWidgetN 또는 QuizNPage로 이동
+    // 예시로 QuizNPage로 이동하는 코드를 작성
+    switch (n) {
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QuizWidget1()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QuizView1(
+                    quizTag: 999,
+                  )),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QuizWidget2()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QuizView2(
+                    quizTag: 999,
+                  )),
+        );
+        break;
+      // Add more cases for other quiz pages
+      default:
+        // Handle the case when n is not matched with any of the cases
+        break;
+    }
   }
 }
