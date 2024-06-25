@@ -8,6 +8,7 @@ import 'package:quizzer/Class/quiz.dart';
 //순서 정렬형. A,B,C,D 순서로 정렬되어야 함.
 class Quiz3 extends AbstractQuiz {
   int maxAnswerSelection = 1;
+  List<String> ShuffledAnswers = [];
 
   Quiz3({
     int layoutType = 3,
@@ -20,6 +21,15 @@ class Quiz3 extends AbstractQuiz {
             answers: answers,
             ans: ans,
             question: question);
+
+  void setShuffledAnswers(){
+    ShuffledAnswers = answers;
+    ShuffledAnswers.shuffle();
+  }
+
+  List<String> getShuffledAnswers(){
+    return ShuffledAnswers;
+  }
 
   int getAnswersLength() {
     return answers.length;

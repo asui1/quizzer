@@ -5,6 +5,7 @@ import 'package:quizzer/Widgets/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/quizWidget1Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget3Generator.dart';
+import 'package:quizzer/Widgets/quizWidget3Viewer.dart';
 import 'package:quizzer/testpage.dart';
 import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
@@ -231,13 +232,13 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         break;
       case 6:
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => QuizView3(
-        //             quizTag: 999,
-        //           )),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QuizView3(
+                    quizTag: 999,
+                  )),
+        );
         break;
       // Add more cases for other quiz pages
       default:
