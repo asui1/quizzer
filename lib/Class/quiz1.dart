@@ -28,7 +28,6 @@ class Quiz1 extends AbstractQuiz {
             ans: ans,
             question: question);
 
-
   void setAnswer(int index, String newAnswer) {
     if (index >= answers.length) {
       return;
@@ -152,38 +151,18 @@ class Quiz1 extends AbstractQuiz {
   }
 
   @override
-  Future<AbstractQuiz> loadQuiz(int tag) async {
-    try {
-      final file = await getlocalFile();
-      final contents = await file.readAsString();
-      final Map<String, dynamic> quizzes = json.decode(contents);
-      if (!quizzes.containsKey(tag.toString())) {
-        throw Exception('Quiz not found');
-      }
-      final jsonData = quizzes[tag.toString()];
-      return Quiz1(
-          bodyType: jsonData['bodyType'],
-          imageFile: jsonData['imageFile'],
-          bodyText: jsonData['bodyText'],
-          shuffleAnswers: jsonData['shuffleAnswers'],
-          maxAnswerSelection: jsonData['maxAnswerSelection'],
-          answers: jsonData['answers'],
-          ans: jsonData['ans'],
-          question: jsonData['question']);
-    } catch (e) {
-      throw Exception('Failed to load quiz');
-    }
+  Future<AbstractQuiz> loadQuiz(dynamic jsonData) async {
+    return Quiz1(
+        bodyType: jsonData['bodyType'],
+        imageFile: jsonData['imageFile'],
+        bodyText: jsonData['bodyText'],
+        shuffleAnswers: jsonData['shuffleAnswers'],
+        maxAnswerSelection: jsonData['maxAnswerSelection'],
+        answers: jsonData['answers'],
+        ans: jsonData['ans'],
+        question: jsonData['question']);
   }
 
-  @override
-  Future<File> saveQuiz(int tag) async {
-    final file = await getlocalFile();
-    String contents = await file.readAsString();
-    Map<String, dynamic> quizzes =
-        contents.isNotEmpty ? json.decode(contents) : {};
-    quizzes[tag.toString()] = toJson(); // 태그를 키로 사용하여 퀴즈 저장
-    return file.writeAsString(json.encode(quizzes));
-  }
 
   @override
   Map<String, dynamic> toJson() {

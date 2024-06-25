@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
 
 class Quiz2 extends AbstractQuiz {
@@ -18,6 +17,9 @@ class Quiz2 extends AbstractQuiz {
     required List<bool> ans,
     required String question,
     required this.maxAnswerSelection,
+    this.centerDate = const [2024, 6, 22],
+    this.yearRange = 10,
+    this.answerDate = const [],
   }) : super(
           layoutType: layoutType,
           answers: answers,
@@ -54,6 +56,7 @@ class Quiz2 extends AbstractQuiz {
     answerDate.add(newAnswerDate);
     maxAnswerSelection = answerDate.length;
   }
+
   void setAnswerDate(List<List<int>> newAnswerDate) {
     answerDate = newAnswerDate;
     maxAnswerSelection = answerDate.length;
@@ -146,34 +149,18 @@ class Quiz2 extends AbstractQuiz {
   }
 
   @override
-  Future<AbstractQuiz> loadQuiz(int tag) async {
-    try {
-      final file = await getlocalFile();
-      final contents = await file.readAsString();
-      final Map<String, dynamic> quizzes = json.decode(contents);
-      if (!quizzes.containsKey(tag.toString())) {
-        throw Exception('Quiz not found');
-      }
-      final jsonData = quizzes[tag.toString()];
-      return Quiz2(
-          maxAnswerSelection: jsonData['maxAnswerSelection'],
-          answers: jsonData['answers'],
-          ans: jsonData['ans'],
-          question: jsonData['question']);
-    } catch (e) {
-      throw Exception('Failed to load quiz');
-    }
+  Future<AbstractQuiz> loadQuiz(dynamic jsonData) async {
+    return Quiz2(
+      maxAnswerSelection: jsonData['maxAnswerSelection'],
+      answers: jsonData['answers'],
+      ans: jsonData['ans'],
+      question: jsonData['question'],
+      centerDate: jsonData['centerDate'],
+      yearRange: jsonData['yearRange'],
+      answerDate: jsonData['answerDate'],
+    );
   }
 
-  @override
-  Future<File> saveQuiz(int tag) async {
-    final file = await getlocalFile();
-    String contents = await file.readAsString();
-    Map<String, dynamic> quizzes =
-        contents.isNotEmpty ? json.decode(contents) : {};
-    quizzes[tag.toString()] = toJson(); // 태그를 키로 사용하여 퀴즈 저장
-    return file.writeAsString(json.encode(quizzes));
-  }
 
   @override
   Map<String, dynamic> toJson() {

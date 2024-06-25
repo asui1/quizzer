@@ -4,6 +4,7 @@ import 'package:quizzer/Strings.dart';
 import 'package:quizzer/Widgets/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/quizWidget1Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget2Viewer.dart';
+import 'package:quizzer/Widgets/quizWidget3Generator.dart';
 import 'package:quizzer/testpage.dart';
 import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
@@ -157,26 +158,30 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 6,
               ),
-              GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // 2열로 버튼 배치
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 50, // 가로 간격
-                  mainAxisSpacing: 10, // 세로 간격
-                ),
-                itemCount: 4, // 예시로 4개의 버튼을 생성, 필요에 따라 조정
-                shrinkWrap: true, // GridView의 높이를 자동으로 조정
-                itemBuilder: (context, index) {
-                  int n = (index + 1); // N 값을 결정
-                  return InkWell(
-                    onTap: () => navigateToQuizPage(context, n),
-                    child: Card(
-                      child: Center(
-                        child: Text(stringResources['quiz$n']!),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 512.0, right: 512.0), // 왼쪽과 오른쪽에 패딩 추가
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // 2열로 버튼 배치
+                    childAspectRatio: 1 / 0.3,
+                    crossAxisSpacing: 50, // 가로 간격
+                    mainAxisSpacing: 10, // 세로 간격
+                  ),
+                  itemCount: 6, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
+                  shrinkWrap: true, // GridView의 높이를 자동으로 조정
+                  itemBuilder: (context, index) {
+                    int n = (index + 1); // N 값을 결정
+                    return InkWell(
+                      onTap: () => navigateToQuizPage(context, n),
+                      child: Card(
+                        child: Center(
+                          child: Text(stringResources['quiz$n']!),
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -218,6 +223,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     quizTag: 999,
                   )),
         );
+        break;
+      case 5:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QuizWidget3()),
+        );
+        break;
+      case 6:
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => QuizView3(
+        //             quizTag: 999,
+        //           )),
+        // );
         break;
       // Add more cases for other quiz pages
       default:

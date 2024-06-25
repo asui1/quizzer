@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -44,9 +45,19 @@ abstract class AbstractQuiz {
     return question;
   }
 
-  Future<File> saveQuiz(int tag);
+  Future<File> saveQuiz(int tag) async {
+    final file = await getlocalFile();
+    String contents = await file.readAsString();
+    Map<String, dynamic> quizzes =
+        contents.isNotEmpty ? json.decode(contents) : {};
+    quizzes[tag.toString()] = {
+      'layoutType': layoutType,
+      'Quiz': toJson(),
+    };
+    return file.writeAsString(json.encode(quizzes));
+  }
 
-  Future<AbstractQuiz> loadQuiz(int tag);
+  Future<AbstractQuiz> loadQuiz(dynamic tag);
 
   Map<String, dynamic> toJson();
 }
