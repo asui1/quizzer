@@ -15,6 +15,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
     question: '',
     maxAnswerSelection: 1,
     connectionAnswers: ['', ''],
+    connectionAnswerIndex: [null, null],
   );
   late TextEditingController questionController;
   List<TextEditingController> _controllersLeft = [];
@@ -86,6 +87,10 @@ class _QuizWidget4State extends State<QuizWidget4> {
                           _controllersRight.add(TextEditingController());
                           starts.add(null);
                           ends.add(null);
+                          isDragging.add(false);
+                          leftKeys.add(GlobalKey());
+                          rightKeys.add(GlobalKey());
+                          lineKeys.add(GlobalKey());
                         });
                       },
                       child: Icon(Icons.add),
@@ -110,21 +115,27 @@ class _QuizWidget4State extends State<QuizWidget4> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: GestureDetector(
                             onPanStart: (details) {
+                              print("TOUCH DETECTED");
                               setState(() {
-                                if (isDragging[index] == true) {
-                                  RenderBox leftDot = leftKeys[index]
-                                      .currentContext!
-                                      .findRenderObject() as RenderBox;
-                                  RenderBox linePaint = lineKeys[index]
-                                      .currentContext!
-                                      .findRenderObject() as RenderBox;
-                                  Offset GlobalPosition =
-                                      leftDot.localToGlobal(Offset.zero);
-                                  GlobalPosition = Offset(
-                                      GlobalPosition.dx +
-                                          leftDot.size.width / 2,
-                                      GlobalPosition.dy +
-                                          leftDot.size.height / 2);
+                                RenderBox leftDot = leftKeys[index]
+                                    .currentContext!
+                                    .findRenderObject() as RenderBox;
+                                RenderBox linePaint = lineKeys[index]
+                                    .currentContext!
+                                    .findRenderObject() as RenderBox;
+                                Offset GlobalPosition =
+                                    leftDot.localToGlobal(Offset.zero);
+                                GlobalPosition = Offset(
+                                    GlobalPosition.dx + leftDot.size.width / 2,
+                                    GlobalPosition.dy +
+                                        leftDot.size.height / 2);
+                                double distance =
+                                    (GlobalPosition - details.globalPosition)
+                                        .distance;
+                                print("startDistance");
+                                print(distance);
+                                if (distance <= 20) {
+                                  isDragging[index] = true;
                                   Offset position =
                                       linePaint.globalToLocal(GlobalPosition);
                                   starts[index] = position; // 드래그 시작 시 시작점 업데이트
@@ -152,11 +163,11 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           rightDot.size.width / 2,
                                       GlobalPosition.dy +
                                           rightDot.size.height / 2);
-                                  double distance = (GlobalPosition -
-                                          details.globalPosition)
-                                      .distance;
+                                  double distance =
+                                      (GlobalPosition - details.globalPosition)
+                                          .distance;
                                   print(distance);
-                                  if (distance <= 10) {
+                                  if (distance <= 20) {
                                     print("connected");
                                     RenderBox linePaint = lineKeys[index]
                                         .currentContext!
@@ -164,9 +175,10 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                     Offset position =
                                         linePaint.globalToLocal(GlobalPosition);
                                     ends[index] = position;
+                                    quiz.setConnectionAnswerIndexAt(
+                                        index, rightKeys.indexOf(key));
                                     break;
-                                  }
-                                  else{
+                                  } else {
                                     ends[index] = null;
                                   }
                                 }
@@ -189,18 +201,13 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    GestureDetector(
-                                      onTapDown: (TapDownDetails details) {
-                                        isDragging[index] = true;
-                                      },
-                                      child: Container(
-                                        key: leftKeys[index],
-                                        height: 10.0,
-                                        width: 10.0,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          shape: BoxShape.circle,
-                                        ),
+                                    Container(
+                                      key: leftKeys[index],
+                                      height: 10.0,
+                                      width: 10.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        shape: BoxShape.circle,
                                       ),
                                     ),
                                     Container(
@@ -230,13 +237,18 @@ class _QuizWidget4State extends State<QuizWidget4> {
                           icon: Icon(Icons.remove_circle_outline),
                           onPressed: () {
                             setState(() {
-                              quiz.removeAnswerAt(index); // 퀴즈에서 해당 답변 제거
+                              updateEnds(index);
+                              quiz.removeAnswerPairAt(index); // 퀴즈에서 해당 답변 제거
                               _controllersLeft
                                   .removeAt(index); // 왼쪽 컨트롤러 리스트에서 제거
                               _controllersRight
                                   .removeAt(index); // 오른쪽 컨트롤러 리스트에서 제거
                               starts.removeAt(index);
                               ends.removeAt(index);
+                              isDragging.removeAt(index);
+                              leftKeys.removeAt(index);
+                              rightKeys.removeAt(index);
+                              lineKeys.removeAt(index);
                             });
                           },
                         ),
@@ -264,5 +276,39 @@ class _QuizWidget4State extends State<QuizWidget4> {
         ],
       ),
     );
+  }
+
+  void updateEnds(int deletedIndex) {
+    List<int?> connectionAnswerIndex = quiz.getConnectionAnswerIndex();
+    for (int i = 0; i < connectionAnswerIndex.length; i++) {
+      if (connectionAnswerIndex[i] == null) {
+        continue;
+      }
+      int index = connectionAnswerIndex[i]!;
+      int newIndex;
+      if (deletedIndex < index && i < deletedIndex) {
+        int newIndex = index - 1;
+        RenderBox rightDot =
+            rightKeys[newIndex].currentContext!.findRenderObject() as RenderBox;
+        RenderBox linePaint =
+            lineKeys[i].currentContext!.findRenderObject() as RenderBox;
+        Offset GlobalPosition = rightDot.localToGlobal(Offset.zero);
+        GlobalPosition = Offset(GlobalPosition.dx + rightDot.size.width / 2,
+            GlobalPosition.dy + rightDot.size.height / 2);
+        ends[i] = linePaint.globalToLocal(GlobalPosition);
+      } else if (deletedIndex > index && i > deletedIndex) {
+        int newIndex = index + 1;
+        RenderBox rightDot =
+            rightKeys[newIndex].currentContext!.findRenderObject() as RenderBox;
+        RenderBox linePaint =
+            lineKeys[i].currentContext!.findRenderObject() as RenderBox;
+        Offset GlobalPosition = rightDot.localToGlobal(Offset.zero);
+        GlobalPosition = Offset(GlobalPosition.dx + rightDot.size.width / 2,
+            GlobalPosition.dy + rightDot.size.height / 2);
+        ends[i] = linePaint.globalToLocal(GlobalPosition);
+      } else if (deletedIndex == index) {
+        ends[i] = null;
+      }
+    }
   }
 }

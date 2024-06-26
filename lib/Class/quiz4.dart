@@ -9,6 +9,7 @@ import 'package:quizzer/Class/quiz.dart';
 class Quiz4 extends AbstractQuiz {
   int maxAnswerSelection = 1;
   List<String> connectionAnswers = [];
+  List<int?> connectionAnswerIndex = [];
 
   Quiz4({
     int layoutType = 3,
@@ -17,11 +18,21 @@ class Quiz4 extends AbstractQuiz {
     required String question,
     this.maxAnswerSelection = 1,
     this.connectionAnswers = const [],
+    this.connectionAnswerIndex = const [],
   }) : super(
             layoutType: layoutType,
             answers: answers,
             ans: ans,
             question: question);
+
+  void addConnectionAnswerIndex(int newInt) {
+    connectionAnswerIndex.add(newInt);
+  }
+
+  void setConnectionAnswerIndexAt(int index, int newInt) {
+    connectionAnswerIndex[index] = newInt;
+    print(connectionAnswerIndex);
+  }
 
   List<String> getConnectionAnswers() {
     return connectionAnswers;
@@ -45,6 +56,8 @@ class Quiz4 extends AbstractQuiz {
 
   void removeAnswerAt(int index) {
     answers.removeAt(index);
+    connectionAnswers.removeAt(index);
+    connectionAnswerIndex.removeAt(index);
   }
 
   @override
@@ -60,6 +73,7 @@ class Quiz4 extends AbstractQuiz {
   void addAnswerPair(){
     answers.add('');
     connectionAnswers.add(''); 
+    connectionAnswerIndex.add(null);
   }
 
   @override
@@ -67,9 +81,29 @@ class Quiz4 extends AbstractQuiz {
     return answers.contains(userAns);
   }
 
+  List<int?> getConnectionAnswerIndex() {
+    return connectionAnswerIndex;
+  }
+
+  int getConnectionAnswerIndexAt(int index) {
+    return connectionAnswerIndex[index]!;
+  }
+
   void removeAnswerPairAt(int index){
-    answers.removeAt(index);
-    connectionAnswers.removeAt(index);
+      for(int i = 0; i < answers.length; i++){
+          if(connectionAnswerIndex[i] == null){
+              continue;
+          }
+          if(connectionAnswerIndex[i]! == index){
+              connectionAnswerIndex[i] = null;
+          }
+          else if(connectionAnswerIndex[i]! > index){
+              connectionAnswerIndex[i] = connectionAnswerIndex[i]! - 1;
+          }
+      }
+      answers.removeAt(index);
+      connectionAnswers.removeAt(index);
+      connectionAnswerIndex.removeAt(index);
   }
 
   @override
