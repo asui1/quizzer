@@ -34,6 +34,10 @@ class Quiz4 extends AbstractQuiz {
     print(connectionAnswerIndex);
   }
 
+  String getConnectionAnswerAt(int index){
+    return connectionAnswers[index];
+  }
+
   List<String> getConnectionAnswers() {
     return connectionAnswers;
   }
@@ -111,6 +115,10 @@ class Quiz4 extends AbstractQuiz {
     return answers;
   }
 
+  String getAnswerAt(int index) {
+    return answers[index];
+  }
+
   @override
   Image? getImage() {
     // TODO: implement getImage
@@ -126,6 +134,8 @@ class Quiz4 extends AbstractQuiz {
   @override
   Future<Quiz4> loadQuiz(dynamic jsonData) {
       return Future.value(Quiz4(
+          connectionAnswers: jsonData['connectionAnswers'],
+          connectionAnswerIndex: jsonData['connectionAnswerIndex'],
           layoutType: jsonData['layoutType'],
           answers: jsonData['answers'],
           ans: jsonData['ans'],
@@ -153,6 +163,8 @@ class Quiz4 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
+      "connectionAnswers": connectionAnswers,
+      "connectionAnswerIndex": connectionAnswerIndex,
       "layoutType": layoutType,
       "maxAnswerSelection": maxAnswerSelection,
       "answers": answers,
