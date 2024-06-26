@@ -13,6 +13,8 @@ const Map<String, String> stringResources = {
   'quiz4' : '퀴즈 2 뷰어',
   'quiz5' : '퀴즈 3 생성',
   'quiz6' : '퀴즈 3 뷰어',
+  'quiz7' : '퀴즈 4 생성',
+  'quiz8' : '퀴즈 4 뷰어',
 
 
 };

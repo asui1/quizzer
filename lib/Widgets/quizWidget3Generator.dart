@@ -30,7 +30,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
   }
 
   void _initControllers() {
-    _controllers = quiz.answers
+    _controllers = quiz.getAnswers()
         .map((answer) => TextEditingController(text: answer))
         .toList();
   }

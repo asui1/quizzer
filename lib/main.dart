@@ -6,6 +6,8 @@ import 'package:quizzer/Widgets/quizWidget1Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget3Generator.dart';
 import 'package:quizzer/Widgets/quizWidget3Viewer.dart';
+import 'package:quizzer/Widgets/quizWidget4Generator.dart';
+import 'package:quizzer/Widgets/quizWidget4Viewer.dart';
 import 'package:quizzer/testpage.dart';
 import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
@@ -169,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisSpacing: 50, // 가로 간격
                     mainAxisSpacing: 10, // 세로 간격
                   ),
-                  itemCount: 6, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
+                  itemCount: 8, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
                   shrinkWrap: true, // GridView의 높이를 자동으로 조정
                   itemBuilder: (context, index) {
                     int n = (index + 1); // N 값을 결정
@@ -240,6 +242,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   )),
         );
         break;
+      case 7:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => QuizWidget4()),
+        );
+        break;
+        case 8:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => QuizView4(
+                    quizTag: 999,
+                  )),
+        );
       // Add more cases for other quiz pages
       default:
         // Handle the case when n is not matched with any of the cases
