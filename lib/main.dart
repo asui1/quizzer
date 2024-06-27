@@ -8,6 +8,7 @@ import 'package:quizzer/Widgets/quizWidget3Generator.dart';
 import 'package:quizzer/Widgets/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/quizWidget4Generator.dart';
 import 'package:quizzer/Widgets/quizWidget4Viewer.dart';
+import 'package:quizzer/config.dart';
 import 'package:quizzer/testpage.dart';
 import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
@@ -23,6 +24,15 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    AppConfig.screenWidth = MediaQuery.of(context).size.width;
+    AppConfig.screenHeight = MediaQuery.of(context).size.height;
+    AppConfig.fontSize = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 20;
+    AppConfig.borderRadius = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 20;
+    AppConfig.padding = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 40;
+    AppConfig.smallPadding = AppConfig.padding / 2;
+    AppConfig.largePadding = AppConfig.padding * 2;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -69,6 +79,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  double screenHeight = AppConfig.screenHeight;
+  double screenWidth = AppConfig.screenWidth;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -93,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: MediaQuery.of(context).size.height / 3,
+                height: screenHeight / 6,
               ),
               GestureDetector(
                 onTap: () {
@@ -103,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2,
+                  width: screenWidth / 2,
                   child: AbsorbPointer(
                     child: TextField(
                       decoration: InputDecoration(
@@ -124,10 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height / 6,
+                height: screenHeight / 6,
               ),
               Container(
-                width: MediaQuery.of(context).size.width / 3,
+                width: screenWidth / 3,
+                height: screenHeight / 5,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -137,19 +151,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   },
                   child: Text(
-                    'Make Your Own Quiz!',
+                    '나만의 퀴즈 만들기',
                     style: TextStyle(
-                        fontSize: 24.0,
+                        fontSize: AppConfig.fontSize,
                         color: Colors.white), // Set text color to white
                   ),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(60.0),
+                      borderRadius: BorderRadius.circular(AppConfig.borderRadius),
                     ),
-                    padding: EdgeInsets.symmetric(
-                        vertical: 64.0,
-                        horizontal:
-                            32.0), // Adjust the padding to make the button bigger
                     elevation: 8, // Add elevation to make the button pop out
                     foregroundColor: const Color.fromARGB(
                         255, 153, 27, 175), // Set button color to purple
@@ -159,17 +169,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height / 6,
+                height: screenHeight / 6,
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 512.0, right: 512.0), // 왼쪽과 오른쪽에 패딩 추가
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.1),
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // 2열로 버튼 배치
-                    childAspectRatio: 1 / 0.3,
-                    crossAxisSpacing: 50, // 가로 간격
-                    mainAxisSpacing: 10, // 세로 간격
+                    childAspectRatio: 1,
+                    crossAxisSpacing: screenWidth * 0.2, // 가로 간격
+                    mainAxisSpacing: screenHeight/ 10, // 세로 간격
                   ),
                   itemCount: 8, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
                   shrinkWrap: true, // GridView의 높이를 자동으로 조정
@@ -248,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(builder: (context) => QuizWidget4()),
         );
         break;
-        case 8:
+      case 8:
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz1.dart';
-
-double fontSizeBase = 10.0;
+import 'package:quizzer/Widgets/ViewerCommon.dart';
+import 'package:quizzer/config.dart';
 
 class QuizView1 extends StatefulWidget {
   final int quizTag; // 퀴즈 태그
@@ -59,50 +59,55 @@ class _QuizView1State extends State<QuizView1> {
   Widget build(BuildContext context) {
     int trueCount = currentAnswer.where((answer) => answer == true).length;
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Text(
-            quizTest.getQuestion(),
-            style: TextStyle(
-              fontSize: fontSizeBase * 3,
-            ),
-          ),
-          _buildQuizBody(quizTest),
-          Expanded(
-            child: ListView.builder(
-                itemCount: quizTest.getAnswers().length,
-                itemBuilder: (context, index) {
-                  int newIndex = order[index];
-                  return ListTile(
-                    leading: Checkbox(
-                      value: currentAnswer[newIndex],
-                      onChanged: (bool? newValue) {
-                        setState(() {
-                          if (newValue != null) {
-                            if (trueCount < quizTest.getMaxAnswerSelection() ||
-                                newValue == false) {
-                              currentAnswer[newIndex] = newValue;
+      body: Padding(
+        padding: EdgeInsets.all(AppConfig.padding),
+        child: Column(
+          children: <Widget>[
+            QuestionViewer(question: quizTest.getQuestion()),
+            SizedBox(height: AppConfig.screenHeight * 0.02),
+            _buildQuizBody(quizTest),
+            SizedBox(height: AppConfig.screenHeight * 0.02),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: quizTest.getAnswers().length,
+                  itemBuilder: (context, index) {
+                    int newIndex = order[index];
+                    return ListTile(
+                      leading: Checkbox(
+                        value: currentAnswer[newIndex],
+                        onChanged: (bool? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              if (trueCount <
+                                      quizTest.getMaxAnswerSelection() ||
+                                  newValue == false) {
+                                currentAnswer[newIndex] = newValue;
+                              }
                             }
+                          });
+                        },
+                      ),
+                      title: Text(
+                        quizTest.getAnswerAt(order[newIndex]),
+                        style: TextStyle(fontSize: AppConfig.fontSize),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          if (currentAnswer[newIndex] == false) {
+                            if (trueCount < quizTest.getMaxAnswerSelection()) {
+                              currentAnswer[newIndex] =
+                                  !currentAnswer[newIndex];
+                            }
+                          } else {
+                            currentAnswer[newIndex] = !currentAnswer[newIndex];
                           }
                         });
                       },
-                    ),
-                    title: Text(quizTest.getAnswerAt(order[newIndex])),
-                    onTap: () {
-                      setState(() {
-                        if (currentAnswer[newIndex] == false) {
-                          if(trueCount < quizTest.getMaxAnswerSelection()){
-                          currentAnswer[newIndex] = !currentAnswer[newIndex];
-                          }
-                        } else {
-                          currentAnswer[newIndex] = !currentAnswer[newIndex];
-                        }
-                      });
-                    },
-                  );
-                }),
-          ),
-        ],
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -114,6 +119,7 @@ Widget _buildQuizBody(Quiz1 quiz) {
       return Container();
     case 1:
       return Container(
+        width: AppConfig.screenWidth * 0.8,
         padding: EdgeInsets.all(8.0), // Add padding around the text
         decoration: BoxDecoration(
           border: Border.all(
@@ -124,7 +130,7 @@ Widget _buildQuizBody(Quiz1 quiz) {
         child: Text(
           quiz.getBodyText(),
           style: TextStyle(
-            fontSize: fontSizeBase * 2,
+            fontSize: AppConfig.fontSize,
           ),
         ),
       );
