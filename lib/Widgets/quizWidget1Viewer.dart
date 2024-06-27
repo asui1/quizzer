@@ -18,32 +18,18 @@ class _QuizView1State extends State<QuizView1> {
     ans: [],
     question: '',
   );
-  Quiz1 quizTest = Quiz1(
-    answers: ['11', '22', '33', '44', '55'],
-    ans: [true, false, false, false, false],
-    question: "11을 고르세요.",
-    bodyType: 1,
-    bodyText: "본문입니다.",
-    shuffleAnswers: true,
-    maxAnswerSelection: 1,
-  );
   bool isLoading = true;
   List<int> order = [];
   List<bool> currentAnswer = [];
+  late Future<void> _loadQuizFuture;
 
   @override
   void initState() {
     super.initState();
-    loadQuiz();
-    order = List<int>.generate(quizTest.answers.length, (index) => index);
-    if (quizTest.getShuffleAnswers()) {
-      order.shuffle();
-    }
-    currentAnswer =
-        List<bool>.generate(quizTest.answers.length, (index) => false);
+    _loadQuizFuture = loadQuiz();
   }
 
-  void loadQuiz() async {
+  Future<void> loadQuiz() async {
     try {
       await quizData.loadQuiz(widget.quizTag); // 퀴즈 로드
       setState(() {
@@ -51,6 +37,15 @@ class _QuizView1State extends State<QuizView1> {
       });
     } catch (e) {
       print("퀴즈 로드 실패: $e");
+      quizData = Quiz1(
+        answers: ['11', '22', '33', '44', '55'],
+        ans: [true, false, false, false, false],
+        question: "11을 고르세요.",
+        bodyType: 1,
+        bodyText: "본문입니다.",
+        shuffleAnswers: true,
+        maxAnswerSelection: 1,
+      );
       // 에러 처리 로직 추가
     }
   }
@@ -58,57 +53,83 @@ class _QuizView1State extends State<QuizView1> {
   @override
   Widget build(BuildContext context) {
     int trueCount = currentAnswer.where((answer) => answer == true).length;
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(AppConfig.padding),
-        child: Column(
-          children: <Widget>[
-            QuestionViewer(question: quizTest.getQuestion()),
-            SizedBox(height: AppConfig.screenHeight * 0.02),
-            _buildQuizBody(quizTest),
-            SizedBox(height: AppConfig.screenHeight * 0.02),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: quizTest.getAnswers().length,
-                  itemBuilder: (context, index) {
-                    int newIndex = order[index];
-                    return ListTile(
-                      leading: Checkbox(
-                        value: currentAnswer[newIndex],
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            if (newValue != null) {
-                              if (trueCount <
-                                      quizTest.getMaxAnswerSelection() ||
-                                  newValue == false) {
-                                currentAnswer[newIndex] = newValue;
-                              }
-                            }
-                          });
-                        },
-                      ),
-                      title: Text(
-                        quizTest.getAnswerAt(order[newIndex]),
-                        style: TextStyle(fontSize: AppConfig.fontSize),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          if (currentAnswer[newIndex] == false) {
-                            if (trueCount < quizTest.getMaxAnswerSelection()) {
-                              currentAnswer[newIndex] =
-                                  !currentAnswer[newIndex];
-                            }
-                          } else {
-                            currentAnswer[newIndex] = !currentAnswer[newIndex];
-                          }
-                        });
-                      },
-                    );
-                  }),
+
+    return FutureBuilder(
+      future: _loadQuizFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            return Center(child: Text("퀴즈 로드에 실패했습니다."));
+          }
+          if (order.length == 0) {
+            order =
+                List<int>.generate(quizData.answers.length, (index) => index);
+            currentAnswer =
+                List<bool>.generate(quizData.answers.length, (index) => false);
+            if (quizData.getShuffleAnswers()) {
+              order.shuffle();
+            }
+          }
+          // Future가 완료되면 UI 빌드
+          return Scaffold(
+            body: Padding(
+              padding: EdgeInsets.all(AppConfig.padding),
+              child: Column(
+                children: <Widget>[
+                  QuestionViewer(question: quizData.getQuestion()),
+                  SizedBox(height: AppConfig.screenHeight * 0.02),
+                  _buildQuizBody(quizData),
+                  SizedBox(height: AppConfig.screenHeight * 0.02),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: quizData.getAnswers().length,
+                        itemBuilder: (context, index) {
+                          int newIndex = order[index];
+                          return ListTile(
+                            leading: Checkbox(
+                              value: currentAnswer[newIndex],
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  if (newValue != null) {
+                                    if (trueCount <
+                                            quizData.getMaxAnswerSelection() ||
+                                        newValue == false) {
+                                      currentAnswer[newIndex] = newValue;
+                                    }
+                                  }
+                                });
+                              },
+                            ),
+                            title: Text(
+                              quizData.getAnswerAt(order[newIndex]),
+                              style: TextStyle(fontSize: AppConfig.fontSize),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                if (currentAnswer[newIndex] == false) {
+                                  if (trueCount <
+                                      quizData.getMaxAnswerSelection()) {
+                                    currentAnswer[newIndex] =
+                                        !currentAnswer[newIndex];
+                                  }
+                                } else {
+                                  currentAnswer[newIndex] =
+                                      !currentAnswer[newIndex];
+                                }
+                              });
+                            },
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          // 로딩 중 UI
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

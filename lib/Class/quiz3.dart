@@ -27,6 +27,10 @@ class Quiz3 extends AbstractQuiz {
     ShuffledAnswers.shuffle();
   }
 
+  bool isShuffledAnswersEmpty(){
+    return ShuffledAnswers.isEmpty;
+  }
+
   List<String> getShuffledAnswers(){
     return ShuffledAnswers;
   }
