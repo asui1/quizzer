@@ -24,14 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-    AppConfig.screenWidth = MediaQuery.of(context).size.width;
-    AppConfig.screenHeight = MediaQuery.of(context).size.height;
-    AppConfig.fontSize = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 20;
-    AppConfig.borderRadius = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 20;
-    AppConfig.padding = math.min(AppConfig.screenWidth, AppConfig.screenHeight) / 40;
-    AppConfig.smallPadding = AppConfig.padding / 2;
-    AppConfig.largePadding = AppConfig.padding * 2;
+    AppConfig.setUp(context);
 
     return MaterialApp(
       title: 'Flutter Demo',

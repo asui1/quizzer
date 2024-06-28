@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Strings.dart';
+import 'package:quizzer/config.dart';
 
 import 'Widgets/FlipWidgets.dart';
 import 'makingQuiz.dart';
@@ -379,9 +380,8 @@ class LayoutOption extends StatelessWidget {
       child: GestureDetector(
         child: Image(
           image: AssetImage(imagePath),
-          width: 200,
-          height: 320,
-          fit: BoxFit.fitHeight,
+          width: AppConfig.screenWidth/5,
+          fit: BoxFit.fitWidth,
         ),
         onTap: () {
           onSelected(layoutNumber);

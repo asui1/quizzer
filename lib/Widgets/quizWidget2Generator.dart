@@ -197,7 +197,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
             GeneratorDoneButton(
               onPressed: () {
                 quiz.saveQuiz(9999);
-                Navigator.pop(context);
+                Navigator.pop(context, quiz);
               },
             ),
           ],

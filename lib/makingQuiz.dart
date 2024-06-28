@@ -1,7 +1,20 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Class/quiz2.dart';
+import 'package:quizzer/Class/quiz3.dart';
+import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
+import 'package:quizzer/Widgets/quizWidget1Generator.dart';
+import 'package:quizzer/Widgets/quizWidget2Generator.dart';
+import 'package:quizzer/Widgets/quizWidget3Generator.dart';
+import 'package:quizzer/Widgets/quizWidget4Generator.dart';
+import 'package:quizzer/config.dart';
 
 import 'Class/quizLayout.dart';
 
@@ -15,9 +28,19 @@ class MakingQuiz extends StatefulWidget {
 }
 
 class _MakingQuizState extends State<MakingQuiz> {
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+  int curQuizIndex = 0;
+  int maxQuizIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    curQuizIndex = widget.quizLayout.getCurQuizIndex();
+    maxQuizIndex = widget.quizLayout.getQuizCount();
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenShortestSide = MediaQuery.of(context).size.shortestSide;
     return Scaffold(
       appBar: widget.quizLayout.getIsTopBarVisible()
           ? PreferredSize(
@@ -64,100 +87,135 @@ class _MakingQuizState extends State<MakingQuiz> {
                 onPressedBack: () {},
                 onPressedForward: () {},
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: 8.0), // Adjust the value as needed
-                  child: Text(
-                    '${widget.quizLayout.getCurQuizIndex()} / ${widget.quizLayout.getQuizCount()}',
+              Center(
+                  child: Column(
+                children: [
+                  Spacer(flex: 1),
+                  Container(
+                    height: AppConfig.screenHeight /
+                        2, // AppConfig.ScreenHeight의 1/2 크기로 설정
+                    width: AppConfig.screenWidth *
+                        0.65, // AppConfig.ScreenWidth의 1/2 크기로 설정
+
+                    child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            curQuizIndex = index;
+                          });
+                        },
+                        itemCount: widget.quizLayout.getQuizCount() + 1,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: index < widget.quizLayout.getQuizCount()
+                                ? Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Page $index',
+                                        style: TextStyle(fontSize: 24),
+                                      ),
+                                    ),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                        20), // 모서리 둥글기 정도 조절
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () async {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                content: Container(
+                                                  width: double.maxFinite,
+                                                  child: GridView.count(
+                                                    shrinkWrap: true,
+                                                    physics: ScrollPhysics(),
+                                                    crossAxisCount: 2,
+                                                    childAspectRatio: 1,
+                                                    children: List.generate(4,
+                                                        (index) {
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.pop(context,
+                                                              'Item $index');
+                                                          moveToQuizWidgetGenerator(
+                                                              index);
+                                                        },
+                                                        child: Card(
+                                                          child: Column(
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                flex: 3,
+                                                                child: Image.asset(
+                                                                    'images/one.jpg',
+                                                                    fit: BoxFit
+                                                                        .cover),
+                                                              ),
+                                                              Expanded(
+                                                                flex: 1,
+                                                                child: Center(
+                                                                  child: Text(
+                                                                      'Item $index'),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ).then((value) {
+                                            setState(() {});
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 100, // 너비 설정
+                                          height: 100, // 높이 설정
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[200], // 배경색 설정
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.add, // 추가 아이콘
+                                              size: 50, // 아이콘 크기
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          );
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                  ),
+                  Text(
+                    '${min(curQuizIndex + 1, widget.quizLayout.getQuizCount())} / ${widget.quizLayout.getQuizCount()}',
                     style: TextStyle(
                       fontSize: 36, // Adjust as needed
                       color: Colors.black, // Adjust as needed
                     ),
                   ),
-                ),
-              ),
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      0.1 * screenShortestSide), // Adjust as needed
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () async {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Container(
-                                width: double.maxFinite,
-                                child: GridView.count(
-                                  shrinkWrap: true,
-                                  physics: ScrollPhysics(),
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1,
-                                  children: List.generate(8, (index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context, 'Item $index');
-                                      },
-                                      child: Card(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Expanded(
-                                              flex: 3,
-                                              child: Image.asset(
-                                                  'images/one.jpg',
-                                                  fit: BoxFit.cover),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Center(
-                                                child: Text('Item $index'),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }),
-                                ),
-                              ),
-                            );
-                          },
-                        ).then((value) {
-                          setState(() {
-                            
-                          });
-                        });
-                        // Handle tap event here
-                      },
-                      child: DottedBorder(
-                        borderType: BorderType.RRect,
-                        radius: Radius.circular(
-                            0.1 * screenShortestSide), // Adjust as needed
-                        padding: EdgeInsets.all(
-                            0.05 * screenShortestSide), // Adjust as needed
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(12)), // Adjust as needed
-                          child: Container(
-                            width: 0.7 * screenShortestSide, // Adjust as needed
-                            height:
-                                0.7 * screenShortestSide, // Adjust as needed
-                            color: Colors.transparent, // Adjust as needed
-                            child: Icon(
-                              Icons.add,
-                              size: 0.7 * screenShortestSide,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                  Spacer(flex: 1),
+                ],
+              )),
             ],
           ),
         ),
@@ -193,5 +251,74 @@ class _MakingQuizState extends State<MakingQuiz> {
             )
           : null,
     );
+  }
+
+  void moveToQuizWidgetGenerator(int n) {
+    switch (n) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget1(),
+          ),
+        ).then((result) {
+          if (result is Quiz1) {
+            setState(() {
+              widget.quizLayout.addQuiz(result);
+            });
+            // 필요한 추가 작업을 여기에 수행합니다.
+          }
+        });
+
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget2(),
+          ),
+        ).then((result) {
+          if (result is Quiz2) {
+            setState(() {
+              widget.quizLayout.addQuiz(result);
+            });
+            // 필요한 추가 작업을 여기에 수행합니다.
+          }
+        });
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget3(),
+          ),
+        ).then((result) {
+          if (result is Quiz3) {
+            setState(() {
+              widget.quizLayout.addQuiz(result);
+            });
+            // 필요한 추가 작업을 여기에 수행합니다.
+          }
+        });
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget4(),
+          ),
+        ).then((result) {
+          if (result is Quiz4) {
+            setState(() {
+              widget.quizLayout.addQuiz(result);
+            });
+            // 필요한 추가 작업을 여기에 수행합니다.
+          }
+        });
+        break;
+      default:
+        // Handle the default case here
+        break;
+    }
   }
 }

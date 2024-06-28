@@ -17,15 +17,34 @@ abstract class AbstractQuiz {
       required this.ans,
       required this.question});
 
-  void setLayoutType(int newLayoutType);
-  int getLayoutType();
-  void addAnswer(String newString);
-  void removeAnswer(String stringToRemove);
-  List<String> getAnswers();
+  void addAnswer(String newString){
+    answers.add(newString);
+  }
+  void removeAnswer(String stringToRemove){
+    answers.remove(stringToRemove);
+  }
+  void setAnswerAt(int index, String newString){
+    answers[index] = newString;
+  }
+  void removeAnswerAt(int index){
+    answers.removeAt(index);
+  }
+
+  List<String> getAnswers(){
+    return answers;
+  }
   void addAns(int newAns);
   bool checkAns(String userAns);
   Image? getImage();
   void setImage(Image newImage);
+
+  int getLayoutType() {
+    return layoutType;
+  }
+
+  void setLayoutType(int newLayoutType) {
+    layoutType = newLayoutType;
+  }
 
   Future<String> getLocalPath() async {
     final directory = await getApplicationDocumentsDirectory();
