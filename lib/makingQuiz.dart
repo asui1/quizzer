@@ -10,10 +10,14 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
-import 'package:quizzer/Widgets/quizWidget1Generator.dart';
-import 'package:quizzer/Widgets/quizWidget2Generator.dart';
-import 'package:quizzer/Widgets/quizWidget3Generator.dart';
-import 'package:quizzer/Widgets/quizWidget4Generator.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget1Viewer.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/config.dart';
 
 import 'Class/quizLayout.dart';
@@ -120,11 +124,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                                       color: Colors.grey,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        'Page $index',
-                                        style: TextStyle(fontSize: 24),
-                                      ),
+                                    child: IgnorePointer(
+                                      ignoring: true,
+                                      child: getQuizView(widget.quizLayout.getQuiz(index).getLayoutType()),
                                     ),
                                   )
                                 : ClipRRect(
@@ -319,6 +321,36 @@ class _MakingQuizState extends State<MakingQuiz> {
       default:
         // Handle the default case here
         break;
+    }
+  }
+  Widget getQuizView(int n) {
+    switch (n) {
+      case 1:
+        return QuizView1(
+          quizTag: 999,
+          screenHeightModifier: 0.5,
+          screenWidthModifier: 0.65,
+        );
+      case 2:
+        return QuizView2(
+          quizTag: 999,
+          screenHeightModifier: 0.5,
+          screenWidthModifier: 0.65,
+        );
+      case 3:
+        return QuizView3(
+          quizTag: 999,
+          screenHeightModifier: 0.5,
+          screenWidthModifier: 0.65,
+        );
+      case 4:
+        return QuizView4(
+          quizTag: 999,
+          screenHeightModifier: 0.5,
+          screenWidthModifier: 0.65,
+        );
+      default:
+        return Container(); // Handle the default case here
     }
   }
 }

@@ -52,10 +52,12 @@ class _QuizWidget2State extends State<QuizWidget2> {
                 quiz.setQuestion(value);
               },
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: AppConfig.smallPadding),
             Container(
-              height: 300.0,
+              height: AppConfig.screenHeight * 0.4,
+              width: AppConfig.screenWidth * 0.8,
               child: TableCalendar(
+                shouldFillViewport: true,
                 firstDay: DateTime.utc(
                     quiz.getCenterDate()[0] - quiz.getYearRange(), 1, 1),
                 lastDay: DateTime.utc(
@@ -119,46 +121,51 @@ class _QuizWidget2State extends State<QuizWidget2> {
             ),
             //시작 날짜 ~ 끝나는 날 설정하도록 하기
             Text("중심 날짜를 선택하세요."),
-            SizedBox(height: 10.0),
+            SizedBox(height: AppConfig.smallPadding),
 
-            buildDatePicker(context, quiz, (List<int> date) {
-              setState(() {
-                quiz.setCenterDate(date);
-                curFocus = DateTime.utc(date[0], date[1], date[2]);
-              });
-            }, true, false, () {}, -1),
-            SizedBox(height: 20.0),
-            Container(
-              width: 100, // Adjust the width as needed
-              child: TextField(
-                controller: yearController,
-                keyboardType: TextInputType.number,
-                onSubmitted: (value) {
-                  int? yearValue = int.tryParse(value);
-                  if (yearValue != null) {
-                    setState(() {
-                      quiz.setYearRange(yearValue);
-                    });
-                  } else {}
-                },
-                decoration: InputDecoration(
-                  labelText: '년도 범위',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+            buildDatePicker(
+              context,
+              quiz,
+              (List<int> date) {
+                setState(() {
+                  quiz.setCenterDate(date);
+                  curFocus = DateTime.utc(date[0], date[1], date[2]);
+                });
+              },
+              true,
+              false,
+              () {},
+              -1,
+              true,
+              (value) {
+                int? yearValue = int.tryParse(value);
+                if (yearValue != null) {
+                  setState(() {
+                    quiz.setYearRange(yearValue);
+                  });
+                } else {}
+              },
             ),
-
-            SizedBox(height: 20.0),
+            SizedBox(height: AppConfig.padding),
             Text("정답인 날짜들을 입력해주세요."),
-            SizedBox(height: 10.0),
+            SizedBox(height: AppConfig.smallPadding),
 
             Column(
               children: <Widget>[
                 Column(
                   children: [
+                    ElevatedButton(
+                      child: Text('+'),
+                      onPressed: () {
+                        setState(() {
+                          quiz.addAnswerDate(quiz.getCenterDate());
+                        });
+                      },
+                    ),
+                    SizedBox(height: AppConfig.smallPadding),
                     SizedBox(
                       height:
-                          MediaQuery.of(context).size.height / 3, // 화면 높이의 1/3
+                          MediaQuery.of(context).size.height * 0.3, // 화면 높이의 1/3
                       child: ListView.builder(
                         itemCount: quiz.getAnswerDate().length,
                         itemBuilder: (context, index) {
@@ -177,22 +184,18 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   quiz.removeAnswerDateAt(index);
                                 });
                               },
-                              index);
+                              index,
+                              false,
+                              (value) {});
                         },
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.0),
-                ElevatedButton(
-                  child: Text('+'),
-                  onPressed: () {
-                    setState(() {
-                      quiz.addAnswerDate(quiz.getCenterDate());
-                    });
-                  },
-                ),
               ],
+            ),
+            Spacer(
+              flex: 1,
             ),
             GeneratorDoneButton(
               onPressed: () {

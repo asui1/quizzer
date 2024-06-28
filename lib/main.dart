@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Strings.dart';
-import 'package:quizzer/Widgets/quizWidget1Generator.dart';
-import 'package:quizzer/Widgets/quizWidget1Viewer.dart';
-import 'package:quizzer/Widgets/quizWidget2Viewer.dart';
-import 'package:quizzer/Widgets/quizWidget3Generator.dart';
-import 'package:quizzer/Widgets/quizWidget3Viewer.dart';
-import 'package:quizzer/Widgets/quizWidget4Generator.dart';
-import 'package:quizzer/Widgets/quizWidget4Viewer.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget1Viewer.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
+import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
+import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/config.dart';
 import 'package:quizzer/testpage.dart';
-import 'Widgets/quizWidget2Generator.dart';
 import 'searchScreen.dart';
 import 'dart:math' as math;
 
@@ -151,7 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConfig.borderRadius),
+                      borderRadius:
+                          BorderRadius.circular(AppConfig.borderRadius),
                     ),
                     elevation: 8, // Add elevation to make the button pop out
                     foregroundColor: const Color.fromARGB(
@@ -165,14 +166,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: screenHeight / 6,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.1),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // 2열로 버튼 배치
                     childAspectRatio: 1,
                     crossAxisSpacing: screenWidth * 0.2, // 가로 간격
-                    mainAxisSpacing: screenHeight/ 10, // 세로 간격
+                    mainAxisSpacing: screenHeight / 10, // 세로 간격
                   ),
                   itemCount: 8, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
                   shrinkWrap: true, // GridView의 높이를 자동으로 조정
@@ -211,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView1(
-                    quizTag: 999,
+                    quizTag: 999, screenHeightModifier: 1, screenWidthModifier: 1,
                   )),
         );
         break;
@@ -226,8 +226,9 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView2(
-                    quizTag: 999,
-                  )),
+                  quizTag: 999,
+                  screenHeightModifier: AppConfig.screenHeight,
+                  screenWidthModifier: AppConfig.screenWidth)),
         );
         break;
       case 5:

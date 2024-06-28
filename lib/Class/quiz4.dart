@@ -12,7 +12,7 @@ class Quiz4 extends AbstractQuiz {
   List<int?> connectionAnswerIndex = [];
 
   Quiz4({
-    int layoutType = 3,
+    int layoutType = 4,
     required List<String> answers,
     required List<bool> ans,
     required String question,
@@ -125,11 +125,6 @@ class Quiz4 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-  @override
-  int getLayoutType() {
-    // TODO: implement getLayoutType
-    throw UnimplementedError();
-  }
 
   @override
   Future<Quiz4> loadQuiz(dynamic jsonData) {

@@ -3,10 +3,15 @@
 makingquiz 페이지 완성하기.
 
 기능 목록:
-+ 버튼 누르고 item 선택하면 해당 WIdgetGenerator로 이동.
- - QuizWidget2 Generator 화면 크기에 맞게 조절 필요.
 
-그리고 네모 모양 속에 WidgetViewer를 이용해 상호작용 불가능한 미리보기로 확인 가능.
+6/29 TODO
+
+현재 QuizView1은 괜찮은 상태
+View2는 calendar가 좀 깨지는데 상단 바 크기만 조절하면 괜찮을듯.
+VIew3, View4는 크기가 너무 커짐
+View3은 크기만 좀 줄이면 문제없음.
+View4의 경우 포인터 드래그를 다시 확인해봐야함.
+
 
 추가 예정?
 위젯 드래그해서 순서 바꾸는 기능.

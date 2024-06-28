@@ -73,11 +73,6 @@ class Quiz3 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-  @override
-  int getLayoutType() {
-    // TODO: implement getLayoutType
-    throw UnimplementedError();
-  }
 
   @override
   Future<Quiz3> loadQuiz(dynamic jsonData) {

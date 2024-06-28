@@ -53,6 +53,7 @@ class Quiz2 extends AbstractQuiz {
   }
 
   void addAnswerDate(List<int> newAnswerDate) {
+    answerDate = List<List<int>>.from(answerDate);
     answerDate.add(newAnswerDate);
     maxAnswerSelection = answerDate.length;
   }
@@ -160,7 +161,6 @@ class Quiz2 extends AbstractQuiz {
       answerDate: jsonData['answerDate'],
     );
   }
-
 
   @override
   Map<String, dynamic> toJson() {

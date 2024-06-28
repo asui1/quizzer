@@ -5,8 +5,15 @@ import 'package:quizzer/config.dart';
 
 class QuizView1 extends StatefulWidget {
   final int quizTag; // 퀴즈 태그
+  final double screenWidthModifier;
+  final double screenHeightModifier;
 
-  QuizView1({Key? key, required this.quizTag}) : super(key: key);
+  QuizView1(
+      {Key? key,
+      required this.quizTag,
+      this.screenHeightModifier = 1,
+      this.screenWidthModifier = 1})
+      : super(key: key);
 
   @override
   _QuizView1State createState() => _QuizView1State();
@@ -76,10 +83,10 @@ class _QuizView1State extends State<QuizView1> {
               padding: EdgeInsets.all(AppConfig.padding),
               child: Column(
                 children: <Widget>[
-                  QuestionViewer(question: quizData.getQuestion()),
-                  SizedBox(height: AppConfig.screenHeight * 0.02),
-                  _buildQuizBody(quizData),
-                  SizedBox(height: AppConfig.screenHeight * 0.02),
+                  QuestionViewer(question: quizData.getQuestion(), fontSizeModifier: widget.screenWidthModifier),
+                  SizedBox(height: AppConfig.screenHeight * 0.02 * widget.screenHeightModifier),
+                  _buildQuizBody(quizData, widget.screenWidthModifier),
+                  SizedBox(height: AppConfig.screenHeight * 0.02 * widget.screenHeightModifier),
                   Expanded(
                     child: ListView.builder(
                         itemCount: quizData.getAnswers().length,
@@ -102,7 +109,7 @@ class _QuizView1State extends State<QuizView1> {
                             ),
                             title: Text(
                               quizData.getAnswerAt(order[newIndex]),
-                              style: TextStyle(fontSize: AppConfig.fontSize),
+                              style: TextStyle(fontSize: AppConfig.fontSize * widget.screenWidthModifier),
                             ),
                             onTap: () {
                               setState(() {
@@ -134,13 +141,13 @@ class _QuizView1State extends State<QuizView1> {
   }
 }
 
-Widget _buildQuizBody(Quiz1 quiz) {
+Widget _buildQuizBody(Quiz1 quiz, double screenWidthModifier) {
   switch (quiz.getBodyType()) {
     case 0:
       return Container();
     case 1:
       return Container(
-        width: AppConfig.screenWidth * 0.8,
+        width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
         padding: EdgeInsets.all(8.0), // Add padding around the text
         decoration: BoxDecoration(
           border: Border.all(
@@ -151,12 +158,14 @@ Widget _buildQuizBody(Quiz1 quiz) {
         child: Text(
           quiz.getBodyText(),
           style: TextStyle(
-            fontSize: AppConfig.fontSize,
+            fontSize: AppConfig.fontSize * screenWidthModifier,
           ),
         ),
       );
     case 2:
       return Image.asset(
+        height: AppConfig.screenHeight * 0.3 * screenWidthModifier,
+        width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
         quiz.getImageFile().path,
         fit: BoxFit.cover,
       );

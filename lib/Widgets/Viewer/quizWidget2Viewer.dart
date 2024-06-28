@@ -8,8 +8,15 @@ double fontSizeBase = 10.0;
 
 class QuizView2 extends StatefulWidget {
   final int quizTag; // 퀴즈 태그
+  final double screenWidthModifier;
+  final double screenHeightModifier;
 
-  QuizView2({Key? key, required this.quizTag}) : super(key: key);
+  QuizView2(
+      {Key? key,
+      required this.quizTag,
+      this.screenWidthModifier = 1,
+      this.screenHeightModifier = 1})
+      : super(key: key);
 
   @override
   _QuizView2State createState() => _QuizView2State();
@@ -80,10 +87,12 @@ class _QuizView2State extends State<QuizView2> {
               padding: EdgeInsets.all(AppConfig.padding),
               child: Column(
                 children: <Widget>[
-                  QuestionViewer(question: quizData.getQuestion()),
+                  QuestionViewer(question: quizData.getQuestion(), fontSizeModifier: widget.screenWidthModifier,),
                   Container(
-                    height: 450.0,
+                    height: AppConfig.screenHeight * 0.5 * widget.screenHeightModifier,
+                    width: AppConfig.screenWidth * 0.8 * widget.screenWidthModifier,
                     child: TableCalendar(
+                      shouldFillViewport: true,
                       firstDay: DateTime.utc(
                           quizData.getCenterDate()[0] - quizData.getYearRange(),
                           1,
@@ -161,7 +170,8 @@ class _QuizView2State extends State<QuizView2> {
                                 '${day.day}',
                                 style: TextStyle(
                                     color: Colors
-                                        .black), // Making text color similar to other days
+                                        .black,
+                                        ), // Making text color similar to other days
                               ),
                             ),
                           );
@@ -169,6 +179,26 @@ class _QuizView2State extends State<QuizView2> {
                       ),
                     ),
                   ),
+                  SizedBox(height: AppConfig.padding),
+                  Text(
+                    "선택된 날짜들",
+                    style: TextStyle(fontSize: AppConfig.fontSize * widget.screenWidthModifier),
+                  ),
+                  SizedBox(height: AppConfig.padding),
+                  Center(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: highlightedDates.length,
+                      itemBuilder: (context, index) {
+                        DateTime date = highlightedDates[index];
+                        return Text(
+                          '${index + 1}. ${date.year}, ${date.month}, ${date.day}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: AppConfig.fontSize * 1.5 * widget.screenWidthModifier),
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             ),

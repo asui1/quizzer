@@ -9,8 +9,15 @@ double fontSizeBase = 10.0;
 
 class QuizView4 extends StatefulWidget {
   final int quizTag;
+  final double screenWidthModifier;
+  final double screenHeightModifier;
 
-  QuizView4({Key? key, required this.quizTag}) : super(key: key);
+  QuizView4(
+      {Key? key,
+      required this.quizTag,
+      this.screenHeightModifier = 1,
+      this.screenWidthModifier = 1})
+      : super(key: key);
 
   @override
   _QuizView4State createState() => _QuizView4State();
@@ -121,8 +128,10 @@ class _QuizView4State extends State<QuizView4> {
                   mainAxisAlignment:
                       MainAxisAlignment.center, // Vertically center the content
                   children: <Widget>[
-                    QuestionViewer(question: quizData.getQuestion()),
-                    SizedBox(height: 20.0),
+                    QuestionViewer(
+                        question: quizData.getQuestion(),
+                        fontSizeModifier: widget.screenWidthModifier),
+                    SizedBox(height: AppConfig.padding),
                     Expanded(
                       // ListView.builder를 Expanded로 감싸기
                       child: ListView.builder(
@@ -131,14 +140,20 @@ class _QuizView4State extends State<QuizView4> {
                         itemBuilder: (context, index) {
                           // 나머지 요소들은 기존 로직을 따름
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
+                            padding: EdgeInsets.only(
+                                bottom: AppConfig.padding *
+                                    widget.screenHeightModifier),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5), // 텍스트 주변에 여백 추가
+                                        horizontal: AppConfig.padding *
+                                            2 *
+                                            widget.screenWidthModifier,
+                                        vertical: AppConfig.padding *
+                                            widget
+                                                .screenWidthModifier), // 텍스트 주변에 여백 추가
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: Colors.blue,
@@ -150,15 +165,19 @@ class _QuizView4State extends State<QuizView4> {
                                       quizData.getAnswerAt(index),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize:
-                                              fontSizeBase * 3), // 텍스트 스타일 설정
+                                          fontSize: AppConfig.fontSize *
+                                              3 *
+                                              widget
+                                                  .screenWidthModifier), // 텍스트 스타일 설정
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  width: 200,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0),
+                                  width: AppConfig.screenWidth *
+                                      0.3 *
+                                      widget.screenWidthModifier,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConfig.largePadding),
                                   child: GestureDetector(
                                     onTapDown: (details) {
                                       setState(() {
@@ -217,15 +236,15 @@ class _QuizView4State extends State<QuizView4> {
                                               end: ends[index]!)
                                           : null,
                                       child: Container(
-                                        height: 100.0,
+                                        height: AppConfig.screenHeight * 0.15 * widget.screenHeightModifier,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Container(
                                               key: leftKeys[index],
-                                              height: 15.0,
-                                              width: 15.0,
+                                              height: 15.0 * widget.screenWidthModifier,
+                                              width: 15.0 * widget.screenWidthModifier,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
@@ -233,8 +252,8 @@ class _QuizView4State extends State<QuizView4> {
                                             ),
                                             Container(
                                               key: rightKeys[index],
-                                              height: 15.0,
-                                              width: 15.0,
+                                              height: 15.0 * widget.screenWidthModifier,
+                                              width: 15.0 * widget.screenWidthModifier,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
@@ -249,8 +268,8 @@ class _QuizView4State extends State<QuizView4> {
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                        vertical: 5), // 텍스트 주변에 여백 추가
+                                        horizontal: AppConfig.largePadding,
+                                        vertical: AppConfig.padding), // 텍스트 주변에 여백 추가
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: Colors.blue,
@@ -263,7 +282,7 @@ class _QuizView4State extends State<QuizView4> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           fontSize:
-                                              fontSizeBase * 3), // 텍스트 스타일 설정
+                                              AppConfig.fontSize * 3 * widget.screenWidthModifier), // 텍스트 스타일 설정
                                     ),
                                   ),
                                 ),

@@ -8,8 +8,15 @@ double fontSizeBase = 10.0;
 
 class QuizView3 extends StatefulWidget {
   final int quizTag; // 퀴즈 태그
+  final double screenWidthModifier;
+  final double screenHeightModifier;
 
-  QuizView3({Key? key, required this.quizTag}) : super(key: key);
+  QuizView3(
+      {Key? key,
+      required this.quizTag,
+      this.screenWidthModifier = 1,
+      this.screenHeightModifier = 1})
+      : super(key: key);
 
   @override
   _QuizView3State createState() => _QuizView3State();
@@ -31,7 +38,7 @@ class _QuizView3State extends State<QuizView3> {
   late Future<void> _loadQuizFuture;
   bool isFirstRun = true;
   late List<String> _items;
-  
+
   @override
   void initState() {
     super.initState();
@@ -74,13 +81,13 @@ class _QuizView3State extends State<QuizView3> {
               padding: EdgeInsets.all(AppConfig.padding),
               child: Column(
                 children: <Widget>[
-                  QuestionViewer(question: quizData.getQuestion()),
-                  SizedBox(height: 20.0),
+                  QuestionViewer(question: quizData.getQuestion(), fontSizeModifier: widget.screenWidthModifier),
+                  SizedBox(height: AppConfig.padding),
                   Expanded(
                     child: ReorderableListView.builder(
                       footer: ListTile(
                         title: Container(
-                          padding: EdgeInsets.all(8.0),
+                          padding: EdgeInsets.all(AppConfig.smallPadding),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black, width: 2.0),
                             borderRadius: BorderRadius.circular(4.0),
@@ -89,7 +96,7 @@ class _QuizView3State extends State<QuizView3> {
                             "Done",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: fontSizeBase * 3,
+                              fontSize: AppConfig.fontSize * 3 * widget.screenWidthModifier,
                             ),
                           ),
                         ),
@@ -106,7 +113,7 @@ class _QuizView3State extends State<QuizView3> {
                               key: Key(item),
                               child: ListTile(
                                 title: Container(
-                                  padding: EdgeInsets.all(8.0), // 텍스트 주변에 패딩 추가
+                                  padding: EdgeInsets.all(AppConfig.padding), // 텍스트 주변에 패딩 추가
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.blue,
@@ -118,14 +125,16 @@ class _QuizView3State extends State<QuizView3> {
                                     _items[index],
                                     textAlign: TextAlign.center, // 텍스트를 가운데 정렬
                                     style: TextStyle(
-                                      fontSize: fontSizeBase * 3,
+                                      fontSize: AppConfig.fontSize * 3 * widget.screenWidthModifier, // 폰트 크기 설정
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                             Icon(
+                              
                               Icons.arrow_downward,
+                              size: AppConfig.fontSize * 2 * widget.screenWidthModifier,
                               color: Colors.blue,
                             )
                           ],
