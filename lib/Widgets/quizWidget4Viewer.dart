@@ -32,11 +32,43 @@ class _QuizView4State extends State<QuizView4> {
   List<GlobalKey> lineKeys = [];
   List<int> curAnswer = [];
   late Future<void> _loadQuizFuture;
+  List<Offset> leftDotGlobal = [];
+  List<Offset> leftDotLinePaintLocal = [];
+  List<Offset> rightDotGlobal = [];
+  bool needUpdate = true;
 
   @override
   void initState() {
     super.initState();
     _loadQuizFuture = loadQuiz();
+  }
+
+  void setOffsets() {
+    if (needUpdate) {
+      leftDotGlobal = leftKeys.map((key) {
+        RenderBox leftDot = key.currentContext!.findRenderObject() as RenderBox;
+        Offset GlobalPosition = leftDot.localToGlobal(Offset.zero);
+        GlobalPosition = Offset(GlobalPosition.dx + leftDot.size.width / 2,
+            GlobalPosition.dy + leftDot.size.height / 2);
+        return GlobalPosition;
+      }).toList();
+      leftDotLinePaintLocal = lineKeys.map((key) {
+        RenderBox linePaint =
+            key.currentContext!.findRenderObject() as RenderBox;
+        Offset position =
+            linePaint.globalToLocal(leftDotGlobal[lineKeys.indexOf(key)]);
+        return position;
+      }).toList();
+      rightDotGlobal = rightKeys.map((key) {
+        RenderBox rightDot =
+            key.currentContext!.findRenderObject() as RenderBox;
+        Offset GlobalPosition = rightDot.localToGlobal(Offset.zero);
+        GlobalPosition = Offset(GlobalPosition.dx + rightDot.size.width / 2,
+            GlobalPosition.dy + rightDot.size.height / 2);
+        return GlobalPosition;
+      }).toList();
+      needUpdate = false;
+    }
   }
 
   Future<void> loadQuiz() async {
@@ -74,6 +106,9 @@ class _QuizView4State extends State<QuizView4> {
               starts.add(null);
               ends.add(null);
               isDragging.add(false);
+              WidgetsBinding.instance!.addPostFrameCallback((_) {
+                setOffsets();
+              });
             }
           }
           // Future가 완료되면 UI 빌드
@@ -125,35 +160,14 @@ class _QuizView4State extends State<QuizView4> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16.0),
                                   child: GestureDetector(
-                                    onPanStart: (details) {
-                                      print("TOUCH DETECTED");
+                                    onTapDown: (details) {
                                       setState(() {
-                                        RenderBox leftDot = leftKeys[index]
-                                            .currentContext!
-                                            .findRenderObject() as RenderBox;
-                                        RenderBox linePaint = lineKeys[index]
-                                            .currentContext!
-                                            .findRenderObject() as RenderBox;
-                                        Offset GlobalPosition =
-                                            leftDot.localToGlobal(Offset.zero);
-                                        GlobalPosition = Offset(
-                                            GlobalPosition.dx +
-                                                leftDot.size.width / 2,
-                                            GlobalPosition.dy +
-                                                leftDot.size.height / 2);
-                                        double distance = (GlobalPosition -
-                                                details.globalPosition)
-                                            .distance;
-                                        print("startDistance");
-                                        print(distance);
-                                        if (distance <= 20) {
-                                          isDragging[index] = true;
-                                          Offset position = linePaint
-                                              .globalToLocal(GlobalPosition);
-                                          starts[index] =
-                                              position; // 드래그 시작 시 시작점 업데이트
-                                          ends[index] = position;
-                                        }
+                                        isDragging[index] = true;
+                                        Offset position =
+                                            leftDotLinePaintLocal[index];
+                                        starts[index] =
+                                            position; // 드래그 시작 시 시작점 업데이트
+                                        ends[index] = position;
                                       });
                                     },
                                     onPanUpdate: (details) {
@@ -167,32 +181,23 @@ class _QuizView4State extends State<QuizView4> {
                                       if (isDragging[index] == false) return;
                                       setState(() {
                                         for (var key in rightKeys) {
-                                          RenderBox rightDot = key
-                                              .currentContext!
-                                              .findRenderObject() as RenderBox;
-                                          Offset GlobalPosition = rightDot
-                                              .localToGlobal(Offset.zero);
-                                          GlobalPosition = Offset(
-                                              GlobalPosition.dx +
-                                                  rightDot.size.width / 2,
-                                              GlobalPosition.dy +
-                                                  rightDot.size.height / 2);
-                                          double distance = (GlobalPosition -
+                                          Offset globalPosition =
+                                              rightDotGlobal[
+                                                  rightKeys.indexOf(key)];
+                                          double distance = (globalPosition -
                                                   details.globalPosition)
                                               .distance;
-                                          print(distance);
                                           if (distance <= 20) {
-                                            print("connected");
                                             RenderBox linePaint =
                                                 lineKeys[index]
                                                         .currentContext!
                                                         .findRenderObject()
                                                     as RenderBox;
                                             Offset position = linePaint
-                                                .globalToLocal(GlobalPosition);
+                                                .globalToLocal(globalPosition);
                                             ends[index] = position;
-                                            curAnswer[index] =
-                                                rightKeys.indexOf(key);
+                                            quizData.setConnectionAnswerIndexAt(
+                                                index, rightKeys.indexOf(key));
                                             break;
                                           } else {
                                             ends[index] = null;
@@ -219,8 +224,8 @@ class _QuizView4State extends State<QuizView4> {
                                           children: <Widget>[
                                             Container(
                                               key: leftKeys[index],
-                                              height: 10.0,
-                                              width: 10.0,
+                                              height: 15.0,
+                                              width: 15.0,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
@@ -228,8 +233,8 @@ class _QuizView4State extends State<QuizView4> {
                                             ),
                                             Container(
                                               key: rightKeys[index],
-                                              height: 10.0,
-                                              width: 10.0,
+                                              height: 15.0,
+                                              width: 15.0,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
