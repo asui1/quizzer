@@ -91,7 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(widget.title,
+            style: TextStyle(
+              fontFamily: MyFonts.gothicA1,
+            )
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -211,7 +215,9 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView1(
-                    quizTag: 999, screenHeightModifier: 1, screenWidthModifier: 1,
+                    quizTag: 999,
+                    screenHeightModifier: 1,
+                    screenWidthModifier: 1,
                   )),
         );
         break;
@@ -226,9 +232,8 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView2(
-                  quizTag: 999,
-                  screenHeightModifier: AppConfig.screenHeight,
-                  screenWidthModifier: AppConfig.screenWidth)),
+                    quizTag: 999,
+                  )),
         );
         break;
       case 5:

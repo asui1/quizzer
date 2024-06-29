@@ -165,8 +165,8 @@ class _QuizView4State extends State<QuizView4> {
                                       quizData.getAnswerAt(index),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
+                                          overflow: TextOverflow.ellipsis,
                                           fontSize: AppConfig.fontSize *
-                                              3 *
                                               widget
                                                   .screenWidthModifier), // 텍스트 스타일 설정
                                     ),
@@ -174,12 +174,13 @@ class _QuizView4State extends State<QuizView4> {
                                 ),
                                 Container(
                                   width: AppConfig.screenWidth *
-                                      0.3 *
+                                      0.4 *
                                       widget.screenWidthModifier,
                                   padding: EdgeInsets.symmetric(
-                                      horizontal: AppConfig.largePadding),
+                                      horizontal: AppConfig.largePadding * widget.screenWidthModifier),
                                   child: GestureDetector(
                                     onTapDown: (details) {
+                                      print("onTapDown ");
                                       setState(() {
                                         isDragging[index] = true;
                                         Offset position =
@@ -190,6 +191,7 @@ class _QuizView4State extends State<QuizView4> {
                                       });
                                     },
                                     onPanUpdate: (details) {
+                                      print("onPanUpdate ");
                                       if (isDragging[index] == false) return;
                                       setState(() {
                                         ends[index] = details
@@ -236,15 +238,19 @@ class _QuizView4State extends State<QuizView4> {
                                               end: ends[index]!)
                                           : null,
                                       child: Container(
-                                        height: AppConfig.screenHeight * 0.15 * widget.screenHeightModifier,
+                                        height: AppConfig.screenHeight *
+                                            0.15 *
+                                            widget.screenHeightModifier,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Container(
                                               key: leftKeys[index],
-                                              height: 15.0 * widget.screenWidthModifier,
-                                              width: 15.0 * widget.screenWidthModifier,
+                                              height: 15.0 *
+                                                  widget.screenWidthModifier,
+                                              width: 15.0 *
+                                                  widget.screenWidthModifier,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
@@ -252,8 +258,10 @@ class _QuizView4State extends State<QuizView4> {
                                             ),
                                             Container(
                                               key: rightKeys[index],
-                                              height: 15.0 * widget.screenWidthModifier,
-                                              width: 15.0 * widget.screenWidthModifier,
+                                              height: 15.0 *
+                                                  widget.screenWidthModifier,
+                                              width: 15.0 *
+                                                  widget.screenWidthModifier,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
                                                 shape: BoxShape.circle,
@@ -268,8 +276,9 @@ class _QuizView4State extends State<QuizView4> {
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: AppConfig.largePadding,
-                                        vertical: AppConfig.padding), // 텍스트 주변에 여백 추가
+                                        horizontal: AppConfig.largePadding * widget.screenWidthModifier,
+                                        vertical:
+                                            AppConfig.padding * widget.screenWidthModifier), // 텍스트 주변에 여백 추가
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: Colors.blue,
@@ -281,8 +290,10 @@ class _QuizView4State extends State<QuizView4> {
                                       quizData.getConnectionAnswerAt(index),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          fontSize:
-                                              AppConfig.fontSize * 3 * widget.screenWidthModifier), // 텍스트 스타일 설정
+                                          overflow: TextOverflow.ellipsis,
+                                          fontSize: AppConfig.fontSize *
+                                              widget
+                                                  .screenWidthModifier), // 텍스트 스타일 설정
                                     ),
                                   ),
                                 ),

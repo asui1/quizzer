@@ -54,7 +54,7 @@ class _QuizView3State extends State<QuizView3> {
     } catch (e) {
       print("퀴즈 로드 실패: $e");
       quizData = Quiz3(
-        answers: ['11', '22', '33', '44', '55'],
+        answers: ['111', '222', '333', '444', '555'],
         ans: [true, false, false, false, false],
         question: "11을 고르세요.",
         maxAnswerSelection: 1,
@@ -85,35 +85,42 @@ class _QuizView3State extends State<QuizView3> {
                   SizedBox(height: AppConfig.padding),
                   Expanded(
                     child: ReorderableListView.builder(
-                      footer: ListTile(
+                      header: ListTile(
                         title: Container(
-                          padding: EdgeInsets.all(AppConfig.smallPadding),
+                          padding: EdgeInsets.all(AppConfig.smallPadding * widget.screenWidthModifier),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.black, width: 2.0),
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: Text(
-                            "Done",
+                            _items[_items.length-1],
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: AppConfig.fontSize * 3 * widget.screenWidthModifier,
+                              fontSize: AppConfig.fontSize * 1.3 * widget.screenWidthModifier,
                             ),
                           ),
                         ),
                       ),
                       buildDefaultDragHandles: false,
-                      itemCount: _items.length,
+                      itemCount: _items.length-1,
                       itemBuilder: (context, index) {
                         final item = _items[index];
                         return Column(
                           key: Key('$item-$index'), // Column에 고유한 Key 추가
                           children: [
+                            Icon(
+                              
+                              Icons.arrow_downward,
+                              size: AppConfig.fontSize * 1.3 * widget.screenWidthModifier,
+                              color: Colors.blue,
+                              
+                            ),
                             ReorderableDragStartListener(
                               index: index,
                               key: Key(item),
                               child: ListTile(
                                 title: Container(
-                                  padding: EdgeInsets.all(AppConfig.padding), // 텍스트 주변에 패딩 추가
+                                  padding: EdgeInsets.all(AppConfig.smallPadding * widget.screenWidthModifier), // 텍스트 주변에 패딩 추가
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         color: Colors.blue,
@@ -125,18 +132,12 @@ class _QuizView3State extends State<QuizView3> {
                                     _items[index],
                                     textAlign: TextAlign.center, // 텍스트를 가운데 정렬
                                     style: TextStyle(
-                                      fontSize: AppConfig.fontSize * 3 * widget.screenWidthModifier, // 폰트 크기 설정
+                                      fontSize: AppConfig.fontSize * 1.3 * widget.screenWidthModifier, // 폰트 크기 설정
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            Icon(
-                              
-                              Icons.arrow_downward,
-                              size: AppConfig.fontSize * 2 * widget.screenWidthModifier,
-                              color: Colors.blue,
-                            )
                           ],
                         );
                       },

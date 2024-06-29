@@ -3,6 +3,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/config.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 double fontSizeBase = 10.0;
 
@@ -87,10 +88,17 @@ class _QuizView2State extends State<QuizView2> {
               padding: EdgeInsets.all(AppConfig.padding),
               child: Column(
                 children: <Widget>[
-                  QuestionViewer(question: quizData.getQuestion(), fontSizeModifier: widget.screenWidthModifier,),
+                  QuestionViewer(
+                    question: quizData.getQuestion(),
+                    fontSizeModifier: widget.screenWidthModifier,
+                  ),
                   Container(
-                    height: AppConfig.screenHeight * 0.5 * widget.screenHeightModifier,
-                    width: AppConfig.screenWidth * 0.8 * widget.screenWidthModifier,
+                    height: AppConfig.screenHeight *
+                        0.5 *
+                        widget.screenHeightModifier,
+                    width: AppConfig.screenWidth *
+                        0.8 *
+                        widget.screenWidthModifier,
                     child: TableCalendar(
                       shouldFillViewport: true,
                       firstDay: DateTime.utc(
@@ -105,6 +113,26 @@ class _QuizView2State extends State<QuizView2> {
                       headerStyle: HeaderStyle(
                         formatButtonVisible: false,
                         titleCentered: true,
+                        headerMargin: EdgeInsets.all(AppConfig.padding *
+                            widget.screenHeightModifier *
+                            0.5),
+                        headerPadding: EdgeInsets.all(AppConfig.padding *
+                            widget.screenWidthModifier *
+                            0.5),
+                        titleTextStyle: TextStyle(
+                          fontSize:
+                              AppConfig.fontSize * widget.screenHeightModifier,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        leftChevronIcon: Icon(
+                          Icons.chevron_left,
+                          size: AppConfig.iconSize * widget.screenWidthModifier,
+                        ),
+                        rightChevronIcon: Icon(
+                          Icons.chevron_right,
+                          size: AppConfig.iconSize * widget.screenWidthModifier,
+                        ),
                       ),
                       onPageChanged: (focusedDay) {
                         // 사용자가 달력의 페이지를 변경할 때 호출됩니다.
@@ -169,9 +197,8 @@ class _QuizView2State extends State<QuizView2> {
                               child: Text(
                                 '${day.day}',
                                 style: TextStyle(
-                                    color: Colors
-                                        .black,
-                                        ), // Making text color similar to other days
+                                  color: Colors.black,
+                                ), // Making text color similar to other days
                               ),
                             ),
                           );
@@ -182,7 +209,9 @@ class _QuizView2State extends State<QuizView2> {
                   SizedBox(height: AppConfig.padding),
                   Text(
                     "선택된 날짜들",
-                    style: TextStyle(fontSize: AppConfig.fontSize * widget.screenWidthModifier),
+                    style: TextStyle(
+                        fontSize:
+                            AppConfig.fontSize * widget.screenWidthModifier),
                   ),
                   SizedBox(height: AppConfig.padding),
                   Center(
@@ -194,7 +223,10 @@ class _QuizView2State extends State<QuizView2> {
                         return Text(
                           '${index + 1}. ${date.year}, ${date.month}, ${date.day}',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: AppConfig.fontSize * 1.5 * widget.screenWidthModifier),
+                          style: TextStyle(
+                              fontSize: AppConfig.fontSize *
+                                  1.5 *
+                                  widget.screenWidthModifier),
                         );
                       },
                     ),

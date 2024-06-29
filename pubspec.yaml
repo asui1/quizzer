@@ -67,6 +67,33 @@ flutter:
   assets:
     - assets/images/
     - assets/jsons/
+
+
+  fonts:
+      - family : GothicA1
+        fonts:
+          - asset: fonts/GothicA1-Black.ttf
+          - asset: fonts/GothicA1-Bold.ttf
+          - asset: fonts/GothicA1-ExtraBold.ttf
+          - asset: fonts/GothicA1-ExtraLight.ttf
+          - asset: fonts/GothicA1-Light.ttf
+          - asset: fonts/GothicA1-Medium.ttf
+          - asset: fonts/GothicA1-Regular.ttf
+          - asset: fonts/GothicA1-SemiBold.ttf
+          - asset: fonts/GothicA1-Thin.ttf
+
+      - family : NotoSansKr
+        fonts:
+          - asset: fonts/NotoSansKr-Black.ttf
+          - asset: fonts/NotoSansKr-Bold.ttf
+          - asset: fonts/NotoSansKr-ExtraBold.ttf
+          - asset: fonts/NotoSansKr-ExtraLight.ttf
+          - asset: fonts/NotoSansKr-Light.ttf
+          - asset: fonts/NotoSansKr-Medium.ttf
+          - asset: fonts/NotoSansKr-Regular.ttf
+          - asset: fonts/NotoSansKr-SemiBold.ttf
+          - asset: fonts/NotoSansKr-Thin.ttf
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

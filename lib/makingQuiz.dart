@@ -45,6 +45,7 @@ class _MakingQuizState extends State<MakingQuiz> {
 
   @override
   Widget build(BuildContext context) {
+    maxQuizIndex = widget.quizLayout.getQuizCount();
     return Scaffold(
       appBar: widget.quizLayout.getIsTopBarVisible()
           ? PreferredSize(
@@ -88,8 +89,8 @@ class _MakingQuizState extends State<MakingQuiz> {
             children: [
               FilpStyle12(
                 quizLayout: widget.quizLayout,
-                onPressedBack: () {},
-                onPressedForward: () {},
+                onPressedBack: onPressedBack,
+                onPressedForward: onPressedForward,
               ),
               Center(
                   child: Column(
@@ -126,7 +127,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                                     ),
                                     child: IgnorePointer(
                                       ignoring: true,
-                                      child: getQuizView(widget.quizLayout.getQuiz(index).getLayoutType()),
+                                      child: getQuizView(widget.quizLayout
+                                          .getQuiz(index)
+                                          .getLayoutType()),
                                     ),
                                   )
                                 : ClipRRect(
@@ -232,9 +235,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                       color: widget.quizLayout.getImage(2).getColor(),
                       height: widget.quizLayout.getBottomBarHeight(),
                       child: BottomBarStack(
-                          quizLayout: widget.quizLayout,
-                          onPressedBack: () {},
-                          onPressedForward: () {}),
+                        quizLayout: widget.quizLayout,
+                        onPressedBack: onPressedBack,
+                        onPressedForward: onPressedForward,
+                      ),
                     )
                   : Container(
                       height: widget.quizLayout.getBottomBarHeight(),
@@ -323,6 +327,7 @@ class _MakingQuizState extends State<MakingQuiz> {
         break;
     }
   }
+
   Widget getQuizView(int n) {
     switch (n) {
       case 1:
@@ -352,5 +357,25 @@ class _MakingQuizState extends State<MakingQuiz> {
       default:
         return Container(); // Handle the default case here
     }
+  }
+
+  void onPressedBack() {
+    setState(() {
+      if (curQuizIndex > 0) {
+        curQuizIndex--;
+        _pageController.animateToPage(curQuizIndex,
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      }
+    });
+  }
+
+  void onPressedForward() {
+    setState(() {
+      if (curQuizIndex < maxQuizIndex + 1) {
+        curQuizIndex++;
+        _pageController.animateToPage(curQuizIndex,
+            duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+      }
+    });
   }
 }

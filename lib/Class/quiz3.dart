@@ -23,8 +23,13 @@ class Quiz3 extends AbstractQuiz {
             question: question);
 
   void setShuffledAnswers(){
-    ShuffledAnswers = answers;
-    ShuffledAnswers.shuffle();
+    
+    List<String> tempShuffled = answers.sublist(1);
+    tempShuffled.shuffle();
+    ShuffledAnswers = [...answers];
+
+    ShuffledAnswers.replaceRange(0, answers.length-1, tempShuffled);
+    ShuffledAnswers[answers.length-1] = answers[0];
   }
 
   bool isShuffledAnswersEmpty(){
