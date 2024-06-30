@@ -4,24 +4,22 @@ import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/config.dart';
 
 class QuizWidget3 extends StatefulWidget {
+  final Quiz3 quiz;
+  QuizWidget3({Key? key, required this.quiz}) : super(key: key);
+
   @override
   _QuizWidget3State createState() => _QuizWidget3State();
 }
 
+
 class _QuizWidget3State extends State<QuizWidget3> {
-  Quiz3 quiz = Quiz3(
-    answers: ['', ''],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-  );
   late TextEditingController questionController;
   List<TextEditingController> _controllers = [];
 
   @override
   void initState() {
     super.initState();
-    questionController = TextEditingController(text: quiz.getQuestion());
+    questionController = TextEditingController(text: widget.quiz.getQuestion());
     _initControllers();
   }
 
@@ -32,7 +30,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
   }
 
   void _initControllers() {
-    _controllers = quiz
+    _controllers = widget.quiz
         .getAnswers()
         .map((answer) => TextEditingController(text: answer))
         .toList();
@@ -48,14 +46,14 @@ class _QuizWidget3State extends State<QuizWidget3> {
             questionInputTextField(
               controller: questionController,
               onChanged: (value) {
-                quiz.setQuestion(value);
+                widget.quiz.setQuestion(value);
               },
             ),
             SizedBox(height: 20.0),
             Column(
               children: <Widget>[
                 for (int index = 0;
-                    index < quiz.getAnswersLength();
+                    index < widget.quiz.getAnswersLength();
                     index++) ...[
                   Row(
                     children: [
@@ -70,7 +68,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                           ),
                           onChanged: (value) {
                             setState(() {
-                              quiz.setAnswerAt(index, value);
+                              widget.quiz.setAnswerAt(index, value);
                             });
                           },
                         ),
@@ -79,7 +77,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                         icon: Icon(Icons.remove_circle_outline),
                         onPressed: () {
                           setState(() {
-                            quiz.removeAnswerAt(index);
+                            widget.quiz.removeAnswerAt(index);
                             _controllers
                                 .removeAt(index); // 컨트롤러 리스트에서도 해당 항목 제거
                           });
@@ -88,7 +86,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                     ],
                   ),
                   if (index <
-                      quiz.answers.length -
+                      widget.quiz.answers.length -
                           1) // 마지막 TextField 다음에는 아이콘을 추가하지 않음
                     IgnorePointer(
                       child: Padding(
@@ -110,7 +108,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
               child: Icon(Icons.add),
               onPressed: () {
                 setState(() {
-                  quiz.addAnswer('');
+                  widget.quiz.addAnswer('');
                   _controllers.add(TextEditingController());
                 });
               },
@@ -120,8 +118,8 @@ class _QuizWidget3State extends State<QuizWidget3> {
             ),
             GeneratorDoneButton(
               onPressed: () {
-                quiz.saveQuiz(9999);
-                Navigator.pop(context, quiz);
+                widget.quiz.saveQuiz(9999);
+                Navigator.pop(context, widget.quiz);
               },
             ),
           ],

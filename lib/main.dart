@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Class/quiz2.dart';
+import 'package:quizzer/Class/quiz3.dart';
+import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Strings.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
@@ -207,7 +211,10 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget1()),
+          MaterialPageRoute(builder: (context) => QuizWidget1(quiz: Quiz1(
+      answers: ['', '', '', '', ''],
+      ans: [false, false, false, false, false],
+      question: ''),)),
         );
         break;
       case 2:
@@ -224,7 +231,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget2()),
+          MaterialPageRoute(builder: (context) => QuizWidget2(quiz: Quiz2(
+    answers: [],
+    ans: [],
+    question: '',
+    maxAnswerSelection: 1,
+  ),)),
         );
         break;
       case 4:
@@ -239,7 +251,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 5:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget3()),
+          MaterialPageRoute(builder: (context) => QuizWidget3(quiz: Quiz3(
+    answers: ['', ''],
+    ans: [],
+    question: '',
+    maxAnswerSelection: 1,
+  ))),
         );
         break;
       case 6:
@@ -254,7 +271,14 @@ class _MyHomePageState extends State<MyHomePage> {
       case 7:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget4()),
+          MaterialPageRoute(builder: (context) => QuizWidget4(quiz: Quiz4(
+    answers: ['', ''],
+    ans: [],
+    question: '',
+    maxAnswerSelection: 1,
+    connectionAnswers: ['', ''],
+    connectionAnswerIndex: [null, null],
+  ))),
         );
         break;
       case 8:

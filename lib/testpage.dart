@@ -18,21 +18,16 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Scaffold (
-      body:
-    GestureDetector(
-      onTap: _toggleUIState,
-      child: 
-      Align(
-        alignment: Alignment.center,
+    return Scaffold(
+      body: GestureDetector(
+        onTap: _toggleUIState,
+        child: Align(
+          alignment: Alignment.center,
           child: Padding(
             padding: const EdgeInsets.all(16.0), // adjust the value as needed
-            child: QuizWidget1(),
           ),
         ),
-    ),
+      ),
     );
   }
 }
-

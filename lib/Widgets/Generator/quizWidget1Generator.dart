@@ -9,23 +9,22 @@ import 'package:quizzer/Widgets/quizBodyTextImageYoutube.dart';
 import 'package:quizzer/config.dart';
 
 class QuizWidget1 extends StatefulWidget {
+  final Quiz1 quiz;
+  QuizWidget1({Key? key, 
+  required this.quiz}) : super(key: key);
   @override
   _QuizWidget1State createState() => _QuizWidget1State();
 }
 
 class _QuizWidget1State extends State<QuizWidget1> {
-  Quiz1 quiz = Quiz1(
-      answers: ['', '', '', '', ''],
-      ans: [false, false, false, false, false],
-      question: '');
   late TextEditingController questionController;
   late List<TextEditingController> _controllers;
 
   @override
   void initState() {
     super.initState();
-    questionController = TextEditingController(text: quiz.getQuestion());
-    _controllers = quiz.answers
+    questionController = TextEditingController(text: widget.quiz.getQuestion());
+    _controllers = widget.quiz.answers
         .map((answer) => TextEditingController(text: answer))
         .toList();
   }
@@ -41,10 +40,10 @@ class _QuizWidget1State extends State<QuizWidget1> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> answers = quiz.getAnswers();
-    int trueCount = quiz.getAnsLength();
-    bool shuffleAnswers = quiz.getShuffleAnswers();
-    int maxAnswerSelection = quiz.getMaxAnswerSelection();
+    List<String> answers = widget.quiz.getAnswers();
+    int trueCount = widget.quiz.getAnsLength();
+    bool shuffleAnswers = widget.quiz.getShuffleAnswers();
+    int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
     TextEditingController controller =
         TextEditingController(text: maxAnswerSelection.toString());
     return Scaffold(
@@ -55,7 +54,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
             questionInputTextField(
               controller: questionController,
               onChanged: (value) {
-                quiz.setQuestion(value);
+                widget.quiz.setQuestion(value);
               },
             ),
             SizedBox(height: AppConfig.screenHeight * 0.02),
@@ -63,10 +62,10 @@ class _QuizWidget1State extends State<QuizWidget1> {
               context: context,
               updateStateCallback: (int value) {
                 setState(() {
-                  quiz.setBodyType(value);
+                  widget.quiz.setBodyType(value);
                 });
               },
-              quiz1: quiz,
+              quiz1: widget.quiz,
             ),
             SizedBox(height: AppConfig.screenHeight * 0.02),
             Expanded(
@@ -86,7 +85,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                           ),
                           onPressed: () {
                             setState(() {
-                              quiz.addAnswer('');
+                              widget.quiz.addAnswer('');
                               _controllers.add(TextEditingController(text: ''));
                             });
                           },
@@ -97,13 +96,13 @@ class _QuizWidget1State extends State<QuizWidget1> {
                   } else {
                     return ListTile(
                       leading: Checkbox(
-                        value: quiz.isCorrectAns(index),
+                        value: widget.quiz.isCorrectAns(index),
                         onChanged: (bool? newValue) {
                           setState(() {
                             if (newValue != null) {
                               if (trueCount < maxAnswerSelection ||
                                   newValue == false) {
-                                quiz.changeCorrectAns(index, newValue);
+                                widget.quiz.changeCorrectAns(index, newValue);
                               }
                             }
                           });
@@ -114,7 +113,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                         controller: _controllers[index],
                         onChanged: (value) {
                           setState(() {
-                            quiz.setAnswer(index, value);
+                            widget.quiz.setAnswer(index, value);
                           });
                         },
                         decoration: InputDecoration(
@@ -125,7 +124,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                         icon: Icon(Icons.delete),
                         onPressed: () {
                           setState(() {
-                            quiz.removeAnswerAt(index);
+                            widget.quiz.removeAnswerAt(index);
                             _controllers.removeAt(index);
                           });
                         },
@@ -144,7 +143,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                   onChanged: (bool? newValue) {
                     setState(() {
                       if (newValue != null) {
-                        quiz.setShuffleAnswers(newValue);
+                        widget.quiz.setShuffleAnswers(newValue);
                       }
                     });
                   },
@@ -160,7 +159,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                     ], // Only numbers can be entered
                     onChanged: (value) {
                       setState(() {
-                        quiz.setMaxAnswerSelection(
+                        widget.quiz.setMaxAnswerSelection(
                             int.tryParse(value) ?? maxAnswerSelection);
                       });
                     },
@@ -171,8 +170,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
             ),
             GeneratorDoneButton(
               onPressed: () {
-                quiz.saveQuiz(9999);
-                Navigator.pop(context, quiz);
+                Navigator.pop(context, widget.quiz);
               },
             ),
           ],

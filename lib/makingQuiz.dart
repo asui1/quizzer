@@ -95,7 +95,7 @@ class _MakingQuizState extends State<MakingQuiz> {
               Center(
                   child: Column(
                 children: [
-                  Spacer(flex: 1),
+                  Spacer(flex: 2),
                   Container(
                     height: AppConfig.screenHeight /
                         2, // AppConfig.ScreenHeight의 1/2 크기로 설정
@@ -219,6 +219,45 @@ class _MakingQuizState extends State<MakingQuiz> {
                     ),
                   ),
                   Spacer(flex: 1),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly, // 버튼들 사이에 균등한 공간 배분
+                    children: <Widget>[
+                      // 첫 번째 버튼: 체크박스와 텍스트 조합으로 "문제 순서 섞기" 구현
+                      Row(
+                        mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                        children: [
+                          Checkbox(
+                            value: false, // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
+                            onChanged: (bool? newValue) {
+                              // 체크박스 클릭 시 동작
+                              // 여기에 체크박스 상태 변경 로직 추가
+                            },
+                          ),
+                          Text("문제 순서 섞기"), // 체크박스 옆에 표시될 텍스트
+                        ],
+                      ),
+                      // 두 번째 버튼: 임시 저장 버튼
+                      ElevatedButton(
+                        onPressed: () {
+                          // 임시 저장 버튼 클릭 시 동작
+                          // 여기에 임시 저장 로직 추가
+                        },
+                        child: Text('임시 저장'),
+                      ),
+                      // 세 번째 버튼: 저장 버튼
+                      ElevatedButton(
+                        onPressed: () {
+                          // 저장 버튼 클릭 시 동작
+                          // 여기에 저장 로직 추가
+                        },
+                        child: Text('저장'),
+                      ),
+                    ],
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
                 ],
               )),
             ],
@@ -265,7 +304,12 @@ class _MakingQuizState extends State<MakingQuiz> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuizWidget1(),
+            builder: (context) => QuizWidget1(
+              quiz: Quiz1(
+                  answers: ['', '', '', '', ''],
+                  ans: [false, false, false, false, false],
+                  question: ''),
+            ),
           ),
         ).then((result) {
           if (result is Quiz1) {
@@ -281,7 +325,14 @@ class _MakingQuizState extends State<MakingQuiz> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuizWidget2(),
+            builder: (context) => QuizWidget2(
+              quiz: Quiz2(
+                answers: [],
+                ans: [],
+                question: '',
+                maxAnswerSelection: 1,
+              ),
+            ),
           ),
         ).then((result) {
           if (result is Quiz2) {
@@ -296,7 +347,14 @@ class _MakingQuizState extends State<MakingQuiz> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuizWidget3(),
+            builder: (context) => QuizWidget3(
+              quiz: Quiz3(
+                answers: ['', ''],
+                ans: [],
+                question: '',
+                maxAnswerSelection: 1,
+              ),
+            ),
           ),
         ).then((result) {
           if (result is Quiz3) {
@@ -311,7 +369,15 @@ class _MakingQuizState extends State<MakingQuiz> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => QuizWidget4(),
+            builder: (context) => QuizWidget4(
+                quiz: Quiz4(
+              answers: ['', ''],
+              ans: [],
+              question: '',
+              maxAnswerSelection: 1,
+              connectionAnswers: ['', ''],
+              connectionAnswerIndex: [null, null],
+            )),
           ),
         ).then((result) {
           if (result is Quiz4) {

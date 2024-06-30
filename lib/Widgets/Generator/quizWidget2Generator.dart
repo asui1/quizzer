@@ -8,17 +8,14 @@ import 'package:quizzer/config.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class QuizWidget2 extends StatefulWidget {
+  final Quiz2 quiz;
+  QuizWidget2({Key? key, required this.quiz}) : super(key: key);
+
+
   @override
   _QuizWidget2State createState() => _QuizWidget2State();
 }
-
 class _QuizWidget2State extends State<QuizWidget2> {
-  Quiz2 quiz = Quiz2(
-    answers: [],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-  );
   late TextEditingController questionController;
   late DateTime curFocus;
   late TextEditingController yearController;
@@ -26,19 +23,19 @@ class _QuizWidget2State extends State<QuizWidget2> {
   @override
   void initState() {
     super.initState();
-    questionController = TextEditingController(text: quiz.getQuestion());
+    questionController = TextEditingController(text: widget.quiz.getQuestion());
     yearController =
-        TextEditingController(text: quiz.getYearRange().toString());
-    curFocus = DateTime(quiz.getCenterDate()[0], quiz.getCenterDate()[1],
-        quiz.getCenterDate()[2]);
+        TextEditingController(text: widget.quiz.getYearRange().toString());
+    curFocus = DateTime(widget.quiz.getCenterDate()[0], widget.quiz.getCenterDate()[1],
+        widget.quiz.getCenterDate()[2]);
   }
 
   @override
   Widget build(BuildContext context) {
-    int maxAnswerSelection = quiz.getMaxAnswerSelection();
+    int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
     TextEditingController controller =
         TextEditingController(text: maxAnswerSelection.toString());
-    final highlightedDates = quiz.getAnswerDate().map((date) {
+    final highlightedDates = widget.quiz.getAnswerDate().map((date) {
       return DateTime.utc(date[0], date[1], date[2]);
     }).toList();
     return Scaffold(
@@ -49,7 +46,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
             questionInputTextField(
               controller: questionController,
               onChanged: (value) {
-                quiz.setQuestion(value);
+                widget.quiz.setQuestion(value);
               },
             ),
             SizedBox(height: AppConfig.smallPadding),
@@ -59,9 +56,9 @@ class _QuizWidget2State extends State<QuizWidget2> {
               child: TableCalendar(
                 shouldFillViewport: true,
                 firstDay: DateTime.utc(
-                    quiz.getCenterDate()[0] - quiz.getYearRange(), 1, 1),
+                    widget.quiz.getCenterDate()[0] - widget.quiz.getYearRange(), 1, 1),
                 lastDay: DateTime.utc(
-                    quiz.getCenterDate()[0] + quiz.getYearRange(), 12, 31),
+                    widget.quiz.getCenterDate()[0] + widget.quiz.getYearRange(), 12, 31),
                 focusedDay: curFocus,
                 headerStyle: HeaderStyle(
                   formatButtonVisible: false,
@@ -125,10 +122,10 @@ class _QuizWidget2State extends State<QuizWidget2> {
 
             buildDatePicker(
               context,
-              quiz,
+              widget.quiz,
               (List<int> date) {
                 setState(() {
-                  quiz.setCenterDate(date);
+                  widget.quiz.setCenterDate(date);
                   curFocus = DateTime.utc(date[0], date[1], date[2]);
                 });
               },
@@ -141,7 +138,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                 int? yearValue = int.tryParse(value);
                 if (yearValue != null) {
                   setState(() {
-                    quiz.setYearRange(yearValue);
+                    widget.quiz.setYearRange(yearValue);
                   });
                 } else {}
               },
@@ -158,7 +155,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                       child: Text('+'),
                       onPressed: () {
                         setState(() {
-                          quiz.addAnswerDate(quiz.getCenterDate());
+                          widget.quiz.addAnswerDate(widget.quiz.getCenterDate());
                         });
                       },
                     ),
@@ -167,21 +164,21 @@ class _QuizWidget2State extends State<QuizWidget2> {
                       height:
                           MediaQuery.of(context).size.height * 0.3, // 화면 높이의 1/3
                       child: ListView.builder(
-                        itemCount: quiz.getAnswerDate().length,
+                        itemCount: widget.quiz.getAnswerDate().length,
                         itemBuilder: (context, index) {
                           return buildDatePicker(
                               context,
-                              quiz,
+                              widget.quiz,
                               (List<int> date) {
                                 setState(() {
-                                  quiz.updateAnswerDateAt(index, date);
+                                  widget.quiz.updateAnswerDateAt(index, date);
                                 });
                               },
                               false,
                               true,
                               () {
                                 setState(() {
-                                  quiz.removeAnswerDateAt(index);
+                                  widget.quiz.removeAnswerDateAt(index);
                                 });
                               },
                               index,
@@ -199,8 +196,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
             ),
             GeneratorDoneButton(
               onPressed: () {
-                quiz.saveQuiz(9999);
-                Navigator.pop(context, quiz);
+                Navigator.pop(context, widget.quiz);
               },
             ),
           ],

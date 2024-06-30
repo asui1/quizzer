@@ -6,19 +6,13 @@ import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/config.dart';
 
 class QuizWidget4 extends StatefulWidget {
+  final Quiz4 quiz;
+  QuizWidget4({Key? key, required this.quiz}) : super(key: key);
   @override
   _QuizWidget4State createState() => _QuizWidget4State();
 }
 
 class _QuizWidget4State extends State<QuizWidget4> {
-  Quiz4 quiz = Quiz4(
-    answers: ['', ''],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-    connectionAnswers: ['', ''],
-    connectionAnswerIndex: [null, null],
-  );
   late TextEditingController questionController;
   List<TextEditingController> _controllersLeft = [];
   List<TextEditingController> _controllersRight = [];
@@ -36,7 +30,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
   @override
   void initState() {
     super.initState();
-    questionController = TextEditingController(text: quiz.getQuestion());
+    questionController = TextEditingController(text: widget.quiz.getQuestion());
     _initControllers();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       setOffsets();
@@ -53,11 +47,11 @@ class _QuizWidget4State extends State<QuizWidget4> {
   }
 
   void _initControllers() {
-    _controllersLeft = quiz
+    _controllersLeft = widget.quiz
         .getAnswers()
         .map((answer) => TextEditingController(text: answer))
         .toList();
-    _controllersRight = quiz
+    _controllersRight = widget.quiz
         .getConnectionAnswers()
         .map((answer) => TextEditingController(text: answer))
         .toList();
@@ -101,16 +95,17 @@ class _QuizWidget4State extends State<QuizWidget4> {
             questionInputTextField(
               controller: questionController,
               onChanged: (value) {
-                quiz.setQuestion(value);
+                widget.quiz.setQuestion(value);
               },
             ),
             SizedBox(height: 20.0),
             Expanded(
               // ListView.builder를 Expanded로 감싸기
               child: ListView.builder(
-                itemCount: quiz.getAnswers().length + 1, // 마지막 "+" 버튼을 위해 +1
+                itemCount:
+                    widget.quiz.getAnswers().length + 1, // 마지막 "+" 버튼을 위해 +1
                 itemBuilder: (context, index) {
-                  if (index == quiz.getAnswers().length) {
+                  if (index == widget.quiz.getAnswers().length) {
                     // 마지막 요소인 경우 "+" 버튼을 표시
                     return Container(
                       alignment: Alignment.center,
@@ -119,7 +114,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                         onPressed: () {
                           needUpdate = true;
                           setState(() {
-                            quiz.addAnswerPair();
+                            widget.quiz.addAnswerPair();
                             _controllersLeft.add(TextEditingController());
                             _controllersRight.add(TextEditingController());
                             starts.add(null);
@@ -187,7 +182,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                       Offset position = linePaint
                                           .globalToLocal(globalPosition);
                                       ends[index] = position;
-                                      quiz.setConnectionAnswerIndexAt(
+                                      widget.quiz.setConnectionAnswerIndexAt(
                                           index, rightKeys.indexOf(key));
                                       break;
                                     } else {
@@ -218,8 +213,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                         height: 15.0,
                                         width: 15.0,
                                         decoration: BoxDecoration(
-                                          color: Colors.black,
                                           shape: BoxShape.circle,
+                                          color: Colors.black,
                                         ),
                                       ),
                                       Container(
@@ -227,8 +222,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                         height: 15.0,
                                         width: 15.0,
                                         decoration: BoxDecoration(
-                                          color: Colors.black,
                                           shape: BoxShape.circle,
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ],
@@ -250,7 +245,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                             onPressed: () {
                               setState(() {
                                 updateEnds(index);
-                                quiz.removeAnswerPairAt(index); // 퀴즈에서 해당 답변 제거
+                                widget.quiz
+                                    .removeAnswerPairAt(index); // 퀴즈에서 해당 답변 제거
                                 _controllersLeft
                                     .removeAt(index); // 왼쪽 컨트롤러 리스트에서 제거
                                 _controllersRight
@@ -278,8 +274,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
             ),
             GeneratorDoneButton(
               onPressed: () {
-                quiz.saveQuiz(9999);
-                Navigator.pop(context, quiz);
+                Navigator.pop(context, widget.quiz);
               },
             ),
           ],
@@ -289,7 +284,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
   }
 
   void updateEnds(int deletedIndex) {
-    List<int?> connectionAnswerIndex = quiz.getConnectionAnswerIndex();
+    List<int?> connectionAnswerIndex = widget.quiz.getConnectionAnswerIndex();
     for (int i = 0; i < connectionAnswerIndex.length; i++) {
       if (connectionAnswerIndex[i] == null) {
         continue;
