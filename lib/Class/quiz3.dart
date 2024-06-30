@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -22,21 +21,20 @@ class Quiz3 extends AbstractQuiz {
             ans: ans,
             question: question);
 
-  void setShuffledAnswers(){
-    
+  void setShuffledAnswers() {
     List<String> tempShuffled = answers.sublist(1);
     tempShuffled.shuffle();
     ShuffledAnswers = [...answers];
 
-    ShuffledAnswers.replaceRange(0, answers.length-1, tempShuffled);
-    ShuffledAnswers[answers.length-1] = answers[0];
+    ShuffledAnswers.replaceRange(0, answers.length - 1, tempShuffled);
+    ShuffledAnswers[answers.length - 1] = answers[0];
   }
 
-  bool isShuffledAnswersEmpty(){
+  bool isShuffledAnswersEmpty() {
     return ShuffledAnswers.isEmpty;
   }
 
-  List<String> getShuffledAnswers(){
+  List<String> getShuffledAnswers() {
     return ShuffledAnswers;
   }
 
@@ -78,23 +76,20 @@ class Quiz3 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-
   @override
   Future<Quiz3> loadQuiz(dynamic jsonData) {
-      return Future.value(Quiz3(
-          layoutType: jsonData['layoutType'],
-          answers: jsonData['answers'],
-          ans: jsonData['ans'],
-          question: jsonData['question'],
-          maxAnswerSelection: jsonData['maxAnswerSelection']
-      ));
+    return Future.value(Quiz3(
+        layoutType: jsonData['layoutType'],
+        answers: jsonData['answers'],
+        ans: jsonData['ans'],
+        question: jsonData['question'],
+        maxAnswerSelection: jsonData['maxAnswerSelection']));
   }
 
   @override
   void removeAnswer(String stringToRemove) {
     // TODO: implement removeAnswer
   }
-
 
   @override
   void setImage(Image newImage) {
@@ -110,10 +105,13 @@ class Quiz3 extends AbstractQuiz {
   Map<String, dynamic> toJson() {
     return {
       "layoutType": layoutType,
-      "maxAnswerSelection": maxAnswerSelection,
-      "answers": answers,
-      "ans": ans,
-      "question": question
+      "body": {
+        "layoutType": layoutType,
+        "maxAnswerSelection": maxAnswerSelection,
+        "answers": answers,
+        "ans": ans,
+        "question": question
+      }
     };
   }
 }

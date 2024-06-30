@@ -79,4 +79,5 @@ abstract class AbstractQuiz {
   Future<AbstractQuiz> loadQuiz(dynamic tag);
 
   Map<String, dynamic> toJson();
+  
 }

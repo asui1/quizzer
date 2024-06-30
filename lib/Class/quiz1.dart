@@ -167,14 +167,17 @@ class Quiz1 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "bodyType": bodyType,
-      "imageFile": imageFile?.path,
-      "bodyText": bodyText,
-      "shuffleAnswers": shuffleAnswers,
-      "maxAnswerSelection": maxAnswerSelection,
-      "answers": answers,
-      "ans": ans,
-      "question": question
+      "layoutType": layoutType,
+      "body": {
+        "bodyType": bodyType,
+        "imageFile": imageFile?.path,
+        "bodyText": bodyText,
+        "shuffleAnswers": shuffleAnswers,
+        "maxAnswerSelection": maxAnswerSelection,
+        "answers": answers,
+        "ans": ans,
+        "question": question
+      }
     };
   }
 }

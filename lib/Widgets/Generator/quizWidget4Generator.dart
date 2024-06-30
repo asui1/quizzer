@@ -16,12 +16,12 @@ class _QuizWidget4State extends State<QuizWidget4> {
   late TextEditingController questionController;
   List<TextEditingController> _controllersLeft = [];
   List<TextEditingController> _controllersRight = [];
-  List<Offset?> starts = [null, null];
-  List<Offset?> ends = [null, null];
-  List<bool> isDragging = [false, false];
-  List<GlobalKey> leftKeys = [GlobalKey(), GlobalKey()];
-  List<GlobalKey> rightKeys = [GlobalKey(), GlobalKey()];
-  List<GlobalKey> lineKeys = [GlobalKey(), GlobalKey()];
+  List<Offset?> starts = [];
+  List<Offset?> ends = [];
+  List<bool> isDragging = [];
+  List<GlobalKey> leftKeys = [];
+  List<GlobalKey> rightKeys = [];
+  List<GlobalKey> lineKeys = [];
   List<Offset> leftDotGlobal = [];
   List<Offset> leftDotLinePaintLocal = [];
   List<Offset> rightDotGlobal = [];
@@ -55,6 +55,14 @@ class _QuizWidget4State extends State<QuizWidget4> {
         .getConnectionAnswers()
         .map((answer) => TextEditingController(text: answer))
         .toList();
+    for (int i = 0; i < widget.quiz.getAnswers().length; i++) {
+      starts.add(null);
+      ends.add(null);
+      isDragging.add(false);
+      leftKeys.add(GlobalKey());
+      rightKeys.add(GlobalKey());
+      lineKeys.add(GlobalKey());
+    }
   }
 
   void setOffsets() {
@@ -143,6 +151,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
                               decoration: InputDecoration(
                                 hintText: '답변 ${index + 1}',
                               ),
+                              onChanged: (value) {
+                                widget.quiz.setAnswerAt(index, value);
+                              },
                             ),
                           ),
                           Container(
@@ -238,6 +249,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
                               decoration: InputDecoration(
                                 hintText: '연결된 답변 ${index + 1}',
                               ),
+                              onChanged: (value) {
+                                widget.quiz.setConnectionAnswerAt(index, value);
+                              },
                             ),
                           ),
                           IconButton(

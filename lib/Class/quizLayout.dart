@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart'; // Import the material.dart package
 
 import 'package:quizzer/Class/ImageColor.dart';
@@ -21,9 +20,55 @@ class QuizLayout {
   ImageColor bottompBarImage = ImageColor(color: Colors.blue[200]);
   ImageColor titleColor = ImageColor(color: Colors.black);
   ImageColor textColor = ImageColor(color: Colors.black);
-  ImageColor buttonColor = ImageColor(color: Color.fromARGB(255, 180, 147, 243));
+  ImageColor buttonColor =
+      ImageColor(color: Color.fromARGB(255, 180, 147, 243));
+  bool shuffleQuestions = false;
+  String title = '';
 
   QuizLayout({this.highlightedIndex = 0});
+  Map<String, dynamic> toJson() {
+    return {
+      'isTopBarVisible': isTopBarVisible,
+      'isBottomBarVisible': isBottomBarVisible,
+      'appBarHeight': appBarHeight,
+      'bottomBarHeight': bottomBarHeight,
+      'highlightedIndex': highlightedIndex,
+      'selectedLayout': selectedLayout,
+      'quizzes': quizzes.map((quiz) => quiz.toJson()).toList(),
+      'curQuizIndex': curQuizIndex,
+      'isFlipStyleSet': isFlipStyleSet,
+      'isBackgroundImageSet': isBackgroundImageSet,
+      'isWidgetSizeSet': isWidgetSizeSet,
+      'backgroundImage': backgroundImage.toJson(),
+      'topBarImage': topBarImage.toJson(),
+      'bottompBarImage': bottompBarImage.toJson(),
+      'titleColor': titleColor.toJson(),
+      'textColor': textColor.toJson(),
+      'buttonColor': buttonColor.toJson(),
+      'shuffleQuestions': shuffleQuestions,
+      'title': title,
+    };
+  }
+
+  void setTitle(String newTitle) {
+    title = newTitle;
+  }
+
+  String getTitle() {
+    return title;
+  }
+
+  void flipShuffleQuestions() {
+    shuffleQuestions = !shuffleQuestions;
+  }
+
+  void setShuffleQuestions(bool value) {
+    shuffleQuestions = value;
+  }
+
+  bool getShuffleQuestions() {
+    return shuffleQuestions;
+  }
 
   void addQuiz(AbstractQuiz quiz) {
     quizzes.add(quiz);
@@ -77,8 +122,7 @@ class QuizLayout {
     bottompBarImage = image;
   }
 
-
-bool getIsTopBarVisible() {
+  bool getIsTopBarVisible() {
     return isTopBarVisible;
   }
 
@@ -90,7 +134,7 @@ bool getIsTopBarVisible() {
     isTopBarVisible = !isTopBarVisible;
   }
 
-void toggleBottomBarVisibility() {
+  void toggleBottomBarVisibility() {
     isBottomBarVisible = !isBottomBarVisible;
   }
 
@@ -101,49 +145,45 @@ void toggleBottomBarVisibility() {
       return isTopBarVisible;
     } else if (index == 2) {
       return isBottomBarVisible;
-      }
-      if(index < 6 && index > 2){
-        return true;
-      }
+    }
+    if (index < 6 && index > 2) {
+      return true;
+    }
     return false;
   }
 
-  ImageColor getImage(int index){
-    if(index == 0){
+  ImageColor getImage(int index) {
+    if (index == 0) {
       return backgroundImage;
-    } else if(index == 1){
+    } else if (index == 1) {
       return topBarImage;
-    } else if(index == 2){
+    } else if (index == 2) {
       return bottompBarImage;
-    }
-    else if(index == 3){
+    } else if (index == 3) {
       return titleColor;
-    }
-    else if(index == 4){
+    } else if (index == 4) {
       return textColor;
-    }
-    else if(index == 5){
+    } else if (index == 5) {
       return buttonColor;
     }
     return topBarImage;
   }
 
-  void setImage(int index, ImageColor image){
-    if(index == 0){
+  void setImage(int index, ImageColor image) {
+    if (index == 0) {
       backgroundImage = image;
-    } else if(index == 1){
+    } else if (index == 1) {
       topBarImage = image;
-    } else if(index == 2){
+    } else if (index == 2) {
       bottompBarImage = image;
-    } else if(index == 3){
+    } else if (index == 3) {
       titleColor = image;
-    } else if(index == 4){
+    } else if (index == 4) {
       textColor = image;
-    } else if(index == 5){
+    } else if (index == 5) {
       buttonColor = image;
     }
   }
-
 
   bool getIsFlipStyleSet() {
     return isFlipStyleSet;
@@ -168,16 +208,17 @@ void toggleBottomBarVisibility() {
   void setIsWidgetSizeSet(bool value) {
     isWidgetSizeSet = value;
   }
+
   int getNextHighlightedIndex() {
-    if(!isFlipStyleSet) {
+    if (!isFlipStyleSet) {
       highlightedIndex = 0;
       return highlightedIndex;
     }
-    if(!isBackgroundImageSet) {
+    if (!isBackgroundImageSet) {
       highlightedIndex = 1;
       return highlightedIndex;
     }
-    if(!isWidgetSizeSet) {
+    if (!isWidgetSizeSet) {
       highlightedIndex = 2;
       return highlightedIndex;
     }
@@ -231,5 +272,4 @@ void toggleBottomBarVisibility() {
   void setSelectedLayout(int layout) {
     selectedLayout = layout;
   }
-
 }

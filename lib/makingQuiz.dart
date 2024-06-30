@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
@@ -19,6 +22,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/config.dart';
+import 'package:uuid/uuid.dart';
 
 import 'Class/quizLayout.dart';
 
@@ -118,18 +122,26 @@ class _MakingQuizState extends State<MakingQuiz> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: index < widget.quizLayout.getQuizCount()
-                                ? Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: IgnorePointer(
-                                      ignoring: true,
-                                      child: getQuizView(widget.quizLayout
-                                          .getQuiz(index)
-                                          .getLayoutType()),
+                                ? GestureDetector(
+                                    onDoubleTap: () {
+                                      navigateToQuizWidgetGenerator(
+                                          widget.quizLayout.getQuiz(index));
+                                    },
+                                    child: Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: IgnorePointer(
+                                        ignoring: true,
+                                        child: getQuizView(
+                                            widget.quizLayout
+                                                .getQuiz(index)
+                                                .getLayoutType(),
+                                            widget.quizLayout.getQuiz(index)),
+                                      ),
                                     ),
                                   )
                                 : ClipRRect(
@@ -228,8 +240,17 @@ class _MakingQuizState extends State<MakingQuiz> {
                         mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
                         children: [
                           Checkbox(
-                            value: false, // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
+                            value: widget.quizLayout
+                                .getShuffleQuestions(), // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
                             onChanged: (bool? newValue) {
+                              print(newValue);
+                              if (newValue != null) {
+                                setState(() {
+                                  widget.quizLayout
+                                      .setShuffleQuestions(newValue);
+                                });
+                              }
+
                               // 체크박스 클릭 시 동작
                               // 여기에 체크박스 상태 변경 로직 추가
                             },
@@ -240,16 +261,32 @@ class _MakingQuizState extends State<MakingQuiz> {
                       // 두 번째 버튼: 임시 저장 버튼
                       ElevatedButton(
                         onPressed: () {
-                          // 임시 저장 버튼 클릭 시 동작
-                          // 여기에 임시 저장 로직 추가
+                          // 퀴즈들을 전체화면으로 미리보기.
                         },
-                        child: Text('임시 저장'),
+                        child: Text('미리보기'),
                       ),
                       // 세 번째 버튼: 저장 버튼
                       ElevatedButton(
-                        onPressed: () {
-                          // 저장 버튼 클릭 시 동작
-                          // 여기에 저장 로직 추가
+                        onPressed: () async {
+                          final directory =
+                              await getApplicationDocumentsDirectory();
+                          final file = await File('$directory/quiz.json');
+                          String contents = await file.readAsString();
+                          Map<String, dynamic> quizzes =
+                              contents.isNotEmpty ? json.decode(contents) : {};
+                          final uuid = Uuid();
+                          final currentTime =
+                              DateTime.now().millisecondsSinceEpoch;
+                          final quizTitle = widget.quizLayout.getTitle();
+                          final tag = uuid.v5(
+                              Uuid.NAMESPACE_URL, '$currentTime$quizTitle');
+                          quizzes[tag] = widget.quizLayout.toJson();
+                          await file.writeAsString(json.encode(quizzes));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('저장되었습니다.'),
+                            ),
+                          );
                         },
                         child: Text('저장'),
                       ),
@@ -296,6 +333,68 @@ class _MakingQuizState extends State<MakingQuiz> {
             )
           : null,
     );
+  }
+
+  void navigateToQuizWidgetGenerator(AbstractQuiz quiz) {
+    int n = quiz.getLayoutType();
+    switch (n) {
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget1(
+              quiz: quiz as Quiz1,
+            ),
+          ),
+        ).then((result) {
+          if (result is Quiz1) {
+            setState(() {});
+          }
+        });
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget2(
+              quiz: quiz as Quiz2,
+            ),
+          ),
+        ).then((result) {
+          if (result is Quiz2) {
+            setState(() {});
+          }
+        });
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget3(
+              quiz: quiz as Quiz3,
+            ),
+          ),
+        ).then((result) {
+          if (result is Quiz3) {
+            setState(() {});
+          }
+        });
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget4(
+              quiz: quiz as Quiz4,
+            ),
+          ),
+        ).then((result) {
+          if (result is Quiz4) {
+            setState(() {});
+          }
+        });
+        break;
+    }
   }
 
   void moveToQuizWidgetGenerator(int n) {
@@ -394,29 +493,29 @@ class _MakingQuizState extends State<MakingQuiz> {
     }
   }
 
-  Widget getQuizView(int n) {
+  Widget getQuizView(int n, AbstractQuiz quiz) {
     switch (n) {
       case 1:
         return QuizView1(
-          quizTag: 999,
+          quiz: quiz as Quiz1,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
         );
       case 2:
         return QuizView2(
-          quizTag: 999,
+          quiz: quiz as Quiz2,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
         );
       case 3:
         return QuizView3(
-          quizTag: 999,
+          quiz: quiz as Quiz3,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
         );
       case 4:
         return QuizView4(
-          quizTag: 999,
+          quiz: quiz as Quiz4,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
         );

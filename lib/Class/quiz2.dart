@@ -165,13 +165,16 @@ class Quiz2 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "centerDate": centerDate,
-      "yearRange": yearRange,
-      "answerDate": answerDate,
-      "maxAnswerSelection": maxAnswerSelection,
-      "answers": answers,
-      "ans": ans,
-      "question": question
+      "layoutType": layoutType,
+      "body": {
+        "centerDate": centerDate,
+        "yearRange": yearRange,
+        "answerDate": answerDate,
+        "maxAnswerSelection": maxAnswerSelection,
+        "answers": answers,
+        "ans": ans,
+        "question": question
+      }
     };
   }
 }

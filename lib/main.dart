@@ -98,8 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title,
             style: TextStyle(
               fontFamily: MyFonts.gothicA1,
-            )
-        ),
+            )),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -211,10 +210,13 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget1(quiz: Quiz1(
-      answers: ['', '', '', '', ''],
-      ans: [false, false, false, false, false],
-      question: ''),)),
+          MaterialPageRoute(
+              builder: (context) => QuizWidget1(
+                    quiz: Quiz1(
+                        answers: ['', '', '', '', ''],
+                        ans: [false, false, false, false, false],
+                        question: ''),
+                  )),
         );
         break;
       case 2:
@@ -222,7 +224,15 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView1(
-                    quizTag: 999,
+                    quiz: Quiz1(
+                      answers: ['11', '22', '33', '44', '55'],
+                      ans: [true, false, false, false, false],
+                      question: "11을 고르세요.",
+                      bodyType: 1,
+                      bodyText: "본문입니다.",
+                      shuffleAnswers: true,
+                      maxAnswerSelection: 1,
+                    ),
                     screenHeightModifier: 1,
                     screenWidthModifier: 1,
                   )),
@@ -231,12 +241,15 @@ class _MyHomePageState extends State<MyHomePage> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget2(quiz: Quiz2(
-    answers: [],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-  ),)),
+          MaterialPageRoute(
+              builder: (context) => QuizWidget2(
+                    quiz: Quiz2(
+                      answers: [],
+                      ans: [],
+                      question: '',
+                      maxAnswerSelection: 1,
+                    ),
+                  )),
         );
         break;
       case 4:
@@ -244,41 +257,60 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView2(
-                    quizTag: 999,
+                    quiz: Quiz2(
+                      answers: ['11', '22', '33', '44', '55'],
+                      ans: [true, false, false, false, false],
+                      question: "11을 고르세요.",
+                      maxAnswerSelection: 1,
+                      centerDate: [2024, 6, 22],
+                      yearRange: 10,
+                      answerDate: [
+                        [2024, 6, 22],
+                        [2024, 6, 20]
+                      ],
+                    ),
                   )),
         );
         break;
       case 5:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget3(quiz: Quiz3(
-    answers: ['', ''],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-  ))),
+          MaterialPageRoute(
+              builder: (context) => QuizWidget3(
+                      quiz: Quiz3(
+                    answers: ['', ''],
+                    ans: [],
+                    question: '',
+                    maxAnswerSelection: 1,
+                  ))),
         );
         break;
       case 6:
         Navigator.push(
-          context,
-          MaterialPageRoute(
+            context,
+            MaterialPageRoute(
               builder: (context) => QuizView3(
-                    quizTag: 999,
-                  )),
-        );
+                  quiz: Quiz3(
+                answers: ['111', '222', '333', '444', '555'],
+                ans: [true, false, false, false, false],
+                question: "11을 고르세요.",
+                maxAnswerSelection: 1,
+              )),
+            ));
         break;
       case 7:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => QuizWidget4(quiz: Quiz4(
-    answers: ['', ''],
-    ans: [],
-    question: '',
-    maxAnswerSelection: 1,
-    connectionAnswers: ['', ''],
-    connectionAnswerIndex: [null, null],
-  ))),
+          MaterialPageRoute(
+              builder: (context) => QuizWidget4(
+                      quiz: Quiz4(
+                    answers: ['', ''],
+                    ans: [],
+                    question: '',
+                    maxAnswerSelection: 1,
+                    connectionAnswers: ['', ''],
+                    connectionAnswerIndex: [null, null],
+                  ))),
         );
         break;
       case 8:
@@ -286,7 +318,14 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizView4(
-                    quizTag: 999,
+                    quiz: Quiz4(
+                      answers: ['11', '22', '33', '44', '55'],
+                      ans: [true, false, false, false, false],
+                      question: "11을 고르세요.",
+                      maxAnswerSelection: 1,
+                      connectionAnswers: ['C', 'E', 'A', 'B', 'D'],
+                      connectionAnswerIndex: [2, 4, 0, 1, 3],
+                    ),
                   )),
         );
       // Add more cases for other quiz pages

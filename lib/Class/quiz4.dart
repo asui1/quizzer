@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -34,7 +33,7 @@ class Quiz4 extends AbstractQuiz {
     print(connectionAnswerIndex);
   }
 
-  String getConnectionAnswerAt(int index){
+  String getConnectionAnswerAt(int index) {
     return connectionAnswers[index];
   }
 
@@ -74,9 +73,9 @@ class Quiz4 extends AbstractQuiz {
     answers.add(newString);
   }
 
-  void addAnswerPair(){
+  void addAnswerPair() {
     answers.add('');
-    connectionAnswers.add(''); 
+    connectionAnswers.add('');
     connectionAnswerIndex.add(null);
   }
 
@@ -93,21 +92,20 @@ class Quiz4 extends AbstractQuiz {
     return connectionAnswerIndex[index]!;
   }
 
-  void removeAnswerPairAt(int index){
-      for(int i = 0; i < answers.length; i++){
-          if(connectionAnswerIndex[i] == null){
-              continue;
-          }
-          if(connectionAnswerIndex[i]! == index){
-              connectionAnswerIndex[i] = null;
-          }
-          else if(connectionAnswerIndex[i]! > index){
-              connectionAnswerIndex[i] = connectionAnswerIndex[i]! - 1;
-          }
+  void removeAnswerPairAt(int index) {
+    for (int i = 0; i < answers.length; i++) {
+      if (connectionAnswerIndex[i] == null) {
+        continue;
       }
-      answers.removeAt(index);
-      connectionAnswers.removeAt(index);
-      connectionAnswerIndex.removeAt(index);
+      if (connectionAnswerIndex[i]! == index) {
+        connectionAnswerIndex[i] = null;
+      } else if (connectionAnswerIndex[i]! > index) {
+        connectionAnswerIndex[i] = connectionAnswerIndex[i]! - 1;
+      }
+    }
+    answers.removeAt(index);
+    connectionAnswers.removeAt(index);
+    connectionAnswerIndex.removeAt(index);
   }
 
   @override
@@ -125,25 +123,22 @@ class Quiz4 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-
   @override
   Future<Quiz4> loadQuiz(dynamic jsonData) {
-      return Future.value(Quiz4(
-          connectionAnswers: jsonData['connectionAnswers'],
-          connectionAnswerIndex: jsonData['connectionAnswerIndex'],
-          layoutType: jsonData['layoutType'],
-          answers: jsonData['answers'],
-          ans: jsonData['ans'],
-          question: jsonData['question'],
-          maxAnswerSelection: jsonData['maxAnswerSelection']
-      ));
+    return Future.value(Quiz4(
+        connectionAnswers: jsonData['connectionAnswers'],
+        connectionAnswerIndex: jsonData['connectionAnswerIndex'],
+        layoutType: jsonData['layoutType'],
+        answers: jsonData['answers'],
+        ans: jsonData['ans'],
+        question: jsonData['question'],
+        maxAnswerSelection: jsonData['maxAnswerSelection']));
   }
 
   @override
   void removeAnswer(String stringToRemove) {
     // TODO: implement removeAnswer
   }
-
 
   @override
   void setImage(Image newImage) {
@@ -158,13 +153,16 @@ class Quiz4 extends AbstractQuiz {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "connectionAnswers": connectionAnswers,
-      "connectionAnswerIndex": connectionAnswerIndex,
       "layoutType": layoutType,
-      "maxAnswerSelection": maxAnswerSelection,
-      "answers": answers,
-      "ans": ans,
-      "question": question
+      "body": {
+        "connectionAnswers": connectionAnswers,
+        "connectionAnswerIndex": connectionAnswerIndex,
+        "layoutType": layoutType,
+        "maxAnswerSelection": maxAnswerSelection,
+        "answers": answers,
+        "ans": ans,
+        "question": question
+      }
     };
   }
 }
