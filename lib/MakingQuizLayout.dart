@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -12,30 +14,51 @@ import 'makingQuiz.dart';
 import 'myColorPicker.dart';
 
 class MakingQuizscreen extends StatefulWidget {
+  final QuizLayout quizLayout;
+
+  MakingQuizscreen({required this.quizLayout});
+
   @override
   State<StatefulWidget> createState() => _MakingQuizState();
 }
 
 class _MakingQuizState extends State<MakingQuizscreen> {
-  QuizLayout quizLayout = QuizLayout();
   double tempAppBarHeight = 30.0;
   double tempBottomBarHeight = 30.0;
+
+  late TextEditingController _titleController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the TextEditingController with the current title
+    _titleController =
+        TextEditingController(text: widget.quizLayout.getTitle());
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed
+    _titleController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     TextScaler scaleFactor = MediaQuery.of(context).textScaler;
-    int highlightedIndex = quizLayout.getNextHighlightedIndex();
-    if (quizLayout.getSelectedLayout() == 0) {
+    int highlightedIndex = widget.quizLayout.getNextHighlightedIndex();
+    if (widget.quizLayout.getSelectedLayout() == 0) {
       highlightedIndex = 0;
     }
-    if (quizLayout.getSelectedLayout() == 3) {
-      quizLayout.setBottomBarVisibility(true);
+    if (widget.quizLayout.getSelectedLayout() == 3) {
+      widget.quizLayout.setBottomBarVisibility(true);
     }
     return Scaffold(
-      appBar: quizLayout.getIsTopBarVisible()
+      appBar: widget.quizLayout.getIsTopBarVisible()
           ? PreferredSize(
               // 상단 바 추가
-              preferredSize: Size.fromHeight(quizLayout.getAppBarHeight()),
+              preferredSize:
+                  Size.fromHeight(widget.quizLayout.getAppBarHeight()),
               child: GestureDetector(
                 onVerticalDragUpdate: (DragUpdateDetails details) {
                   setState(() {
@@ -45,13 +68,13 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                         MediaQuery.of(context).size.height / 40,
                         MediaQuery.of(context).size.height /
                             4); // 화면 높이의 1/4로 제한
-                    quizLayout.setAppBarHeight(tempAppBarHeight);
+                    widget.quizLayout.setAppBarHeight(tempAppBarHeight);
                   });
                 },
-                child: quizLayout.getImage(1).isColor()
+                child: widget.quizLayout.getImage(1).isColor()
                     ? Container(
-                        color: quizLayout.getImage(1).getColor(),
-                        height: quizLayout.getAppBarHeight(),
+                        color: widget.quizLayout.getImage(1).getColor(),
+                        height: widget.quizLayout.getAppBarHeight(),
                         child: Stack(
                           alignment: Alignment.bottomCenter,
                           children: <Widget>[
@@ -61,11 +84,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                         ),
                       )
                     : Container(
-                        height: quizLayout.getAppBarHeight(),
+                        height: widget.quizLayout.getAppBarHeight(),
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
-                                quizLayout.getImage(1).getImagePath()),
+                                widget.quizLayout.getImage(1).getImagePath()),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -81,23 +104,24 @@ class _MakingQuizState extends State<MakingQuizscreen> {
             )
           : null,
       body: Container(
-        decoration: quizLayout.getBackgroundImage().isColor()
+        decoration: widget.quizLayout.getBackgroundImage().isColor()
             ? BoxDecoration(
-                color: quizLayout.getBackgroundImage().getColor(),
+                color: widget.quizLayout.getBackgroundImage().getColor(),
               )
             : BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      quizLayout.getBackgroundImage().getImagePath()),
+                      widget.quizLayout.getBackgroundImage().getImagePath()),
                   fit: BoxFit.cover,
                 ),
               ),
         child: Stack(
           children: [
             FilpStyle12(
-                quizLayout: quizLayout,
-                onPressedBack: () {},
-                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
+              quizLayout: widget.quizLayout,
+              onPressedBack: () {},
+              onPressedForward: () =>
+                  navigateToMakingQuizPage(context, widget.quizLayout),
             ),
             Positioned(
               top: 30.0,
@@ -106,11 +130,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               child: FloatingActionButton(
                 heroTag: 'topBarToggle',
                 backgroundColor: Colors.blue.withOpacity(0.5),
-                child: Icon(
-                    quizLayout.getIsTopBarVisible() ? Icons.remove : Icons.add),
+                child: Icon(widget.quizLayout.getIsTopBarVisible()
+                    ? Icons.remove
+                    : Icons.add),
                 onPressed: () {
                   setState(() {
-                    quizLayout.toggleTopBarVisibility();
+                    widget.quizLayout.toggleTopBarVisibility();
                   });
                 },
               ),
@@ -120,9 +145,107 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   CustomContainer(
-                    text: '1. 넘기기 스타일 설정.',
-                    quizLayout: quizLayout,
+                    text: '1. 퀴즈 제목 설정.',
+                    quizLayout: widget.quizLayout,
                     index: 0,
+                    onPressed: () async {
+                      final layoutSelected = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(// Add this
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                            return AlertDialog(
+                              title: Center(child: Text('퀴즈 제목 설정')),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: AppConfig.screenHeight * 0.02,
+                                  ),
+                                  TextField(
+                                    controller:
+                                        _titleController, // Bind the controller to the TextField
+                                    decoration: InputDecoration(
+                                      labelText: '퀴즈 제목을 입력하세요.',
+                                    ),
+                                    onChanged: (value) {
+                                      // Optionally update the title in real-time
+                                      widget.quizLayout.setTitle(value);
+                                      setState(() {});
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: AppConfig.screenHeight * 0.02,
+                                  ),
+                                  Text('표지 이미지를 선택하세요:'),
+                                  SizedBox(
+                                    height: AppConfig.screenHeight * 0.02,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final ImagePicker _picker = ImagePicker();
+                                      final XFile? tempImageFile =
+                                          await _picker.pickImage(
+                                              source: ImageSource.gallery);
+                                      if (tempImageFile != null) {
+                                        // 이미지 파일 처리
+                                        setState(() {
+                                          widget.quizLayout.setTitleImage(
+                                              Image.file(
+                                                  File(tempImageFile.path)));
+                                        });
+                                      }
+                                      // Handle user upload with image picker
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors
+                                              .transparent, // Border color
+                                          width: 2.0, // Border width
+                                        ),
+                                      ),
+                                      width: AppConfig.screenWidth / 3,
+                                      height: AppConfig.screenWidth /
+                                          3, // 가로 크기를 기준으로 정사각형 크기 설정
+                                      child: widget.quizLayout.isTitleImageSet()
+                                          ? widget.quizLayout.getTitleImage()
+                                          : Icon(Icons.add_a_photo,
+                                              size: AppConfig.screenWidth / 3),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: AppConfig.screenHeight * 0.02,
+                                  ),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                ConfirmButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop(
+                                        widget.quizLayout.getSelectedLayout());
+                                  },
+                                  selection: widget.quizLayout.getTitle() == ''
+                                      ? 0
+                                      : 1,
+                                ),
+                              ],
+                            );
+                          });
+                        },
+                      );
+                      setState(() {
+                        widget.quizLayout.setIsTitleSet(true);
+                        highlightedIndex =
+                            widget.quizLayout.getNextHighlightedIndex();
+                      });
+                    },
+                  ),
+                  CustomContainer(
+                    text: '2. 넘기기 스타일 설정.',
+                    quizLayout: widget.quizLayout,
+                    index: 1,
                     onPressed: () async {
                       final layoutSelected = await showDialog(
                         context: context,
@@ -141,11 +264,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                       children: List.generate(3, (index) {
                                         return LayoutOption(
                                           layoutNumber: index + 1,
-                                          quizLayout: quizLayout,
+                                          quizLayout: widget.quizLayout,
                                           onSelected: (layoutNumber) {
                                             setState(() {
-                                              quizLayout.setSelectedLayout(
-                                                  layoutNumber);
+                                              widget.quizLayout
+                                                  .setSelectedLayout(
+                                                      layoutNumber);
                                             });
                                           },
                                           imagePath:
@@ -160,31 +284,32 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               actions: <Widget>[
                                 ConfirmButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop(quizLayout
-                                        .getSelectedLayout());
+                                    Navigator.of(context).pop(
+                                        widget.quizLayout.getSelectedLayout());
                                   },
-                                  selection: quizLayout.getSelectedLayout(),
+                                  selection:
+                                      widget.quizLayout.getSelectedLayout(),
                                 ),
                               ],
                             );
                           });
                         },
                       );
-                      if (quizLayout.getSelectedLayout() != 0) {
+                      if (widget.quizLayout.getSelectedLayout() != 0) {
                         {
                           setState(() {
-                            quizLayout.setIsFlipStyleSet(true);
+                            widget.quizLayout.setIsFlipStyleSet(true);
                             highlightedIndex =
-                                quizLayout.getNextHighlightedIndex();
+                                widget.quizLayout.getNextHighlightedIndex();
                           });
                         }
                       }
                     },
                   ),
                   CustomContainer(
-                    text: '2. 베경/색상 설정.',
-                    quizLayout: quizLayout,
-                    index: 1,
+                    text: '3. 배경/색상 설정.',
+                    quizLayout: widget.quizLayout,
+                    index: 2,
                     onPressed: () async {
                       final layoutSelected = await showDialog(
                         context: context,
@@ -193,7 +318,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               builder:
                                   (BuildContext context, StateSetter setState) {
                             return AlertDialog(
-                              title: Center(child: Text('베경/색상 설정')),
+                              title: Center(child: Text('배경/색상 설정')),
                               content: SingleChildScrollView(
                                 child: ListBody(
                                   children: <Widget>[
@@ -212,7 +337,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return ColorPickerField(
-                                                    quizLayout: quizLayout,
+                                                    quizLayout:
+                                                        widget.quizLayout,
                                                     index: index,
                                                   );
                                                 },
@@ -222,13 +348,14 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                 setState(() {});
                                               }
                                             },
-                                            isActive:
-                                                quizLayout.getVisibility(index),
-                                            quizLayout: quizLayout,
+                                            isActive: widget.quizLayout
+                                                .getVisibility(index),
+                                            quizLayout: widget.quizLayout,
                                             buttonText: stringResources[
                                                     'imageSet$index'] ??
                                                 '',
-                                            image: quizLayout.getImage(index),
+                                            image: widget.quizLayout
+                                                .getImage(index),
                                           ),
                                         );
                                       }),
@@ -250,21 +377,21 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       ).then((_) {
                         setState(() {});
                       });
-                      if (quizLayout.getSelectedLayout() != 0) {
+                      if (widget.quizLayout.getSelectedLayout() != 0) {
                         {
                           setState(() {
-                            quizLayout.setIsBackgroundImageSet(true);
+                            widget.quizLayout.setIsBackgroundImageSet(true);
                             highlightedIndex =
-                                quizLayout.getNextHighlightedIndex();
+                                widget.quizLayout.getNextHighlightedIndex();
                           });
                         }
                       }
                     },
                   ),
                   CustomContainer(
-                    text: '3. 위젯 크기 설정.',
-                    quizLayout: quizLayout,
-                    index: 2,
+                    text: '4. 기타 추가 설정.',
+                    quizLayout: widget.quizLayout,
+                    index: 3,
                     onPressed: () async {
                       // 버튼 3의 동작을 여기에 구현합니다.
                     },
@@ -279,12 +406,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               child: FloatingActionButton(
                 heroTag: 'bottomBarToggle',
                 backgroundColor: Colors.blue.withOpacity(0.5),
-                child: Icon(quizLayout.getIsBottomBarVisible()
+                child: Icon(widget.quizLayout.getIsBottomBarVisible()
                     ? Icons.remove
                     : Icons.add),
                 onPressed: () {
                   setState(() {
-                    quizLayout.toggleBottomBarVisibility();
+                    widget.quizLayout.toggleBottomBarVisibility();
                   });
                 },
               ),
@@ -292,10 +419,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
           ],
         ),
       ),
-      bottomNavigationBar: quizLayout.getIsBottomBarVisible()
+      bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()
           ? PreferredSize(
               // 하단 바 추가
-              preferredSize: Size.fromHeight(quizLayout.getBottomBarHeight()),
+              preferredSize:
+                  Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
               child: GestureDetector(
                   onVerticalDragUpdate: (DragUpdateDetails details) {
                     setState(() {
@@ -305,31 +433,35 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           MediaQuery.of(context).size.height / 40,
                           MediaQuery.of(context).size.height /
                               4); // 화면 높이의 1/4로 제한
-                      quizLayout.setBottomBarHeight(tempBottomBarHeight);
+                      widget.quizLayout.setBottomBarHeight(tempBottomBarHeight);
                     });
                   },
-                  child: quizLayout.getImage(2).isColor()
+                  child: widget.quizLayout.getImage(2).isColor()
                       ? Container(
-                          color: quizLayout.getImage(2).getColor(),
-                          height: quizLayout.getBottomBarHeight(),
-                          child: BottomBarStack(quizLayout: quizLayout,
-                onPressedBack: () {},
-                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
+                          color: widget.quizLayout.getImage(2).getColor(),
+                          height: widget.quizLayout.getBottomBarHeight(),
+                          child: BottomBarStack(
+                            quizLayout: widget.quizLayout,
+                            onPressedBack: () {},
+                            onPressedForward: () => navigateToMakingQuizPage(
+                                context, widget.quizLayout),
                           ),
                         )
                       : Container(
-                          height: quizLayout.getBottomBarHeight(),
+                          height: widget.quizLayout.getBottomBarHeight(),
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(
-                                  quizLayout.getImage(2).getImagePath()),
+                                  widget.quizLayout.getImage(2).getImagePath()),
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: BottomBarStack(quizLayout: quizLayout,
-                                          onPressedBack: () {},
-                onPressedForward: () => navigateToMakingQuizPage(context, quizLayout),
-),
+                          child: BottomBarStack(
+                            quizLayout: widget.quizLayout,
+                            onPressedBack: () {},
+                            onPressedForward: () => navigateToMakingQuizPage(
+                                context, widget.quizLayout),
+                          ),
                         )),
             )
           : null,
@@ -380,7 +512,7 @@ class LayoutOption extends StatelessWidget {
       child: GestureDetector(
         child: Image(
           image: AssetImage(imagePath),
-          width: AppConfig.screenWidth/5,
+          width: AppConfig.screenWidth / 5,
           fit: BoxFit.fitWidth,
         ),
         onTap: () {
@@ -452,8 +584,8 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 12,
-      width: MediaQuery.of(context).size.width / 3,
+      height: MediaQuery.of(context).size.height / 16,
+      width: MediaQuery.of(context).size.width * 0.6,
       child: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: quizLayout.getNextHighlightedIndex() == index

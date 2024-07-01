@@ -12,6 +12,7 @@ class QuizLayout {
   int selectedLayout = 0;
   List<AbstractQuiz> quizzes = [];
   int curQuizIndex = 0;
+  bool isTitleSet = false;
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
   bool isWidgetSizeSet = false;
@@ -24,8 +25,36 @@ class QuizLayout {
       ImageColor(color: Color.fromARGB(255, 180, 147, 243));
   bool shuffleQuestions = false;
   String title = '';
+  Image titleImage = Image.asset('images/question2.png');
+  bool titleImageSet = false;
 
   QuizLayout({this.highlightedIndex = 0});
+
+  bool isTitleImageSet() {
+    return titleImageSet;
+  }
+
+  void setTitle(String newTitle) {
+    title = newTitle;
+  }
+
+  String getTitle() {
+    return title;
+  }
+
+  void setTitleImage(Image image) {
+    titleImage = image;
+    titleImageSet = true;
+  }
+
+  void setIsTitleSet(bool value) {
+    isTitleSet = value;
+  }
+
+  Image getTitleImage() {
+    return titleImage;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'isTopBarVisible': isTopBarVisible,
@@ -50,13 +79,6 @@ class QuizLayout {
     };
   }
 
-  void setTitle(String newTitle) {
-    title = newTitle;
-  }
-
-  String getTitle() {
-    return title;
-  }
 
   void flipShuffleQuestions() {
     shuffleQuestions = !shuffleQuestions;
@@ -210,16 +232,20 @@ class QuizLayout {
   }
 
   int getNextHighlightedIndex() {
-    if (!isFlipStyleSet) {
+    if(!isTitleSet) {
       highlightedIndex = 0;
       return highlightedIndex;
     }
-    if (!isBackgroundImageSet) {
+    if (!isFlipStyleSet) {
       highlightedIndex = 1;
       return highlightedIndex;
     }
-    if (!isWidgetSizeSet) {
+    if (!isBackgroundImageSet) {
       highlightedIndex = 2;
+      return highlightedIndex;
+    }
+    if (!isWidgetSizeSet) {
+      highlightedIndex = 3;
       return highlightedIndex;
     }
     return 0;

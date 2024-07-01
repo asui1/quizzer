@@ -3,6 +3,7 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Strings.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
@@ -106,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: screenHeight / 6,
+                height: screenHeight / 12,
               ),
               GestureDetector(
                 onTap: () {
@@ -137,21 +138,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 6,
+                height: screenHeight / 12,
               ),
               Container(
-                width: screenWidth / 3,
-                height: screenHeight / 5,
+                width: screenWidth * 0.4,
+                height: screenWidth * 0.3,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MakingQuizscreen()),
+                          builder: (context) => MakingQuizscreen(quizLayout: QuizLayout(),)),
                     );
                   },
                   child: Text(
-                    '나만의 퀴즈 만들기',
+                    '나만의 퀴즈\n만들기',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: AppConfig.fontSize,
                         color: Colors.white), // Set text color to white
@@ -170,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(
-                height: screenHeight / 6,
+                height: screenHeight / 12,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),

@@ -177,7 +177,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                                               Expanded(
                                                                 flex: 3,
                                                                 child: Image.asset(
-                                                                    'images/one.jpg',
+                                                                    'images/question1.png',
                                                                     fit: BoxFit
                                                                         .cover),
                                                               ),
