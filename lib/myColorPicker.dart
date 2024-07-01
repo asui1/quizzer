@@ -15,7 +15,6 @@ class ColorPickerField extends StatefulWidget {
 }
 
 class _ColorPickerFieldState extends State<ColorPickerField> {
-  
   Color pickerColor = Colors.white;
   XFile? imageFile;
   TextEditingController hexController = TextEditingController();
@@ -25,8 +24,16 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    pickerColor = widget.quizLayout.getImage(widget.index).isColor() ? widget.quizLayout.getImage(widget.index).getColor() : Colors.white;
-    imageFile = widget.quizLayout.getImage(widget.index).imagePath == null ? null : XFile(widget.quizLayout.getImage(widget.index).getImagePath());
+    if (widget.index > 2) {
+      pickerColor = widget.quizLayout.getColor(widget.index);
+    } else {
+      pickerColor = widget.quizLayout.getImage(widget.index).isColor()
+          ? widget.quizLayout.getImage(widget.index).getColor()
+          : Colors.white;
+    }
+    imageFile = widget.quizLayout.getImage(widget.index).imagePath == null
+        ? null
+        : XFile(widget.quizLayout.getImage(widget.index).getImagePath());
   }
 
   @override
@@ -34,109 +41,117 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.55,
           width: MediaQuery.of(context).size.width / 3,
           child: Column(
-      children: [
-        Column(
-          children: [
-            ColorPicker(
-              pickerColor: pickerColor,
-              onColorChanged: (newColor) {
-                setState(() {
-                  pickerColor = newColor;
-                  hexController.text = newColor.value
-                      .toRadixString(16)
-                      .substring(2); // Ignore alpha
-                });
-              },
-              portraitOnly: true,
-              showLabel: false,
-              pickerAreaHeightPercent: 0.8,
-              enableAlpha: false,
-            ),
-            TextField(
-              controller: hexController,
-              maxLength: 6,
-              decoration: InputDecoration(
-                labelText: 'Hex code',
-                errorText: isHexCodeValid ? null : 'Invalid hex code',
-              ),
-              onChanged: (value) {
-                try {
-                  setState(() {
-                    pickerColor = new Color(int.parse('ff' + value,
-                        radix: 16)); // Add 'ff' for full opacity
-                    isHexCodeValid = true;
-                  });
-                } catch (e) {
-                  // Handle invalid hex code
-                  setState(() {
-                    isHexCodeValid = false;
-                  });
-                }
-              },
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Current Path: ${imageFile == null ? 'No image selected' : '...${imageFile!.path.split('/').last}'}',
-                style: TextStyle(fontSize: 16),
-                maxLines: 1,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: SizedBox.shrink(), // 정렬을 위한 자리 표시자
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                children: [
+                  ColorPicker(
+                    pickerColor: pickerColor,
+                    onColorChanged: (newColor) {
+                      setState(() {
+                        pickerColor = newColor;
+                        hexController.text = newColor.value
+                            .toRadixString(16)
+                            .substring(2); // Ignore alpha
+                      });
+                    },
+                    portraitOnly: true,
+                    showLabel: false,
+                    pickerAreaHeightPercent: 0.8,
+                    enableAlpha: false,
                   ),
-                  ElevatedButton(
-                    child: Text('Pick Image'),
-                    onPressed: () async {
-                      final ImagePicker _picker = ImagePicker();
-                      final XFile? tempImageFile =
-                          await _picker.pickImage(source: ImageSource.gallery);
-                      if (tempImageFile != null) {
-                        // 이미지 파일 처리
+                  TextField(
+                    controller: hexController,
+                    maxLength: 6,
+                    decoration: InputDecoration(
+                      labelText: 'Hex code',
+                      errorText: isHexCodeValid ? null : 'Invalid hex code',
+                    ),
+                    onChanged: (value) {
+                      try {
                         setState(() {
-                          imageFile = tempImageFile;
+                          pickerColor = new Color(int.parse('ff' + value,
+                              radix: 16)); // Add 'ff' for full opacity
+                          isHexCodeValid = true;
+                        });
+                      } catch (e) {
+                        // Handle invalid hex code
+                        setState(() {
+                          isHexCodeValid = false;
                         });
                       }
                     },
                   ),
-                  Expanded(
-                    child: TextButton(
-                      child: Text('X'),
-                      onPressed: () {
-                        setState(() {
-                          imageFile = null;
-                        });
-                      },
-                    ),
-                  ),
                 ],
               ),
+              widget.index < 3
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'Current Path: ${imageFile == null ? 'No image selected' : '...${imageFile!.path.split('/').last}'}',
+                            style: TextStyle(fontSize: 16),
+                            maxLines: 1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: SizedBox.shrink(), // 정렬을 위한 자리 표시자
+                              ),
+                              ElevatedButton(
+                                child: Text('Pick Image'),
+                                onPressed: () async {
+                                  final ImagePicker _picker = ImagePicker();
+                                  final XFile? tempImageFile = await _picker
+                                      .pickImage(source: ImageSource.gallery);
+                                  if (tempImageFile != null) {
+                                    // 이미지 파일 처리
+                                    setState(() {
+                                      imageFile = tempImageFile;
+                                    });
+                                  }
+                                },
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  child: Text('X'),
+                                  onPressed: () {
+                                    setState(() {
+                                      imageFile = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox.shrink(),
             ],
           ),
-        ),
-      ],
-      ),
         ),
       ),
       actions: <Widget>[
         TextButton(
           child: Text('확인'),
           onPressed: () {
-            widget.quizLayout.setImage(widget.index, ImageColor(imagePath: imageFile?.path, color: pickerColor));
+            if(widget.index > 2){
+              widget.quizLayout.setColor(widget.index, pickerColor);
+
+            }
+            else{
+            widget.quizLayout.setImage(widget.index,
+                ImageColor(imagePath: imageFile?.path, color: pickerColor));
+            }
             Navigator.of(context).pop(pickerColor);
           },
         ),
       ],
     );
   }
-
 }

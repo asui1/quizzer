@@ -31,6 +31,40 @@ class AppConfig {
 
 
 class MyFonts{
+  static const count = 13;
+  static String getFontByIndex(int index) {
+    switch (index) {
+      case 0:
+        return gothicA1;
+      case 1:
+        return gothicA1Bold;
+      case 2:
+        return gothicA1ExtraBold;
+      case 3:
+        return gothicA1Medium;
+      case 4:
+        return gothicA1SemiBold;
+      case 5:
+        return gothicA1Thin;
+      case 6:
+        return notoSans;
+      case 7:
+        return notoSansBold;
+      case 8:
+        return notoSansExtraBold;
+      case 9:
+        return notoSansLight;
+      case 10:
+        return notoSansMedium;
+      case 11:
+        return notoSansRegular;
+      case 12:
+        return notoSansThin;
+      default:
+        return '';
+    }
+  }
+
   static const gothicA1 = 'GothicA1';
   static const gothicA1Bold = 'GothicA1Bold';
   static const gothicA1ExtraBold = 'GothicA1ExtraBold';

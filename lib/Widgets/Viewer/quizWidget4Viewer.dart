@@ -147,7 +147,6 @@ class _QuizView4State extends State<QuizView4> {
                                     widget.screenWidthModifier),
                             child: GestureDetector(
                               onTapDown: (details) {
-                                print("onTapDown ");
                                 setState(() {
                                   isDragging[index] = true;
                                   Offset position =
@@ -157,7 +156,6 @@ class _QuizView4State extends State<QuizView4> {
                                 });
                               },
                               onPanUpdate: (details) {
-                                print("onPanUpdate ");
                                 if (isDragging[index] == false) return;
                                 setState(() {
                                   ends[index] =

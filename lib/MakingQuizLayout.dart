@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Strings.dart';
+import 'package:quizzer/additionalSetup.dart';
 import 'package:quizzer/config.dart';
 
 import 'Widgets/FlipWidgets.dart';
@@ -323,7 +324,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                 child: ListBody(
                                   children: <Widget>[
                                     Column(
-                                      children: List.generate(6, (index) {
+                                      children: List.generate(9, (index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                               bottom:
@@ -393,6 +394,15 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     quizLayout: widget.quizLayout,
                     index: 3,
                     onPressed: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              quizLayoutAdditionalSetup(quizLayout: widget.quizLayout),
+                        ),
+                      ).then((_) {
+                        setState(() {});
+                      });
                       // 버튼 3의 동작을 여기에 구현합니다.
                     },
                   ),

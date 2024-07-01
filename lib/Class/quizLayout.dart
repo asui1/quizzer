@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'; // Import the material.dart package
 
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/config.dart';
 
 class QuizLayout {
   bool isTopBarVisible = false;
@@ -19,16 +20,63 @@ class QuizLayout {
   ImageColor backgroundImage = ImageColor(color: Colors.white);
   ImageColor topBarImage = ImageColor(color: Colors.blue[200]);
   ImageColor bottompBarImage = ImageColor(color: Colors.blue[200]);
-  ImageColor titleColor = ImageColor(color: Colors.black);
-  ImageColor textColor = ImageColor(color: Colors.black);
-  ImageColor buttonColor =
-      ImageColor(color: Color.fromARGB(255, 180, 147, 243));
+  Color titleColor = Colors.black;
+  Color bodyTextColor = Colors.black;
+  Color textColor = Colors.black;
+  Color buttonColor = Color.fromARGB(255, 180, 147, 243);
+  Color borderColor1 = Color.fromARGB(255, 172, 98, 214);
+  Color borderColor2 = Colors.black;
+  Color selectedColor = Color.fromARGB(255, 140, 183, 224);
   bool shuffleQuestions = false;
   String title = '';
   Image titleImage = Image.asset('images/question2.png');
   bool titleImageSet = false;
+  String questionFont = MyFonts.gothicA1Bold;
+  String bodyFont = MyFonts.gothicA1ExtraBold;
+  String answerFont = MyFonts.gothicA1;
 
   QuizLayout({this.highlightedIndex = 0});
+
+  Color getBorderColor1() {
+    return borderColor1;
+  }
+
+  Color getBorderColor2() {
+    return borderColor2;
+  }
+
+  Color getTextColorByIndex(index) {
+    if (index == 0) {
+      return titleColor;
+    } else if (index == 1) {
+      return bodyTextColor;
+    } else if (index == 2) {
+      return textColor;
+    }
+
+    return textColor;
+  }
+
+  void setFontFamily(int index, String fontFamily) {
+    if (index == 0) {
+      questionFont = fontFamily;
+    } else if (index == 1) {
+      bodyFont = fontFamily;
+    } else if (index == 2) {
+      answerFont = fontFamily;
+    }
+  }
+
+  String getFontFamily(int index) {
+    if (index == 0) {
+      return questionFont;
+    } else if (index == 1) {
+      return bodyFont;
+    } else if (index == 2) {
+      return answerFont;
+    }
+    return questionFont;
+  }
 
   bool isTitleImageSet() {
     return titleImageSet;
@@ -71,14 +119,13 @@ class QuizLayout {
       'backgroundImage': backgroundImage.toJson(),
       'topBarImage': topBarImage.toJson(),
       'bottompBarImage': bottompBarImage.toJson(),
-      'titleColor': titleColor.toJson(),
-      'textColor': textColor.toJson(),
-      'buttonColor': buttonColor.toJson(),
+      'titleColor': titleColor,
+      'textColor': textColor,
+      'buttonColor': buttonColor,
       'shuffleQuestions': shuffleQuestions,
       'title': title,
     };
   }
-
 
   void flipShuffleQuestions() {
     shuffleQuestions = !shuffleQuestions;
@@ -112,11 +159,11 @@ class QuizLayout {
     return curQuizIndex;
   }
 
-  ImageColor getButtonColor() {
+  Color getButtonColor() {
     return buttonColor;
   }
 
-  ImageColor getTextColor() {
+  Color getTextColor() {
     return textColor;
   }
 
@@ -168,10 +215,7 @@ class QuizLayout {
     } else if (index == 2) {
       return isBottomBarVisible;
     }
-    if (index < 6 && index > 2) {
-      return true;
-    }
-    return false;
+    return true;
   }
 
   ImageColor getImage(int index) {
@@ -182,13 +226,59 @@ class QuizLayout {
     } else if (index == 2) {
       return bottompBarImage;
     } else if (index == 3) {
-      return titleColor;
+      return ImageColor(color: titleColor);
     } else if (index == 4) {
-      return textColor;
-    } else if (index == 5) {
-      return buttonColor;
+      return ImageColor(color: bodyTextColor);
+    } else if(index ==5){
+      return ImageColor(color: textColor);
+    } else if (index == 6) {
+      return ImageColor(color: buttonColor);
+    } else if (index == 7) {
+      return ImageColor(color: borderColor1);
+    } else if (index == 8) {
+      return ImageColor(color: borderColor2);
+    } else if (index == 9) {
+      return ImageColor(color: selectedColor);
     }
+
     return topBarImage;
+  }
+
+  Color getColor(int index) {
+    if (index == 3) {
+      return titleColor;
+    } else if(index == 4){
+      return bodyTextColor;
+    } else if (index == 5) {
+      return textColor;
+    } else if (index == 6) {
+      return buttonColor;
+    } else if (index == 7) {
+      return borderColor1;
+    } else if (index == 8) {
+      return borderColor2;
+    } else if (index == 9) {
+      return selectedColor;
+    }
+    return titleColor;
+  }
+
+  void setColor(int index, Color color) {
+    if (index == 3) {
+      titleColor = color;
+    } else if (index == 4) {
+      bodyTextColor = color;
+    } else if (index == 5) {
+      textColor = color;
+    } else if (index == 6) {
+      buttonColor = color;
+    } else if (index == 7) {
+      borderColor1 = color;
+    } else if (index == 8) {
+      borderColor2 = color;
+    } else if (index == 9) {
+      selectedColor = color;
+    }
   }
 
   void setImage(int index, ImageColor image) {
@@ -198,12 +288,6 @@ class QuizLayout {
       topBarImage = image;
     } else if (index == 2) {
       bottompBarImage = image;
-    } else if (index == 3) {
-      titleColor = image;
-    } else if (index == 4) {
-      textColor = image;
-    } else if (index == 5) {
-      buttonColor = image;
     }
   }
 
@@ -232,7 +316,7 @@ class QuizLayout {
   }
 
   int getNextHighlightedIndex() {
-    if(!isTitleSet) {
+    if (!isTitleSet) {
       highlightedIndex = 0;
       return highlightedIndex;
     }

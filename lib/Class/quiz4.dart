@@ -30,7 +30,6 @@ class Quiz4 extends AbstractQuiz {
 
   void setConnectionAnswerIndexAt(int index, int newInt) {
     connectionAnswerIndex[index] = newInt;
-    print(connectionAnswerIndex);
   }
 
   String getConnectionAnswerAt(int index) {

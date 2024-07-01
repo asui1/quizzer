@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,13 +9,16 @@ class FilpStyle12 extends StatelessWidget {
   final VoidCallback onPressedBack;
   final VoidCallback onPressedForward;
 
-  FilpStyle12({required this.quizLayout, required this.onPressedBack, required this.onPressedForward});
+  FilpStyle12(
+      {required this.quizLayout,
+      required this.onPressedBack,
+      required this.onPressedForward});
 
   @override
   Widget build(BuildContext context) {
-    ImageColor imageColor = quizLayout.getButtonColor();
+    Color imageColor = quizLayout.getButtonColor();
     int flipStyle = quizLayout.getSelectedLayout();
-    Color textColor = imageColor.getColor();
+    Color textColor = quizLayout.getTextColor();
     if (flipStyle != 1 && flipStyle != 2) {
       return SizedBox.shrink(); // or Container()
     }
@@ -30,7 +31,7 @@ class FilpStyle12 extends StatelessWidget {
             padding: EdgeInsets.all(8.0), // Adjust the padding as needed
             child: FloatingActionButton(
               heroTag: 'prevButtonBody',
-              backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
+              backgroundColor: imageColor, // 하이라이트 여부에 따라 색상 변경
               child: Icon(Icons.arrow_back),
               onPressed: onPressedBack,
             ),
@@ -43,7 +44,7 @@ class FilpStyle12 extends StatelessWidget {
             padding: EdgeInsets.all(8.0), // Adjust the padding as needed
             child: FloatingActionButton(
               heroTag: 'nextButtonBody',
-              backgroundColor: imageColor.getColor(), // 하이라이트 여부에 따라 색상 변경
+              backgroundColor: imageColor, // 하이라이트 여부에 따라 색상 변경
               child: Icon(Icons.arrow_forward),
               onPressed: onPressedForward,
             ),
@@ -63,7 +64,10 @@ class BottomBarStack extends StatelessWidget {
   final VoidCallback onPressedBack;
   final VoidCallback onPressedForward;
 
-  BottomBarStack({required this.quizLayout, required this.onPressedBack, required this.onPressedForward});
+  BottomBarStack(
+      {required this.quizLayout,
+      required this.onPressedBack,
+      required this.onPressedForward});
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +82,8 @@ class BottomBarStack extends StatelessWidget {
               padding: EdgeInsets.all(8.0), // Adjust the padding as needed
               child: FloatingActionButton(
                 heroTag: 'prevButtonBottomBar',
-                backgroundColor: quizLayout
-                    .getButtonColor()
-                    .getColor(), // 하이라이트 여부에 따라 색상 변경
+                backgroundColor:
+                    quizLayout.getButtonColor(), // 하이라이트 여부에 따라 색상 변경
                 child: Icon(Icons.arrow_back),
                 onPressed: onPressedBack,
               ),
@@ -92,9 +95,8 @@ class BottomBarStack extends StatelessWidget {
               padding: EdgeInsets.all(8.0), // Adjust the padding as needed
               child: FloatingActionButton(
                 heroTag: 'nextButtonBottomBar',
-                backgroundColor: quizLayout
-                    .getButtonColor()
-                    .getColor(), // 하이라이트 여부에 따라 색상 변경
+                backgroundColor:
+                    quizLayout.getButtonColor(), // 하이라이트 여부에 따라 색상 변경
                 child: Icon(Icons.arrow_forward),
                 onPressed: onPressedForward,
               ),
@@ -105,5 +107,3 @@ class BottomBarStack extends StatelessWidget {
     );
   }
 }
-
-

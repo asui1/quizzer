@@ -9,6 +9,16 @@ makingquiz 페이지 완성하기.
 USB 사서 노트북에 ubuntu server 설치하기.
 
 
+배경/색 설정에 들어갈 것: 
+배경 이미지, 상단 바, 하단 바, 제목 텍스트 색, 본문 텍스트 색, 버튼 색, 테두리 색1, 테두리 색2, 선택됨 색
+
+기타 추가 설정에 들어갈 것:
+제목 글씨체, 본문 글씨체, 
+나아중에 추가할 것: 넘기기 버튼 유형 변경, 
+
+bodyTextColor 설정할 수 있게 전부 추가해줘야함.
+
+
 기능 목록:
 
 
@@ -17,3 +27,13 @@ USB 사서 노트북에 ubuntu server 설치하기.
 
 Viewer Widget의 경우 QuizLayout 받아서 Topbar, Bottombar, 넘기기 버튼 추가해주기.
 
+  ImageColor backgroundImage = ImageColor(color: Colors.white);
+  ImageColor topBarImage = ImageColor(color: Colors.blue[200]);
+  ImageColor bottompBarImage = ImageColor(color: Colors.blue[200]);
+  Color titleColor = Colors.black;
+  Color bodyTextColor = Colors.black;
+  Color textColor = Colors.black;
+  Color buttonColor = Color.fromARGB(255, 180, 147, 243);
+  Color borderColor1 = Color.fromARGB(255, 172, 98, 214);
+  Color borderColor2 = Colors.black;
+  Color selectedColor = Color.fromARGB(255, 140, 183, 224);

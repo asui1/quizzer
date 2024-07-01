@@ -243,7 +243,6 @@ class _MakingQuizState extends State<MakingQuiz> {
                             value: widget.quizLayout
                                 .getShuffleQuestions(), // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
                             onChanged: (bool? newValue) {
-                              print(newValue);
                               if (newValue != null) {
                                 setState(() {
                                   widget.quizLayout
