@@ -277,6 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         [2024, 6, 20]
                       ],
                     ),
+                    quizLayout: QuizLayout(),
                   )),
         );
         break;
@@ -300,12 +301,14 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(
               builder: (context) => QuizView3(
-                  quiz: Quiz3(
-                answers: ['111', '222', '333', '444', '555'],
-                ans: [true, false, false, false, false],
-                question: "11을 고르세요.",
-                maxAnswerSelection: 1,
-              )),
+                quiz: Quiz3(
+                  answers: ['111', '222', '333', '444', '555'],
+                  ans: [true, false, false, false, false],
+                  question: "11을 고르세요.",
+                  maxAnswerSelection: 1,
+                ),
+                quizLayout: QuizLayout(),
+              ),
             ));
         break;
       case 7:

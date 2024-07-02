@@ -54,12 +54,14 @@ class _QuizView1State extends State<QuizView1> {
             children: <Widget>[
               QuestionViewer(
                   question: widget.quiz.getQuestion(),
-                  fontSizeModifier: widget.screenWidthModifier),
+                  fontSizeModifier: widget.screenWidthModifier,
+                  quizLayout: widget.quizLayout),
               SizedBox(
                   height: AppConfig.screenHeight *
                       0.02 *
                       widget.screenHeightModifier),
-              _buildQuizBody(widget.quiz, widget.screenWidthModifier),
+              _buildQuizBody(
+                  widget.quiz, widget.screenWidthModifier, widget.quizLayout),
               SizedBox(
                   height: AppConfig.screenHeight *
                       0.02 *
@@ -70,25 +72,38 @@ class _QuizView1State extends State<QuizView1> {
                     itemBuilder: (context, index) {
                       int newIndex = order[index];
                       return ListTile(
-                        leading: Checkbox(
-                          value: currentAnswer[newIndex],
-                          onChanged: (bool? newValue) {
-                            setState(() {
-                              if (newValue != null) {
-                                if (trueCount <
-                                        widget.quiz.getMaxAnswerSelection() ||
-                                    newValue == false) {
-                                  currentAnswer[newIndex] = newValue;
+                        leading: Theme(
+                          data: ThemeData(
+                            checkboxTheme: CheckboxThemeData(
+                              checkColor: WidgetStateProperty.all(
+                                  Colors.white), // 체크 표시 색상
+                              fillColor: WidgetStateProperty.all(widget
+                                  .quizLayout
+                                  .getSelectedColor()), // 박스 배경 색상
+                            ),
+                          ),
+                          child: Checkbox(
+                            value: currentAnswer[newIndex],
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                if (newValue != null) {
+                                  if (trueCount <
+                                          widget.quiz.getMaxAnswerSelection() ||
+                                      newValue == false) {
+                                    currentAnswer[newIndex] = newValue;
+                                  }
                                 }
-                              }
-                            });
-                          },
+                              });
+                            },
+                          ),
                         ),
                         title: Text(
                           widget.quiz.getAnswerAt(order[newIndex]),
                           style: TextStyle(
                               fontSize: AppConfig.fontSize *
-                                  widget.screenWidthModifier),
+                                  widget.screenWidthModifier,
+                                  color: widget.quizLayout.getTextColor(),
+                                  fontFamily: widget.quizLayout.getAnswerFont()),
                         ),
                         onTap: () {
                           setState(() {
@@ -115,7 +130,8 @@ class _QuizView1State extends State<QuizView1> {
   }
 }
 
-Widget _buildQuizBody(Quiz1 quiz, double screenWidthModifier) {
+Widget _buildQuizBody(
+    Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
   switch (quiz.getBodyType()) {
     case 0:
       return Container();
@@ -125,7 +141,7 @@ Widget _buildQuizBody(Quiz1 quiz, double screenWidthModifier) {
         padding: EdgeInsets.all(8.0), // Add padding around the text
         decoration: BoxDecoration(
           border: Border.all(
-              color: Colors.black), // Add black border around the container
+              color: quizLayout.getBorderColor1()), // Add black border around the container
           borderRadius:
               BorderRadius.circular(4.0), // Optional: Add rounded corners
         ),
@@ -133,6 +149,8 @@ Widget _buildQuizBody(Quiz1 quiz, double screenWidthModifier) {
           quiz.getBodyText(),
           style: TextStyle(
             fontSize: AppConfig.fontSize * screenWidthModifier,
+            color: quizLayout.getBodyTextColor(),
+            fontFamily: quizLayout.getBodyFont(),
           ),
         ),
       );

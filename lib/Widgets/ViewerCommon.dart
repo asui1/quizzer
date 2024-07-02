@@ -5,8 +5,9 @@ import 'package:quizzer/config.dart';
 class QuestionViewer extends StatelessWidget {
   final String question;
   final double fontSizeModifier;
+  final QuizLayout quizLayout;
 
-  QuestionViewer({required this.question, this.fontSizeModifier = 1});
+  QuestionViewer({required this.question, this.fontSizeModifier = 1, required this.quizLayout});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,8 @@ class QuestionViewer extends StatelessWidget {
         textAlign: TextAlign.left,
         style: TextStyle(
           fontSize: AppConfig.fontSize * 1.5 * fontSizeModifier,
+          color: quizLayout.getTitleColor(),
+          fontFamily: quizLayout.getQuestionFont(),
         ),
       ),
     );

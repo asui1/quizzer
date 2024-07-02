@@ -86,6 +86,8 @@ class _QuizWidget2State extends State<QuizWidget2> {
                     formatButtonVisible: false,
                     titleCentered: true,
                     titleTextStyle: TextStyle(
+                      fontFamily: widget.quizLayout.getBodyFont(),
+                        fontWeight: FontWeight.bold,
                         color:
                             widget.quizLayout.getBodyTextColor()), // 헤더 제목 색상
                     leftChevronIcon: Icon(Icons.chevron_left,
@@ -166,7 +168,10 @@ class _QuizWidget2State extends State<QuizWidget2> {
                 ),
               ),
               //시작 날짜 ~ 끝나는 날 설정하도록 하기
-              Text("중심 날짜를 선택하세요.", style: textStyle,),
+              Text(
+                "중심 날짜를 선택하세요.",
+                style: textStyle,
+              ),
               SizedBox(height: AppConfig.smallPadding),
 
               buildDatePicker(
@@ -194,7 +199,10 @@ class _QuizWidget2State extends State<QuizWidget2> {
                 textStyle,
               ),
               SizedBox(height: AppConfig.padding),
-              Text("정답인 날짜들을 입력해주세요.", style: textStyle,),
+              Text(
+                "정답인 날짜들을 입력해주세요.",
+                style: textStyle,
+              ),
               SizedBox(height: AppConfig.smallPadding),
 
               Column(

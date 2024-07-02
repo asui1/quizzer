@@ -118,7 +118,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                             onChanged: (bool? newValue) {
                               setState(() {
                                 if (newValue != null) {
-                                  if (trueCount < maxAnswerSelection ||
+                                  if (trueCount < widget.quiz.getMaxAnswerSelection() ||
                                       newValue == false) {
                                     widget.quiz
                                         .changeCorrectAns(index, newValue);

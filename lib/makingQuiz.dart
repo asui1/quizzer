@@ -516,12 +516,14 @@ class _MakingQuizState extends State<MakingQuiz> {
           quiz: quiz as Quiz2,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
+          quizLayout: widget.quizLayout,
         );
       case 3:
         return QuizView3(
           quiz: quiz as Quiz3,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
+          quizLayout: widget.quizLayout,
         );
       case 4:
         return QuizView4(
