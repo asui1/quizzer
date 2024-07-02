@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/config.dart';
 
 class QuizWidget4 extends StatefulWidget {
+  final QuizLayout quizLayout;
   final Quiz4 quiz;
-  QuizWidget4({Key? key, required this.quiz}) : super(key: key);
+  QuizWidget4({Key? key, required this.quiz, required this.quizLayout})
+      : super(key: key);
   @override
   _QuizWidget4State createState() => _QuizWidget4State();
 }
@@ -105,8 +108,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
               onChanged: (value) {
                 widget.quiz.setQuestion(value);
               },
+              quizLayout: widget.quizLayout,
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: AppConfig.padding),
             Expanded(
               // ListView.builder를 Expanded로 감싸기
               child: ListView.builder(
@@ -154,10 +158,11 @@ class _QuizWidget4State extends State<QuizWidget4> {
                               onChanged: (value) {
                                 widget.quiz.setAnswerAt(index, value);
                               },
+                              style: widget.quizLayout.getAnswerTextStyle(),
                             ),
                           ),
                           Container(
-                            width: 200,
+                            width: AppConfig.screenWidth * 0.5,
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: GestureDetector(
@@ -211,7 +216,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                     starts[index] != null && ends[index] != null
                                         ? LinePainter(
                                             start: starts[index]!,
-                                            end: ends[index]!)
+                                            end: ends[index]!,
+                                            color: widget.quizLayout.getSelectedColor())
                                         : null,
                                 child: Container(
                                   height: 100.0,
@@ -225,7 +231,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                         width: 15.0,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Colors.black,
+                                          color: widget.quizLayout.getBorderColor1(),
                                         ),
                                       ),
                                       Container(
@@ -234,7 +240,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                         width: 15.0,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: Colors.black,
+                                          color: widget.quizLayout.getBorderColor1(),
                                         ),
                                       ),
                                     ],
@@ -252,6 +258,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                               onChanged: (value) {
                                 widget.quiz.setConnectionAnswerAt(index, value);
                               },
+                              style: widget.quizLayout.getAnswerTextStyle(),
                             ),
                           ),
                           IconButton(

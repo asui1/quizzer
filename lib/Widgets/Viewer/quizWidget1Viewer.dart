@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/config.dart';
 
@@ -7,12 +8,14 @@ class QuizView1 extends StatefulWidget {
   final Quiz1 quiz; // 퀴즈 태그
   final double screenWidthModifier;
   final double screenHeightModifier;
+  final QuizLayout quizLayout;
 
   QuizView1(
       {Key? key,
       required this.quiz,
       this.screenHeightModifier = 1,
-      this.screenWidthModifier = 1})
+      this.screenWidthModifier = 1,
+      required this.quizLayout})
       : super(key: key);
 
   @override
@@ -43,65 +46,69 @@ class _QuizView1State extends State<QuizView1> {
     }
     // Future가 완료되면 UI 빌드
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(AppConfig.padding),
-        child: Column(
-          children: <Widget>[
-            QuestionViewer(
-                question: widget.quiz.getQuestion(),
-                fontSizeModifier: widget.screenWidthModifier),
-            SizedBox(
-                height: AppConfig.screenHeight *
-                    0.02 *
-                    widget.screenHeightModifier),
-            _buildQuizBody(widget.quiz, widget.screenWidthModifier),
-            SizedBox(
-                height: AppConfig.screenHeight *
-                    0.02 *
-                    widget.screenHeightModifier),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: widget.quiz.getAnswers().length,
-                  itemBuilder: (context, index) {
-                    int newIndex = order[index];
-                    return ListTile(
-                      leading: Checkbox(
-                        value: currentAnswer[newIndex],
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            if (newValue != null) {
-                              if (trueCount <
-                                      widget.quiz.getMaxAnswerSelection() ||
-                                  newValue == false) {
-                                currentAnswer[newIndex] = newValue;
+      body: Container(
+        decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+        child: Padding(
+          padding: EdgeInsets.all(AppConfig.padding),
+          child: Column(
+            children: <Widget>[
+              QuestionViewer(
+                  question: widget.quiz.getQuestion(),
+                  fontSizeModifier: widget.screenWidthModifier),
+              SizedBox(
+                  height: AppConfig.screenHeight *
+                      0.02 *
+                      widget.screenHeightModifier),
+              _buildQuizBody(widget.quiz, widget.screenWidthModifier),
+              SizedBox(
+                  height: AppConfig.screenHeight *
+                      0.02 *
+                      widget.screenHeightModifier),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: widget.quiz.getAnswers().length,
+                    itemBuilder: (context, index) {
+                      int newIndex = order[index];
+                      return ListTile(
+                        leading: Checkbox(
+                          value: currentAnswer[newIndex],
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              if (newValue != null) {
+                                if (trueCount <
+                                        widget.quiz.getMaxAnswerSelection() ||
+                                    newValue == false) {
+                                  currentAnswer[newIndex] = newValue;
+                                }
                               }
-                            }
-                          });
-                        },
-                      ),
-                      title: Text(
-                        widget.quiz.getAnswerAt(order[newIndex]),
-                        style: TextStyle(
-                            fontSize: AppConfig.fontSize *
-                                widget.screenWidthModifier),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          if (currentAnswer[newIndex] == false) {
-                            if (trueCount <
-                                widget.quiz.getMaxAnswerSelection()) {
+                            });
+                          },
+                        ),
+                        title: Text(
+                          widget.quiz.getAnswerAt(order[newIndex]),
+                          style: TextStyle(
+                              fontSize: AppConfig.fontSize *
+                                  widget.screenWidthModifier),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            if (currentAnswer[newIndex] == false) {
+                              if (trueCount <
+                                  widget.quiz.getMaxAnswerSelection()) {
+                                currentAnswer[newIndex] =
+                                    !currentAnswer[newIndex];
+                              }
+                            } else {
                               currentAnswer[newIndex] =
                                   !currentAnswer[newIndex];
                             }
-                          } else {
-                            currentAnswer[newIndex] = !currentAnswer[newIndex];
-                          }
-                        });
-                      },
-                    );
-                  }),
-            ),
-          ],
+                          });
+                        },
+                      );
+                    }),
+              ),
+            ],
+          ),
         ),
       ),
     );

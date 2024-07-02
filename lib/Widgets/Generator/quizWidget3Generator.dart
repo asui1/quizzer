@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz3.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/config.dart';
 
 class QuizWidget3 extends StatefulWidget {
+  final QuizLayout quizLayout;
   final Quiz3 quiz;
-  QuizWidget3({Key? key, required this.quiz}) : super(key: key);
+  QuizWidget3({Key? key, required this.quiz, required this.quizLayout})
+      : super(key: key);
 
   @override
   _QuizWidget3State createState() => _QuizWidget3State();
 }
-
 
 class _QuizWidget3State extends State<QuizWidget3> {
   late TextEditingController questionController;
@@ -26,6 +28,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
   @override
   void dispose() {
     _controllers.forEach((controller) => controller.dispose());
+    questionController.dispose();
     super.dispose();
   }
 
@@ -48,8 +51,9 @@ class _QuizWidget3State extends State<QuizWidget3> {
               onChanged: (value) {
                 widget.quiz.setQuestion(value);
               },
+              quizLayout: widget.quizLayout,
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: AppConfig.padding),
             Column(
               children: <Widget>[
                 for (int index = 0;
@@ -57,24 +61,42 @@ class _QuizWidget3State extends State<QuizWidget3> {
                     index++) ...[
                   Row(
                     children: [
-                      SizedBox(width: 20.0),
+                      SizedBox(height: AppConfig.padding),
                       Expanded(
                         child: TextField(
-                          key: ValueKey(index), // TextField에 대한 Key
-                          controller: _controllers[index],
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: '답변 ${index + 1}',
-                          ),
-                          onChanged: (value) {
-                            setState(() {
-                              widget.quiz.setAnswerAt(index, value);
-                            });
-                          },
-                        ),
+                            key: ValueKey(index), // TextField에 대한 Key
+                            controller: _controllers[index],
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                // 활성화되지 않았을 때의 테두리 스타일
+                                borderSide: BorderSide(
+                                  color: index == 0 ? widget.quizLayout.getBorderColor2() : widget.quizLayout.getBorderColor1(), // 테두리 색상 변경
+                                  width: 2.0, // 테두리 두께 변경
+                                ),
+                                borderRadius:
+                                    BorderRadius.circular(10), // 테두리 모서리 둥글기 변경
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                // 포커스를 받았을 때의 테두리 스타일
+                                borderSide: BorderSide(
+                                  color: widget.quizLayout.getSelectedColor(), // 테두리 색상 변경
+                                  width: 2.5, // 테두리 두께 변경
+                                ),
+                                borderRadius:
+                                    BorderRadius.circular(10), // 테두리 모서리 둥글기 변경
+                              ),
+                              hintText: '답변 ${index + 1}',
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                widget.quiz.setAnswerAt(index, value);
+                              });
+                            },
+                            style: widget.quizLayout.getAnswerTextStyle()),
                       ),
                       IconButton(
                         icon: Icon(Icons.remove_circle_outline),
+                        color: widget.quizLayout.getButtonColor(),
                         onPressed: () {
                           setState(() {
                             widget.quiz.removeAnswerAt(index);
@@ -95,7 +117,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                           alignment: Alignment.center,
                           child: Icon(
                             Icons.arrow_downward,
-                            color: Colors.purple[700],
+                            color: widget.quizLayout.getButtonColor(),
                           ),
                         ),
                       ),

@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Strings.dart';
+import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/additionalSetup.dart';
 import 'package:quizzer/config.dart';
 
@@ -105,17 +106,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
             )
           : null,
       body: Container(
-        decoration: widget.quizLayout.getBackgroundImage().isColor()
-            ? BoxDecoration(
-                color: widget.quizLayout.getBackgroundImage().getColor(),
-              )
-            : BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      widget.quizLayout.getBackgroundImage().getImagePath()),
-                  fit: BoxFit.cover,
-                ),
-              ),
+        decoration: backgroundDecoration(quizLayout: widget.quizLayout),
         child: Stack(
           children: [
             FilpStyle12(

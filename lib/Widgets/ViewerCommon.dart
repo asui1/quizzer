@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/config.dart';
 
 class QuestionViewer extends StatelessWidget {
@@ -20,4 +21,18 @@ class QuestionViewer extends StatelessWidget {
       ),
     );
   }
+}
+
+
+BoxDecoration backgroundDecoration({required QuizLayout quizLayout}) {
+  return quizLayout.getBackgroundImage().isColor()
+      ? BoxDecoration(
+          color: quizLayout.getBackgroundImage().getColor(),
+        )
+      : BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(quizLayout.getBackgroundImage().getImagePath()),
+            fit: BoxFit.cover,
+          ),
+        );
 }

@@ -13,7 +13,8 @@ Widget buildDatePicker(
     Function deleteThis,
     int inputType,
     bool showRangeInput,
-    Function onRangeChanged) {
+    Function onRangeChanged,
+    TextStyle answerStyle) {
   List<int> selectedDate = [];
   if (inputType == -1) {
     selectedDate = quiz.getCenterDate();
@@ -54,8 +55,10 @@ Widget buildDatePicker(
                 },
                 decoration: InputDecoration(
                   labelText: 'Year',
+                  labelStyle: answerStyle,
                   border: OutlineInputBorder(),
                 ),
+                style: answerStyle,
               ),
             )
           : Container(),
@@ -67,7 +70,7 @@ Widget buildDatePicker(
         items: years.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(value.toString()),
+            child: Text(value.toString(), style: answerStyle,),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -81,7 +84,7 @@ Widget buildDatePicker(
         items: months.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(DateFormat.MMM().format(DateTime(0, value))),
+            child: Text(DateFormat.MMM().format(DateTime(0, value)), style: answerStyle,),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -94,7 +97,7 @@ Widget buildDatePicker(
         items: days.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(value.toString()),
+            child: Text(value.toString(), style: answerStyle,),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -105,7 +108,7 @@ Widget buildDatePicker(
 
       getDeleteButton
           ? IconButton(
-              icon: Icon(Icons.delete),
+              icon: Icon(Icons.delete,),
               onPressed: () {
                 deleteThis();
               },
@@ -128,6 +131,7 @@ Widget buildDatePicker(
                   labelText: '년도 범위',
                   border: OutlineInputBorder(),
                 ),
+                style: answerStyle,
               ),
             )
           : Container(),

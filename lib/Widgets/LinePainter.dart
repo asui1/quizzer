@@ -5,11 +5,12 @@ class LinePainter extends CustomPainter {
   final Offset start;
   final Offset end;
   final Paint dotPaint;
+  final Color color;
 
-  LinePainter({required this.start, required this.end})
+  LinePainter({required this.start, required this.end, required this.color})
       : dotPaint = Paint()
-          ..color = Colors.black
-          ..strokeWidth = 2;
+          ..color = color
+          ..strokeWidth = 5;
 
   @override
   void paint(Canvas canvas, Size size) {

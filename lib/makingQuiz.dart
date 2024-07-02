@@ -343,6 +343,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
               quiz: quiz as Quiz1,
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -357,6 +358,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget2(
               quiz: quiz as Quiz2,
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -371,6 +373,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget3(
               quiz: quiz as Quiz3,
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -385,6 +388,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget4(
               quiz: quiz as Quiz4,
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -404,9 +408,11 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
               quiz: Quiz1(
-                  answers: ['', '', '', '', ''],
-                  ans: [false, false, false, false, false],
-                  question: ''),
+                answers: ['', '', '', '', ''],
+                ans: [false, false, false, false, false],
+                question: '',
+              ),
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -430,6 +436,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                 question: '',
                 maxAnswerSelection: 1,
               ),
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -452,6 +459,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                 question: '',
                 maxAnswerSelection: 1,
               ),
+              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
@@ -468,14 +476,16 @@ class _MakingQuizState extends State<MakingQuiz> {
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget4(
-                quiz: Quiz4(
-              answers: ['', ''],
-              ans: [],
-              question: '',
-              maxAnswerSelection: 1,
-              connectionAnswers: ['', ''],
-              connectionAnswerIndex: [null, null],
-            )),
+              quiz: Quiz4(
+                answers: ['', ''],
+                ans: [],
+                question: '',
+                maxAnswerSelection: 1,
+                connectionAnswers: ['', ''],
+                connectionAnswerIndex: [null, null],
+              ),
+              quizLayout: widget.quizLayout,
+            ),
           ),
         ).then((result) {
           if (result is Quiz4) {
@@ -499,6 +509,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           quiz: quiz as Quiz1,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
+          quizLayout: widget.quizLayout,
         );
       case 2:
         return QuizView2(
@@ -517,6 +528,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           quiz: quiz as Quiz4,
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
+          quizLayout: widget.quizLayout,
         );
       default:
         return Container(); // Handle the default case here

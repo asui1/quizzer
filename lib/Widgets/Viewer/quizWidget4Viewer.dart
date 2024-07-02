@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/config.dart';
@@ -9,12 +10,14 @@ class QuizView4 extends StatefulWidget {
   final Quiz4 quiz;
   final double screenWidthModifier;
   final double screenHeightModifier;
+  final QuizLayout quizLayout;
 
   QuizView4(
       {Key? key,
       required this.quiz,
       this.screenHeightModifier = 1,
-      this.screenWidthModifier = 1})
+      this.screenWidthModifier = 1,
+      required this.quizLayout})
       : super(key: key);
 
   @override
@@ -196,7 +199,8 @@ class _QuizView4State extends State<QuizView4> {
                                     starts[index] != null && ends[index] != null
                                         ? LinePainter(
                                             start: starts[index]!,
-                                            end: ends[index]!)
+                                            end: ends[index]!,
+                                            color: widget.quizLayout.getSelectedColor())
                                         : null,
                                 child: Container(
                                   height: AppConfig.screenHeight *

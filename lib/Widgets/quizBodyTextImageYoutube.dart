@@ -3,17 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/config.dart';
 
 class ContentWidget extends StatefulWidget {
   final BuildContext context;
   final Function(int value) updateStateCallback;
   final Quiz1 quiz1;
+  final QuizLayout quizLayout;
 
   ContentWidget({
     Key? key,
     required this.context,
     required this.updateStateCallback,
     required this.quiz1,
+    required this.quizLayout,
   }) : super(key: key);
 
   @override
@@ -56,7 +60,10 @@ class _ContentWidgetState extends State<ContentWidget> {
                         },
                       ),
                       ElevatedButton(
-                        child: Text('유튜브'),
+                        child: Text(
+                          '유튜브',
+                          style: TextStyle(decoration: TextDecoration.lineThrough),
+                        ),
                         onPressed: () {
                           widget.updateStateCallback(3);
                           Navigator.of(context).pop(); // 다이얼로그 종료
@@ -76,12 +83,17 @@ class _ContentWidgetState extends State<ContentWidget> {
             TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: widget.quizLayout.getBorderColor1()),
                 ),
               ),
               minLines: 1, // 최소 줄 수 설정
               maxLines: null, // 최대 줄 수를 무제한으로 설정
               keyboardType: TextInputType.multiline, // 멀티라인 입력 활성화
+              style: TextStyle(
+                fontFamily: widget.quizLayout.getBodyFont(),
+                fontSize: AppConfig.fontSize,
+                color: widget.quizLayout.getBodyTextColor(),
+              ),
             ),
             Positioned(
               right: 0,

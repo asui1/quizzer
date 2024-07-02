@@ -148,7 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MakingQuizscreen(quizLayout: QuizLayout(),)),
+                          builder: (context) => MakingQuizscreen(
+                                quizLayout: QuizLayout(),
+                              )),
                     );
                   },
                   child: Text(
@@ -213,12 +215,14 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => QuizWidget1(
-                    quiz: Quiz1(
-                        answers: ['', '', '', '', ''],
-                        ans: [false, false, false, false, false],
-                        question: ''),
-                  )),
+            builder: (context) => QuizWidget1(
+              quiz: Quiz1(
+                  answers: ['', '', '', '', ''],
+                  ans: [false, false, false, false, false],
+                  question: ''),
+              quizLayout: QuizLayout(),
+            ),
+          ),
         );
         break;
       case 2:
@@ -237,6 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     screenHeightModifier: 1,
                     screenWidthModifier: 1,
+                    quizLayout: QuizLayout(),
                   )),
         );
         break;
@@ -251,6 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       question: '',
                       maxAnswerSelection: 1,
                     ),
+                    quizLayout: QuizLayout(),
                   )),
         );
         break;
@@ -279,12 +285,14 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizWidget3(
-                      quiz: Quiz3(
-                    answers: ['', ''],
-                    ans: [],
-                    question: '',
-                    maxAnswerSelection: 1,
-                  ))),
+                    quiz: Quiz3(
+                      answers: ['', ''],
+                      ans: [],
+                      question: '',
+                      maxAnswerSelection: 1,
+                    ),
+                    quizLayout: QuizLayout(),
+                  )),
         );
         break;
       case 6:
@@ -305,14 +313,16 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => QuizWidget4(
-                      quiz: Quiz4(
-                    answers: ['', ''],
-                    ans: [],
-                    question: '',
-                    maxAnswerSelection: 1,
-                    connectionAnswers: ['', ''],
-                    connectionAnswerIndex: [null, null],
-                  ))),
+                    quiz: Quiz4(
+                      answers: ['', ''],
+                      ans: [],
+                      question: '',
+                      maxAnswerSelection: 1,
+                      connectionAnswers: ['', ''],
+                      connectionAnswerIndex: [null, null],
+                    ),
+                    quizLayout: QuizLayout(),
+                  )),
         );
         break;
       case 8:
@@ -328,6 +338,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       connectionAnswers: ['C', 'E', 'A', 'B', 'D'],
                       connectionAnswerIndex: [2, 4, 0, 1, 3],
                     ),
+                    quizLayout: QuizLayout(),
                   )),
         );
       // Add more cases for other quiz pages

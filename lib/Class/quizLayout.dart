@@ -17,16 +17,16 @@ class QuizLayout {
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
   bool isWidgetSizeSet = false;
-  ImageColor backgroundImage = ImageColor(color: Colors.white);
+  ImageColor backgroundImage = ImageColor(color: Color.fromARGB(255, 245, 197, 219));
   ImageColor topBarImage = ImageColor(color: Colors.blue[200]);
   ImageColor bottompBarImage = ImageColor(color: Colors.blue[200]);
-  Color titleColor = Colors.black;
-  Color bodyTextColor = Colors.black;
-  Color textColor = Colors.black;
-  Color buttonColor = Color.fromARGB(255, 180, 147, 243);
+  Color titleColor = Color.fromARGB(255, 236, 207, 207);
+  Color bodyTextColor = Color.fromARGB(255, 253, 250, 75);
+  Color textColor = Color.fromARGB(255, 131, 238, 104);
+  Color buttonColor = Color.fromARGB(255, 207, 194, 231);
   Color borderColor1 = Color.fromARGB(255, 172, 98, 214);
-  Color borderColor2 = Colors.black;
-  Color selectedColor = Color.fromARGB(255, 140, 183, 224);
+  Color borderColor2 = Color.fromARGB(255, 94, 236, 255);
+  Color selectedColor = Color.fromARGB(255, 120, 153, 184);
   bool shuffleQuestions = false;
   String title = '';
   Image titleImage = Image.asset('images/question2.png');
@@ -36,6 +36,39 @@ class QuizLayout {
   String answerFont = MyFonts.gothicA1;
 
   QuizLayout({this.highlightedIndex = 0});
+
+  TextStyle getAnswerTextStyle(){
+    return TextStyle(
+      color: textColor,
+      fontFamily: answerFont,
+      fontSize: AppConfig.fontSize,
+    );
+  }
+
+  Color getTitleColor() {
+    return titleColor;
+  }
+
+  Color getBodyTextColor() {
+    return bodyTextColor;
+  }
+
+  Color getSelectedColor() {
+    return selectedColor;
+  }
+
+  String getQuestionFont() {
+    return questionFont;
+  }
+
+  String getBodyFont() {
+    return bodyFont;
+  }
+
+  String getAnswerFont() {
+    return answerFont;
+  }
+
 
   Color getBorderColor1() {
     return borderColor1;
