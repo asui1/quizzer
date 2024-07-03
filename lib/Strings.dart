@@ -3,11 +3,12 @@ const Map<String, String> stringResources = {
   'imageSet1': '상단 바 이미지 설정',
   'imageSet2': '하단 바 이미지 설정',
   'imageSet3': '제목 텍스트 색 설정',
-  'imageSet4': '본문 텍스트 색 설정',
-  'imageSet5': '버튼 색 설정',
-  'imageSet6': '선택됨 색 설정',
-  'imageSet7': '테두리 색 1 설정',
-  'imageSet8': '테두리 색 2 설정',
+  'imageSet4': "예문 텍스트 색 설정",
+  'imageSet5': '본문 텍스트 색 설정',
+  'imageSet6': '버튼 색 설정',
+  'imageSet7': '선택됨 색 설정',
+  'imageSet8': '테두리 색 1 설정',
+  'imageSet9': '테두리 색 2 설정',
 
   
   'quiz1' : '퀴즈 1 생성',

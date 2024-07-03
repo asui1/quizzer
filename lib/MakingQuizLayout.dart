@@ -315,7 +315,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                 child: ListBody(
                                   children: <Widget>[
                                     Column(
-                                      children: List.generate(9, (index) {
+                                      children: List.generate(10, (index) {
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                               bottom:
@@ -356,11 +356,28 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                 ),
                               ),
                               actions: <Widget>[
-                                ConfirmButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(1);
-                                  },
-                                  selection: 1,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween, // 좌우 정렬
+                                  children: <Widget>[
+                                    IconButton(
+                                      onPressed: () {
+                                        widget.quizLayout
+                                            .generateAdequateColors();
+                                        setState(() {});
+                                      },
+                                      icon: Icon(Icons.autorenew),
+                                    ),
+                                    Expanded(
+                                        child:
+                                            SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
+                                    ConfirmButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(1);
+                                      },
+                                      selection: 1,
+                                    ),
+                                  ],
                                 ),
                               ],
                             );
@@ -388,8 +405,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              quizLayoutAdditionalSetup(quizLayout: widget.quizLayout),
+                          builder: (context) => quizLayoutAdditionalSetup(
+                              quizLayout: widget.quizLayout),
                         ),
                       ).then((_) {
                         setState(() {});

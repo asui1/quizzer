@@ -109,9 +109,11 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                           vertical: AppConfig.padding),
                       decoration: BoxDecoration(
                         color: Colors.transparent, // 컨테이너를 투명하게 만듭니다.
+                        border: Border.all(
+                            color: widget.quizLayout.getBorderColor2(),
+                            width: 2),
                         borderRadius:
                             BorderRadius.circular(10), // 모서리를 둥글게 처리합니다.
-                            border: Border.all(color: widget.quizLayout.getBorderColor1(), width: 2)
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(AppConfig.padding),

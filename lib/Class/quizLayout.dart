@@ -2,7 +2,9 @@ import 'package:flutter/material.dart'; // Import the material.dart package
 
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Functions/colorGenerator.dart';
 import 'package:quizzer/config.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 class QuizLayout {
   bool isTopBarVisible = false;
@@ -17,16 +19,19 @@ class QuizLayout {
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
   bool isWidgetSizeSet = false;
-  ImageColor backgroundImage = ImageColor(color: Color.fromARGB(255, 245, 197, 219));
-  ImageColor topBarImage = ImageColor(color: Colors.blue[200]);
-  ImageColor bottompBarImage = ImageColor(color: Colors.blue[200]);
-  Color titleColor = Color.fromARGB(255, 236, 207, 207);
-  Color bodyTextColor = Color.fromARGB(255, 253, 250, 75);
-  Color textColor = Color.fromARGB(255, 131, 238, 104);
-  Color buttonColor = Color.fromARGB(255, 207, 194, 231);
-  Color borderColor1 = Color.fromARGB(255, 172, 98, 214);
-  Color borderColor2 = Color.fromARGB(255, 94, 236, 255);
-  Color selectedColor = Color.fromARGB(255, 120, 153, 184);
+  ImageColor backgroundImage =
+      ImageColor(color: Color.fromARGB(255, 255, 235, 244));
+  ImageColor topBarImage =
+      ImageColor(color: const Color.fromARGB(255, 186, 220, 248));
+  ImageColor bottompBarImage =
+      ImageColor(color: Color.fromARGB(255, 186, 220, 248));
+  Color titleColor = Color.fromARGB(255, 0, 0, 0);
+  Color bodyTextColor = Color.fromARGB(255, 0, 0, 0);
+  Color textColor = Color.fromARGB(255, 0, 0, 0);
+  Color buttonColor = Color.fromARGB(255, 122, 79, 202);
+  Color borderColor1 = Color.fromARGB(255, 130, 23, 192);
+  Color borderColor2 = Color.fromARGB(255, 192, 156, 224);
+  Color selectedColor = Color.fromARGB(255, 211, 175, 214);
   bool shuffleQuestions = false;
   String title = '';
   Image titleImage = Image.asset('images/question2.png');
@@ -37,7 +42,7 @@ class QuizLayout {
 
   QuizLayout({this.highlightedIndex = 0});
 
-  TextStyle getAnswerTextStyle(){
+  TextStyle getAnswerTextStyle() {
     return TextStyle(
       color: textColor,
       fontFamily: answerFont,
@@ -68,7 +73,6 @@ class QuizLayout {
   String getAnswerFont() {
     return answerFont;
   }
-
 
   Color getBorderColor1() {
     return borderColor1;
@@ -251,6 +255,21 @@ class QuizLayout {
     return true;
   }
 
+  Future<void> generateAdequateColors() async {
+    Color backgroundColorMain = await backgroundImage.getMainColor() as Color;
+    print(backgroundColorMain);
+    ColorSchemeGenerator colorSchemeGenerator =
+        ColorSchemeGenerator(backgroundColorMain);
+    titleColor = colorSchemeGenerator.getStandingOutColor();
+    bodyTextColor = colorSchemeGenerator.getStandingOutColor();
+    textColor = colorSchemeGenerator.getStandingOutColor();
+    buttonColor = colorSchemeGenerator.getStandingOutColor();
+    borderColor1 = colorSchemeGenerator.getSimilarColor();
+    selectedColor = colorSchemeGenerator.getStandingOutColor();
+    borderColor2 = colorSchemeGenerator.getSimilarColor();
+    //TODO: I want to generate color similar to background color for border Colors, contrast colors for button color and selected color.
+  }
+
   ImageColor getImage(int index) {
     if (index == 0) {
       return backgroundImage;
@@ -262,7 +281,7 @@ class QuizLayout {
       return ImageColor(color: titleColor);
     } else if (index == 4) {
       return ImageColor(color: bodyTextColor);
-    } else if(index ==5){
+    } else if (index == 5) {
       return ImageColor(color: textColor);
     } else if (index == 6) {
       return ImageColor(color: buttonColor);
@@ -280,7 +299,7 @@ class QuizLayout {
   Color getColor(int index) {
     if (index == 3) {
       return titleColor;
-    } else if(index == 4){
+    } else if (index == 4) {
       return bodyTextColor;
     } else if (index == 5) {
       return textColor;
