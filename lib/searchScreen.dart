@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzer/Widgets/quizCard.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -8,7 +9,25 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String _searchText = '';
+  List<QuizCard> _searchResults = [
+    QuizCard(
+      title: "loadQuizLayoutMaker",
+      uuid: "11111",
+      titleImagePath: "images/question2.png",
+    ),
+    QuizCard(
+      title: "loadQuizLayoutSolver",
+      uuid: "11111",
+      titleImagePath: "images/question2.png",
+    ),
+    QuizCard(
+      title: "emptyTest",
+      uuid: "11111",
+      titleImagePath: "images/question2.png",
+    )
+  ];
 
+  // Needs UUID, title, and titleImage.
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +75,14 @@ class _SearchScreenState extends State<SearchScreen> {
           // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
           // action in the IDE, or press "p" in the console), to see the
           // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Expanded(
+              child: ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  return _searchResults[index];
+                },
+              ),
             ),
           ],
         ),

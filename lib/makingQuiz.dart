@@ -276,20 +276,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                     // 세 번째 버튼: 저장 버튼
                     ElevatedButton(
                       onPressed: () async {
-                        final directory =
-                            await getApplicationDocumentsDirectory();
-                        final file = await File('$directory/quiz.json');
-                        String contents = await file.readAsString();
-                        Map<String, dynamic> quizzes =
-                            contents.isNotEmpty ? json.decode(contents) : {};
-                        final uuid = Uuid();
-                        final currentTime =
-                            DateTime.now().millisecondsSinceEpoch;
-                        final quizTitle = widget.quizLayout.getTitle();
-                        final tag = uuid.v5(
-                            Uuid.NAMESPACE_URL, '$currentTime$quizTitle');
-                        quizzes[tag] = widget.quizLayout.toJson();
-                        await file.writeAsString(json.encode(quizzes));
+                        await widget.quizLayout.saveQuizLayout();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('저장되었습니다.'),

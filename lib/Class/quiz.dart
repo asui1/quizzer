@@ -53,7 +53,7 @@ abstract class AbstractQuiz {
 
   Future<File> getlocalFile() async {
     final path = await getLocalPath();
-    return File('$path/quiz.json');
+    return File('$path/test.json');
   }
 
   void setQuestion(String newQuestion) {

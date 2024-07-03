@@ -184,8 +184,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                         // 이미지 파일 처리
                                         setState(() {
                                           widget.quizLayout.setTitleImage(
-                                              Image.file(
-                                                  File(tempImageFile.path)));
+                                              tempImageFile.path);
                                         });
                                       }
                                       // Handle user upload with image picker

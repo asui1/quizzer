@@ -5,11 +5,17 @@ import 'dart:io';
 import 'package:image/image.dart' as img;
 
 class ImageColor {
-  final String? imagePath;
-  final Color? color;
+  String? imagePath;
+  Color? color;
   Color? mainColor = null;
 
   ImageColor({this.imagePath, this.color});
+
+  void setImage(String imagePath) {
+    this.imagePath = imagePath;
+    this.color = null;
+    this.mainColor = null;
+  }
 
   Future<Color> getMainColor() async {
     if (mainColor == null) {
