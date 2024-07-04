@@ -10,7 +10,8 @@ class LinePainter extends CustomPainter {
   LinePainter({required this.start, required this.end, required this.color})
       : dotPaint = Paint()
           ..color = color
-          ..strokeWidth = 5;
+          ..strokeWidth = 3.0 // Adjust line thickness here
+          ..style = PaintingStyle.stroke;
 
   @override
   void paint(Canvas canvas, Size size) {

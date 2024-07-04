@@ -145,11 +145,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: screenWidth * 0.3,
                 child: ElevatedButton(
                   onPressed: () {
+                    QuizLayout quizLayout = QuizLayout();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => MakingQuizscreen(
-                                quizLayout: QuizLayout(),
+                                quizLayout: quizLayout,
                               )),
                     );
                   },
@@ -210,138 +211,148 @@ class _MyHomePageState extends State<MyHomePage> {
   void navigateToQuizPage(BuildContext context, int n) {
     // Navigator를 사용하여 QuizWidgetN 또는 QuizNPage로 이동
     // 예시로 QuizNPage로 이동하는 코드를 작성
+    QuizLayout quizLayout = QuizLayout();
+
     switch (n) {
       case 1:
+        Quiz1 quiz = Quiz1(
+            answers: ['', '', '', '', ''],
+            ans: [false, false, false, false, false],
+            question: '');
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
-              quiz: Quiz1(
-                  answers: ['', '', '', '', ''],
-                  ans: [false, false, false, false, false],
-                  question: ''),
-              quizLayout: QuizLayout(),
+              quiz: quiz,
+              quizLayout: quizLayout,
             ),
           ),
         );
         break;
       case 2:
+        Quiz1 quiz = Quiz1(
+          answers: ['11', '22', '33', '44', '55'],
+          ans: [true, false, false, false, false],
+          question: "11을 고르세요.",
+          bodyType: 1,
+          bodyText: "본문입니다.",
+          shuffleAnswers: true,
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizView1(
-                    quiz: Quiz1(
-                      answers: ['11', '22', '33', '44', '55'],
-                      ans: [true, false, false, false, false],
-                      question: "11을 고르세요.",
-                      bodyType: 1,
-                      bodyText: "본문입니다.",
-                      shuffleAnswers: true,
-                      maxAnswerSelection: 1,
-                    ),
+                    quiz: quiz,
                     screenHeightModifier: 1,
                     screenWidthModifier: 1,
-                    quizLayout: QuizLayout(),
+                    quizLayout: quizLayout,
                   )),
         );
         break;
       case 3:
+        Quiz2 quiz = Quiz2(
+          answers: ['', '', '', '', ''],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizWidget2(
-                    quiz: Quiz2(
-                      answers: [],
-                      ans: [],
-                      question: '',
-                      maxAnswerSelection: 1,
-                    ),
-                    quizLayout: QuizLayout(),
+                    quiz: quiz,
+                    quizLayout: quizLayout,
                   )),
         );
         break;
       case 4:
+        Quiz2 quiz = Quiz2(
+          answers: ['11', '22', '33', '44', '55'],
+          ans: [true, false, false, false, false],
+          question: "11을 고르세요.",
+          maxAnswerSelection: 1,
+          centerDate: [2024, 6, 22],
+          yearRange: 10,
+          answerDate: [
+            [2024, 6, 22],
+            [2024, 6, 20]
+          ],
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizView2(
-                    quiz: Quiz2(
-                      answers: ['11', '22', '33', '44', '55'],
-                      ans: [true, false, false, false, false],
-                      question: "11을 고르세요.",
-                      maxAnswerSelection: 1,
-                      centerDate: [2024, 6, 22],
-                      yearRange: 10,
-                      answerDate: [
-                        [2024, 6, 22],
-                        [2024, 6, 20]
-                      ],
-                    ),
-                    quizLayout: QuizLayout(),
+                    quiz: quiz,
+                    quizLayout: quizLayout,
                   )),
         );
         break;
       case 5:
+        Quiz3 quiz = Quiz3(
+          answers: ['', ''],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizWidget3(
-                    quiz: Quiz3(
-                      answers: ['', ''],
-                      ans: [],
-                      question: '',
-                      maxAnswerSelection: 1,
-                    ),
-                    quizLayout: QuizLayout(),
+                    quiz: quiz,
+                    quizLayout: quizLayout,
                   )),
         );
         break;
       case 6:
+        Quiz3 quiz = Quiz3(
+          answers: ['111', '222', '333', '444', '555'],
+          ans: [true, false, false, false, false],
+          question: "11을 고르세요.",
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => QuizView3(
-                quiz: Quiz3(
-                  answers: ['111', '222', '333', '444', '555'],
-                  ans: [true, false, false, false, false],
-                  question: "11을 고르세요.",
-                  maxAnswerSelection: 1,
-                ),
-                quizLayout: QuizLayout(),
+                quiz: quiz,
+                quizLayout: quizLayout,
               ),
             ));
         break;
       case 7:
+        Quiz4 quiz = Quiz4(
+          answers: ['', ''],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+          connectionAnswers: ['', ''],
+          connectionAnswerIndex: [null, null],
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizWidget4(
-                    quiz: Quiz4(
-                      answers: ['', ''],
-                      ans: [],
-                      question: '',
-                      maxAnswerSelection: 1,
-                      connectionAnswers: ['', ''],
-                      connectionAnswerIndex: [null, null],
-                    ),
-                    quizLayout: QuizLayout(),
+                    quiz: quiz,
+                    quizLayout: quizLayout,
                   )),
         );
         break;
       case 8:
+        Quiz4 quiz = Quiz4(
+          answers: ['11', '22', '33', '44', '55'],
+          ans: [true, false, false, false, false],
+          question: "11을 고르세요.",
+          maxAnswerSelection: 1,
+          connectionAnswers: ['C', 'E', 'A', 'B', 'D'],
+          connectionAnswerIndex: [2, 4, 0, 1, 3],
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => QuizView4(
-                    quiz: Quiz4(
-                      answers: ['11', '22', '33', '44', '55'],
-                      ans: [true, false, false, false, false],
-                      question: "11을 고르세요.",
-                      maxAnswerSelection: 1,
-                      connectionAnswers: ['C', 'E', 'A', 'B', 'D'],
-                      connectionAnswerIndex: [2, 4, 0, 1, 3],
-                    ),
-                    quizLayout: QuizLayout(),
+                    quiz: quiz,
+                    quizLayout: quizLayout,
                   )),
         );
       // Add more cases for other quiz pages

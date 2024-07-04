@@ -90,6 +90,11 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     widget.quiz.setBodyType(value);
                                   });
                                 },
+                                updateBodyTextCallback: (String value) {
+                                  setState(() {
+                                    widget.quiz.setBodyText(value);
+                                  });
+                                },
                                 quiz1: widget.quiz,
                                 quizLayout: widget.quizLayout,
                               ),
@@ -114,7 +119,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                             _controllers.add(
                                                 TextEditingController(
                                                     text: ''));
-                                            FocusScope.of(context).unfocus();
                                           });
                                         },
                                       ),
@@ -148,7 +152,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                                     index, newValue);
                                               }
                                             }
-                                            FocusScope.of(context).unfocus();
                                           });
                                         },
                                       ),
@@ -164,7 +167,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                       onChanged: (value) {
                                         setState(() {
                                           widget.quiz.setAnswer(index, value);
-                                          FocusScope.of(context).unfocus();
                                         });
                                       },
                                       decoration: InputDecoration(
@@ -177,7 +179,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                         setState(() {
                                           widget.quiz.removeAnswerAt(index);
                                           _controllers.removeAt(index);
-                                          FocusScope.of(context).unfocus();
                                         });
                                       },
                                     ),
@@ -192,7 +193,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     value: shuffleAnswers,
                                     onChanged: (bool? newValue) {
                                       setState(() {
-                                        FocusScope.of(context).unfocus();
                                         if (newValue != null) {
                                           widget.quiz
                                               .setShuffleAnswers(newValue);

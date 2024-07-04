@@ -422,16 +422,17 @@ class _MakingQuizState extends State<MakingQuiz> {
 
         break;
       case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuizWidget2(
-              quiz: Quiz2(
+      Quiz2 quiz = Quiz2(
                 answers: [],
                 ans: [],
                 question: '',
                 maxAnswerSelection: 1,
-              ),
+              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget2(
+              quiz: quiz,
               quizLayout: widget.quizLayout,
             ),
           ),
@@ -445,16 +446,17 @@ class _MakingQuizState extends State<MakingQuiz> {
         });
         break;
       case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuizWidget3(
-              quiz: Quiz3(
+      Quiz3 quiz = Quiz3(
                 answers: ['', ''],
                 ans: [],
                 question: '',
                 maxAnswerSelection: 1,
-              ),
+              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget3(
+              quiz: quiz,
               quizLayout: widget.quizLayout,
             ),
           ),
@@ -468,18 +470,19 @@ class _MakingQuizState extends State<MakingQuiz> {
         });
         break;
       case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuizWidget4(
-              quiz: Quiz4(
+      Quiz4 quiz = Quiz4(
                 answers: ['', ''],
                 ans: [],
                 question: '',
                 maxAnswerSelection: 1,
                 connectionAnswers: ['', ''],
                 connectionAnswerIndex: [null, null],
-              ),
+              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => QuizWidget4(
+              quiz: quiz,
               quizLayout: widget.quizLayout,
             ),
           ),

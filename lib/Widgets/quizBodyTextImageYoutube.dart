@@ -11,6 +11,7 @@ class ContentWidget extends StatefulWidget {
   final Function(int value) updateStateCallback;
   final Quiz1 quiz1;
   final QuizLayout quizLayout;
+  final Function(String value) updateBodyTextCallback;
 
   ContentWidget({
     Key? key,
@@ -18,6 +19,7 @@ class ContentWidget extends StatefulWidget {
     required this.updateStateCallback,
     required this.quiz1,
     required this.quizLayout,
+    required this.updateBodyTextCallback,
   }) : super(key: key);
 
   @override
@@ -25,6 +27,20 @@ class ContentWidget extends StatefulWidget {
 }
 
 class _ContentWidgetState extends State<ContentWidget> {
+  late TextEditingController _bodyTextController;
+
+  @override
+  void initState() {
+    super.initState();
+    _bodyTextController = TextEditingController(text: widget.quiz1.getBodyText());
+  }
+
+  @override
+  void dispose() {
+    _bodyTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (widget.quiz1.getBodyType()) {
@@ -81,6 +97,7 @@ class _ContentWidgetState extends State<ContentWidget> {
         return Stack(
           children: [
             TextField(
+              controller: _bodyTextController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: widget.quizLayout.getBorderColor1()),
@@ -94,6 +111,9 @@ class _ContentWidgetState extends State<ContentWidget> {
                 fontSize: AppConfig.fontSize,
                 color: widget.quizLayout.getBodyTextColor(),
               ),
+              onChanged: (value) {
+                widget.updateBodyTextCallback(value);
+              },
             ),
             Positioned(
               right: 0,

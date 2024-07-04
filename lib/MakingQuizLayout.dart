@@ -200,15 +200,15 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                             width: 2.0, // Border width
                                           ),
                                         ),
-                                        width: AppConfig.screenWidth / 3,
+                                        width: AppConfig.screenWidth / 4,
                                         height: AppConfig.screenWidth /
-                                            3, // 가로 크기를 기준으로 정사각형 크기 설정
+                                            4, // 가로 크기를 기준으로 정사각형 크기 설정
                                         child: widget.quizLayout
                                                 .isTitleImageSet()
                                             ? widget.quizLayout.getTitleImage()
                                             : Icon(Icons.add_a_photo,
                                                 size:
-                                                    AppConfig.screenWidth / 3),
+                                                    AppConfig.screenWidth / 4),
                                       ),
                                     ),
                                     SizedBox(

@@ -31,4 +31,8 @@ TODO later
 상단 statusbar 아래서부터 화면 그려지도록 하기.
 QuizGenerator1 BodyText 저장안됨.
 TableCalendar에서 vertical drag가 table calendar로 가던, SingleScrollView로 가던 해야되는데 아에 무시됨.
+QuizGenerator4 지속적인 드래그 인풋 개선 필요.
+Quizgenerator2 질문 저장 안됨.
+MakingQuizLayout 색 자동젠 개선 필.
+QuizGenerator1 마지막 int 텍스트 필드 입력 하나하면 선택 해제됨.
 
