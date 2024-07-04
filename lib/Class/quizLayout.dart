@@ -18,7 +18,7 @@ import 'package:uuid/uuid.dart';
 class QuizLayout {
   bool isTopBarVisible = false;
   bool isBottomBarVisible = false;
-  double appBarHeight = 50.0;
+  double appBarHeight = 75.0;
   double bottomBarHeight = 50.0;
   int highlightedIndex = 0;
   int selectedLayout = 0;

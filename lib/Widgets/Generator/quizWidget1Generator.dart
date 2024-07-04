@@ -59,7 +59,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: Container(
+        body: SafeArea(
+          child: Container(
             height: AppConfig.screenHeight,
             width: AppConfig.screenWidth,
             decoration: backgroundDecoration(quizLayout: widget.quizLayout),
@@ -220,7 +221,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: AppConfig.padding * 6,),
+                              SizedBox(
+                                height: AppConfig.padding * 6,
+                              ),
                             ],
                           )),
                         ),
@@ -238,7 +241,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
                   ),
                 ),
               ],
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
