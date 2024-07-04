@@ -144,6 +144,7 @@ class Quiz1 extends AbstractQuiz {
 
   @override
   List<String> getAnswers() {
+    print("getAnswers: $answers");
     return answers;
   }
 

@@ -176,7 +176,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                                             Expanded(
                                                               flex: 3,
                                                               child: Image.asset(
-                                                                  'images/question1.png',
+                                                                  'assets/images/question2.png',
                                                                   fit: BoxFit
                                                                       .cover),
                                                             ),
@@ -398,15 +398,16 @@ class _MakingQuizState extends State<MakingQuiz> {
   void moveToQuizWidgetGenerator(int n) {
     switch (n) {
       case 0:
+      Quiz1 quiz = Quiz1(
+                answers: ['', '', '', '', ''],
+                ans: [false, false, false, false, false],
+                question: '',
+              );
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
-              quiz: Quiz1(
-                answers: ['', '', '', '', ''],
-                ans: [false, false, false, false, false],
-                question: '',
-              ),
+              quiz: quiz,
               quizLayout: widget.quizLayout,
             ),
           ),

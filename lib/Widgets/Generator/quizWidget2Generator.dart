@@ -220,7 +220,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                       ),
                       SizedBox(height: AppConfig.smallPadding),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height *
+                        height: AppConfig.screenHeight *
                             0.3, // 화면 높이의 1/3
                         child: ListView.builder(
                           itemCount: widget.quiz.getAnswerDate().length,

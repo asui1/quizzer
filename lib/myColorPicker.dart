@@ -4,6 +4,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/config.dart';
 
 class ColorPickerField extends StatefulWidget {
   final QuizLayout quizLayout;
@@ -41,7 +42,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(
-          width: MediaQuery.of(context).size.width / 3,
+          width: AppConfig.screenWidth / 3,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

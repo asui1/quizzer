@@ -9,7 +9,9 @@ ubuntu server 설정하고, 개발환경 개발하기.
 저장이 필요한 것: json 파일 + 이미지들. 최대 4개.(이미지 이름을 UUID_~~ 형태로 표지, 배경, 탑바, 바텀바 4개).
 
 4. solver 페이지 만들기. -> 페이지 만들고 3.에서 생성한 파일 불러오기.
-5. 문제 풀고 채점하는 로직 만들기.(채점은 가능하면 서버레벨에서 할 수 있게)
+
+5. 문제 풀고 채점하는 로직 만들기.(채점은 가능하면 서버에서 할 수 있게)
+
 6. 점수 보여주는 화면 만들기.
 
 
@@ -19,38 +21,6 @@ ubuntu server 설정하고, 개발환경 개발하기.
 TODO later
 달력 위젯에서 이전 달, 이후 달 누르면 focus day 이동하기.
 넘기기 버튼에서 어두운 경우 흰색, 밝은 경우 검은색으로 설정하기.
+상단 statusbar 아래서부터 화면 그려지도록 하기.
+QuizGenerator1 BodyText 저장안됨.
 
-
-  Map<String, dynamic> toJson() {
-    return {
-      'isTopBarVisible': isTopBarVisible,
-      'isBottomBarVisible': isBottomBarVisible,
-      'appBarHeight': appBarHeight,
-      'bottomBarHeight': bottomBarHeight,
-      'highlightedIndex': highlightedIndex,
-      'selectedLayout': selectedLayout,
-      'quizzes': quizzes.map((quiz) => quiz.toJson()).toList(),
-      'curQuizIndex': curQuizIndex,
-      'isTitleSet': isTitleSet,
-      'isFlipStyleSet': isFlipStyleSet,
-      'isBackgroundImageSet': isBackgroundImageSet,
-      'isWidgetSizeSet': isWidgetSizeSet,
-      'backgroundImage': backgroundImage.toJson(),
-      'topBarImage': topBarImage.toJson(),
-      'bottompBarImage': bottompBarImage.toJson(),
-      'titleColor': titleColor.value,
-      'bodyTextColor': bodyTextColor.value,
-      'textColor': textColor.value,
-      'buttonColor': buttonColor.value,
-      'borderColor1': borderColor1.value,
-      'borderColor2': borderColor2.value,
-      'selectedColor': selectedColor.value,
-      'shuffleQuestions': shuffleQuestions,
-      'title': title,
-      'titleImageSet': titleImageSet,
-      'questionFont': questionFont,
-      'bodyFont': bodyFont,
-      'answerFont': answerFont,
-      'titleImagePath': titleImagePath,
-    };
-  }

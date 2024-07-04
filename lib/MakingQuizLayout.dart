@@ -47,7 +47,6 @@ class _MakingQuizState extends State<MakingQuizscreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextScaler scaleFactor = MediaQuery.of(context).textScaler;
     int highlightedIndex = widget.quizLayout.getNextHighlightedIndex();
     if (widget.quizLayout.getSelectedLayout() == 0) {
       highlightedIndex = 0;
@@ -67,8 +66,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     tempAppBarHeight +=
                         details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
                     tempAppBarHeight = tempAppBarHeight.clamp(
-                        MediaQuery.of(context).size.height / 40,
-                        MediaQuery.of(context).size.height /
+                        AppConfig.screenHeight / 40,
+                        AppConfig.screenHeight /
                             4); // 화면 높이의 1/4로 제한
                     widget.quizLayout.setAppBarHeight(tempAppBarHeight);
                   });
@@ -111,13 +110,15 @@ class _MakingQuizState extends State<MakingQuizscreen> {
           children: [
             FilpStyle12(
               quizLayout: widget.quizLayout,
-              onPressedBack: () {},
+              onPressedBack: () {
+                Navigator.pop(context);
+              },
               onPressedForward: () =>
                   navigateToMakingQuizPage(context, widget.quizLayout),
             ),
             Positioned(
               top: 30.0,
-              left: MediaQuery.of(context).size.width / 2 -
+              left: AppConfig.screenWidth / 2 -
                   28, // Subtract half the width of the button to center it
               child: FloatingActionButton(
                 heroTag: 'topBarToggle',
@@ -264,7 +265,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                             });
                                           },
                                           imagePath:
-                                              'images/layoutOption${index + 1}.jpg',
+                                              'assets/images/layoutOption${index + 1}.jpg',
                                         );
                                       }),
                                     ),
@@ -418,7 +419,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
             ),
             Positioned(
               bottom: 30.0,
-              left: MediaQuery.of(context).size.width / 2 -
+              left: AppConfig.screenWidth / 2 -
                   28, // Subtract half the width of the button to center it
               child: FloatingActionButton(
                 heroTag: 'bottomBarToggle',
@@ -447,8 +448,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       tempBottomBarHeight -=
                           details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
                       tempBottomBarHeight = tempBottomBarHeight.clamp(
-                          MediaQuery.of(context).size.height / 40,
-                          MediaQuery.of(context).size.height /
+                          AppConfig.screenHeight / 40,
+                          AppConfig.screenHeight /
                               4); // 화면 높이의 1/4로 제한
                       widget.quizLayout.setBottomBarHeight(tempBottomBarHeight);
                     });
@@ -459,7 +460,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           height: widget.quizLayout.getBottomBarHeight(),
                           child: BottomBarStack(
                             quizLayout: widget.quizLayout,
-                            onPressedBack: () {},
+                            onPressedBack: () {
+                              Navigator.pop(context);
+                            },
                             onPressedForward: () => navigateToMakingQuizPage(
                                 context, widget.quizLayout),
                           ),
@@ -475,7 +478,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           ),
                           child: BottomBarStack(
                             quizLayout: widget.quizLayout,
-                            onPressedBack: () {},
+                            onPressedBack: () {
+                              Navigator.pop(context);
+                            },
                             onPressedForward: () => navigateToMakingQuizPage(
                                 context, widget.quizLayout),
                           ),
@@ -601,8 +606,8 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height / 16,
-      width: MediaQuery.of(context).size.width * 0.6,
+      height: AppConfig.screenHeight / 16,
+      width: AppConfig.screenWidth * 0.6,
       child: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: quizLayout.getNextHighlightedIndex() == index

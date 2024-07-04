@@ -13,17 +13,17 @@ class _SearchScreenState extends State<SearchScreen> {
     QuizCard(
       title: "loadQuizLayoutMaker",
       uuid: "11111",
-      titleImagePath: "images/question2.png",
+      titleImagePath: "assets/images/question2.png",
     ),
     QuizCard(
       title: "loadQuizLayoutSolver",
       uuid: "11111",
-      titleImagePath: "images/question2.png",
+      titleImagePath: "assets/images/question2.png",
     ),
     QuizCard(
       title: "emptyTest",
       uuid: "11111",
-      titleImagePath: "images/question2.png",
+      titleImagePath: "assets/images/question2.png",
     )
   ];
 
