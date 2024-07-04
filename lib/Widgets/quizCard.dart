@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
@@ -23,11 +25,22 @@ class QuizCard extends StatelessWidget {
       padding: EdgeInsets.all(AppConfig.smallPadding), // AppConfig에서 패딩 값 가져오기
       child: InkWell(
         onTap: () async {
-          
-          String jsonString = await rootBundle.loadString('assets/jsons/test.json');
+          print("0");
+          String jsonString = await rootBundle.loadString('jsons/test.json');
+          print("0");
           final jsonResponse = json.decode(jsonString);
           // jsonResponse를 사용하여 필요한 작업 수행
           print('Loaded JSON data: $jsonResponse');
+
+          QuizLayout quizLayout =
+              await QuizLayout().loadQuizLayout(jsonResponse) as QuizLayout;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MakingQuizscreen(
+                      quizLayout: quizLayout,
+                    )),
+          );
         },
         child: Card(
             elevation: 4.0,

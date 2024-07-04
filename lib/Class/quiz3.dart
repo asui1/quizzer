@@ -76,14 +76,14 @@ class Quiz3 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-  @override
-  Future<Quiz3> loadQuiz(dynamic jsonData) {
-    return Future.value(Quiz3(
-        layoutType: jsonData['layoutType'],
+  Quiz3 loadQuiz(dynamic jsonData) {
+    Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    return Quiz3(
+        layoutType: 3,
         answers: jsonData['answers'],
         ans: jsonData['ans'],
         question: jsonData['question'],
-        maxAnswerSelection: jsonData['maxAnswerSelection']));
+        maxAnswerSelection: jsonData['maxAnswerSelection']);
   }
 
   @override

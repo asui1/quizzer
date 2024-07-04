@@ -21,3 +21,36 @@ TODO later
 넘기기 버튼에서 어두운 경우 흰색, 밝은 경우 검은색으로 설정하기.
 
 
+  Map<String, dynamic> toJson() {
+    return {
+      'isTopBarVisible': isTopBarVisible,
+      'isBottomBarVisible': isBottomBarVisible,
+      'appBarHeight': appBarHeight,
+      'bottomBarHeight': bottomBarHeight,
+      'highlightedIndex': highlightedIndex,
+      'selectedLayout': selectedLayout,
+      'quizzes': quizzes.map((quiz) => quiz.toJson()).toList(),
+      'curQuizIndex': curQuizIndex,
+      'isTitleSet': isTitleSet,
+      'isFlipStyleSet': isFlipStyleSet,
+      'isBackgroundImageSet': isBackgroundImageSet,
+      'isWidgetSizeSet': isWidgetSizeSet,
+      'backgroundImage': backgroundImage.toJson(),
+      'topBarImage': topBarImage.toJson(),
+      'bottompBarImage': bottompBarImage.toJson(),
+      'titleColor': titleColor.value,
+      'bodyTextColor': bodyTextColor.value,
+      'textColor': textColor.value,
+      'buttonColor': buttonColor.value,
+      'borderColor1': borderColor1.value,
+      'borderColor2': borderColor2.value,
+      'selectedColor': selectedColor.value,
+      'shuffleQuestions': shuffleQuestions,
+      'title': title,
+      'titleImageSet': titleImageSet,
+      'questionFont': questionFont,
+      'bodyFont': bodyFont,
+      'answerFont': answerFont,
+      'titleImagePath': titleImagePath,
+    };
+  }

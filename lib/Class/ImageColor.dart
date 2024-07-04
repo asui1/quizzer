@@ -17,6 +17,13 @@ class ImageColor {
     this.mainColor = null;
   }
 
+  ImageColor fromJson(Map<String, dynamic> json) {
+    return ImageColor(
+      imagePath: json['imagePath'],
+      color: json['color'] != null ? Color(json['color']) : null,
+    );
+  }
+
   Future<Color> getMainColor() async {
     if (mainColor == null) {
       if(color != null){

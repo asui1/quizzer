@@ -149,17 +149,19 @@ class Quiz2 extends AbstractQuiz {
     image = newImage;
   }
 
-  @override
-  Future<AbstractQuiz> loadQuiz(dynamic jsonData) async {
+
+  Quiz2 loadQuiz(dynamic json){
+    Map<String, dynamic> jsonData = json as Map<String, dynamic>;
     return Quiz2(
-      maxAnswerSelection: jsonData['maxAnswerSelection'],
-      answers: jsonData['answers'],
-      ans: jsonData['ans'],
-      question: jsonData['question'],
-      centerDate: jsonData['centerDate'],
-      yearRange: jsonData['yearRange'],
-      answerDate: jsonData['answerDate'],
-    );
+        layoutType: 2,
+        answers: jsonData['answers'],
+        ans: jsonData['ans'],
+        question: jsonData['question'],
+        maxAnswerSelection: jsonData['maxAnswerSelection'],
+        centerDate: jsonData['centerDate'],
+        yearRange: jsonData['yearRange'],
+        answerDate: jsonData['answerDate']);
+
   }
 
   @override

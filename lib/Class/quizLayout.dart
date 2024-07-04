@@ -6,6 +6,10 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Class/quiz1.dart';
+import 'package:quizzer/Class/quiz2.dart';
+import 'package:quizzer/Class/quiz3.dart';
+import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
 import 'package:quizzer/config.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -53,6 +57,116 @@ class QuizLayout {
       fontFamily: answerFont,
       fontSize: AppConfig.fontSize,
     );
+  }
+
+  Future<void> loadQuizLayout(dynamic inputJson) async {
+    print(inputJson);
+    Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
+    print(inputData['isTopBarVisible']);
+    if (inputData['isTopBarVisible'] != null) {
+      isTopBarVisible = inputData['isTopBarVisible'];
+    }
+    if (inputData['isBottomBarVisible'] != null) {
+      isBottomBarVisible = inputData['isBottomBarVisible'];
+    }
+    if (inputData['appBarHeight'] != null) {
+      appBarHeight = inputData['appBarHeight'];
+    }
+    if (inputData['bottomBarHeight'] != null) {
+      bottomBarHeight = inputData['bottomBarHeight'];
+    }
+    if (inputData['highlightedIndex'] != null) {
+      highlightedIndex = inputData['highlightedIndex'];
+    }
+    if (inputData['selectedLayout'] != null) {
+      selectedLayout = inputData['selectedLayout'];
+    }
+    if (inputData['quizzes'] != null) {
+      for (var quiz in inputData['quizzes']) {
+        if (quiz['layoutType'] == 1) {
+          quizzes.add(Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+        } else if (quiz['layoutType'] == 2) {
+          quizzes.add(Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1).loadQuiz(quiz["body"]));
+        } else if (quiz['layoutType'] == 3) {
+          quizzes.add(Quiz3(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+        } else if (quiz['layoutType'] == 4) {
+          quizzes.add(Quiz4(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+        }
+      }
+    }
+    if (inputData['curQuizIndex'] != null) {
+      curQuizIndex = inputData['curQuizIndex'];
+    }
+    if (inputData['isTitleSet'] != null) {
+      isTitleSet = inputData['isTitleSet'];
+    }
+    if (inputData['isFlipStyleSet'] != null) {
+      isFlipStyleSet = inputData['isFlipStyleSet'];
+    }
+    if (inputData['isBackgroundImageSet'] != null) {
+      isBackgroundImageSet = inputData['isBackgroundImageSet'];
+    }
+    if (inputData['isWidgetSizeSet'] != null) {
+      isWidgetSizeSet = inputData['isWidgetSizeSet'];
+    }
+    if (inputData['backgroundImage'] != null) {
+      backgroundImage = ImageColor().fromJson(inputData['backgroundImage']);
+    }
+    if (inputData['topBarImage'] != null) {
+      topBarImage = ImageColor().fromJson(inputData['topBarImage']);
+    }
+    if (inputData['bottompBarImage'] != null) {
+      bottompBarImage = ImageColor().fromJson(inputData['bottompBarImage']);
+    }
+    if (inputData['titleColor'] != null) {
+      final List<int> rgb = inputData['titleColor'].cast<int>();
+      titleColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['bodyTextColor'] != null) {
+      final List<int> rgb = inputData['bodyTextColor'].cast<int>();
+      bodyTextColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['textColor'] != null) {
+      final List<int> rgb = inputData['textColor'].cast<int>();
+      textColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['buttonColor'] != null) {
+      final List<int> rgb = inputData['buttonColor'].cast<int>();
+      buttonColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['borderColor1'] != null) {
+      final List<int> rgb = inputData['borderColor1'].cast<int>();
+      borderColor1 = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['borderColor2'] != null) {
+      final List<int> rgb = inputData['borderColor2'].cast<int>();
+      borderColor2 = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['selectedColor'] != null) {
+      final List<int> rgb = inputData['selectedColor'].cast<int>();
+      selectedColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+    }
+    if (inputData['shuffleQuestions'] != null) {
+      shuffleQuestions = inputData['shuffleQuestions'];
+    }
+    if (inputData['title'] != null) {
+      title = inputData['title'];
+    }
+    if (inputData['questionFont'] != null) {
+      questionFont = inputData['questionFont'];
+    }
+    if (inputData['bodyFont'] != null) {
+      bodyFont = inputData['bodyFont'];
+    }
+    if (inputData['answerFont'] != null) {
+      answerFont = inputData['answerFont'];
+    }
+    if (inputData['titleImagePath'] != null) {
+      titleImagePath = inputData['titleImagePath'];
+    }
+    if (inputData['titleImageSet'] != null) {
+      titleImageSet = inputData['titleImageSet'];
+    }
   }
 
   Color getTitleColor() {
@@ -464,24 +578,31 @@ class QuizLayout {
   Future<void> saveQuizLayout() async {
     String uuid = generateUuid();
     final directory = await getApplicationDocumentsDirectory();
-  List<Future> futures = [];
+    List<Future> futures = [];
 
-  if (backgroundImage.isColor() == false) {
-    futures.add(copyImage(backgroundImage.imagePath!, '${directory.path}/$uuid-backgroundImage.png').then((newPath) => backgroundImage.setImage(newPath)));
-  }
-  if (topBarImage.isColor() == false) {
-    futures.add(copyImage(topBarImage.imagePath!, '${directory.path}/$uuid-topBarImage.png').then((newPath) => topBarImage.setImage(newPath)));
-  }
-  if (bottompBarImage.isColor() == false) {
-    futures.add(copyImage(bottompBarImage.imagePath!, '${directory.path}/$uuid-bottomBarImage.png').then((newPath) => bottompBarImage.setImage(newPath)));
-  }
-  if (titleImageSet == true) {
-    futures.add(copyImage(titleImagePath, '${directory.path}/$uuid-titleImage.png').then((newPath) => titleImagePath = newPath));
-  }
+    if (backgroundImage.isColor() == false) {
+      futures.add(copyImage(backgroundImage.imagePath!,
+              '${directory.path}/$uuid-backgroundImage.png')
+          .then((newPath) => backgroundImage.setImage(newPath)));
+    }
+    if (topBarImage.isColor() == false) {
+      futures.add(copyImage(
+              topBarImage.imagePath!, '${directory.path}/$uuid-topBarImage.png')
+          .then((newPath) => topBarImage.setImage(newPath)));
+    }
+    if (bottompBarImage.isColor() == false) {
+      futures.add(copyImage(bottompBarImage.imagePath!,
+              '${directory.path}/$uuid-bottomBarImage.png')
+          .then((newPath) => bottompBarImage.setImage(newPath)));
+    }
+    if (titleImageSet == true) {
+      futures.add(
+          copyImage(titleImagePath, '${directory.path}/$uuid-titleImage.png')
+              .then((newPath) => titleImagePath = newPath));
+    }
 
-  // 모든 이미지 복사 작업이 완료될 때까지 기다립니다.
-  await Future.wait(futures);
-
+    // 모든 이미지 복사 작업이 완료될 때까지 기다립니다.
+    await Future.wait(futures);
 
     //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
     Map<String, dynamic> json = toJson();
@@ -493,7 +614,7 @@ class QuizLayout {
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
   }
-  
+
   copyImage(String s, String t) {
     return File(s).copy(t).then((_) => t);
   }

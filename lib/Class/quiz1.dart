@@ -35,6 +35,23 @@ class Quiz1 extends AbstractQuiz {
     answers[index] = newAnswer;
   }
 
+  Quiz1 loadQuiz(dynamic json) {
+    // JSON 데이터를 처리하는 로직을 구현합니다.
+    // 예시에서는 json이 Map<String, dynamic> 타입이라고 가정합니다.
+    // 실제로는 json 타입을 확인하고 적절히 변환하는 로직이 필요할 수 있습니다.
+    Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    return Quiz1(
+      bodyType: jsonData['bodyType'],
+      imageFile: jsonData['imageFile'],
+      bodyText: jsonData['bodyText'],
+      shuffleAnswers: jsonData['shuffleAnswers'],
+      maxAnswerSelection: jsonData['maxAnswerSelection'],
+      answers: jsonData['answers'],
+      ans: jsonData['ans'],
+      question: jsonData['question'],
+    );
+  }
+
   String getAnswerAt(int index) {
     if (index >= answers.length) {
       return '';
@@ -149,20 +166,6 @@ class Quiz1 extends AbstractQuiz {
   void setImage(Image newImage) {
     image = newImage;
   }
-
-  @override
-  Future<AbstractQuiz> loadQuiz(dynamic jsonData) async {
-    return Quiz1(
-        bodyType: jsonData['bodyType'],
-        imageFile: jsonData['imageFile'],
-        bodyText: jsonData['bodyText'],
-        shuffleAnswers: jsonData['shuffleAnswers'],
-        maxAnswerSelection: jsonData['maxAnswerSelection'],
-        answers: jsonData['answers'],
-        ans: jsonData['ans'],
-        question: jsonData['question']);
-  }
-
 
   @override
   Map<String, dynamic> toJson() {

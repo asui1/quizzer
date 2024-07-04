@@ -76,7 +76,6 @@ abstract class AbstractQuiz {
     return file.writeAsString(json.encode(quizzes));
   }
 
-  Future<AbstractQuiz> loadQuiz(dynamic tag);
 
   Map<String, dynamic> toJson();
   

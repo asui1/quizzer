@@ -69,8 +69,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/jsons/test.json
     - assets/jsons/
-
 
   fonts:
       - family : GothicA1
