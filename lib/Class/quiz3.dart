@@ -76,12 +76,16 @@ class Quiz3 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-  Quiz3 loadQuiz(dynamic jsonData) {
+  Quiz3 loadQuiz(dynamic json) {
     Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    List<String> answersList = List<String>.from(
+        jsonData['answers'].map((answer) => answer.toString()));
+    List<bool> ansList =
+        List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
     return Quiz3(
         layoutType: 3,
-        answers: jsonData['answers'],
-        ans: jsonData['ans'],
+        answers: answersList,
+        ans: ansList,
         question: jsonData['question'],
         maxAnswerSelection: jsonData['maxAnswerSelection']);
   }

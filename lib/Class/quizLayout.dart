@@ -84,13 +84,18 @@ class QuizLayout {
     if (inputData['quizzes'] != null) {
       for (var quiz in inputData['quizzes']) {
         if (quiz['layoutType'] == 1) {
-          quizzes.add(Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 2) {
-          quizzes.add(Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1).loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1)
+                  .loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 3) {
-          quizzes.add(Quiz3(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz3(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 4) {
-          quizzes.add(Quiz4(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz4(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
         }
       }
     }
@@ -119,32 +124,26 @@ class QuizLayout {
       bottompBarImage = ImageColor().fromJson(inputData['bottompBarImage']);
     }
     if (inputData['titleColor'] != null) {
-      final List<int> rgb = inputData['titleColor'].cast<int>();
-      titleColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      titleColor = Color(inputData['titleColor'] as int);
+      print(titleColor);
     }
     if (inputData['bodyTextColor'] != null) {
-      final List<int> rgb = inputData['bodyTextColor'].cast<int>();
-      bodyTextColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      bodyTextColor = Color(inputData['bodyTextColor'] as int);
     }
     if (inputData['textColor'] != null) {
-      final List<int> rgb = inputData['textColor'].cast<int>();
-      textColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      textColor = Color(inputData['textColor'] as int);
     }
     if (inputData['buttonColor'] != null) {
-      final List<int> rgb = inputData['buttonColor'].cast<int>();
-      buttonColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      buttonColor = Color(inputData['buttonColor'] as int);
     }
     if (inputData['borderColor1'] != null) {
-      final List<int> rgb = inputData['borderColor1'].cast<int>();
-      borderColor1 = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      borderColor1 = Color(inputData['borderColor1'] as int);
     }
     if (inputData['borderColor2'] != null) {
-      final List<int> rgb = inputData['borderColor2'].cast<int>();
-      borderColor2 = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      borderColor2 = Color(inputData['borderColor2'] as int);
     }
     if (inputData['selectedColor'] != null) {
-      final List<int> rgb = inputData['selectedColor'].cast<int>();
-      selectedColor = Color.fromARGB(255, rgb[0], rgb[1], rgb[2]);
+      selectedColor = Color(inputData['selectedColor'] as int);
     }
     if (inputData['shuffleQuestions'] != null) {
       shuffleQuestions = inputData['shuffleQuestions'];
@@ -606,6 +605,7 @@ class QuizLayout {
 
     //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
     Map<String, dynamic> json = toJson();
+    print("saved as : ${json}");
     // 문서 디렉토리의 경로를 얻습니다.
     // JSON 파일을 저장할 경로를 생성합니다.
     final file = File('${directory.path}/$uuid.json');

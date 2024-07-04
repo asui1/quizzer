@@ -40,14 +40,19 @@ class Quiz1 extends AbstractQuiz {
     // 예시에서는 json이 Map<String, dynamic> 타입이라고 가정합니다.
     // 실제로는 json 타입을 확인하고 적절히 변환하는 로직이 필요할 수 있습니다.
     Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    print(jsonData);
+    List<String> answersList = List<String>.from(
+        jsonData['answers'].map((answer) => answer.toString()));
+        List<bool> ansList = List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
     return Quiz1(
+      layoutType: 1,
       bodyType: jsonData['bodyType'],
       imageFile: jsonData['imageFile'],
       bodyText: jsonData['bodyText'],
       shuffleAnswers: jsonData['shuffleAnswers'],
       maxAnswerSelection: jsonData['maxAnswerSelection'],
-      answers: jsonData['answers'],
-      ans: jsonData['ans'],
+      answers: answersList,
+      ans: ansList,
       question: jsonData['question'],
     );
   }

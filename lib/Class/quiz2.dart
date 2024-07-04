@@ -149,19 +149,24 @@ class Quiz2 extends AbstractQuiz {
     image = newImage;
   }
 
-
-  Quiz2 loadQuiz(dynamic json){
+  Quiz2 loadQuiz(dynamic json) {
     Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    List<String> answersList = List<String>.from(
+        jsonData['answers'].map((answer) => answer.toString()));
+    List<bool> ansList =
+        List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
+        List<int> centerDate = List<int>.from(jsonData['centerDate'].map((date) => date as int));
+        List<List<int>> answerDate = List<List<int>>.from(jsonData['answerDate'].map((date) => List<int>.from(date.map((d) => d as int))));
+
     return Quiz2(
         layoutType: 2,
-        answers: jsonData['answers'],
-        ans: jsonData['ans'],
+        answers: answersList,
+        ans: ansList,
         question: jsonData['question'],
         maxAnswerSelection: jsonData['maxAnswerSelection'],
-        centerDate: jsonData['centerDate'],
+        centerDate: centerDate,
         yearRange: jsonData['yearRange'],
-        answerDate: jsonData['answerDate']);
-
+        answerDate: answerDate);
   }
 
   @override

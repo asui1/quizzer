@@ -12,13 +12,15 @@ class _SearchScreenState extends State<SearchScreen> {
   List<QuizCard> _searchResults = [
     QuizCard(
       title: "loadQuizLayoutMaker",
-      uuid: "11111",
+      uuid: "cc08fdd7-323c-5fee-91d9-9203ead380c5",
       titleImagePath: "assets/images/question2.png",
+      additionalData: "로드 후 QuizLayoutMaker로 이동.",
     ),
     QuizCard(
       title: "loadQuizLayoutSolver",
-      uuid: "11111",
+      uuid: "cc08fdd7-323c-5fee-91d9-9203ead380c5",
       titleImagePath: "assets/images/question2.png",
+      additionalData: "로드 후 QuizLayoutSolver로 이동.",
     ),
     QuizCard(
       title: "emptyTest",
@@ -59,32 +61,37 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: _searchResults.length,
-                itemBuilder: (context, index) {
-                  return _searchResults[index];
-                },
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          // Center is a layout widget. It takes a single child and positions it
+          // in the middle of the parent.
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            //
+            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+            // action in the IDE, or press "p" in the console), to see the
+            // wireframe for each widget.
+            children: <Widget>[
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _searchResults.length,
+                  itemBuilder: (context, index) {
+                    return _searchResults[index];
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

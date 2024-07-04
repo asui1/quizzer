@@ -122,14 +122,20 @@ class Quiz4 extends AbstractQuiz {
     throw UnimplementedError();
   }
 
-  Quiz4 loadQuiz(dynamic jsonData) {
+  Quiz4 loadQuiz(dynamic json) {
     Map<String, dynamic> jsonData = json as Map<String, dynamic>;
+    List<String> answersList = List<String>.from(
+        jsonData['answers'].map((answer) => answer.toString()));
+    List<bool> ansList =
+        List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
+        List<String> connectionAnswers = List<String>.from(jsonData['connectionAnswers'].map((answer) => answer.toString()));
+        List<int> connectionAnswerIndex = List<int>.from(jsonData['connectionAnswerIndex'].map((index) => index as int));
     return Quiz4(
         layoutType: 4,
-        connectionAnswers: jsonData['connectionAnswers'],
-        connectionAnswerIndex: jsonData['connectionAnswerIndex'],
-        answers: jsonData['answers'],
-        ans: jsonData['ans'],
+        connectionAnswers: connectionAnswers,
+        connectionAnswerIndex: connectionAnswerIndex,
+        answers: answersList,
+        ans: ansList,
         question: jsonData['question'],
         maxAnswerSelection: jsonData['maxAnswerSelection']);
   }
