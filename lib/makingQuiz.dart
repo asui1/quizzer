@@ -282,6 +282,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                             content: Text('저장되었습니다.'),
                           ),
                         );
+                        if (Navigator.of(context).canPop())
+                          Navigator.of(context).pop();
+                        if (Navigator.of(context).canPop())
+                          Navigator.of(context).pop();
                       },
                       child: Text('저장'),
                     ),
@@ -398,11 +402,11 @@ class _MakingQuizState extends State<MakingQuiz> {
   void moveToQuizWidgetGenerator(int n) {
     switch (n) {
       case 0:
-      Quiz1 quiz = Quiz1(
-                answers: ['', '', '', '', ''],
-                ans: [false, false, false, false, false],
-                question: '',
-              );
+        Quiz1 quiz = Quiz1(
+          answers: ['', '', '', '', ''],
+          ans: [false, false, false, false, false],
+          question: '',
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -422,12 +426,12 @@ class _MakingQuizState extends State<MakingQuiz> {
 
         break;
       case 1:
-      Quiz2 quiz = Quiz2(
-                answers: [],
-                ans: [],
-                question: '',
-                maxAnswerSelection: 1,
-              );
+        Quiz2 quiz = Quiz2(
+          answers: [],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -446,12 +450,12 @@ class _MakingQuizState extends State<MakingQuiz> {
         });
         break;
       case 2:
-      Quiz3 quiz = Quiz3(
-                answers: ['', ''],
-                ans: [],
-                question: '',
-                maxAnswerSelection: 1,
-              );
+        Quiz3 quiz = Quiz3(
+          answers: ['', ''],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -470,14 +474,14 @@ class _MakingQuizState extends State<MakingQuiz> {
         });
         break;
       case 3:
-      Quiz4 quiz = Quiz4(
-                answers: ['', ''],
-                ans: [],
-                question: '',
-                maxAnswerSelection: 1,
-                connectionAnswers: ['', ''],
-                connectionAnswerIndex: [null, null],
-              );
+        Quiz4 quiz = Quiz4(
+          answers: ['', ''],
+          ans: [],
+          question: '',
+          maxAnswerSelection: 1,
+          connectionAnswers: ['', ''],
+          connectionAnswerIndex: [null, null],
+        );
         Navigator.push(
           context,
           MaterialPageRoute(
