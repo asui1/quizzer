@@ -53,8 +53,7 @@ class _QuizView2State extends State<QuizView2> {
           widget.quiz.getCenterDate()[1], widget.quiz.getCenterDate()[2]);
     }
     return Scaffold(
-      body: SafeArea(
-        child: Container(
+      body: Container(
           decoration: backgroundDecoration(quizLayout: widget.quizLayout),
           child: Padding(
             padding: EdgeInsets.all(AppConfig.padding),
@@ -217,7 +216,7 @@ class _QuizView2State extends State<QuizView2> {
                     itemBuilder: (context, index) {
                       DateTime date = highlightedDates[index];
                       return Text(
-                        '${index + 1}. ${date.year}, ${date.month}, ${date.day}',
+                        '${index + 1}. ${date.year}. ${date.month}. ${date.day}',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: AppConfig.fontSize *
@@ -233,7 +232,6 @@ class _QuizView2State extends State<QuizView2> {
               ],
             ),
           ),
-        ),
       ),
     );
   }

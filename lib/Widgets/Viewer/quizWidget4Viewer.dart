@@ -89,8 +89,7 @@ class _QuizView4State extends State<QuizView4> {
     }
     // Future가 완료되면 UI 빌드
     return Scaffold(
-      body: SafeArea(
-        child: Container(
+      body: Container(
           decoration: backgroundDecoration(quizLayout: widget.quizLayout),
           child: Padding(
             padding: EdgeInsets.all(AppConfig.padding),
@@ -290,7 +289,6 @@ class _QuizView4State extends State<QuizView4> {
             ),
           ),
         ),
-      ),
     );
   }
 }

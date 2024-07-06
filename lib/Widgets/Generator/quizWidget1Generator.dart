@@ -83,6 +83,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                           child: SingleChildScrollView(
                               child: Column(
                             children: [
+                              SizedBox(height: AppConfig.screenHeight * 0.02),
                               ContentWidget(
                                 context: context,
                                 updateStateCallback: (int value) {

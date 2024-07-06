@@ -312,6 +312,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         quizLayout: widget.quizLayout,
                         onPressedBack: onPressedBack,
                         onPressedForward: onPressedForward,
+                        showDragHandle: false,
                       ),
                     )
                   : Container(

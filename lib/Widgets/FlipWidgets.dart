@@ -63,18 +63,20 @@ class BottomBarStack extends StatelessWidget {
   final QuizLayout quizLayout;
   final VoidCallback onPressedBack;
   final VoidCallback onPressedForward;
+  final bool showDragHandle;
 
   BottomBarStack(
       {required this.quizLayout,
       required this.onPressedBack,
-      required this.onPressedForward});
+      required this.onPressedForward,
+      this.showDragHandle = true});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topCenter,
       children: <Widget>[
-        Icon(Icons.drag_handle, color: Colors.white),
+        if (showDragHandle) Icon(Icons.drag_handle, color: Colors.white),
         if (quizLayout.getSelectedLayout() == 3) ...{
           Align(
             alignment: Alignment.centerLeft,

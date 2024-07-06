@@ -4,16 +4,9 @@
 ubuntu server 설정하고, 개발환경 개발하기.
 
 - 앱 레벨
-실제 핸드폰에서 텍스트 필드 열렸을 때 앱 크기 확인, SafeArea 설정, SingleScrollView 전체에 설정해주고 ListView.builder는 ...List.Generate 형태로 바꾸기.
-Confirm 버튼은 stack으로 따로 빼고, scrollview 하단에는 빈 공간 추가해주기.
 
-
-QuizGenerator4 수정 예정 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
+QuizGenerator4 수정 필요 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
   ->  시작점에서 끝나는 위치까지 dx, dy 계산해서 연결 설정하기.
-
-3. 퀴즈 저장하는 버튼 구현하기. -> 구현하고 json 형태로 저장된 파일 만들고 가져오기.
-
-저장이 필요한 것: json 파일 + 이미지들. 최대 4개.(이미지 이름을 UUID_~~ 형태로 표지, 배경, 탑바, 바텀바 4개).
 
 4. solver 페이지 만들기. -> 페이지 만들고 3.에서 생성한 파일 불러오기.
 
@@ -24,6 +17,11 @@ QuizGenerator4 수정 예정 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, �
 
 - 앱 전체에서 사용할 색상 테마 하나 만들기.
 
+QuizSolver 구조.
+QuizLayout과 int index를 받는다.
+topbar, bottombar, 넘기기 버튼 구현하고, body에 quizViewer : height 조절, width : 0.90로 조절해서 만들기.
+뒤로가기 구현을 위해 index 기록 준비하고,
+버튼 넘기기, 뒤로가기 등 버튼 누를 때마다 index 기록 참고해서 이동하기.
 
 TODO later
 달력 위젯에서 이전 달, 이후 달 누르면 focus day 이동하기.

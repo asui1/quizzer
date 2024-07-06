@@ -48,8 +48,7 @@ class _QuizView3State extends State<QuizView3> {
       _items = widget.quiz.getShuffledAnswers();
     }
     return Scaffold(
-      body: SafeArea(
-        child: Container(
+      body: Container(
           decoration: backgroundDecoration(quizLayout: widget.quizLayout),
           child: Padding(
             padding: EdgeInsets.all(AppConfig.padding),
@@ -155,7 +154,6 @@ class _QuizView3State extends State<QuizView3> {
             ),
           ),
         ),
-      ),
     );
   }
 }

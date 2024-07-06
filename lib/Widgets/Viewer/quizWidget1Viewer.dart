@@ -46,86 +46,83 @@ class _QuizView1State extends State<QuizView1> {
     }
     // Future가 완료되면 UI 빌드
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
-          child: Padding(
-            padding: EdgeInsets.all(AppConfig.padding),
-            child: Column(
-              children: <Widget>[
-                QuestionViewer(
-                    question: widget.quiz.getQuestion(),
-                    fontSizeModifier: widget.screenWidthModifier,
-                    quizLayout: widget.quizLayout),
-                SizedBox(
-                    height: AppConfig.screenHeight *
-                        0.02 *
-                        widget.screenHeightModifier),
-                _buildQuizBody(
-                    widget.quiz, widget.screenWidthModifier, widget.quizLayout),
-                SizedBox(
-                    height: AppConfig.screenHeight *
-                        0.02 *
-                        widget.screenHeightModifier),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: widget.quiz.getAnswers().length,
-                      itemBuilder: (context, index) {
-                        int newIndex = order[index];
-                        return ListTile(
-                          leading: Theme(
-                            data: ThemeData(
-                              checkboxTheme: CheckboxThemeData(
-                                checkColor: WidgetStateProperty.all(
-                                    Colors.white), // 체크 표시 색상
-                                fillColor: WidgetStateProperty.all(widget
-                                    .quizLayout
-                                    .getSelectedColor()), // 박스 배경 색상
-                              ),
+      body: Container(
+        decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+        child: Padding(
+          padding: EdgeInsets.all(AppConfig.padding),
+          child: Column(
+            children: <Widget>[
+              QuestionViewer(
+                  question: widget.quiz.getQuestion(),
+                  fontSizeModifier: widget.screenWidthModifier,
+                  quizLayout: widget.quizLayout),
+              SizedBox(
+                  height: AppConfig.screenHeight *
+                      0.02 *
+                      widget.screenHeightModifier),
+              _buildQuizBody(
+                  widget.quiz, widget.screenWidthModifier, widget.quizLayout),
+              SizedBox(
+                  height: AppConfig.screenHeight *
+                      0.02 *
+                      widget.screenHeightModifier),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: widget.quiz.getAnswers().length,
+                    itemBuilder: (context, index) {
+                      int newIndex = order[index];
+                      return ListTile(
+                        leading: Theme(
+                          data: ThemeData(
+                            checkboxTheme: CheckboxThemeData(
+                              checkColor: WidgetStateProperty.all(
+                                  Colors.white), // 체크 표시 색상
+                              fillColor: WidgetStateProperty.all(widget
+                                  .quizLayout
+                                  .getSelectedColor()), // 박스 배경 색상
                             ),
-                            child: Checkbox(
-                              value: currentAnswer[newIndex],
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  if (newValue != null) {
-                                    if (trueCount <
-                                            widget.quiz
-                                                .getMaxAnswerSelection() ||
-                                        newValue == false) {
-                                      currentAnswer[newIndex] = newValue;
-                                    }
+                          ),
+                          child: Checkbox(
+                            value: currentAnswer[newIndex],
+                            onChanged: (bool? newValue) {
+                              setState(() {
+                                if (newValue != null) {
+                                  if (trueCount <
+                                          widget.quiz.getMaxAnswerSelection() ||
+                                      newValue == false) {
+                                    currentAnswer[newIndex] = newValue;
                                   }
-                                });
-                              },
-                            ),
-                          ),
-                          title: Text(
-                            widget.quiz.getAnswerAt(order[newIndex]),
-                            style: TextStyle(
-                                fontSize: AppConfig.fontSize *
-                                    widget.screenWidthModifier,
-                                color: widget.quizLayout.getTextColor(),
-                                fontFamily: widget.quizLayout.getAnswerFont()),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              if (currentAnswer[newIndex] == false) {
-                                if (trueCount <
-                                    widget.quiz.getMaxAnswerSelection()) {
-                                  currentAnswer[newIndex] =
-                                      !currentAnswer[newIndex];
                                 }
-                              } else {
+                              });
+                            },
+                          ),
+                        ),
+                        title: Text(
+                          widget.quiz.getAnswerAt(order[newIndex]),
+                          style: TextStyle(
+                              fontSize: AppConfig.fontSize *
+                                  widget.screenWidthModifier,
+                              color: widget.quizLayout.getTextColor(),
+                              fontFamily: widget.quizLayout.getAnswerFont()),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            if (currentAnswer[newIndex] == false) {
+                              if (trueCount <
+                                  widget.quiz.getMaxAnswerSelection()) {
                                 currentAnswer[newIndex] =
                                     !currentAnswer[newIndex];
                               }
-                            });
-                          },
-                        );
-                      }),
-                ),
-              ],
-            ),
+                            } else {
+                              currentAnswer[newIndex] =
+                                  !currentAnswer[newIndex];
+                            }
+                          });
+                        },
+                      );
+                    }),
+              ),
+            ],
           ),
         ),
       ),

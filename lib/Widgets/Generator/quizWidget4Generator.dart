@@ -125,208 +125,223 @@ class _QuizWidget4State extends State<QuizWidget4> {
                         ),
                         SizedBox(height: AppConfig.padding),
                         Expanded(
-                          // ListView.builder를 Expanded로 감싸기
-                          child: ListView.builder(
-                            itemCount: widget.quiz.getAnswers().length +
-                                1, // 마지막 "+" 버튼을 위해 +1
-                            itemBuilder: (context, index) {
-                              if (index == widget.quiz.getAnswers().length) {
-                                // 마지막 요소인 경우 "+" 버튼을 표시
-                                return Container(
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.only(bottom: AppConfig.padding * 6),
-                                  width: 64.0,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      needUpdate = true;
-                                      setState(() {
-                                        widget.quiz.addAnswerPair();
-                                        _controllersLeft
-                                            .add(TextEditingController());
-                                        _controllersRight
-                                            .add(TextEditingController());
-                                        starts.add(null);
-                                        ends.add(null);
-                                        isDragging.add(false);
-                                        leftKeys.add(GlobalKey());
-                                        rightKeys.add(GlobalKey());
-                                        lineKeys.add(GlobalKey());
-                                        WidgetsBinding.instance!
-                                            .addPostFrameCallback((_) {
-                                          setOffsets();
-                                        });
-                                      });
-                                    },
-                                    child: Icon(Icons.add),
-                                  ),
-                                );
-                              } else {
-                                // 나머지 요소들은 기존 로직을 따름
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _controllersLeft[index],
-                                          decoration: InputDecoration(
-                                            hintText: '답변 ${index + 1}',
-                                          ),
-                                          onChanged: (value) {
-                                            widget.quiz
-                                                .setAnswerAt(index, value);
-                                          },
-                                          style: widget.quizLayout
-                                              .getAnswerTextStyle(),
-                                        ),
-                                      ),
-                                      Container(
-                                        width: AppConfig.screenWidth * 0.5,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: GestureDetector(
-                                          onTapDown: (details) {
-                                            setState(() {
-                                              isDragging[index] = true;
-                                              Offset position =
-                                                  leftDotLinePaintLocal[index];
-                                              starts[index] =
-                                                  position; // 드래그 시작 시 시작점 업데이트
-                                            });
-                                          },
-                                          onPanUpdate: (details) {
-                                            if (isDragging[index] == false)
-                                              return;
-                                            setState(() {
-                                              ends[index] = details
-                                                  .localPosition; // 드래그하는 동안 끝점 업데이트
-                                            });
-                                          },
-                                          onPanEnd: (details) {
-                                            if (isDragging[index] == false)
-                                              return;
-                                            setState(() {
-                                              for (var key in rightKeys) {
-                                                Offset globalPosition =
-                                                    rightDotGlobal[
-                                                        rightKeys.indexOf(key)];
-                                                double distance =
-                                                    (globalPosition -
-                                                            details
-                                                                .globalPosition)
-                                                        .distance;
-                                                if (distance <= 20) {
-                                                  RenderBox linePaint =
-                                                      lineKeys[index]
-                                                              .currentContext!
-                                                              .findRenderObject()
-                                                          as RenderBox;
-                                                  Offset position =
-                                                      linePaint.globalToLocal(
-                                                          globalPosition);
-                                                  ends[index] = position;
-                                                  widget.quiz
-                                                      .setConnectionAnswerIndexAt(
-                                                          index,
-                                                          rightKeys
-                                                              .indexOf(key));
-                                                  break;
-                                                } else {
-                                                  ends[index] = null;
-                                                }
-                                              }
+                          child: NotificationListener<ScrollNotification>(
+                            onNotification: (ScrollNotification scrollInfo) {
+                              if (scrollInfo is ScrollEndNotification) {
+                                needUpdate = true;
+                                setOffsets(); // 스크롤이 완전히 멈춘 후에 setOffsets 함수를 호출합니다.
+                              }
+                              return true; // 모든 스크롤 이벤트에 대해 true를 반환하여 이벤트 처리를 계속합니다.
+                            },
 
-                                              // 드래그 종료 후 필요한 작업 수행
-                                              isDragging[index] = false;
-                                            });
-                                          },
-                                          child: CustomPaint(
-                                            key: lineKeys[index],
-                                            painter: starts[index] != null &&
-                                                    ends[index] != null
-                                                ? LinePainter(
-                                                    start: starts[index]!,
-                                                    end: ends[index]!,
-                                                    color: widget.quizLayout
-                                                        .getSelectedColor())
-                                                : null,
-                                            child: Container(
-                                              height: 100.0,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Container(
-                                                    key: leftKeys[index],
-                                                    height: 15.0,
-                                                    width: 15.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
+                            // ListView.builder를 Expanded로 감싸기
+                            child: ListView.builder(
+                              itemCount: widget.quiz.getAnswers().length +
+                                  1, // 마지막 "+" 버튼을 위해 +1
+                              itemBuilder: (context, index) {
+                                if (index == widget.quiz.getAnswers().length) {
+                                  // 마지막 요소인 경우 "+" 버튼을 표시
+                                  return Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.only(
+                                        bottom: AppConfig.padding * 6),
+                                    width: 64.0,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        needUpdate = true;
+                                        setState(() {
+                                          widget.quiz.addAnswerPair();
+                                          _controllersLeft
+                                              .add(TextEditingController());
+                                          _controllersRight
+                                              .add(TextEditingController());
+                                          starts.add(null);
+                                          ends.add(null);
+                                          isDragging.add(false);
+                                          leftKeys.add(GlobalKey());
+                                          rightKeys.add(GlobalKey());
+                                          lineKeys.add(GlobalKey());
+                                          WidgetsBinding.instance!
+                                              .addPostFrameCallback((_) {
+                                            setOffsets();
+                                          });
+                                        });
+                                      },
+                                      child: Icon(Icons.add),
+                                    ),
+                                  );
+                                } else {
+                                  // 나머지 요소들은 기존 로직을 따름
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _controllersLeft[index],
+                                            decoration: InputDecoration(
+                                              hintText: '답변 ${index + 1}',
+                                            ),
+                                            onChanged: (value) {
+                                              widget.quiz
+                                                  .setAnswerAt(index, value);
+                                            },
+                                            style: widget.quizLayout
+                                                .getAnswerTextStyle(),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: AppConfig.screenWidth * 0.5,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: GestureDetector(
+                                            onTapDown: (details) {
+                                              setState(() {
+                                                isDragging[index] = true;
+                                                Offset position =
+                                                    leftDotLinePaintLocal[
+                                                        index];
+                                                starts[index] =
+                                                    position; // 드래그 시작 시 시작점 업데이트
+                                              });
+                                            },
+                                            onPanUpdate: (details) {
+                                              if (isDragging[index] == false)
+                                                return;
+                                              setState(() {
+                                                ends[index] = details
+                                                    .localPosition; // 드래그하는 동안 끝점 업데이트
+                                              });
+                                            },
+                                            onPanEnd: (details) {
+                                              if (isDragging[index] == false)
+                                                return;
+                                              setState(() {
+                                                for (var key in rightKeys) {
+                                                  Offset globalPosition =
+                                                      rightDotGlobal[rightKeys
+                                                          .indexOf(key)];
+                                                  double distance =
+                                                      (globalPosition -
+                                                              details
+                                                                  .globalPosition)
+                                                          .distance;
+                                                  if (distance <= 20) {
+                                                    RenderBox linePaint =
+                                                        lineKeys[index]
+                                                                .currentContext!
+                                                                .findRenderObject()
+                                                            as RenderBox;
+                                                    Offset position =
+                                                        linePaint.globalToLocal(
+                                                            globalPosition);
+                                                    ends[index] = position;
+                                                    widget.quiz
+                                                        .setConnectionAnswerIndexAt(
+                                                            index,
+                                                            rightKeys
+                                                                .indexOf(key));
+                                                    break;
+                                                  } else {
+                                                    ends[index] = null;
+                                                  }
+                                                }
+
+                                                // 드래그 종료 후 필요한 작업 수행
+                                                isDragging[index] = false;
+                                              });
+                                            },
+                                            child: CustomPaint(
+                                              key: lineKeys[index],
+                                              painter: starts[index] != null &&
+                                                      ends[index] != null
+                                                  ? LinePainter(
+                                                      start: starts[index]!,
+                                                      end: ends[index]!,
                                                       color: widget.quizLayout
-                                                          .getBorderColor1(),
+                                                          .getSelectedColor())
+                                                  : null,
+                                              child: Container(
+                                                height: 100.0,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      key: leftKeys[index],
+                                                      height: 15.0,
+                                                      width: 15.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: widget.quizLayout
+                                                            .getBorderColor1(),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    key: rightKeys[index],
-                                                    height: 15.0,
-                                                    width: 15.0,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: widget.quizLayout
-                                                          .getBorderColor1(),
+                                                    Container(
+                                                      key: rightKeys[index],
+                                                      height: 15.0,
+                                                      width: 15.0,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: widget.quizLayout
+                                                            .getBorderColor1(),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _controllersRight[index],
-                                          decoration: InputDecoration(
-                                            hintText: '연결된 답변 ${index + 1}',
+                                        Expanded(
+                                          child: TextField(
+                                            controller:
+                                                _controllersRight[index],
+                                            decoration: InputDecoration(
+                                              hintText: '연결된 답변 ${index + 1}',
+                                            ),
+                                            onChanged: (value) {
+                                              widget.quiz.setConnectionAnswerAt(
+                                                  index, value);
+                                            },
+                                            style: widget.quizLayout
+                                                .getAnswerTextStyle(),
                                           ),
-                                          onChanged: (value) {
-                                            widget.quiz.setConnectionAnswerAt(
-                                                index, value);
-                                          },
-                                          style: widget.quizLayout
-                                              .getAnswerTextStyle(),
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.remove_circle_outline),
-                                        onPressed: () {
-                                          setState(() {
-                                            updateEnds(index);
-                                            widget.quiz.removeAnswerPairAt(
-                                                index); // 퀴즈에서 해당 답변 제거
-                                            _controllersLeft.removeAt(
-                                                index); // 왼쪽 컨트롤러 리스트에서 제거
-                                            _controllersRight.removeAt(
-                                                index); // 오른쪽 컨트롤러 리스트에서 제거
-                                            starts.removeAt(index);
-                                            ends.removeAt(index);
-                                            isDragging.removeAt(index);
-                                            leftKeys.removeAt(index);
-                                            rightKeys.removeAt(index);
-                                            lineKeys.removeAt(index);
-                                            needUpdate = true;
-                                            WidgetsBinding.instance!
-                                                .addPostFrameCallback((_) {
-                                              setOffsets();
+                                        IconButton(
+                                          icon:
+                                              Icon(Icons.remove_circle_outline),
+                                          onPressed: () {
+                                            setState(() {
+                                              updateEnds(index);
+                                              widget.quiz.removeAnswerPairAt(
+                                                  index); // 퀴즈에서 해당 답변 제거
+                                              _controllersLeft.removeAt(
+                                                  index); // 왼쪽 컨트롤러 리스트에서 제거
+                                              _controllersRight.removeAt(
+                                                  index); // 오른쪽 컨트롤러 리스트에서 제거
+                                              starts.removeAt(index);
+                                              ends.removeAt(index);
+                                              isDragging.removeAt(index);
+                                              leftKeys.removeAt(index);
+                                              rightKeys.removeAt(index);
+                                              lineKeys.removeAt(index);
+                                              needUpdate = true;
+                                              WidgetsBinding.instance!
+                                                  .addPostFrameCallback((_) {
+                                                setOffsets();
+                                              });
                                             });
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            },
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ],
