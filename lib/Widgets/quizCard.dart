@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
@@ -56,8 +58,9 @@ class QuizCard extends StatelessWidget {
                     SizedBox(
                       width: AppConfig.shortestSide / 6, // 이미지 너비
                       height: AppConfig.shortestSide / 6, // 이미지 높이
-                      child: Image.asset(titleImagePath,
-                          fit: BoxFit.cover), // 이미지 표시
+                      child: titleImagePath.startsWith('assets/')
+                          ? Image.asset(titleImagePath) // 에셋 이미지 사용
+                          : Image.file(File(titleImagePath)), // 파일 이미지 사용
                     ),
                     SizedBox(
                       width: AppConfig.shortestSide * 0.05,

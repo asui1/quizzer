@@ -260,7 +260,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                       start: starts[index]!,
                                                       end: ends[index]!,
                                                       color: widget.quizLayout
-                                                          .getSelectedColor())
+                                                          .getBorderColor1())
                                                   : null,
                                               child: Container(
                                                 height: 100.0,

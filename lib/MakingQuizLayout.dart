@@ -88,9 +88,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                         height: widget.quizLayout.getAppBarHeight(),
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(
-                                widget.quizLayout.getImage(1).getImagePath()),
-                            fit: BoxFit.cover,
+                            image: Image.file(File(
+                              widget.quizLayout.getImage(1).getImagePath(),
+                            )).image,
+                            fit: BoxFit.fitWidth,
                           ),
                         ),
                         child: Stack(
@@ -478,9 +479,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           height: widget.quizLayout.getBottomBarHeight(),
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage(
-                                  widget.quizLayout.getImage(2).getImagePath()),
-                              fit: BoxFit.cover,
+                              image: Image.file(
+                                File(widget.quizLayout
+                                    .getImage(2)
+                                    .getImagePath()),
+                              ).image,
+                              fit: BoxFit.fitWidth,
                             ),
                           ),
                           child: BottomBarStack(

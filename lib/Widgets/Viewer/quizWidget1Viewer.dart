@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -156,10 +158,10 @@ Widget _buildQuizBody(
         ),
       );
     case 2:
-      return Image.asset(
+      return Image.file(
         height: AppConfig.screenHeight * 0.3 * screenWidthModifier,
         width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
-        quiz.getImageFile().path,
+        File(quiz.getImageFile().path),
         fit: BoxFit.cover,
       );
     default:

@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'package:path/path.dart' as path; // Add this line
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/config.dart';
@@ -35,10 +39,17 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
     imageFile = widget.quizLayout.getImage(widget.index).imagePath == null
         ? null
         : XFile(widget.quizLayout.getImage(widget.index).getImagePath());
+    hexController.text = colorToHex(pickerColor, enableAlpha: false);
   }
 
   @override
   Widget build(BuildContext context) {
+    String lastTenChars = "";
+
+    if (imageFile != null) {
+      String path = imageFile!.path;
+      lastTenChars = path.length > 10 ? path.substring(path.length - 10) : path;
+    }
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(
@@ -93,7 +104,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Current Path: ${imageFile == null ? 'No image selected' : '...${imageFile!.path.split('/').last}'}',
+                            'Current Path: ${imageFile == null ? 'No image selected' : lastTenChars}',
                             style: TextStyle(fontSize: 16),
                             maxLines: 1,
                           ),
@@ -112,6 +123,8 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                                   if (tempImageFile != null) {
                                     // 이미지 파일 처리
                                     setState(() {
+                                      print(
+                                          "Image Path: " + tempImageFile.path);
                                       imageFile = tempImageFile;
                                     });
                                   }
@@ -141,18 +154,40 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
         TextButton(
           child: Text('확인'),
           onPressed: () {
-            if(widget.index > 2){
+            if (widget.index > 2) {
               widget.quizLayout.setColor(widget.index, pickerColor);
-
+              Navigator.of(context).pop(pickerColor);
+            } else {
+              if (imageFile != null) {
+                saveFileToPermanentDirectory(imageFile!).then((value) {
+                  widget.quizLayout.setImage(widget.index,
+                      ImageColor(imagePath: value.path, color: pickerColor));
+                  Navigator.of(context).pop(pickerColor);
+                });
+              } else {
+                widget.quizLayout.setImage(widget.index,
+                    ImageColor(imagePath: imageFile?.path, color: pickerColor));
+                Navigator.of(context).pop(pickerColor);
+              }
             }
-            else{
-            widget.quizLayout.setImage(widget.index,
-                ImageColor(imagePath: imageFile?.path, color: pickerColor));
-            }
-            Navigator.of(context).pop(pickerColor);
           },
         ),
       ],
     );
+  }
+
+  Future<File> saveFileToPermanentDirectory(XFile xFile) async {
+    // 영구 저장소의 경로를 얻습니다.
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    String appDocPath = appDocDir.path;
+
+    // 새 파일 경로를 생성합니다.
+    final String fileName = path.basename(xFile.path);
+    final File permanentFile = File('$appDocPath/$fileName');
+
+    // XFile을 영구 디렉토리로 복사합니다.
+    await xFile.saveTo(permanentFile.path);
+
+    return permanentFile;
   }
 }

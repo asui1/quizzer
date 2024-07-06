@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Strings.dart';
@@ -22,8 +24,9 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
               )
             : BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                      widget.quizLayout.getBackgroundImage().getImagePath()),
+                  image: Image.file(
+                          File(widget.quizLayout.getBackgroundImage().getImagePath()))
+                      .image,
                   fit: BoxFit.cover,
                 ),
               ),

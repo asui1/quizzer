@@ -266,7 +266,7 @@ class QuizLayout {
   }
 
   Image getTitleImage() {
-    return Image.asset(titleImagePath);
+    return Image.file(File(titleImagePath));
   }
 
   Map<String, dynamic> toJson() {
@@ -313,6 +313,14 @@ class QuizLayout {
 
   bool getShuffleQuestions() {
     return shuffleQuestions;
+  }
+
+  void addQuizAt(AbstractQuiz quiz, int index) {
+    if (index > quizzes.length) {
+      quizzes.add(quiz);
+      return;
+    }
+    quizzes.insert(index, quiz);
   }
 
   void addQuiz(AbstractQuiz quiz) {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/config.dart';
@@ -34,7 +36,7 @@ BoxDecoration backgroundDecoration({required QuizLayout quizLayout}) {
         )
       : BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(quizLayout.getBackgroundImage().getImagePath()),
+            image: Image.file(File(quizLayout.getBackgroundImage().getImagePath())).image,
             fit: BoxFit.cover,
           ),
         );

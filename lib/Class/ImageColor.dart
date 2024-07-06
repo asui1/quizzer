@@ -12,6 +12,7 @@ class ImageColor {
   ImageColor({this.imagePath, this.color});
 
   void setImage(String imagePath) {
+    print("Image Set: $imagePath");
     this.imagePath = imagePath;
     this.color = null;
     this.mainColor = null;
@@ -26,10 +27,9 @@ class ImageColor {
 
   Future<Color> getMainColor() async {
     if (mainColor == null) {
-      if(color != null){
+      if (color != null) {
         return color!;
-      }
-      else{
+      } else {
         mainColor = await getMainColorOfImage(imagePath!);
         return mainColor!;
       }
@@ -39,7 +39,7 @@ class ImageColor {
   }
 
   bool isColor() {
-    return color != null;
+    return imagePath == null;
   }
 
   Color getColor() {
@@ -51,12 +51,13 @@ class ImageColor {
   }
 
   Widget getImage(double width, double height) {
+    print("IsImage: ${!isColor()}");
     return isColor()
         ? CustomPaint(
             size: Size(width, height),
             painter: ColorPainter(getColor()),
           )
-        : Image.asset(getImagePath(), width: width, height: height);
+        : Image.file(File(getImagePath()), width: width, height: height);
   }
 
   Map<String, dynamic> toJson() {

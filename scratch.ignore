@@ -5,9 +5,8 @@ ubuntu server 설정하고, 개발환경 개발하기.
 
 - 앱 레벨
 
-QuizGenerator4 수정 필요 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
-  ->  시작점에서 끝나는 위치까지 dx, dy 계산해서 연결 설정하기.
-
+7/07 목표.
+Solver page 구현하기.
 4. solver 페이지 만들기. -> 페이지 만들고 3.에서 생성한 파일 불러오기.
 
 5. 문제 풀고 채점하는 로직 만들기.(채점은 가능하면 서버에서 할 수 있게)
@@ -24,13 +23,14 @@ topbar, bottombar, 넘기기 버튼 구현하고, body에 quizViewer : height �
 버튼 넘기기, 뒤로가기 등 버튼 누를 때마다 index 기록 참고해서 이동하기.
 
 TODO later
-달력 위젯에서 이전 달, 이후 달 누르면 focus day 이동하기.
 넘기기 버튼에서 어두운 경우 흰색, 밝은 경우 검은색으로 설정하기.
-상단 statusbar 아래서부터 화면 그려지도록 하기.
-QuizGenerator1 BodyText 저장안됨.
 TableCalendar에서 vertical drag가 table calendar로 가던, SingleScrollView로 가던 해야되는데 아에 무시됨.
 QuizGenerator4 지속적인 드래그 인풋 개선 필요.
-Quizgenerator2 질문 저장 안됨.
+QuizGenerator4 수정 필요 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
+  ->  시작점에서 끝나는 위치까지 dx, dy 계산해서 연결 설정하기.
 MakingQuizLayout 색 자동젠 개선 필.
 QuizGenerator1 마지막 int 텍스트 필드 입력 하나하면 선택 해제됨.
+Quizgenerator/viewer4에서 항상 dotted line이 젤 뒤에 위치하게.
+dialog 밖을 눌러서 꺼져도 바뀐점이 반영되어있음.
+dialog클릭 시 키보드에 unfocus 설정.
 
