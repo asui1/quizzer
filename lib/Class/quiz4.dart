@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/src/widgets/image.dart';
 import 'package:quizzer/Class/quiz.dart';
@@ -9,6 +10,8 @@ class Quiz4 extends AbstractQuiz {
   int maxAnswerSelection = 1;
   List<String> connectionAnswers = [];
   List<int?> connectionAnswerIndex = [];
+  List<Offset?> starts = [];
+  List<Offset?> ends = [];
 
   Quiz4({
     int layoutType = 4,
@@ -24,8 +27,41 @@ class Quiz4 extends AbstractQuiz {
             ans: ans,
             question: question);
 
+  void initOffsets() {
+    if (starts.isEmpty) {
+      for (int i = 0; i < answers.length; i++) {
+        starts.add(null);
+        ends.add(null);
+      }
+    }
+  }
+
+  void setEndAt(int index, Offset? newOffset) {
+    ends[index] = newOffset;
+  }
+
   void addConnectionAnswerIndex(int newInt) {
     connectionAnswerIndex.add(newInt);
+  }
+
+  List<Offset?> getStarts() {
+    return starts;
+  }
+
+  Offset? getStartAt(int index) {
+    return starts[index];
+  }
+
+  void setStartAt(int index, Offset newOffset) {
+    starts[index] = newOffset;
+  }
+
+  void addStart(Offset newOffset) {
+    starts.add(newOffset);
+  }
+
+  List<Offset?> getEnds() {
+    return ends;
   }
 
   void setConnectionAnswerIndexAt(int index, int newInt) {
@@ -128,8 +164,10 @@ class Quiz4 extends AbstractQuiz {
         jsonData['answers'].map((answer) => answer.toString()));
     List<bool> ansList =
         List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
-        List<String> connectionAnswers = List<String>.from(jsonData['connectionAnswers'].map((answer) => answer.toString()));
-        List<int> connectionAnswerIndex = List<int>.from(jsonData['connectionAnswerIndex'].map((index) => index as int));
+    List<String> connectionAnswers = List<String>.from(
+        jsonData['connectionAnswers'].map((answer) => answer.toString()));
+    List<int> connectionAnswerIndex = List<int>.from(
+        jsonData['connectionAnswerIndex'].map((index) => index as int));
     return Quiz4(
         layoutType: 4,
         connectionAnswers: connectionAnswers,

@@ -22,6 +22,7 @@ class Quiz3 extends AbstractQuiz {
             question: question);
 
   void setShuffledAnswers() {
+    if(ShuffledAnswers.isNotEmpty) return;
     List<String> tempShuffled = answers.sublist(1);
     tempShuffled.shuffle();
     ShuffledAnswers = [...answers];
