@@ -11,6 +11,10 @@ class Quiz2 extends AbstractQuiz {
   List<List<int>> answerDate = [];
   int maxAnswerSelection = 1;
 
+  ////////////// 뷰어용 변수들
+  List<DateTime> viewerAnswers = [];
+  DateTime? curFocus = null;
+
   Quiz2({
     int layoutType = 2,
     required List<String> answers,
@@ -26,6 +30,27 @@ class Quiz2 extends AbstractQuiz {
           ans: ans,
           question: question,
         );
+
+  void setCurFocus(DateTime newCurFocus) {
+    curFocus = newCurFocus;
+  }
+
+  List<DateTime> getViewerAnswers() {
+    return viewerAnswers;
+  }
+
+  void addViewerAnswer(DateTime newViewerAnswer) {
+    viewerAnswers.add(newViewerAnswer);
+  }
+
+  void removeViewerAnswerAt(int index) {
+    viewerAnswers.removeAt(index);
+  }
+
+  DateTime getCurFocus() {
+    curFocus ??= DateTime(centerDate[0], centerDate[1], centerDate[2]);
+    return curFocus!;
+  }
 
   int getYearRange() {
     return yearRange;
@@ -155,8 +180,10 @@ class Quiz2 extends AbstractQuiz {
         jsonData['answers'].map((answer) => answer.toString()));
     List<bool> ansList =
         List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
-        List<int> centerDate = List<int>.from(jsonData['centerDate'].map((date) => date as int));
-        List<List<int>> answerDate = List<List<int>>.from(jsonData['answerDate'].map((date) => List<int>.from(date.map((d) => d as int))));
+    List<int> centerDate =
+        List<int>.from(jsonData['centerDate'].map((date) => date as int));
+    List<List<int>> answerDate = List<List<int>>.from(jsonData['answerDate']
+        .map((date) => List<int>.from(date.map((d) => d as int))));
 
     return Quiz2(
         layoutType: 2,
