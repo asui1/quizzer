@@ -19,6 +19,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:quizzer/answerCheckScreen.dart';
 
 import 'Class/quiz2.dart';
 
@@ -90,23 +91,30 @@ class _QuizSolverState extends State<QuizSolver> {
                 index: curIndex,
                 screenHeightModifier: heightModifier,
                 screenWidthModifier: 0.80,
+                moveToQuiz: (int index) {
+                  setState(() {
+                    curIndex = index;
+                  });
+                },
               ),
               FilpStyle12(
                 quizLayout: widget.quizLayout,
                 onPressedBack: onPressedBack,
                 onPressedForward: onPressedForward,
               ),
-              Positioned(
-                bottom: 10, // 하단에서의 거리
-                right: 10, // 오른쪽에서의 거리
-                child: Text(
-                  "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
-                  style: TextStyle(
-                    fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
-                    color: widget.quizLayout.getTextColor(), // 텍스트 색상
-                  ),
-                ),
-              ),
+              curIndex == widget.quizLayout.getQuizCount()
+                  ? Container()
+                  : Positioned(
+                      bottom: 10, // 하단에서의 거리
+                      right: 10, // 오른쪽에서의 거리
+                      child: Text(
+                        "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
+                        style: TextStyle(
+                          fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
+                          color: widget.quizLayout.getTextColor(), // 텍스트 색상
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -151,16 +159,10 @@ class _QuizSolverState extends State<QuizSolver> {
 
   void onPressedForward() {
     setState(() {
-      if (curIndex < widget.quizLayout.getQuizCount() - 1) {
+      if (curIndex < widget.quizLayout.getQuizCount()) {
         curIndex++;
       }
     });
-    if (curIndex == widget.quizLayout.getQuizCount() - 1) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => SearchScreen()),
-      // );
-    }
   }
 
   void onPressedBack() {
@@ -176,8 +178,17 @@ Widget QuizView(
     {required QuizLayout quizLayout,
     required int index,
     required double screenHeightModifier,
-    required double screenWidthModifier}) {
+    required double screenWidthModifier,
+    required Function(int) moveToQuiz}) {
   // 여기에서 quizLayout과 index를 사용하여 퀴즈 화면을 구성합니다.
+  if (index >= quizLayout.getQuizCount()) {
+    return AnswerCheckScreen(
+      quizLayout: quizLayout,
+      screenWidthModifier: screenWidthModifier,
+      screenHeightModifier: screenHeightModifier,
+      moveToQuiz: moveToQuiz,
+    );
+  }
 
   AbstractQuiz quiz = quizLayout.getQuiz(index);
   int layoutType = quiz.getLayoutType();

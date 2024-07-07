@@ -189,7 +189,7 @@ class _QuizView4State extends State<QuizView4> {
                                         Offset position = linePaint
                                             .globalToLocal(globalPosition);
                                             widget.quiz.setEndAt(index,position);
-                                        widget.quiz.setConnectionAnswerIndexAt(
+                                        widget.quiz.setUserConnectionIndexAt(
                                             index, rightKeys.indexOf(key));
                                         break;
                                       } else {

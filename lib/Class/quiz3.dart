@@ -1,13 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/src/widgets/image.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Setup/Colors.dart';
 
 //순서 정렬형. A,B,C,D 순서로 정렬되어야 함.
 class Quiz3 extends AbstractQuiz {
   int maxAnswerSelection = 1;
-  List<String> ShuffledAnswers = [];
+  List<String> shuffledAnswers = [];
 
   Quiz3({
     int layoutType = 3,
@@ -22,25 +24,39 @@ class Quiz3 extends AbstractQuiz {
             question: question);
 
   void setShuffledAnswers() {
-    if(ShuffledAnswers.isNotEmpty) return;
+    if (shuffledAnswers.isNotEmpty) return;
     List<String> tempShuffled = answers.sublist(1);
     tempShuffled.shuffle();
-    ShuffledAnswers = [...answers];
+    shuffledAnswers = [...answers];
 
-    ShuffledAnswers.replaceRange(0, answers.length - 1, tempShuffled);
-    ShuffledAnswers[answers.length - 1] = answers[0];
+    shuffledAnswers.replaceRange(0, answers.length - 1, tempShuffled);
+    shuffledAnswers[answers.length - 1] = answers[0];
+  }
+
+  @override
+  Color getState() {
+    if (shuffledAnswers.isNotEmpty) return MyColors().green;
+    return MyColors().red;
   }
 
   bool isShuffledAnswersEmpty() {
-    return ShuffledAnswers.isEmpty;
+    return shuffledAnswers.isEmpty;
   }
 
   List<String> getShuffledAnswers() {
-    return ShuffledAnswers;
+    return shuffledAnswers;
   }
 
   int getAnswersLength() {
     return answers.length;
+  }
+
+  String removeShuffledAnswerAt(int index) {
+    return shuffledAnswers.removeAt(index);
+  }
+
+  void addShuffledAnswerAt(int index, String newString) {
+    shuffledAnswers.insert(index, newString);
   }
 
   void setAnswerAt(int index, String newString) {

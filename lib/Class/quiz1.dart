@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Setup/Colors.dart';
 
 class Quiz1 extends AbstractQuiz {
   int bodyType = 0;
@@ -41,6 +42,19 @@ class Quiz1 extends AbstractQuiz {
         viewerAnswers.shuffle();
         shuffleAnswers = false;
       }
+    }
+  }
+
+  @override
+  Color getState() {
+    int trueCount = ans.where((element) => element == true).length;
+    int userTrueCount = viewerAns.where((element) => element == true).length;
+    if (trueCount == userTrueCount) {
+      return MyColors().green;
+    } else if(userTrueCount > 0){
+      return MyColors().orange;
+    }else{
+      return MyColors().red;
     }
   }
 

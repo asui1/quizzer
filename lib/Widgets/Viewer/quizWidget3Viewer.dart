@@ -132,9 +132,10 @@ class _QuizView3State extends State<QuizView3> {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
                         }
-                        final item = _items.removeAt(oldIndex);
-                        _items.insert(newIndex, item);
-                      });
+                        final item =
+                            widget.quiz.removeShuffledAnswerAt(oldIndex);
+                        widget.quiz.addShuffledAnswerAt(newIndex, item);
+                        _items = widget.quiz.getShuffledAnswers();});
                     },
                   ),
                 ),

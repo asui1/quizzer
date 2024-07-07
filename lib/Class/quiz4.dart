@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/src/widgets/image.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Setup/Colors.dart';
 
 //순서 정렬형. A,B,C,D 순서로 정렬되어야 함.
 class Quiz4 extends AbstractQuiz {
@@ -12,6 +13,8 @@ class Quiz4 extends AbstractQuiz {
   List<int?> connectionAnswerIndex = [];
   List<Offset?> starts = [];
   List<Offset?> ends = [];
+  /////////////////
+  List<int> userConnectionIndex = [];
 
   Quiz4({
     int layoutType = 4,
@@ -33,6 +36,23 @@ class Quiz4 extends AbstractQuiz {
         starts.add(null);
         ends.add(null);
       }
+    }
+    userConnectionIndex = List<int>.generate(answers.length, (index) => -1);
+  }
+
+  void setUserConnectionIndexAt(int index, int newIndex) {
+    userConnectionIndex[index] = newIndex;
+  }
+
+  @override
+  Color getState() {
+    if (connectionAnswerIndex.every((index) => index == -1)) {
+      return MyColors().red;
+    }
+    else if (connectionAnswerIndex.contains(-1)) {
+      return MyColors().orange;
+    } else {
+      return MyColors().green;
     }
   }
 

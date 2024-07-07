@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quizzer/Setup/Colors.dart';
 
 abstract class AbstractQuiz {
   int layoutType;
@@ -10,12 +11,15 @@ abstract class AbstractQuiz {
   List<bool> ans;
   Image? image;
   String question;
+  Color state = MyColors().red;
 
   AbstractQuiz(
       {required this.layoutType,
       required this.answers,
       required this.ans,
       required this.question});
+
+  Color getState();
 
   void addAnswer(String newString){
     answers.add(newString);

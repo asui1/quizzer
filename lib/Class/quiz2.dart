@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Setup/Colors.dart';
 
 class Quiz2 extends AbstractQuiz {
   // Remove the duplicate declaration of maxAnswerSelection
@@ -33,6 +34,18 @@ class Quiz2 extends AbstractQuiz {
 
   void setCurFocus(DateTime newCurFocus) {
     curFocus = newCurFocus;
+  }
+
+  @override
+  Color getState() {
+    if (viewerAnswers.length == 0) {
+      return MyColors().red;
+    } else if(viewerAnswers.length == answerDate.length){
+      return MyColors().green;
+      }
+      else{
+        return MyColors().orange;
+    }
   }
 
   List<DateTime> getViewerAnswers() {
