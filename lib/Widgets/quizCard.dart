@@ -7,6 +7,8 @@ import 'package:quizzer/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
+import 'package:quizzer/solver.dart';
+
 class QuizCard extends StatelessWidget {
   final String uuid;
   final String title;
@@ -30,16 +32,14 @@ class QuizCard extends StatelessWidget {
             .transparency, // This makes the material widget transparent
         child: InkWell(
           onTap: () async {
-            print("0");
             String jsonString =
                 await rootBundle.loadString('assets/jsons/$uuid.json');
-            print("0");
             final jsonResponse = json.decode(jsonString);
             // jsonResponse를 사용하여 필요한 작업 수행
-            print('Loaded JSON data: $jsonResponse');
 
             QuizLayout quizLayout = QuizLayout();
             await quizLayout.loadQuizLayout(jsonResponse);
+            if(title.contains("Maker")){
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -47,6 +47,17 @@ class QuizCard extends StatelessWidget {
                         quizLayout: quizLayout,
                       )),
             );
+            }
+            else{
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => QuizSolver(
+                        quizLayout: quizLayout,
+                        index: 0,
+                      )),
+            );
+            }
           },
           child: Card(
               elevation: 4.0,

@@ -551,6 +551,9 @@ class QuizLayout {
   }
 
   double getAppBarHeight() {
+    if(isTopBarVisible == false) {
+      return 0.0;
+    }
     return appBarHeight;
   }
 
@@ -559,6 +562,9 @@ class QuizLayout {
   }
 
   double getBottomBarHeight() {
+    if(isBottomBarVisible == false) {
+      return 0.0;
+    }
     return bottomBarHeight;
   }
 
