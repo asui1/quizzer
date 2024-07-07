@@ -25,27 +25,16 @@ class QuizView1 extends StatefulWidget {
 }
 
 class _QuizView1State extends State<QuizView1> {
-  bool isLoading = true;
-  List<int> order = [];
-  List<bool> currentAnswer = [];
-
   @override
   void initState() {
     super.initState();
+    widget.quiz.viewerInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    int trueCount = currentAnswer.where((answer) => answer == true).length;
+    List<bool> currentAnswer = widget.quiz.getViewerAns();
 
-    if (order.length == 0) {
-      order = List<int>.generate(widget.quiz.answers.length, (index) => index);
-      currentAnswer =
-          List<bool>.generate(widget.quiz.answers.length, (index) => false);
-      if (widget.quiz.getShuffleAnswers()) {
-        order.shuffle();
-      }
-    }
     // Future가 완료되면 UI 빌드
     return Scaffold(
       body: Container(
@@ -72,27 +61,26 @@ class _QuizView1State extends State<QuizView1> {
                 child: ListView.builder(
                     itemCount: widget.quiz.getAnswers().length,
                     itemBuilder: (context, index) {
-                      int newIndex = order[index];
                       return ListTile(
                         leading: Theme(
                           data: ThemeData(
                             checkboxTheme: CheckboxThemeData(
                               checkColor: WidgetStateProperty.all(
-                                  Colors.white), // 체크 표시 색상
+                                  widget.quizLayout.getBorderColor1()),
                               fillColor: WidgetStateProperty.all(widget
                                   .quizLayout
                                   .getSelectedColor()), // 박스 배경 색상
                             ),
                           ),
                           child: Checkbox(
-                            value: currentAnswer[newIndex],
+                            value: currentAnswer[index],
                             onChanged: (bool? newValue) {
                               setState(() {
                                 if (newValue != null) {
-                                  if (trueCount <
+                                  if (widget.quiz.getViewAnsCount() <
                                           widget.quiz.getMaxAnswerSelection() ||
                                       newValue == false) {
-                                    currentAnswer[newIndex] = newValue;
+                                    currentAnswer[index] = newValue;
                                   }
                                 }
                               });
@@ -100,7 +88,7 @@ class _QuizView1State extends State<QuizView1> {
                           ),
                         ),
                         title: Text(
-                          widget.quiz.getAnswerAt(order[newIndex]),
+                          widget.quiz.getViewerAnsAt(index),
                           style: TextStyle(
                               fontSize: AppConfig.fontSize *
                                   widget.screenWidthModifier,
@@ -109,15 +97,15 @@ class _QuizView1State extends State<QuizView1> {
                         ),
                         onTap: () {
                           setState(() {
-                            if (currentAnswer[newIndex] == false) {
-                              if (trueCount <
+                            if (currentAnswer[index] == false) {
+                              if (widget.quiz.getViewAnsCount() <
                                   widget.quiz.getMaxAnswerSelection()) {
-                                currentAnswer[newIndex] =
-                                    !currentAnswer[newIndex];
+                                currentAnswer[index] =
+                                    !currentAnswer[index];
                               }
                             } else {
-                              currentAnswer[newIndex] =
-                                  !currentAnswer[newIndex];
+                              currentAnswer[index] =
+                                  !currentAnswer[index];
                             }
                           });
                         },

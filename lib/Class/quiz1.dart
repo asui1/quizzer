@@ -11,6 +11,10 @@ class Quiz1 extends AbstractQuiz {
   String bodyText = '';
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
+  
+  ////////////// 뷰어용 변수들
+  List<String> viewerAnswers = [];
+  List<bool> viewerAns = [];
 
   Quiz1({
     int layoutType = 1,
@@ -27,6 +31,35 @@ class Quiz1 extends AbstractQuiz {
             answers: answers,
             ans: ans,
             question: question);
+
+  void viewerInit(){
+    if (viewerAnswers.length == 0) {
+      viewerAnswers = List<String>.generate(answers.length, (index) => answers[index]);
+      viewerAns =
+          List<bool>.generate(answers.length, (index) => false);
+      if (shuffleAnswers) {
+        viewerAnswers.shuffle();
+        shuffleAnswers = false;
+      }
+    }
+  }
+
+  String getViewerAnsAt(int index) {
+    return viewerAnswers[index];
+  }
+
+  List<bool> getViewerAns(){
+    return viewerAns;
+  }
+
+  List<String> getViewerAnswers() {
+
+    return viewerAnswers;
+  }
+
+  int getViewAnsCount() {
+    return viewerAns.where((element) => element == true).length;
+  }
 
   void setAnswer(int index, String newAnswer) {
     if (index >= answers.length) {
