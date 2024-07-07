@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class QuizView1 extends StatefulWidget {
   final Quiz1 quiz; // 퀴즈 태그

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz2.dart';
-import 'package:quizzer/config.dart'; // Add this line to import DateFormat
+import 'package:quizzer/Setup/config.dart'; // Add this line to import DateFormat
 
 Widget buildDatePicker(
     BuildContext context,

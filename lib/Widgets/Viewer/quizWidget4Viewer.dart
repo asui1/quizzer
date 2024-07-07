@@ -4,7 +4,7 @@ import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class QuizView4 extends StatefulWidget {
   final Quiz4 quiz;

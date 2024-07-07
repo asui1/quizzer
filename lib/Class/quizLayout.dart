@@ -11,7 +11,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:uuid/uuid.dart';
 

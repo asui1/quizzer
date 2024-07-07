@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-import 'package:quizzer/Strings.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/Strings.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class quizLayoutAdditionalSetup extends StatefulWidget {
   final QuizLayout quizLayout;

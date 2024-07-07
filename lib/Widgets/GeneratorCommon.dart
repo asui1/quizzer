@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class questionInputTextField extends StatelessWidget {
   final TextEditingController controller;

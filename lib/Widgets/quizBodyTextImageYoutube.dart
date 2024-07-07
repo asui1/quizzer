@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class ContentWidget extends StatefulWidget {
   final BuildContext context;

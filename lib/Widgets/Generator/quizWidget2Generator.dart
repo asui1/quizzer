@@ -6,7 +6,7 @@ import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Widgets/dateChooser.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class QuizWidget2 extends StatefulWidget {

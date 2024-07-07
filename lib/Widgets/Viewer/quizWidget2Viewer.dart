@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 

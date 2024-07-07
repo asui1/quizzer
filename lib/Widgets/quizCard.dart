@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 

@@ -6,14 +6,14 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-import 'package:quizzer/Strings.dart';
+import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/additionalSetup.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 import 'Widgets/FlipWidgets.dart';
 import 'makingQuiz.dart';
-import 'myColorPicker.dart';
+import 'Widgets/myColorPicker.dart';
 
 class MakingQuizscreen extends StatefulWidget {
   final QuizLayout quizLayout;

@@ -21,7 +21,7 @@ import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 import 'package:uuid/uuid.dart';
 
 import 'Class/quizLayout.dart';

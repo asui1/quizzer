@@ -18,7 +18,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 import 'Class/quiz2.dart';
 

@@ -3,7 +3,7 @@ import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class QuizWidget3 extends StatefulWidget {
   final QuizLayout quizLayout;

@@ -9,7 +9,7 @@ import 'package:quizzer/Functions/customScrollPhysic.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Widgets/quizBodyTextImageYoutube.dart';
-import 'package:quizzer/config.dart';
+import 'package:quizzer/Setup/config.dart';
 
 class QuizWidget1 extends StatefulWidget {
   final QuizLayout quizLayout;
