@@ -21,6 +21,8 @@ abstract class AbstractQuiz {
 
   Color getState();
 
+  bool check();
+
   void addAnswer(String newString){
     answers.add(newString);
   }

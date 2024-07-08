@@ -19,9 +19,12 @@ class ScoringScreen extends StatefulWidget {
 }
 
 class _ScoringScreenState extends State<ScoringScreen> {
+  late int score;
   @override
   void initState() {
     super.initState();
+    score = widget.quizLayout.getScore();
+
   }
 
   @override
@@ -114,7 +117,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
                               height:
                                   AppConfig.fontSize), // 텍스트를 수직 방향으로 약간 아래로 이동
                           Text(
-                            '${50}', // 점수 표시
+                            '$score', // 점수 표시
                             style: TextStyle(
                               color: Colors.white, // 텍스트 색상
                               fontSize: AppConfig.fontSize * 5, // 텍스트 크기
@@ -136,6 +139,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
                         child: const Text("돌아가기"),
                       ),
                     ),
+                    //TODO : sns로 결과 공유하는 기능 만들어야하는데, 점수를 공유하고 웹사이트로 이동시킬 수 있어야하니까 이건 나중에 구현하는걸로 하고 지금은 점수 UI만 좀 예쁘게 만들어보는걸로.
                   ],
                 ),
               ],

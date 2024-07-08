@@ -40,6 +40,16 @@ class Quiz4 extends AbstractQuiz {
     userConnectionIndex = List<int>.generate(answers.length, (index) => -1);
   }
 
+  @override
+  bool check() {
+    print(connectionAnswerIndex);
+    print(userConnectionIndex);
+    if(connectionAnswerIndex == userConnectionIndex){
+      return true;
+    }
+    return false;
+  }
+
   void setUserConnectionIndexAt(int index, int newIndex) {
     userConnectionIndex[index] = newIndex;
   }

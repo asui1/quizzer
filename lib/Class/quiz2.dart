@@ -37,6 +37,21 @@ class Quiz2 extends AbstractQuiz {
   }
 
   @override
+  bool check(){
+    print(answerDate);
+    print(viewerAnswers);
+    if(answerDate.length != viewerAnswers.length){
+      return false;
+    }
+    for (int i = 0; i < answerDate.length; i++) {
+      if (!viewerAnswers.contains(DateTime(answerDate[i][0], answerDate[i][1], answerDate[i][2]))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
   Color getState() {
     if (viewerAnswers.length == 0) {
       return MyColors().red;

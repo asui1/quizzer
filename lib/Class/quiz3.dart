@@ -34,6 +34,14 @@ class Quiz3 extends AbstractQuiz {
   }
 
   @override
+  bool check() {
+    print(shuffledAnswers);
+    print(answers);
+    if(shuffledAnswers == answers) return true;
+    return false;
+  }
+
+  @override
   Color getState() {
     if (shuffledAnswers.isNotEmpty) return MyColors().green;
     return MyColors().red;

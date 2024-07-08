@@ -12,7 +12,7 @@ class Quiz1 extends AbstractQuiz {
   String bodyText = '';
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
-  
+
   ////////////// 뷰어용 변수들
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
@@ -33,11 +33,11 @@ class Quiz1 extends AbstractQuiz {
             ans: ans,
             question: question);
 
-  void viewerInit(){
+  void viewerInit() {
     if (viewerAnswers.length == 0) {
-      viewerAnswers = List<String>.generate(answers.length, (index) => answers[index]);
-      viewerAns =
-          List<bool>.generate(answers.length, (index) => false);
+      viewerAnswers =
+          List<String>.generate(answers.length, (index) => answers[index]);
+      viewerAns = List<bool>.generate(answers.length, (index) => false);
       if (shuffleAnswers) {
         viewerAnswers.shuffle();
         shuffleAnswers = false;
@@ -46,14 +46,26 @@ class Quiz1 extends AbstractQuiz {
   }
 
   @override
+  bool check() {
+    print(ans);
+    print(viewerAns);
+    for (int i = 0; i < answers.length; i++) {
+      if (ans[i] != viewerAns[viewerAnswers.indexOf(answers[i])]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
   Color getState() {
     int trueCount = ans.where((element) => element == true).length;
     int userTrueCount = viewerAns.where((element) => element == true).length;
     if (trueCount == userTrueCount) {
       return MyColors().green;
-    } else if(userTrueCount > 0){
+    } else if (userTrueCount > 0) {
       return MyColors().orange;
-    }else{
+    } else {
       return MyColors().red;
     }
   }
@@ -62,12 +74,11 @@ class Quiz1 extends AbstractQuiz {
     return viewerAnswers[index];
   }
 
-  List<bool> getViewerAns(){
+  List<bool> getViewerAns() {
     return viewerAns;
   }
 
   List<String> getViewerAnswers() {
-
     return viewerAnswers;
   }
 
@@ -90,7 +101,8 @@ class Quiz1 extends AbstractQuiz {
     print(jsonData);
     List<String> answersList = List<String>.from(
         jsonData['answers'].map((answer) => answer.toString()));
-        List<bool> ansList = List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
+    List<bool> ansList =
+        List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
     return Quiz1(
       layoutType: 1,
       bodyType: jsonData['bodyType'],

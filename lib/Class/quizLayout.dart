@@ -59,6 +59,30 @@ class QuizLayout {
     );
   }
 
+  int getScore() {
+    int score = 0;
+
+    int n = quizzes.length;
+    int baseScore = 100 ~/ n; // Integer division to get the base score
+    int leftovers = 100 % n; // Remainder to be distributed
+
+    // Initial distribution of scores
+    List<int> scores = List<int>.filled(n, baseScore);
+
+    // Distribute leftovers to the quizzes at the end
+    for (int i = n - leftovers; i < n; i++) {
+      scores[i] += 1;
+    }
+
+    // Iterate through quizzes and adjust scores based on quiz.check()
+    for (int i = 0; i < n; i++) {
+      if (quizzes[i].check()) {
+        score += scores[i];
+      }
+    }
+    return score;
+  }
+
   Future<void> loadQuizLayout(dynamic inputJson) async {
     print(inputJson);
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
@@ -551,7 +575,7 @@ class QuizLayout {
   }
 
   double getAppBarHeight() {
-    if(isTopBarVisible == false) {
+    if (isTopBarVisible == false) {
       return 0.0;
     }
     return appBarHeight;
@@ -562,7 +586,7 @@ class QuizLayout {
   }
 
   double getBottomBarHeight() {
-    if(isBottomBarVisible == false) {
+    if (isBottomBarVisible == false) {
       return 0.0;
     }
     return bottomBarHeight;
