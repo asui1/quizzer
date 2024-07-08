@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:quizzer/scoringScreen.dart';
 
 class AnswerCheckScreen extends StatelessWidget {
   final QuizLayout quizLayout;
   final double screenWidthModifier;
   final double screenHeightModifier;
   final Function(int) moveToQuiz;
+  final double heightModifier;
 
   AnswerCheckScreen({
     required this.quizLayout,
     required this.screenWidthModifier,
     required this.screenHeightModifier,
     required this.moveToQuiz,
+    required this.heightModifier,
   });
 
   @override
@@ -76,6 +79,13 @@ class AnswerCheckScreen extends StatelessWidget {
           width: AppConfig.screenWidth * screenWidthModifier / 2, // 원하는 너비 설정
           child: FloatingActionButton(
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ScoringScreen(quizLayout: quizLayout,heightModifier: heightModifier),
+                ),
+              );
+              
               // 채점 로직
             },
             child: const Text("채점하기"),

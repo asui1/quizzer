@@ -46,7 +46,7 @@ class QuizLayout {
   String questionFont = MyFonts.gothicA1Bold;
   String bodyFont = MyFonts.gothicA1ExtraBold;
   String answerFont = MyFonts.gothicA1;
-  String titleImagePath = 'images/question2.png';
+  String titleImagePath = 'assets/images/question2.png';
   bool titleImageSet = false;
 
   QuizLayout({this.highlightedIndex = 0});

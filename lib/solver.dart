@@ -248,6 +248,7 @@ Widget QuizView(
       screenWidthModifier: screenWidthModifier,
       screenHeightModifier: screenHeightModifier,
       moveToQuiz: moveToQuiz,
+      heightModifier: screenHeightModifier,
     );
   }
 
