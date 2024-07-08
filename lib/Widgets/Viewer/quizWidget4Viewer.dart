@@ -11,14 +11,16 @@ class QuizView4 extends StatefulWidget {
   final double screenWidthModifier;
   final double screenHeightModifier;
   final QuizLayout quizLayout;
+  final Function(bool) changePageViewState;
 
-  QuizView4(
-      {Key? key,
-      required this.quiz,
-      this.screenHeightModifier = 1,
-      this.screenWidthModifier = 1,
-      required this.quizLayout})
-      : super(key: key);
+  QuizView4({
+    Key? key,
+    required this.quiz,
+    this.screenHeightModifier = 1,
+    this.screenWidthModifier = 1,
+    required this.quizLayout,
+    required this.changePageViewState,
+  }) : super(key: key);
 
   @override
   _QuizView4State createState() => _QuizView4State();
@@ -37,6 +39,9 @@ class _QuizView4State extends State<QuizView4> {
   List<Offset> leftDotLinePaintLocal = [];
   List<Offset> rightDotGlobal = [];
   bool needUpdate = true;
+  double dx = 0.0;
+  double dy = 0.0;
+  Offset dragStart = Offset(0, 0);
 
   @override
   void initState() {
@@ -81,6 +86,9 @@ class _QuizView4State extends State<QuizView4> {
         return GlobalPosition;
       }).toList();
       needUpdate = false;
+      print(leftDotGlobal);
+      print(leftDotLinePaintLocal);
+      print(rightDotGlobal);
     }
   }
 
@@ -158,13 +166,23 @@ class _QuizView4State extends State<QuizView4> {
                               child: GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTapDown: (details) {
+                                  print("onTapDown");
+                                  print(
+                                      "SET START AT: ${details.localPosition}");
                                   setState(() {
                                     isDragging[index] = true;
+                                    widget.changePageViewState(false);
                                     Offset position =
                                         leftDotLinePaintLocal[index];
                                     widget.quiz.setStartAt(index, position);
                                     widget.quiz.setEndAt(index, position);
+                                    dragStart = details.localPosition;
                                   });
+                                },
+                                onTapUp: (details) {
+                                  print("onTapUp");
+                                  widget.changePageViewState(true);
+                                  dragStart = Offset(0, 0);
                                 },
                                 onPanUpdate: (details) {
                                   if (isDragging[index] == false) return;
@@ -174,27 +192,35 @@ class _QuizView4State extends State<QuizView4> {
                                   });
                                 },
                                 onPanEnd: (details) {
-                                  if (isDragging[index] == false) return;
+                                  print("onPanEnd");
+                                  if (isDragging[index] == false) {
+                                    widget.changePageViewState(true);
+                                    return;
+                                  }
                                   setState(() {
+                                    Offset diff = details.localPosition - dragStart + leftDotGlobal[index];
                                     for (var key in rightKeys) {
                                       Offset globalPosition = rightDotGlobal[
                                           rightKeys.indexOf(key)];
+                                      print(globalPosition);
+                                      print(diff);
+
                                       double distance = (globalPosition -
-                                              details.globalPosition)
+                                              diff)
                                           .distance;
+                                      print("DISTANCE: $distance");
                                       if (distance <= 20) {
-                                        RenderBox linePaint = lineKeys[index]
-                                            .currentContext!
-                                            .findRenderObject() as RenderBox;
-                                        Offset position = linePaint
-                                            .globalToLocal(globalPosition);
-                                            widget.quiz.setEndAt(index,position);
+                                        Offset position = rightDotGlobal[rightKeys.indexOf(key)] - leftDotGlobal[index];
+                                        print("SET END AT: $position");
+                                        Offset start = widget.quiz.getStartAt(index)!;
+                                        widget.quiz.setEndAt(index, start + position);
                                         widget.quiz.setUserConnectionIndexAt(
                                             index, rightKeys.indexOf(key));
                                         break;
                                       } else {
                                         widget.quiz.setEndAt(index, null);
                                       }
+                                      widget.changePageViewState(true);
                                     }
 
                                     // 드래그 종료 후 필요한 작업 수행

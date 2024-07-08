@@ -353,6 +353,7 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context) => QuizView4(
                     quiz: quiz,
                     quizLayout: quizLayout,
+                    changePageViewState: (bool tint){},
                   )),
         );
       // Add more cases for other quiz pages

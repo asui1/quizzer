@@ -518,6 +518,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           screenHeightModifier: 0.5,
           screenWidthModifier: 0.65,
           quizLayout: widget.quizLayout,
+          changePageViewState: (bool tint) {},
         );
       default:
         return Container(); // Handle the default case here

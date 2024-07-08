@@ -42,11 +42,16 @@ class _QuizSolverState extends State<QuizSolver> {
   //채점 함수는 Functions에 새로운 함수를 만들고 그걸 호출하여 사용할 예정.
   int curIndex = 0;
   double heightModifier = 1;
+  late PageController _pageController;
+  List<int> pageHistory = [];
+  bool _pageScrollEnabled = true;
 
   @override
   void initState() {
     super.initState();
     curIndex = widget.index;
+    pageHistory.add(widget.index);
+    _pageController = PageController(initialPage: widget.index);
   }
 
   @override
@@ -56,119 +61,173 @@ class _QuizSolverState extends State<QuizSolver> {
             widget.quizLayout.getAppBarHeight() -
             widget.quizLayout.getBottomBarHeight()) /
         (AppConfig.screenHeight);
-    print("heightModifier: $heightModifier");
-    return Scaffold(
-      appBar: widget.quizLayout.getIsTopBarVisible()
-          ? PreferredSize(
-              // 상단 바 추가
-              preferredSize:
-                  Size.fromHeight(widget.quizLayout.getAppBarHeight()),
-              child: widget.quizLayout.getImage(1).isColor()
-                  ? Container(
-                      color: widget.quizLayout.getImage(1).getColor(),
-                      height: widget.quizLayout.getAppBarHeight(),
-                    )
-                  : Container(
-                      height: widget.quizLayout.getAppBarHeight(),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: Image.file(File(
-                            widget.quizLayout.getImage(1).getImagePath(),
-                          )).image,
-                          fit: BoxFit.fitWidth,
+    return PopScope(
+      canPop: pageHistory.length <= 1,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          onBackButtonPressed(context);
+        }
+      },
+      child: Scaffold(
+        appBar: widget.quizLayout.getIsTopBarVisible()
+            ? PreferredSize(
+                // 상단 바 추가
+                preferredSize:
+                    Size.fromHeight(widget.quizLayout.getAppBarHeight()),
+                child: widget.quizLayout.getImage(1).isColor()
+                    ? Container(
+                        color: widget.quizLayout.getImage(1).getColor(),
+                        height: widget.quizLayout.getAppBarHeight(),
+                      )
+                    : Container(
+                        height: widget.quizLayout.getAppBarHeight(),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: Image.file(File(
+                              widget.quizLayout.getImage(1).getImagePath(),
+                            )).image,
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                       ),
-                    ),
-            )
-          : null,
-      body: SafeArea(
-        child: Container(
-          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
-          child: Stack(
-            children: [
-              QuizView(
-                quizLayout: widget.quizLayout,
-                index: curIndex,
-                screenHeightModifier: heightModifier,
-                screenWidthModifier: 0.80,
-                moveToQuiz: (int index) {
-                  setState(() {
-                    curIndex = index;
-                  });
-                },
-              ),
-              FilpStyle12(
-                quizLayout: widget.quizLayout,
-                onPressedBack: onPressedBack,
-                onPressedForward: onPressedForward,
-              ),
-              curIndex == widget.quizLayout.getQuizCount()
-                  ? Container()
-                  : Positioned(
-                      bottom: 10, // 하단에서의 거리
-                      right: 10, // 오른쪽에서의 거리
-                      child: Text(
-                        "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
-                        style: TextStyle(
-                          fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
-                          color: widget.quizLayout.getTextColor(), // 텍스트 색상
+              )
+            : null,
+        body: SafeArea(
+          child: Container(
+            decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pageController,
+                  physics: _pageScrollEnabled
+                      ? PageScrollPhysics()
+                      : NeverScrollableScrollPhysics(),
+                  onPageChanged: (int index) {
+                    setState(() {
+                      curIndex = index;
+                      pageHistory.add(index);
+                      print("onPageChanged: $index");
+                    });
+                  },
+                  itemCount: widget.quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수
+                  itemBuilder: (context, index) {
+                    return QuizView(
+                      quizLayout: widget.quizLayout,
+                      index: index, // 현재 페이지 인덱스를 QuizView에 전달
+                      screenHeightModifier: heightModifier,
+                      screenWidthModifier: 0.80,
+                      moveToQuiz: (int newIndex) {
+                        setState(() {
+                          if (_pageController.hasClients &&
+                              _pageController.page! <
+                                  widget.quizLayout.getQuizCount() + 1) {
+                            _pageController.jumpToPage(newIndex);
+                          }
+                        });
+                      },
+                      changePageViewState: (bool enabled) {
+                        setState(() {
+                          _pageScrollEnabled = enabled;
+                        });
+                      },
+                    );
+                  },
+                ),
+                FilpStyle12(
+                  quizLayout: widget.quizLayout,
+                  onPressedBack: onPressedBack,
+                  onPressedForward: onPressedForward,
+                ),
+                curIndex == widget.quizLayout.getQuizCount()
+                    ? Container()
+                    : Positioned(
+                        bottom: 10, // 하단에서의 거리
+                        right: 10, // 오른쪽에서의 거리
+                        child: Text(
+                          "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
+                          style: TextStyle(
+                            fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
+                            color: widget.quizLayout.getTextColor(), // 텍스트 색상
+                          ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()
-          ? PreferredSize(
-              // 하단 바 추가
-              preferredSize:
-                  Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
-              child: widget.quizLayout.getImage(2).isColor()
-                  ? Container(
-                      color: widget.quizLayout.getImage(2).getColor(),
-                      height: widget.quizLayout.getBottomBarHeight(),
-                      child: BottomBarStack(
-                        quizLayout: widget.quizLayout,
-                        onPressedBack: onPressedBack,
-                        onPressedForward: onPressedForward,
-                        showDragHandle: false,
-                      ),
-                    )
-                  : Container(
-                      height: widget.quizLayout.getBottomBarHeight(),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: Image.file(
-                            File(widget.quizLayout.getImage(2).getImagePath()),
-                          ).image,
-                          fit: BoxFit.fitWidth,
+        bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()
+            ? PreferredSize(
+                // 하단 바 추가
+                preferredSize:
+                    Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
+                child: widget.quizLayout.getImage(2).isColor()
+                    ? Container(
+                        color: widget.quizLayout.getImage(2).getColor(),
+                        height: widget.quizLayout.getBottomBarHeight(),
+                        child: BottomBarStack(
+                          quizLayout: widget.quizLayout,
+                          onPressedBack: onPressedBack,
+                          onPressedForward: onPressedForward,
+                          showDragHandle: false,
+                        ),
+                      )
+                    : Container(
+                        height: widget.quizLayout.getBottomBarHeight(),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: Image.file(
+                              File(
+                                  widget.quizLayout.getImage(2).getImagePath()),
+                            ).image,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                        child: BottomBarStack(
+                          quizLayout: widget.quizLayout,
+                          onPressedBack: onPressedBack,
+                          onPressedForward: onPressedForward,
+                          showDragHandle: false,
                         ),
                       ),
-                      child: BottomBarStack(
-                        quizLayout: widget.quizLayout,
-                        onPressedBack: onPressedBack,
-                        onPressedForward: onPressedForward,
-                        showDragHandle: false,
-                      ),
-                    ),
-            )
-          : null,
+              )
+            : null,
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void onBackButtonPressed(BuildContext context) {
+    if (pageHistory.length > 1) {
+      // 이전 페이지로 돌아가기
+      int lastPageIndex = pageHistory.removeLast();
+      lastPageIndex = pageHistory.removeLast();
+      _pageController.jumpToPage(lastPageIndex);
+
+      // 필요한 경우 상태 업데이트
+      setState(() {});
+    }
   }
 
   void onPressedForward() {
     setState(() {
-      if (curIndex < widget.quizLayout.getQuizCount()) {
-        curIndex++;
+      if (_pageController.hasClients &&
+          _pageController.page! < widget.quizLayout.getQuizCount() + 1) {
+        _pageController.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     });
   }
 
   void onPressedBack() {
     setState(() {
-      if (curIndex > 0) {
-        curIndex--;
+      if (_pageController.hasClients && _pageController.page! > 0) {
+        _pageController.previousPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     });
   }
@@ -179,7 +238,9 @@ Widget QuizView(
     required int index,
     required double screenHeightModifier,
     required double screenWidthModifier,
-    required Function(int) moveToQuiz}) {
+    required Function(int) moveToQuiz,
+    required Function(bool) changePageViewState,
+    }) {
   // 여기에서 quizLayout과 index를 사용하여 퀴즈 화면을 구성합니다.
   if (index >= quizLayout.getQuizCount()) {
     return AnswerCheckScreen(
@@ -216,7 +277,8 @@ Widget QuizView(
           quiz: quiz as Quiz4,
           screenWidthModifier: screenWidthModifier,
           screenHeightModifier: screenHeightModifier,
-          quizLayout: quizLayout);
+          quizLayout: quizLayout,
+          changePageViewState: changePageViewState,);
     default:
       return Container();
   }
