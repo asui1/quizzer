@@ -5,6 +5,7 @@ import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppConfig.setUp(context);
+    var brightness = MediaQuery.of(context).platformBrightness;
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -49,8 +51,11 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
+        colorScheme: brightness == Brightness.light
+            ? MyLightColorScheme
+            : MyDarkColorScheme,
+        // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
+
         useMaterial3: true,
       ),
       home: const MyHomePage(
@@ -122,7 +127,10 @@ class _MyHomePageState extends State<MyHomePage> {
               iconSize: AppConfig.iconSize * 0.8,
               icon: Icon(Icons.search), // Example icon
               onPressed: () {
-                //TODO 로그인 화면 구현 필요.
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchScreen()),
+                );
               },
             ),
             IconButton(
@@ -234,6 +242,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -249,12 +259,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: 'My Settings',
           ),
         ],
+        selectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        unselectedItemColor: Theme.of(context).colorScheme.onSecondary,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Theme.of(context).colorScheme.onTertiary,
         onTap: _onItemTapped,
       ),
     );
