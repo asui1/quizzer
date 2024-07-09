@@ -33,7 +33,10 @@ QuizGenerator4 지속적인 드래그 인풋 개
 선 필요.
 QuizGenerator4 수정 필요 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
   ->  시작점에서 끝나는 위치까지 dx, dy 계산해서 연결 설정하기.
+
 MakingQuizLayout 색 자동젠 개선 필.
+--> ColorScheme.fromSeed 사용해서 자동 젠 조금 건드리면 될듯.
+
 QuizGenerator1 마지막 int 텍스트 필드 입력 하나하면 선택 해제됨.
 Quizgenerator/viewer4에서 항상 dotted line이 젤 뒤에 위치하게.
 dialog 밖을 눌러서 꺼져도 바뀐점이 반영되어있음.
@@ -46,3 +49,11 @@ TableCalendar 달 영어 -> 숫자로 바꾸기.
 (이후 예정) 오답 확인할 수 있게 하기.
 -> 나아아중에 하는걸로.
 (이후 예정) 점수 sns 공유 기능 만들기.
+
+
+저작권 관련:
+icon color : 86 119 149 r g b
+https://colorate.azurewebsites.net/ko/Color/567795
+
+앱 아이콘 관련 표기 필요: <a href="https://www.flaticon.com/kr/free-icons/" title="퀴즈 아이콘">퀴즈 아이콘 제작자: Freepik - Flaticon</a>
+

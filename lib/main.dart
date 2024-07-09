@@ -49,7 +49,8 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
         useMaterial3: true,
       ),
       home: const MyHomePage(
@@ -82,6 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    int _selectedIndex = 0; // Default index of first tab
+
+    void _onItemTapped(int index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -96,114 +105,211 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title,
-            style: TextStyle(
-              fontFamily: MyFonts.gothicA1,
-            )),
-      ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                height: screenHeight / 12,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchScreen()),
-                  );
-                },
-                child: Container(
-                  width: screenWidth / 2,
-                  child: AbsorbPointer(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SearchScreen()),
-                            );
-                          },
-                          icon: Icon(Icons.search),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 12,
-              ),
-              Container(
-                width: screenWidth * 0.4,
-                height: screenWidth * 0.3,
-                child: ElevatedButton(
-                  onPressed: () {
-                    QuizLayout quizLayout = QuizLayout();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MakingQuizscreen(
-                                quizLayout: quizLayout,
-                              )),
-                    );
-                  },
-                  child: Text(
-                    '나만의 퀴즈\n만들기',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: AppConfig.fontSize,
-                        color: Colors.white), // Set text color to white
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppConfig.borderRadius),
-                    ),
-                    elevation: 8, // Add elevation to make the button pop out
-                    foregroundColor: const Color.fromARGB(
-                        255, 153, 27, 175), // Set button color to purple
-                    backgroundColor:
-                        Colors.purple, // Set button color to purple
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: screenHeight / 12,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // 2열로 버튼 배치
-                    childAspectRatio: 1,
-                    crossAxisSpacing: screenWidth * 0.2, // 가로 간격
-                    mainAxisSpacing: screenHeight / 10, // 세로 간격
-                  ),
-                  itemCount: 8, // 예시로 6개의 버튼을 생성, 필요에 따라 조정
-                  shrinkWrap: true, // GridView의 높이를 자동으로 조정
-                  itemBuilder: (context, index) {
-                    int n = (index + 1); // N 값을 결정
-                    return InkWell(
-                      onTap: () => navigateToQuizPage(context, n),
-                      child: Card(
-                        child: Center(
-                          child: Text(stringResources['quiz$n']!),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+        title: Row(
+          children: <Widget>[
+            IconButton(
+              iconSize: AppConfig.iconSize,
+              icon: ImageIcon(
+                  AssetImage('assets/icon/quizzerImage.png')), // Example icon
+              onPressed: () {
+                //TODO : 홈 새로고침.
+              },
+            ),
+            Spacer(
+              flex: 1,
+            ),
+            IconButton(
+              iconSize: AppConfig.iconSize * 0.8,
+              icon: Icon(Icons.search), // Example icon
+              onPressed: () {
+                //TODO 로그인 화면 구현 필요.
+              },
+            ),
+            IconButton(
+              iconSize: AppConfig.iconSize * 0.8,
+              icon: Icon(Icons.person), // Example icon
+              onPressed: () {
+                //TODO 로그인 화면 구현 필요.
+              },
+            ),
+          ],
         ),
+      ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: screenHeight / 30,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchScreen()),
+                        );
+                      },
+                      child: Container(
+                        width: screenWidth * 0.7,
+                        child: AbsorbPointer(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SearchScreen()),
+                                  );
+                                },
+                                icon: Icon(Icons.search),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists([
+                      "generator1",
+                      "generator2",
+                      "generator3",
+                      "generator4"
+                    ], "퀴즈 생성자 테스트."),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists(["viewer1", "viewer2", "viewer3", "viewer4"],
+                        "퀴즈 풀이 테스트"),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists(
+                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists(
+                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists(
+                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    homeLists(
+                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16, // Adjust the distance from the right as needed
+            bottom: 16, // Adjust the distance from the bottom as needed
+            child: FloatingActionButton(
+              onPressed: () {
+                QuizLayout quizLayout = QuizLayout();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MakingQuizscreen(
+                            quizLayout: quizLayout,
+                          )),
+                );
+              },
+              child: Icon(Icons.add), // "+" icon
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_up),
+            label: 'Trending',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.leaderboard),
+            label: 'Rank',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Theme.of(context).colorScheme.onTertiary,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Widget homeLists(List<String> list, String title) {
+    return Container(
+      width: AppConfig.screenWidth * 0.9,
+      // Adjust the height to accommodate the text label above the ListView
+      height: AppConfig.screenHeight * 0.25,
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Aligns children to the start (left)
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                bottom: 8.0), // Add some space between the text and the list
+            child: Text(
+              title, // Use the title passed to the function
+              style: TextStyle(
+                fontSize: 16, // Adjust the font size as needed
+                fontWeight: FontWeight.bold, // Make the title bold
+              ),
+            ),
+          ),
+          Expanded(
+            // Wrap ListView.builder in an Expanded widget to take up remaining space
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    if (list[index].contains('gen')) {
+                      navigateToQuizPage(context, 2 * index + 1);
+                    }
+                    if (list[index].contains('vie')) {
+                      navigateToQuizPage(context, 2 * index + 2);
+                    }
+                  },
+                  child: Container(
+                    width: AppConfig.screenWidth * 0.3,
+                    child: Card(
+                      child: Center(
+                        child: Text(list[index]),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -353,7 +459,7 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context) => QuizView4(
                     quiz: quiz,
                     quizLayout: quizLayout,
-                    changePageViewState: (bool tint){},
+                    changePageViewState: (bool tint) {},
                   )),
         );
       // Add more cases for other quiz pages
