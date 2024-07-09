@@ -22,6 +22,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:uuid/uuid.dart';
 
 import 'Class/quizLayout.dart';
@@ -50,223 +51,208 @@ class _MakingQuizState extends State<MakingQuiz> {
   @override
   Widget build(BuildContext context) {
     maxQuizIndex = widget.quizLayout.getQuizCount();
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: widget.quizLayout.getBackgroundImage().isColor()
-              ? BoxDecoration(
-                  color: widget.quizLayout.getBackgroundImage().getColor(),
-                )
-              : BoxDecoration(
-                  image: DecorationImage(
-                    image: Image.file(File(widget.quizLayout
-                            .getBackgroundImage()
-                            .getImagePath()))
-                        .image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-          child: Stack(
-            children: [
-              FilpStyle12(
-                quizLayout: widget.quizLayout,
-                onPressedBack: onPressedBack,
-                onPressedForward: onPressedForward,
-              ),
-              Center(
-                  child: Column(
-                children: [
-                  Spacer(flex: 1),
-                  Text(
-                    widget.quizLayout.getTitle(),
-                    style: TextStyle(
-                      fontSize: AppConfig.fontSize * 2, // Adjust as needed
-                      color:
-                          widget.quizLayout.getTitleColor(), // Adjust as needed
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Spacer(
-                    flex: 2,
-                  ),
-                  Container(
-                    height: AppConfig.screenHeight /
-                        2, // AppConfig.ScreenHeight의 1/2 크기로 설정
-                    width: AppConfig.screenWidth *
-                        0.65, // AppConfig.ScreenWidth의 1/2 크기로 설정
 
-                    child: PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: (index) {
-                          setState(() {
-                            curQuizIndex = index;
-                          });
-                        },
-                        itemCount: widget.quizLayout.getQuizCount() + 1,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: widget.quizLayout.getBorderColor1(),
-                                width: 2,
+    return 
+    Theme(
+      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+            child: Stack(
+              children: [
+                FilpStyle12(
+                  quizLayout: widget.quizLayout,
+                  onPressedBack: onPressedBack,
+                  onPressedForward: onPressedForward,
+                ),
+                Center(
+                    child: Column(
+                  children: [
+                    Spacer(flex: 1),
+                    Text(
+                      widget.quizLayout.getTitle(),
+                      style: TextStyle(
+                        fontSize: AppConfig.fontSize * 2, // Adjust as needed
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Spacer(
+                      flex: 2,
+                    ),
+                    Container(
+                      height: AppConfig.screenHeight /
+                          2, // AppConfig.ScreenHeight의 1/2 크기로 설정
+                      width: AppConfig.screenWidth *
+                          0.65, // AppConfig.ScreenWidth의 1/2 크기로 설정
+
+                      child: PageView.builder(
+                          controller: _pageController,
+                          onPageChanged: (index) {
+                            setState(() {
+                              curQuizIndex = index;
+                            });
+                          },
+                          itemCount: widget.quizLayout.getQuizCount() + 1,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: index < widget.quizLayout.getQuizCount()
-                                ? GestureDetector(
-                                    onDoubleTap: () {
-                                      navigateToQuizWidgetGenerator(
-                                          widget.quizLayout.getQuiz(index));
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 10),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(10),
+                              child: index < widget.quizLayout.getQuizCount()
+                                  ? GestureDetector(
+                                      onDoubleTap: () {
+                                        navigateToQuizWidgetGenerator(
+                                            widget.quizLayout.getQuiz(index));
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: IgnorePointer(
+                                          ignoring: true,
+                                          child: getQuizView(
+                                              widget.quizLayout
+                                                  .getQuiz(index)
+                                                  .getLayoutType(),
+                                              widget.quizLayout.getQuiz(index)),
+                                        ),
                                       ),
-                                      child: IgnorePointer(
-                                        ignoring: true,
-                                        child: getQuizView(
-                                            widget.quizLayout
-                                                .getQuiz(index)
-                                                .getLayoutType(),
-                                            widget.quizLayout.getQuiz(index)),
-                                      ),
-                                    ),
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                        20), // 모서리 둥글기 정도 조절
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          showQuizSelectionDialog(
-                                              context, curQuizIndex);
-                                          setState(() {});
-                                        },
-                                        child: Container(
-                                          width: 100, // 너비 설정
-                                          height: 100, // 높이 설정
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200], // 배경색 설정
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.add, // 추가 아이콘
-                                              size: 50, // 아이콘 크기
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                          20), // 모서리 둥글기 정도 조절
+                                      child: Material(
+                                        child: InkWell(
+                                          onTap: () async {
+                                            showQuizSelectionDialog(
+                                                context, curQuizIndex);
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            width: 100, // 너비 설정
+                                            height: 100, // 높이 설정
+                                            decoration: BoxDecoration(
+                                            ),
+                                            child: Center(
+                                              child: Icon(
+                                                Icons.add, // 추가 아이콘
+                                                size: 50, // 아이콘 크기
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                          );
-                        }),
-                  ),
-                  SizedBox(
-                    height: AppConfig.largePadding,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
-                    children: <Widget>[
-                      Text(
-                        '${min(curQuizIndex + 1, widget.quizLayout.getQuizCount())} / ${widget.quizLayout.getQuizCount()}',
-                        style: TextStyle(
-                          fontSize:
-                              AppConfig.fontSize * 1.5, // Adjust as needed
-                          color: widget.quizLayout
-                              .getBodyTextColor(), // Adjust as needed
-                        ),
-                      ),
-                      SizedBox(
-                        width: AppConfig.padding,
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.add_circle,
-                          size: AppConfig.fontSize * 1.5,
-                          color: widget.quizLayout.getBodyTextColor(),
-                        ), // "+" 아이콘과 크기 설정
-                        onPressed: () {
-                          showQuizSelectionDialog(context, curQuizIndex);
-                          setState(() {});
-                        },
-                      ),
-                    ],
-                  ),
-                  Spacer(flex: 3),
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceEvenly, // 버튼들 사이에 균등한 공간 배분
-                    children: <Widget>[
-                      // 첫 번째 버튼: 체크박스와 텍스트 조합으로 "문제 순서 섞기" 구현
-                      Row(
-                        mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
-                        children: [
-                          Checkbox(
-                            value: widget.quizLayout
-                                .getShuffleQuestions(), // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
-                            onChanged: (bool? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  widget.quizLayout
-                                      .setShuffleQuestions(newValue);
-                                });
-                              }
-
-                              // 체크박스 클릭 시 동작
-                              // 여기에 체크박스 상태 변경 로직 추가
-                            },
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      height: AppConfig.largePadding,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
+                      children: <Widget>[
+                        Text(
+                          '${min(curQuizIndex + 1, widget.quizLayout.getQuizCount())} / ${widget.quizLayout.getQuizCount()}',
+                          style: TextStyle(
+                            fontSize:
+                                AppConfig.fontSize * 1.5, // Adjust as needed
                           ),
-                          Text("문제 순서 섞기"), // 체크박스 옆에 표시될 텍스트
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (widget.quizLayout.getQuizCount() >
-                                curQuizIndex) {
-                              widget.quizLayout.removeQuiz(curQuizIndex);
-                            }
-                          });
-                          // Delete current quiz logic here
-                        },
-                        icon: Icon(Icons.delete),
-                      ),
-                      // 두 번째 버튼: 임시 저장 버튼
-                      ElevatedButton(
-                        onPressed: () {
-                          // 퀴즈들을 전체화면으로 미리보기.
-                        },
-                        child: Text('미리보기'),
-                      ),
-                      // 세 번째 버튼: 저장 버튼
-                      ElevatedButton(
-                        onPressed: () async {
-                          await widget.quizLayout.saveQuizLayout();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('저장되었습니다.'),
+                        ),
+                        SizedBox(
+                          width: AppConfig.padding,
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.add_circle,
+                            size: AppConfig.fontSize * 1.5,
+                          ), // "+" 아이콘과 크기 설정
+                          onPressed: () {
+                            showQuizSelectionDialog(context, curQuizIndex);
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
+                    Spacer(flex: 3),
+                    Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly, // 버튼들 사이에 균등한 공간 배분
+                      children: <Widget>[
+                        // 첫 번째 버튼: 체크박스와 텍스트 조합으로 "문제 순서 섞기" 구현
+                        Row(
+                          mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
+                          children: [
+                            Checkbox(
+                              value: widget.quizLayout
+                                  .getShuffleQuestions(), // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
+                              onChanged: (bool? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    widget.quizLayout
+                                        .setShuffleQuestions(newValue);
+                                  });
+                                }
+
+                                // 체크박스 클릭 시 동작
+                                // 여기에 체크박스 상태 변경 로직 추가
+                              },
                             ),
-                          );
-                          if (Navigator.of(context).canPop())
-                            Navigator.of(context).pop();
-                          if (Navigator.of(context).canPop())
-                            Navigator.of(context).pop();
-                        },
-                        child: Text('저장'),
-                      ),
-                    ],
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                ],
-              )),
-            ],
+                            Text("문제 순서 섞기"), // 체크박스 옆에 표시될 텍스트
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (widget.quizLayout.getQuizCount() >
+                                  curQuizIndex) {
+                                widget.quizLayout.removeQuiz(curQuizIndex);
+                              }
+                            });
+                            // Delete current quiz logic here
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
+                        // 두 번째 버튼: 임시 저장 버튼
+                        ElevatedButton(
+                          onPressed: () {
+                            // 퀴즈들을 전체화면으로 미리보기.
+                          },
+                          child: Text('미리보기'),
+                        ),
+                        // 세 번째 버튼: 저장 버튼
+                        ElevatedButton(
+                          onPressed: () async {
+                            await widget.quizLayout.saveQuizLayout();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('저장되었습니다.'),
+                              ),
+                            );
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                          },
+                          child: Text('저장'),
+                        ),
+                      ],
+                    ),
+                    Spacer(
+                      flex: 1,
+                    ),
+                  ],
+                )),
+              ],
+            ),
           ),
         ),
       ),

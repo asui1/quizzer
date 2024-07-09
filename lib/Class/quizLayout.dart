@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart'; // Import the material.dart package
+import 'package:material_theme_builder/material_theme_builder.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:quizzer/Class/ImageColor.dart';
@@ -11,6 +12,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:uuid/uuid.dart';
@@ -28,19 +30,14 @@ class QuizLayout {
   bool isFlipStyleSet = false;
   bool isBackgroundImageSet = false;
   bool isWidgetSizeSet = false;
-  ImageColor backgroundImage =
-      ImageColor(color: Color.fromARGB(255, 255, 235, 244));
-  ImageColor topBarImage =
+  ColorScheme colorScheme = deepCopyColorScheme(MyLightColorScheme);
+
+  ImageColor? backgroundImage = null;
+  ImageColor? topBarImage =
       ImageColor(color: const Color.fromARGB(255, 186, 220, 248));
-  ImageColor bottompBarImage =
+  ImageColor? bottomBarImage =
       ImageColor(color: Color.fromARGB(255, 186, 220, 248));
-  Color titleColor = Color.fromARGB(255, 0, 0, 0);
-  Color bodyTextColor = Color.fromARGB(255, 0, 0, 0);
-  Color textColor = Color.fromARGB(255, 0, 0, 0);
-  Color buttonColor = Color.fromARGB(255, 122, 79, 202);
-  Color borderColor1 = Color.fromARGB(255, 130, 23, 192);
-  Color borderColor2 = Color.fromARGB(255, 192, 156, 224);
-  Color selectedColor = Color.fromARGB(255, 211, 175, 214);
+
   bool shuffleQuestions = false;
   String title = '';
   String questionFont = MyFonts.gothicA1Bold;
@@ -53,7 +50,6 @@ class QuizLayout {
 
   TextStyle getAnswerTextStyle() {
     return TextStyle(
-      color: textColor,
       fontFamily: answerFont,
       fontSize: AppConfig.fontSize,
     );
@@ -142,29 +138,8 @@ class QuizLayout {
     if (inputData['topBarImage'] != null) {
       topBarImage = ImageColor().fromJson(inputData['topBarImage']);
     }
-    if (inputData['bottompBarImage'] != null) {
-      bottompBarImage = ImageColor().fromJson(inputData['bottompBarImage']);
-    }
-    if (inputData['titleColor'] != null) {
-      titleColor = Color(inputData['titleColor'] as int);
-    }
-    if (inputData['bodyTextColor'] != null) {
-      bodyTextColor = Color(inputData['bodyTextColor'] as int);
-    }
-    if (inputData['textColor'] != null) {
-      textColor = Color(inputData['textColor'] as int);
-    }
-    if (inputData['buttonColor'] != null) {
-      buttonColor = Color(inputData['buttonColor'] as int);
-    }
-    if (inputData['borderColor1'] != null) {
-      borderColor1 = Color(inputData['borderColor1'] as int);
-    }
-    if (inputData['borderColor2'] != null) {
-      borderColor2 = Color(inputData['borderColor2'] as int);
-    }
-    if (inputData['selectedColor'] != null) {
-      selectedColor = Color(inputData['selectedColor'] as int);
+    if (inputData['bottomBarImage'] != null) {
+      bottomBarImage = ImageColor().fromJson(inputData['bottomBarImage']);
     }
     if (inputData['shuffleQuestions'] != null) {
       shuffleQuestions = inputData['shuffleQuestions'];
@@ -187,50 +162,9 @@ class QuizLayout {
     if (inputData['titleImageSet'] != null) {
       titleImageSet = inputData['titleImageSet'];
     }
-  }
-
-  Color getTitleColor() {
-    return titleColor;
-  }
-
-  Color getBodyTextColor() {
-    return bodyTextColor;
-  }
-
-  Color getSelectedColor() {
-    return selectedColor;
-  }
-
-  String getQuestionFont() {
-    return questionFont;
-  }
-
-  String getBodyFont() {
-    return bodyFont;
-  }
-
-  String getAnswerFont() {
-    return answerFont;
-  }
-
-  Color getBorderColor1() {
-    return borderColor1;
-  }
-
-  Color getBorderColor2() {
-    return borderColor2;
-  }
-
-  Color getTextColorByIndex(index) {
-    if (index == 0) {
-      return titleColor;
-    } else if (index == 1) {
-      return bodyTextColor;
-    } else if (index == 2) {
-      return textColor;
+    if (inputData['colorScheme'] != null) {
+      colorScheme = jsonToColorScheme(inputData['colorScheme']);
     }
-
-    return textColor;
   }
 
   void setFontFamily(int index, String fontFamily) {
@@ -254,6 +188,10 @@ class QuizLayout {
     return generatedUuid;
   }
 
+  String getQuestionFont() {
+    return questionFont;
+  }
+
   String getFontFamily(int index) {
     if (index == 0) {
       return questionFont;
@@ -263,6 +201,14 @@ class QuizLayout {
       return answerFont;
     }
     return questionFont;
+  }
+
+  String getAnswerFont() {
+    return answerFont;
+  }
+
+  String getBodyFont() {
+    return bodyFont;
   }
 
   bool isTitleImageSet() {
@@ -304,16 +250,9 @@ class QuizLayout {
       'isFlipStyleSet': isFlipStyleSet,
       'isBackgroundImageSet': isBackgroundImageSet,
       'isWidgetSizeSet': isWidgetSizeSet,
-      'backgroundImage': backgroundImage.toJson(),
-      'topBarImage': topBarImage.toJson(),
-      'bottompBarImage': bottompBarImage.toJson(),
-      'titleColor': titleColor.value,
-      'bodyTextColor': bodyTextColor.value,
-      'textColor': textColor.value,
-      'buttonColor': buttonColor.value,
-      'borderColor1': borderColor1.value,
-      'borderColor2': borderColor2.value,
-      'selectedColor': selectedColor.value,
+      'backgroundImage': backgroundImage?.toJson(),
+      'topBarImage': topBarImage?.toJson(),
+      'bottomBarImage': bottomBarImage?.toJson(),
       'shuffleQuestions': shuffleQuestions,
       'title': title,
       'titleImageSet': titleImageSet,
@@ -321,6 +260,8 @@ class QuizLayout {
       'bodyFont': bodyFont,
       'answerFont': answerFont,
       'titleImagePath': titleImagePath,
+      'colorScheme': colorSchemeToJson(colorScheme),
+
     };
   }
 
@@ -364,15 +305,7 @@ class QuizLayout {
     return curQuizIndex;
   }
 
-  Color getButtonColor() {
-    return buttonColor;
-  }
-
-  Color getTextColor() {
-    return textColor;
-  }
-
-  ImageColor getBackgroundImage() {
+  ImageColor? getBackgroundImage() {
     return backgroundImage;
   }
 
@@ -380,7 +313,7 @@ class QuizLayout {
     backgroundImage = image;
   }
 
-  ImageColor getTopBarImage() {
+  ImageColor? getTopBarImage() {
     return topBarImage;
   }
 
@@ -388,12 +321,12 @@ class QuizLayout {
     topBarImage = image;
   }
 
-  ImageColor getBottomBarImage() {
-    return bottompBarImage;
+  ImageColor? getBottomBarImage() {
+    return bottomBarImage;
   }
 
   void setBottomBarImage(ImageColor image) {
-    bottompBarImage = image;
+    bottomBarImage = image;
   }
 
   bool getIsTopBarVisible() {
@@ -424,80 +357,137 @@ class QuizLayout {
   }
 
   Future<void> generateAdequateColors() async {
-    Color backgroundColorMain = await backgroundImage.getMainColor() as Color;
-    ColorSchemeGenerator colorSchemeGenerator =
-        ColorSchemeGenerator(backgroundColorMain);
-    titleColor = colorSchemeGenerator.getStandingOutColor();
-    bodyTextColor = colorSchemeGenerator.getStandingOutColor();
-    textColor = colorSchemeGenerator.getStandingOutColor();
-    buttonColor = colorSchemeGenerator.getStandingOutColor();
-    borderColor1 = colorSchemeGenerator.getSimilarColor();
-    selectedColor = colorSchemeGenerator.getStandingOutColor();
-    borderColor2 = colorSchemeGenerator.getSimilarColor();
-    //TODO: I want to generate color similar to background color for border Colors, contrast colors for button color and selected color.
+    Color backgroundColorMain;
+    if (backgroundImage == null) {
+      backgroundColorMain = colorScheme.surface;
+    } else {
+      backgroundColorMain = await backgroundImage!.getMainColor() as Color;
+    }
+    colorScheme = MaterialThemeBuilder(
+      primary: colorScheme.primary,
+      secondary: colorScheme.secondary,
+      tertiary: colorScheme.tertiary,
+      neutral: backgroundColorMain,
+    ) as ColorScheme;
   }
 
-  ImageColor getImage(int index) {
+  ImageColor getImageColorNotNull(int index) {
+    if (index == 1) {
+      if (topBarImage == null) {
+        return ImageColor(color: colorScheme.primary);
+      } else {
+        return topBarImage!;
+      }
+    } else if (index == 2) {
+      if (bottomBarImage == null) {
+        return ImageColor(color: colorScheme.primary);
+      } else {
+        return bottomBarImage!;
+      }
+    } else {
+      if (backgroundImage == null) {
+        return ImageColor(color: colorScheme.surface);
+      } else {
+        return backgroundImage!;
+      }
+    }
+  }
+
+  Color getColor(int index) {
+    if (index == 3) {
+      return colorScheme.primary;
+    } else if (index == 4) {
+      return colorScheme.secondary;
+    } else if (index == 5) {
+      return colorScheme.tertiary;
+    } else if (index == 6) {
+      return colorScheme.onPrimary;
+    } else if (index == 7) {
+      return colorScheme.onSecondary;
+    } else if (index == 8) {
+      return colorScheme.onTertiary;
+    } else if (index == 9) {
+      return colorScheme.primaryContainer;
+    } else if (index == 10) {
+      return colorScheme.onPrimaryContainer;
+    } else if (index == 11) {
+      return colorScheme.secondaryContainer;
+    } else if (index == 12) {
+      return colorScheme.onSecondaryContainer;
+    } else if (index == 13) {
+      return colorScheme.tertiaryContainer;
+    } else if (index == 14) {
+      return colorScheme.onTertiaryContainer;
+    } else if (index == 15) {
+      return colorScheme.error;
+    } else if (index == 16) {
+      return colorScheme.onError;
+    } else if (index == 17) {
+      return colorScheme.errorContainer;
+    } else if (index == 18) {
+      return colorScheme.onErrorContainer;
+    } else {
+      return colorScheme.surface;
+    }
+  }
+
+  void setColor(int index, Color color) {
+    if (index == 3) {
+      colorScheme = updatePrimaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 4) {
+      colorScheme = updateSecondaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 5) {
+      colorScheme = updateTertiaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 6) {
+      colorScheme = updateOnPrimaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 7) {
+      colorScheme = updateOnSecondaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 8) {
+      colorScheme = updateOnTertiaryColorUsingCopyWith(colorScheme, color);
+    } else if (index == 9) {
+      colorScheme =
+          updatePrimaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 10) {
+      colorScheme =
+          updateOnPrimaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 11) {
+      colorScheme =
+          updateOnSecondaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 12) {
+      colorScheme =
+          updateOnSecondaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 13) {
+      colorScheme =
+          updateTertiaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 14) {
+      colorScheme =
+          updateOnTertiaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 15) {
+      colorScheme = updateErrorColorUsingCopyWith(colorScheme, color);
+    } else if (index == 16) {
+      colorScheme = updateOnErrorColorUsingCopyWith(colorScheme, color);
+    } else if (index == 17) {
+      colorScheme = updateErrorContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 18) {
+      colorScheme =
+          updateOnErrorContainerColorUsingCopyWith(colorScheme, color);
+    }
+  }
+
+  ColorScheme getColorScheme() {
+    return colorScheme;
+  }
+
+  ImageColor? getImage(int index) {
     if (index == 0) {
       return backgroundImage;
     } else if (index == 1) {
       return topBarImage;
     } else if (index == 2) {
-      return bottompBarImage;
-    } else if (index == 3) {
-      return ImageColor(color: titleColor);
-    } else if (index == 4) {
-      return ImageColor(color: bodyTextColor);
-    } else if (index == 5) {
-      return ImageColor(color: textColor);
-    } else if (index == 6) {
-      return ImageColor(color: buttonColor);
-    } else if (index == 7) {
-      return ImageColor(color: borderColor1);
-    } else if (index == 8) {
-      return ImageColor(color: borderColor2);
-    } else if (index == 9) {
-      return ImageColor(color: selectedColor);
+      return bottomBarImage;
     }
 
     return topBarImage;
-  }
-
-  Color getColor(int index) {
-    if (index == 3) {
-      return titleColor;
-    } else if (index == 4) {
-      return bodyTextColor;
-    } else if (index == 5) {
-      return textColor;
-    } else if (index == 6) {
-      return buttonColor;
-    } else if (index == 7) {
-      return borderColor1;
-    } else if (index == 8) {
-      return borderColor2;
-    } else if (index == 9) {
-      return selectedColor;
-    }
-    return titleColor;
-  }
-
-  void setColor(int index, Color color) {
-    if (index == 3) {
-      titleColor = color;
-    } else if (index == 4) {
-      bodyTextColor = color;
-    } else if (index == 5) {
-      textColor = color;
-    } else if (index == 6) {
-      buttonColor = color;
-    } else if (index == 7) {
-      borderColor1 = color;
-    } else if (index == 8) {
-      borderColor2 = color;
-    } else if (index == 9) {
-      selectedColor = color;
-    }
   }
 
   void setImage(int index, ImageColor image) {
@@ -506,7 +496,7 @@ class QuizLayout {
     } else if (index == 1) {
       topBarImage = image;
     } else if (index == 2) {
-      bottompBarImage = image;
+      bottomBarImage = image;
     }
   }
 
@@ -613,20 +603,20 @@ class QuizLayout {
     final directory = await getApplicationDocumentsDirectory();
     List<Future> futures = [];
 
-    if (backgroundImage.isColor() == false) {
-      futures.add(copyImage(backgroundImage.imagePath!,
+    if (backgroundImage != null && backgroundImage!.isColor() == false) {
+      futures.add(copyImage(backgroundImage!.imagePath!,
               '${directory.path}/$uuid-backgroundImage.png')
-          .then((newPath) => backgroundImage.setImage(newPath)));
+          .then((newPath) => backgroundImage!.setImage(newPath)));
     }
-    if (topBarImage.isColor() == false) {
-      futures.add(copyImage(
-              topBarImage.imagePath!, '${directory.path}/$uuid-topBarImage.png')
-          .then((newPath) => topBarImage.setImage(newPath)));
+    if (topBarImage != null && topBarImage!.isColor() == false) {
+      futures.add(copyImage(topBarImage!.imagePath!,
+              '${directory.path}/$uuid-topBarImage.png')
+          .then((newPath) => topBarImage!.setImage(newPath)));
     }
-    if (bottompBarImage.isColor() == false) {
-      futures.add(copyImage(bottompBarImage.imagePath!,
+    if (bottomBarImage != null && bottomBarImage!.isColor() == false) {
+      futures.add(copyImage(bottomBarImage!.imagePath!,
               '${directory.path}/$uuid-bottomBarImage.png')
-          .then((newPath) => bottompBarImage.setImage(newPath)));
+          .then((newPath) => bottomBarImage!.setImage(newPath)));
     }
     if (titleImageSet == true) {
       futures.add(

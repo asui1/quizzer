@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class quizLayoutAdditionalSetup extends StatefulWidget {
   final QuizLayout quizLayout;
@@ -18,18 +19,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: widget.quizLayout.getBackgroundImage().isColor()
-            ? BoxDecoration(
-                color: widget.quizLayout.getBackgroundImage().getColor(),
-              )
-            : BoxDecoration(
-                image: DecorationImage(
-                  image: Image.file(
-                          File(widget.quizLayout.getBackgroundImage().getImagePath()))
-                      .image,
-                  fit: BoxFit.cover,
-                ),
-              ),
+        decoration: backgroundDecoration(quizLayout: widget.quizLayout),
         child: Column(
           children: [
             SizedBox(
@@ -112,9 +102,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                           vertical: AppConfig.padding),
                       decoration: BoxDecoration(
                         color: Colors.transparent, // 컨테이너를 투명하게 만듭니다.
-                        border: Border.all(
-                            color: widget.quizLayout.getBorderColor2(),
-                            width: 2),
+                        border: Border.all(width: 2),
                         borderRadius:
                             BorderRadius.circular(10), // 모서리를 둥글게 처리합니다.
                       ),
@@ -123,7 +111,6 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                         child: Text(
                           stringResources['quizLayoutSetup${index + 1}']!,
                           style: TextStyle(
-                            color: widget.quizLayout.getTextColorByIndex(index),
                             fontSize: AppConfig.fontSize,
                             fontFamily: widget.quizLayout.getFontFamily(index),
                           ),

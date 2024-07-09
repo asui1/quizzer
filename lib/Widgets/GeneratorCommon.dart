@@ -17,7 +17,6 @@ class questionInputTextField extends StatelessWidget {
         hintText: '질문을 입력해주세요.',
       ),
       style: TextStyle(
-        color: quizLayout.getTitleColor(),
         fontFamily: quizLayout.getQuestionFont(),
         fontSize: AppConfig.fontSize * 1.3,
       ),

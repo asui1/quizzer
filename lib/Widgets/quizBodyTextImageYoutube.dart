@@ -100,7 +100,7 @@ class _ContentWidgetState extends State<ContentWidget> {
               controller: _bodyTextController,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: widget.quizLayout.getBorderColor1()),
+                  borderSide: BorderSide(),
                 ),
               ),
               minLines: 1, // 최소 줄 수 설정
@@ -109,7 +109,6 @@ class _ContentWidgetState extends State<ContentWidget> {
               style: TextStyle(
                 fontFamily: widget.quizLayout.getBodyFont(),
                 fontSize: AppConfig.fontSize,
-                color: widget.quizLayout.getBodyTextColor(),
               ),
               onChanged: (value) {
                 widget.updateBodyTextCallback(value);

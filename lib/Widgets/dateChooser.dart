@@ -12,9 +12,9 @@ Widget buildDatePicker(
     bool getDeleteButton,
     Function deleteThis,
     int inputType,
-    bool showRangeInput,
-    Function onRangeChanged,
-    TextStyle answerStyle) {
+    TextStyle answerStyle,
+    {TextEditingController? yearController = null,
+    TextEditingController? yearRangeController = null}) {
   List<int> selectedDate = [];
   if (inputType == -1) {
     selectedDate = quiz.getCenterDate();
@@ -32,10 +32,6 @@ Widget buildDatePicker(
     DateUtils.getDaysInMonth(selectedYear, selectedMonth),
     (index) => index + 1,
   );
-  TextEditingController yearController =
-      TextEditingController(text: selectedYear.toString());
-  TextEditingController rangeController =
-      TextEditingController(text: range.toString());
 
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +40,7 @@ Widget buildDatePicker(
           ? Container(
               width: AppConfig.screenWidth * 0.2,
               child: TextField(
-                controller: yearController,
+                controller: yearController!,
                 keyboardType: TextInputType.number,
                 onSubmitted: (value) {
                   int? yearValue = int.tryParse(value);
@@ -70,7 +66,10 @@ Widget buildDatePicker(
         items: years.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(value.toString(), style: answerStyle,),
+            child: Text(
+              value.toString(),
+              style: answerStyle,
+            ),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -84,7 +83,10 @@ Widget buildDatePicker(
         items: months.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(DateFormat.MMM().format(DateTime(0, value)), style: answerStyle,),
+            child: Text(
+              DateFormat.MMM().format(DateTime(0, value)),
+              style: answerStyle,
+            ),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -97,7 +99,10 @@ Widget buildDatePicker(
         items: days.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
             value: value,
-            child: Text(value.toString(), style: answerStyle,),
+            child: Text(
+              value.toString(),
+              style: answerStyle,
+            ),
           );
         }).toList(),
         onChanged: (newValue) {
@@ -108,31 +113,12 @@ Widget buildDatePicker(
 
       getDeleteButton
           ? IconButton(
-              icon: Icon(Icons.delete,),
+              icon: Icon(
+                Icons.delete,
+              ),
               onPressed: () {
                 deleteThis();
               },
-            )
-          : Container(),
-
-      SizedBox(
-          width: AppConfig
-              .padding), // Space between the text field and the dropdown
-      showRangeInput
-          ? Container(
-              width: AppConfig.screenWidth * 0.2,
-              child: TextField(
-                controller: rangeController,
-                keyboardType: TextInputType.number,
-                onSubmitted: (value) {
-                  onRangeChanged(value);
-                },
-                decoration: InputDecoration(
-                  labelText: '년도 범위',
-                  border: OutlineInputBorder(),
-                ),
-                style: answerStyle,
-              ),
             )
           : Container(),
     ],

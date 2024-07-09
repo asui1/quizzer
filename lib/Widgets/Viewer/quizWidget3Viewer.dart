@@ -50,18 +50,13 @@ class _QuizView3State extends State<QuizView3> {
                   quizLayout: widget.quizLayout),
               SizedBox(height: AppConfig.padding),
               Expanded(
-                child: Theme(
-                  data: ThemeData(
-                    canvasColor: widget.quizLayout.getSelectedColor(),
-                  ),
-                  child: ReorderableListView.builder(
+                child: ReorderableListView.builder(
                     header: ListTile(
                       title: Container(
                         padding: EdgeInsets.all(AppConfig.smallPadding *
                             widget.screenWidthModifier),
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: widget.quizLayout.getBorderColor2(),
                               width: 2.0),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
@@ -70,7 +65,6 @@ class _QuizView3State extends State<QuizView3> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: widget.quizLayout.getAnswerFont(),
-                            color: widget.quizLayout.getTextColor(),
                             fontSize: AppConfig.fontSize *
                                 1.3 *
                                 widget.screenWidthModifier,
@@ -90,7 +84,6 @@ class _QuizView3State extends State<QuizView3> {
                             size: AppConfig.fontSize *
                                 1.3 *
                                 widget.screenWidthModifier,
-                            color: widget.quizLayout.getButtonColor(),
                           ),
                           ReorderableDragStartListener(
                             index: index,
@@ -102,8 +95,6 @@ class _QuizView3State extends State<QuizView3> {
                                         .screenWidthModifier), // 텍스트 주변에 패딩 추가
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      color:
-                                          widget.quizLayout.getBorderColor1(),
                                       width: 2.0), // 테두리 색상과 두께 설정
                                   borderRadius: BorderRadius.circular(
                                       4.0), // 테두리의 모서리를 둥글게
@@ -117,8 +108,6 @@ class _QuizView3State extends State<QuizView3> {
                                         widget.screenWidthModifier,
                                     fontFamily:
                                         widget.quizLayout.getAnswerFont(),
-                                    color: widget.quizLayout
-                                        .getTextColor(), // 폰트 크기 설정
                                   ),
                                 ),
                               ),
@@ -137,7 +126,6 @@ class _QuizView3State extends State<QuizView3> {
                         widget.quiz.addShuffledAnswerAt(newIndex+1, item);
                         _items = widget.quiz.getShuffledAnswers();});
                     },
-                  ),
                 ),
               ),
             ],

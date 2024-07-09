@@ -29,7 +29,6 @@ class AnswerCheckScreen extends StatelessWidget {
         Text(
           quizLayout.getTitle(),
           style: TextStyle(
-            color: quizLayout.getTitleColor(),
             fontSize: AppConfig.fontSize * 1.3,
           ),
         ),
@@ -111,7 +110,6 @@ class AnswerCheckScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: quizLayout.getBorderColor1(), // 테두리 색상
           width: 2.0, // 테두리 두께
         ),
       ),
@@ -131,7 +129,6 @@ class AnswerCheckScreen extends StatelessWidget {
               Text(
                 '문제 ${index + 1} : ',
                 style: TextStyle(
-                  color: quizLayout.getTextColor(),
                   fontSize: AppConfig.fontSize,
                 ),
               ), // Displaying quiz number

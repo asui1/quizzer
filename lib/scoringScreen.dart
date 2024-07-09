@@ -24,7 +24,6 @@ class _ScoringScreenState extends State<ScoringScreen> {
   void initState() {
     super.initState();
     score = widget.quizLayout.getScore();
-
   }
 
   @override
@@ -37,29 +36,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
         });
       },
       child: Scaffold(
-        appBar: widget.quizLayout.getIsTopBarVisible()
-            ? PreferredSize(
-                // 상단 바 추가
-                preferredSize:
-                    Size.fromHeight(widget.quizLayout.getAppBarHeight()),
-                child: widget.quizLayout.getImage(1).isColor()
-                    ? Container(
-                        color: widget.quizLayout.getImage(1).getColor(),
-                        height: widget.quizLayout.getAppBarHeight(),
-                      )
-                    : Container(
-                        height: widget.quizLayout.getAppBarHeight(),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.file(File(
-                              widget.quizLayout.getImage(1).getImagePath(),
-                            )).image,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                      ),
-              )
-            : null,
+        appBar: viewerAppBar(quizLayout: widget.quizLayout, showDragHandle: false),
         body: SafeArea(
           child: Container(
             decoration: backgroundDecoration(quizLayout: widget.quizLayout),
@@ -80,7 +57,6 @@ class _ScoringScreenState extends State<ScoringScreen> {
                         Text(
                           widget.quizLayout.getTitle(),
                           style: TextStyle(
-                            color: widget.quizLayout.getTitleColor(),
                             fontSize: AppConfig.fontSize * 1.3,
                           ),
                         ),
@@ -146,32 +122,13 @@ class _ScoringScreenState extends State<ScoringScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()
-            ? PreferredSize(
-                // 하단 바 추가
-                preferredSize:
-                    Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
-                child: widget.quizLayout.getImage(2).isColor()
-                    ? Container(
-                        color: widget.quizLayout.getImage(2).getColor(),
-                        height: widget.quizLayout.getBottomBarHeight(),
-                        child: Container(),
-                      )
-                    : Container(
-                        height: widget.quizLayout.getBottomBarHeight(),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.file(
-                              File(
-                                  widget.quizLayout.getImage(2).getImagePath()),
-                            ).image,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                        child: Container(),
-                      ),
-              )
-            : null,
+        bottomNavigationBar: viewerBottomBar(
+            quizLayout: widget.quizLayout,
+            onPressedForward: (){},
+            onPressedBack: (){},
+            showDragHandle: false,
+            showSwitchButton: false,
+            ),
       ),
     );
   }

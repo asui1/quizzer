@@ -7,6 +7,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz3.dart';
@@ -45,6 +46,7 @@ class _QuizSolverState extends State<QuizSolver> {
   late PageController _pageController;
   List<int> pageHistory = [];
   bool _pageScrollEnabled = true;
+  late ImageColor? bottomBarImage;
 
   @override
   void initState() {
@@ -52,6 +54,7 @@ class _QuizSolverState extends State<QuizSolver> {
     curIndex = widget.index;
     pageHistory.add(widget.index);
     _pageController = PageController(initialPage: widget.index);
+    bottomBarImage = widget.quizLayout.getImage(2);
   }
 
   @override
@@ -69,29 +72,7 @@ class _QuizSolverState extends State<QuizSolver> {
         }
       },
       child: Scaffold(
-        appBar: widget.quizLayout.getIsTopBarVisible()
-            ? PreferredSize(
-                // 상단 바 추가
-                preferredSize:
-                    Size.fromHeight(widget.quizLayout.getAppBarHeight()),
-                child: widget.quizLayout.getImage(1).isColor()
-                    ? Container(
-                        color: widget.quizLayout.getImage(1).getColor(),
-                        height: widget.quizLayout.getAppBarHeight(),
-                      )
-                    : Container(
-                        height: widget.quizLayout.getAppBarHeight(),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.file(File(
-                              widget.quizLayout.getImage(1).getImagePath(),
-                            )).image,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                      ),
-              )
-            : null,
+        appBar: viewerAppBar(quizLayout: widget.quizLayout, showDragHandle: false),
         body: SafeArea(
           child: Container(
             decoration: backgroundDecoration(quizLayout: widget.quizLayout),
@@ -146,7 +127,6 @@ class _QuizSolverState extends State<QuizSolver> {
                           "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
                           style: TextStyle(
                             fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
-                            color: widget.quizLayout.getTextColor(), // 텍스트 색상
                           ),
                         ),
                       ),
@@ -154,42 +134,13 @@ class _QuizSolverState extends State<QuizSolver> {
             ),
           ),
         ),
-        bottomNavigationBar: widget.quizLayout.getIsBottomBarVisible()
-            ? PreferredSize(
-                // 하단 바 추가
-                preferredSize:
-                    Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
-                child: widget.quizLayout.getImage(2).isColor()
-                    ? Container(
-                        color: widget.quizLayout.getImage(2).getColor(),
-                        height: widget.quizLayout.getBottomBarHeight(),
-                        child: BottomBarStack(
-                          quizLayout: widget.quizLayout,
-                          onPressedBack: onPressedBack,
-                          onPressedForward: onPressedForward,
-                          showDragHandle: false,
-                        ),
-                      )
-                    : Container(
-                        height: widget.quizLayout.getBottomBarHeight(),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.file(
-                              File(
-                                  widget.quizLayout.getImage(2).getImagePath()),
-                            ).image,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                        child: BottomBarStack(
-                          quizLayout: widget.quizLayout,
-                          onPressedBack: onPressedBack,
-                          onPressedForward: onPressedForward,
-                          showDragHandle: false,
-                        ),
-                      ),
-              )
-            : null,
+        bottomNavigationBar: viewerBottomBar(
+          quizLayout: widget.quizLayout,
+          onPressedForward: onPressedForward,
+          onPressedBack: onPressedBack,
+          showSwitchButton: true,
+          showDragHandle: false,
+        ),
       ),
     );
   }
@@ -232,14 +183,14 @@ class _QuizSolverState extends State<QuizSolver> {
   }
 }
 
-Widget QuizView(
-    {required QuizLayout quizLayout,
-    required int index,
-    required double screenHeightModifier,
-    required double screenWidthModifier,
-    required Function(int) moveToQuiz,
-    required Function(bool) changePageViewState,
-    }) {
+Widget QuizView({
+  required QuizLayout quizLayout,
+  required int index,
+  required double screenHeightModifier,
+  required double screenWidthModifier,
+  required Function(int) moveToQuiz,
+  required Function(bool) changePageViewState,
+}) {
   // 여기에서 quizLayout과 index를 사용하여 퀴즈 화면을 구성합니다.
   if (index >= quizLayout.getQuizCount()) {
     return AnswerCheckScreen(
@@ -274,11 +225,12 @@ Widget QuizView(
           quizLayout: quizLayout);
     case 4:
       return QuizView4(
-          quiz: quiz as Quiz4,
-          screenWidthModifier: screenWidthModifier,
-          screenHeightModifier: screenHeightModifier,
-          quizLayout: quizLayout,
-          changePageViewState: changePageViewState,);
+        quiz: quiz as Quiz4,
+        screenWidthModifier: screenWidthModifier,
+        screenHeightModifier: screenHeightModifier,
+        quizLayout: quizLayout,
+        changePageViewState: changePageViewState,
+      );
     default:
       return Container();
   }

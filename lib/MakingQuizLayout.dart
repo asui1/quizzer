@@ -6,6 +6,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/additionalSetup.dart';
@@ -27,8 +28,10 @@ class MakingQuizscreen extends StatefulWidget {
 class _MakingQuizState extends State<MakingQuizscreen> {
   double tempAppBarHeight = 30.0;
   double tempBottomBarHeight = 30.0;
-
   late TextEditingController _titleController;
+  ColorScheme colorScheme;
+
+  _MakingQuizState() : colorScheme = MyLightColorScheme;
 
   @override
   void initState() {
@@ -36,6 +39,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     // Initialize the TextEditingController with the current title
     _titleController =
         TextEditingController(text: widget.quizLayout.getTitle());
+  }
+  void changeColorScheme(ColorScheme newScheme) {
+    setState(() {
+      colorScheme = newScheme; // Step 3: Update the ColorScheme
+    });
   }
 
   @override
@@ -72,36 +80,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     widget.quizLayout.setAppBarHeight(tempAppBarHeight);
                   });
                 },
-                child: widget.quizLayout.getImage(1).isColor()
-                    ? Container(
-                        color: widget.quizLayout.getImage(1).getColor(),
-                        height: widget.quizLayout.getAppBarHeight(),
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: <Widget>[
-                            Icon(Icons.drag_handle,
-                                color: Colors.white), // Add this line
-                          ],
-                        ),
-                      )
-                    : Container(
-                        height: widget.quizLayout.getAppBarHeight(),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: Image.file(File(
-                              widget.quizLayout.getImage(1).getImagePath(),
-                            )).image,
-                            fit: BoxFit.fitWidth,
-                          ),
-                        ),
-                        child: Stack(
-                          alignment: Alignment.topCenter,
-                          children: <Widget>[
-                            Icon(Icons.drag_handle,
-                                color: Colors.white), // Add this line
-                          ],
-                        ),
-                      ),
+                child: viewerAppBar(
+                    quizLayout: widget.quizLayout, showDragHandle: true),
               ),
             )
           : null,
@@ -233,12 +213,17 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               );
                             });
                           },
+                        ).then(
+                          (value) {
+                            if (value != 0) {
+                              setState(() {
+                                widget.quizLayout.setIsTitleSet(true);
+                                highlightedIndex =
+                                    widget.quizLayout.getNextHighlightedIndex();
+                              });
+                            }
+                          },
                         );
-                        setState(() {
-                          widget.quizLayout.setIsTitleSet(true);
-                          highlightedIndex =
-                              widget.quizLayout.getNextHighlightedIndex();
-                        });
                       },
                     ),
                     CustomContainer(
@@ -323,7 +308,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                   child: ListBody(
                                     children: <Widget>[
                                       Column(
-                                        children: List.generate(10, (index) {
+                                        children: List.generate(19, (index) {
                                           return Padding(
                                             padding: const EdgeInsets.only(
                                                 bottom:
@@ -355,7 +340,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                       'imageSet$index'] ??
                                                   '',
                                               image: widget.quizLayout
-                                                  .getImage(index),
+                                                  .getImageColorNotNull(index),
                                             ),
                                           );
                                         }),
@@ -392,7 +377,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                             });
                           },
                         ).then((_) {
-                          setState(() {});
+                          setState(() {
+                            changeColorScheme(widget.quizLayout.getColorScheme());
+                          });
                         });
                         if (widget.quizLayout.getSelectedLayout() != 0) {
                           {
@@ -452,50 +439,27 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               preferredSize:
                   Size.fromHeight(widget.quizLayout.getBottomBarHeight()),
               child: GestureDetector(
-                  onVerticalDragUpdate: (DragUpdateDetails details) {
-                    setState(() {
-                      tempBottomBarHeight -=
-                          details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
-                      tempBottomBarHeight = tempBottomBarHeight.clamp(
-                          AppConfig.screenHeight / 40,
-                          AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
-                      widget.quizLayout.setBottomBarHeight(tempBottomBarHeight);
-                    });
+                onVerticalDragUpdate: (DragUpdateDetails details) {
+                  setState(() {
+                    tempBottomBarHeight -=
+                        details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                    tempBottomBarHeight = tempBottomBarHeight.clamp(
+                        AppConfig.screenHeight / 40,
+                        AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
+                    widget.quizLayout.setBottomBarHeight(tempBottomBarHeight);
+                  });
+                },
+                child: viewerBottomBar(
+                  quizLayout: widget.quizLayout,
+                  onPressedBack: () {
+                    Navigator.pop(context);
                   },
-                  child: widget.quizLayout.getImage(2).isColor()
-                      ? Container(
-                          color: widget.quizLayout.getImage(2).getColor(),
-                          height: widget.quizLayout.getBottomBarHeight(),
-                          child: BottomBarStack(
-                            quizLayout: widget.quizLayout,
-                            onPressedBack: () {
-                              Navigator.pop(context);
-                            },
-                            onPressedForward: () => navigateToMakingQuizPage(
-                                context, widget.quizLayout),
-                          ),
-                        )
-                      : Container(
-                          height: widget.quizLayout.getBottomBarHeight(),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: Image.file(
-                                File(widget.quizLayout
-                                    .getImage(2)
-                                    .getImagePath()),
-                              ).image,
-                              fit: BoxFit.fitWidth,
-                            ),
-                          ),
-                          child: BottomBarStack(
-                            quizLayout: widget.quizLayout,
-                            onPressedBack: () {
-                              Navigator.pop(context);
-                            },
-                            onPressedForward: () => navigateToMakingQuizPage(
-                                context, widget.quizLayout),
-                          ),
-                        )),
+                  onPressedForward: () =>
+                      navigateToMakingQuizPage(context, widget.quizLayout),
+                  showDragHandle: true,
+                  showSwitchButton: true,
+                ),
+              ),
             )
           : null,
     );

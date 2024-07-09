@@ -143,7 +143,6 @@ class _QuizView4State extends State<QuizView4> {
                                   widget.quiz.getAnswerAt(index),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: widget.quizLayout.getTextColor(),
                                       fontFamily:
                                           widget.quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,
@@ -190,18 +189,23 @@ class _QuizView4State extends State<QuizView4> {
                                     return;
                                   }
                                   setState(() {
-                                    Offset diff = details.localPosition - dragStart + leftDotGlobal[index];
+                                    Offset diff = details.localPosition -
+                                        dragStart +
+                                        leftDotGlobal[index];
                                     for (var key in rightKeys) {
                                       Offset globalPosition = rightDotGlobal[
                                           rightKeys.indexOf(key)];
 
-                                      double distance = (globalPosition -
-                                              diff)
-                                          .distance;
+                                      double distance =
+                                          (globalPosition - diff).distance;
                                       if (distance <= 20) {
-                                        Offset position = rightDotGlobal[rightKeys.indexOf(key)] - leftDotGlobal[index];
-                                        Offset start = widget.quiz.getStartAt(index)!;
-                                        widget.quiz.setEndAt(index, start + position);
+                                        Offset position = rightDotGlobal[
+                                                rightKeys.indexOf(key)] -
+                                            leftDotGlobal[index];
+                                        Offset start =
+                                            widget.quiz.getStartAt(index)!;
+                                        widget.quiz
+                                            .setEndAt(index, start + position);
                                         widget.quiz.setUserConnectionIndexAt(
                                             index, rightKeys.indexOf(key));
                                         break;
@@ -223,7 +227,9 @@ class _QuizView4State extends State<QuizView4> {
                                           start: starts[index]!,
                                           end: ends[index]!,
                                           color: widget.quizLayout
-                                              .getSelectedColor())
+                                              .getColorScheme()
+                                              .tertiary,
+                                        )
                                       : null,
                                   child: Container(
                                     height: AppConfig.screenHeight *
@@ -240,8 +246,6 @@ class _QuizView4State extends State<QuizView4> {
                                           width:
                                               15.0 * widget.screenWidthModifier,
                                           decoration: BoxDecoration(
-                                            color: widget.quizLayout
-                                                .getBorderColor1(),
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -252,8 +256,6 @@ class _QuizView4State extends State<QuizView4> {
                                           width:
                                               15.0 * widget.screenWidthModifier,
                                           decoration: BoxDecoration(
-                                            color: widget.quizLayout
-                                                .getBorderColor1(),
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -282,7 +284,6 @@ class _QuizView4State extends State<QuizView4> {
                                   widget.quiz.getConnectionAnswerAt(index),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: widget.quizLayout.getTextColor(),
                                       fontFamily:
                                           widget.quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,

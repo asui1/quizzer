@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/src/widgets/image.dart';
 import 'package:quizzer/Class/quiz.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/Colors.dart';
 
 //순서 정렬형. A,B,C,D 순서로 정렬되어야 함.
@@ -56,6 +57,7 @@ class Quiz3 extends AbstractQuiz {
   }
 
   int getAnswersLength() {
+    Logger.log("answers length: ${answers.length}");
     return answers.length;
   }
 

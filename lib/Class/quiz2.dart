@@ -8,7 +8,7 @@ import 'package:quizzer/Setup/Colors.dart';
 class Quiz2 extends AbstractQuiz {
   // Remove the duplicate declaration of maxAnswerSelection
   List<int> centerDate = [2024, 6, 22];
-  int yearRange = 10;
+  int yearRange = 20;
   List<List<int>> answerDate = [];
   int maxAnswerSelection = 1;
 
@@ -23,7 +23,7 @@ class Quiz2 extends AbstractQuiz {
     required String question,
     required this.maxAnswerSelection,
     this.centerDate = const [2024, 6, 22],
-    this.yearRange = 10,
+    this.yearRange = 20,
     this.answerDate = const [],
   }) : super(
           layoutType: layoutType,
@@ -123,10 +123,6 @@ class Quiz2 extends AbstractQuiz {
 
   void removeAnswerDateAt(int index) {
     answerDate.removeAt(index);
-  }
-
-  void setYearRange(int newYearRange) {
-    yearRange = newYearRange;
   }
 
   List<int> getAnswerDateAt(int index) {

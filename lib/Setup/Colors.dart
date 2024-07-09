@@ -30,8 +30,6 @@ class MyColors {
   
 }
 
-
-//2d628b
 ColorScheme MyLightColorScheme = ColorScheme.light(
   primary: Color(0xff2d628b),
   onPrimary: Color(0xffffffff),
@@ -105,3 +103,184 @@ ColorScheme MyDarkColorScheme = ColorScheme.dark(
 
 );
 
+ColorScheme updatePrimaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  // 기존 ColorScheme 객체의 속성을 유지하면서 primary 색상만 변경
+  return scheme.copyWith(primary: newColor);
+}
+
+ColorScheme updateSecondaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(secondary: newColor);
+}
+
+ColorScheme updateTertiaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(tertiary: newColor);
+}
+
+ColorScheme updateOnPrimaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onPrimary: newColor);
+}
+
+ColorScheme updateOnSecondaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onSecondary: newColor);
+}
+
+ColorScheme updateOnTertiaryColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onTertiary: newColor);
+}
+
+ColorScheme updatePrimaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(primaryContainer: newColor);
+}
+
+ColorScheme updateOnPrimaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onPrimaryContainer: newColor);
+}
+
+ColorScheme updateSecondaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(secondaryContainer: newColor);
+}
+
+ColorScheme updateOnSecondaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onSecondaryContainer: newColor);
+}
+
+ColorScheme updateTertiaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(tertiaryContainer: newColor);
+}
+
+ColorScheme updateOnTertiaryContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onTertiaryContainer: newColor);
+}
+
+ColorScheme updateErrorColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(error: newColor);
+}
+
+ColorScheme updateOnErrorColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onError: newColor);
+}
+
+ColorScheme updateErrorContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(errorContainer: newColor);
+}
+
+ColorScheme updateOnErrorContainerColorUsingCopyWith(ColorScheme scheme, Color newColor) {
+  return scheme.copyWith(onErrorContainer: newColor);
+}
+
+// Step 1: Convert Color to String
+String colorToString(Color color) {
+  return '#${color.value.toRadixString(16).padLeft(8, '0')}';
+}
+
+// Step 3: Deserialize Color from String
+Color stringToColor(String colorString) {
+  int value = int.parse(colorString.substring(1, 9), radix: 16);
+  return Color(value);
+}
+
+// Step 4: Deserialize ColorScheme from JSON
+ColorScheme jsonToColorScheme(Map<String, dynamic> json) {
+  return ColorScheme(
+    brightness: json['brightness'] == 'Brightness.dark' ? Brightness.dark : Brightness.light,
+    primary: stringToColor(json['primary']),
+    onPrimary: stringToColor(json['onPrimary']),
+    primaryContainer: stringToColor(json['primaryContainer']),
+    onPrimaryContainer: stringToColor(json['onPrimaryContainer']),
+    primaryFixed: stringToColor(json['primaryFixed']),
+    primaryFixedDim: stringToColor(json['primaryFixedDim']),
+    onPrimaryFixed: stringToColor(json['onPrimaryFixed']),
+    onPrimaryFixedVariant: stringToColor(json['onPrimaryFixedVariant']),
+    secondary: stringToColor(json['secondary']),
+    onSecondary: stringToColor(json['onSecondary']),
+    secondaryContainer: stringToColor(json['secondaryContainer']),
+    onSecondaryContainer: stringToColor(json['onSecondaryContainer']),
+    secondaryFixed: stringToColor(json['secondaryFixed']),
+    secondaryFixedDim: stringToColor(json['secondaryFixedDim']),
+    onSecondaryFixed: stringToColor(json['onSecondaryFixed']),
+    onSecondaryFixedVariant: stringToColor(json['onSecondaryFixedVariant']),
+    tertiary: stringToColor(json['tertiary']),
+    onTertiary: stringToColor(json['onTertiary']),
+    tertiaryContainer: stringToColor(json['tertiaryContainer']),
+    onTertiaryContainer: stringToColor(json['onTertiaryContainer']),
+    tertiaryFixed: stringToColor(json['tertiaryFixed']),
+    tertiaryFixedDim: stringToColor(json['tertiaryFixedDim']),
+    onTertiaryFixed: stringToColor(json['onTertiaryFixed']),
+    onTertiaryFixedVariant: stringToColor(json['onTertiaryFixedVariant']),
+    error: stringToColor(json['error']),
+    onError: stringToColor(json['onError']),
+    errorContainer: stringToColor(json['errorContainer']),
+    onErrorContainer: stringToColor(json['onErrorContainer']),
+    surfaceDim: stringToColor(json['surfaceDim']),
+    surface: stringToColor(json['surface']),
+    onSurface: stringToColor(json['onSurface']),
+    surfaceBright: stringToColor(json['surfaceBright']),
+    surfaceContainerLowest: stringToColor(json['surfaceContainerLowest']),
+    surfaceContainerLow: stringToColor(json['surfaceContainerLow']),
+    surfaceContainer: stringToColor(json['surfaceContainer']),
+    surfaceContainerHigh: stringToColor(json['surfaceContainerHigh']),
+    surfaceContainerHighest: stringToColor(json['surfaceContainerHighest']),
+    onSurfaceVariant: stringToColor(json['onSurfaceVariant']),
+    outline: stringToColor(json['outline']),
+    outlineVariant: stringToColor(json['outlineVariant']),
+    shadow: stringToColor(json['shadow']),
+    scrim: stringToColor(json['scrim']),
+    inverseSurface: stringToColor(json['inverseSurface']),
+    onInverseSurface: stringToColor(json['onInverseSurface']),
+    inversePrimary: stringToColor(json['inversePrimary']),
+    surfaceTint: stringToColor(json['surfaceTint']),
+  );
+}
+
+// Step 2: Serialize ColorScheme
+Map<String, dynamic> colorSchemeToJson(ColorScheme colorScheme) {
+  return {
+    'brightness': colorScheme.brightness.toString(),
+    'primary': colorToString(colorScheme.primary),
+    'onPrimary': colorToString(colorScheme.onPrimary),
+    'primaryContainer': colorToString(colorScheme.primaryContainer),
+    'onPrimaryContainer': colorToString(colorScheme.onPrimaryContainer),
+    'primaryFixed': colorToString(colorScheme.primaryFixed),
+    'primaryFixedDim': colorToString(colorScheme.primaryFixedDim),
+    'onPrimaryFixed': colorToString(colorScheme.onPrimaryFixed),
+    'onPrimaryFixedVariant': colorToString(colorScheme.onPrimaryFixedVariant),
+    'secondary': colorToString(colorScheme.secondary),
+    'onSecondary': colorToString(colorScheme.onSecondary),
+    'secondaryContainer': colorToString(colorScheme.secondaryContainer),
+    'onSecondaryContainer': colorToString(colorScheme.onSecondaryContainer),
+    'secondaryFixed': colorToString(colorScheme.secondaryFixed),
+    'secondaryFixedDim': colorToString(colorScheme.secondaryFixedDim),
+    'onSecondaryFixed': colorToString(colorScheme.onSecondaryFixed),
+    'onSecondaryFixedVariant': colorToString(colorScheme.onSecondaryFixedVariant),
+    'tertiary': colorToString(colorScheme.tertiary),
+    'onTertiary': colorToString(colorScheme.onTertiary),
+    'tertiaryContainer': colorToString(colorScheme.tertiaryContainer),
+    'onTertiaryContainer': colorToString(colorScheme.onTertiaryContainer),
+    'tertiaryFixed': colorToString(colorScheme.tertiaryFixed),
+    'tertiaryFixedDim': colorToString(colorScheme.tertiaryFixedDim),
+    'onTertiaryFixed': colorToString(colorScheme.onTertiaryFixed),
+    'onTertiaryFixedVariant': colorToString(colorScheme.onTertiaryFixedVariant),
+    'error': colorToString(colorScheme.error),
+    'onError': colorToString(colorScheme.onError),
+    'errorContainer': colorToString(colorScheme.errorContainer),
+    'onErrorContainer': colorToString(colorScheme.onErrorContainer),
+    'surfaceDim': colorToString(colorScheme.surfaceDim),
+    'surface': colorToString(colorScheme.surface),
+    'onSurface': colorToString(colorScheme.onSurface),
+    'surfaceBright': colorToString(colorScheme.surfaceBright),
+    'surfaceContainerLowest': colorToString(colorScheme.surfaceContainerLowest),
+    'surfaceContainerLow': colorToString(colorScheme.surfaceContainerLow),
+    'surfaceContainer': colorToString(colorScheme.surfaceContainer),
+    'surfaceContainerHigh': colorToString(colorScheme.surfaceContainerHigh),
+    'surfaceContainerHighest': colorToString(colorScheme.surfaceContainerHighest),
+    'onSurfaceVariant': colorToString(colorScheme.onSurfaceVariant),
+    'outline': colorToString(colorScheme.outline),
+    'outlineVariant': colorToString(colorScheme.outlineVariant),
+    'shadow': colorToString(colorScheme.shadow),
+    'scrim': colorToString(colorScheme.scrim),
+    'inverseSurface': colorToString(colorScheme.inverseSurface),
+    'onInverseSurface': colorToString(colorScheme.onInverseSurface),
+    'inversePrimary': colorToString(colorScheme.inversePrimary),
+    'surfaceTint': colorToString(colorScheme.surfaceTint),
+  };
+}

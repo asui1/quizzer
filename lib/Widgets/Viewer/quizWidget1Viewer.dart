@@ -62,37 +62,25 @@ class _QuizView1State extends State<QuizView1> {
                     itemCount: widget.quiz.getAnswers().length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: Theme(
-                          data: ThemeData(
-                            checkboxTheme: CheckboxThemeData(
-                              checkColor: WidgetStateProperty.all(
-                                  widget.quizLayout.getBorderColor1()),
-                              fillColor: WidgetStateProperty.all(widget
-                                  .quizLayout
-                                  .getSelectedColor()), // 박스 배경 색상
-                            ),
-                          ),
-                          child: Checkbox(
-                            value: currentAnswer[index],
-                            onChanged: (bool? newValue) {
-                              setState(() {
-                                if (newValue != null) {
-                                  if (widget.quiz.getViewAnsCount() <
-                                          widget.quiz.getMaxAnswerSelection() ||
-                                      newValue == false) {
-                                    currentAnswer[index] = newValue;
-                                  }
+                        leading: Checkbox(
+                          value: currentAnswer[index],
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              if (newValue != null) {
+                                if (widget.quiz.getViewAnsCount() <
+                                        widget.quiz.getMaxAnswerSelection() ||
+                                    newValue == false) {
+                                  currentAnswer[index] = newValue;
                                 }
-                              });
-                            },
-                          ),
+                              }
+                            });
+                          },
                         ),
                         title: Text(
                           widget.quiz.getViewerAnsAt(index),
                           style: TextStyle(
                               fontSize: AppConfig.fontSize *
                                   widget.screenWidthModifier,
-                              color: widget.quizLayout.getTextColor(),
                               fontFamily: widget.quizLayout.getAnswerFont()),
                         ),
                         onTap: () {
@@ -100,12 +88,10 @@ class _QuizView1State extends State<QuizView1> {
                             if (currentAnswer[index] == false) {
                               if (widget.quiz.getViewAnsCount() <
                                   widget.quiz.getMaxAnswerSelection()) {
-                                currentAnswer[index] =
-                                    !currentAnswer[index];
+                                currentAnswer[index] = !currentAnswer[index];
                               }
                             } else {
-                              currentAnswer[index] =
-                                  !currentAnswer[index];
+                              currentAnswer[index] = !currentAnswer[index];
                             }
                           });
                         },
@@ -130,9 +116,7 @@ Widget _buildQuizBody(
         width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
         padding: EdgeInsets.all(8.0), // Add padding around the text
         decoration: BoxDecoration(
-          border: Border.all(
-              color: quizLayout
-                  .getBorderColor1()), // Add black border around the container
+          border: Border.all(), // Add black border around the container
           borderRadius:
               BorderRadius.circular(4.0), // Optional: Add rounded corners
         ),
@@ -140,7 +124,6 @@ Widget _buildQuizBody(
           quiz.getBodyText(),
           style: TextStyle(
             fontSize: AppConfig.fontSize * screenWidthModifier,
-            color: quizLayout.getBodyTextColor(),
             fontFamily: quizLayout.getBodyFont(),
           ),
         ),

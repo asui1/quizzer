@@ -34,9 +34,7 @@ class _QuizView2State extends State<QuizView2> {
   @override
   void initState() {
     super.initState();
-    bodyTextStyle = TextStyle(
-        color: widget.quizLayout.getBodyTextColor(),
-        fontFamily: widget.quizLayout.getBodyFont());
+    bodyTextStyle = TextStyle(fontFamily: widget.quizLayout.getBodyFont());
   }
 
   @override
@@ -86,17 +84,14 @@ class _QuizView2State extends State<QuizView2> {
                           AppConfig.fontSize * widget.screenHeightModifier,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis,
-                      color: widget.quizLayout.getBodyTextColor(),
                     ),
                     leftChevronIcon: Icon(
                       Icons.chevron_left,
                       size: AppConfig.iconSize * widget.screenWidthModifier,
-                      color: widget.quizLayout.getBodyTextColor(),
                     ),
                     rightChevronIcon: Icon(
                       Icons.chevron_right,
                       size: AppConfig.iconSize * widget.screenWidthModifier,
-                      color: widget.quizLayout.getBodyTextColor(),
                     ),
                   ),
                   onPageChanged: (focusedDay) {
@@ -117,10 +112,6 @@ class _QuizView2State extends State<QuizView2> {
                     isTodayHighlighted: false,
                     defaultTextStyle: bodyTextStyle, // 일반 날짜의 텍스트 색상 설정
                     weekendTextStyle: bodyTextStyle,
-                    outsideTextStyle: TextStyle(
-                      color:
-                          widget.quizLayout.getBodyTextColor().withAlpha(100),
-                    ),
                   ),
                   onDaySelected: (selectedDay, focusedDay) {
                     setState(() {
@@ -152,15 +143,12 @@ class _QuizView2State extends State<QuizView2> {
                       if (isHighlighted) {
                         return Container(
                           decoration: BoxDecoration(
-                            color: widget.quizLayout
-                                .getSelectedColor(), // Highlight color
                             shape: BoxShape.circle,
                           ),
                           child: Center(
                             child: Text(
                               '${day.day}',
                               style: TextStyle(
-                                  color: widget.quizLayout.getBodyTextColor(),
                                   fontFamily: widget.quizLayout
                                       .getBodyFont()), // Text color
                             ),
@@ -178,7 +166,6 @@ class _QuizView2State extends State<QuizView2> {
                           child: Text(
                             '${day.day}',
                             style: TextStyle(
-                                color: widget.quizLayout.getBodyTextColor(),
                                 fontFamily: widget.quizLayout
                                     .getBodyFont()), // Making text color similar to other days
                           ),
@@ -193,7 +180,6 @@ class _QuizView2State extends State<QuizView2> {
                 "선택된 날짜들",
                 style: TextStyle(
                     fontFamily: widget.quizLayout.getAnswerFont(),
-                    color: widget.quizLayout.getTextColor(),
                     fontSize: AppConfig.fontSize * widget.screenWidthModifier),
               ),
               SizedBox(height: AppConfig.padding),
@@ -210,7 +196,6 @@ class _QuizView2State extends State<QuizView2> {
                         fontSize: AppConfig.fontSize *
                             1.5 *
                             widget.screenWidthModifier,
-                        color: widget.quizLayout.getTextColor(),
                         fontFamily: widget.quizLayout.getAnswerFont(),
                       ),
                     );

@@ -32,13 +32,13 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
     if (widget.index > 2) {
       pickerColor = widget.quizLayout.getColor(widget.index);
     } else {
-      pickerColor = widget.quizLayout.getImage(widget.index).isColor()
-          ? widget.quizLayout.getImage(widget.index).getColor()
+      pickerColor = widget.quizLayout.getImageColorNotNull(widget.index).isColor()
+          ? widget.quizLayout.getImageColorNotNull(widget.index).getColor()
           : Colors.white;
     }
-    imageFile = widget.quizLayout.getImage(widget.index).imagePath == null
+    imageFile = widget.quizLayout.getImageColorNotNull(widget.index).imagePath == null
         ? null
-        : XFile(widget.quizLayout.getImage(widget.index).getImagePath());
+        : XFile(widget.quizLayout.getImageColorNotNull(widget.index).getImagePath());
     hexController.text = colorToHex(pickerColor, enableAlpha: false);
   }
 
@@ -60,6 +60,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
               Column(
                 children: [
                   ColorPicker(
+                    labelTypes: [],
                     pickerColor: pickerColor,
                     onColorChanged: (newColor) {
                       setState(() {
@@ -70,7 +71,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                       });
                     },
                     portraitOnly: true,
-                    showLabel: false,
                     pickerAreaHeightPercent: 0.8,
                     enableAlpha: false,
                   ),

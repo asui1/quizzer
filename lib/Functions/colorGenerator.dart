@@ -14,7 +14,7 @@ class ColorSchemeGenerator {
 
   Color getSimilarColor() {
     Color complementaryColor = getComplementaryColor();
-    
+
     //RandomSeed will be int 20 ~ 80
     // 배경색의 명도를 계산합니다.
     double luminance = complementaryColor.computeLuminance();
@@ -39,7 +39,6 @@ class ColorSchemeGenerator {
       return Color.fromRGBO(r, g, b, 1.0);
     }
   }
-
 
   Color getStandingOutColor() {
     //RandomSeed will be int 20 ~ 80
@@ -66,4 +65,38 @@ class ColorSchemeGenerator {
       return Color.fromRGBO(r, g, b, 1.0);
     }
   }
+}
+
+ColorScheme deepCopyColorScheme(ColorScheme original) {
+  return ColorScheme(
+    brightness: original.brightness,
+    primary: original.primary,
+    onPrimary: original.onPrimary,
+    primaryContainer: original.primaryContainer,
+    onPrimaryContainer: original.onPrimaryContainer,
+    secondary: original.secondary,
+    onSecondary: original.onSecondary,
+    secondaryContainer: original.secondaryContainer,
+    onSecondaryContainer: original.onSecondaryContainer,
+    tertiary: original.tertiary,
+    onTertiary: original.onTertiary,
+    tertiaryContainer: original.tertiaryContainer,
+    onTertiaryContainer: original.onTertiaryContainer,
+    error: original.error,
+    onError: original.onError,
+    errorContainer: original.errorContainer,
+    onErrorContainer: original.onErrorContainer,
+    background: original.background,
+    onBackground: original.onBackground,
+    surface: original.surface,
+    onSurface: original.onSurface,
+    surfaceVariant: original.surfaceVariant,
+    onSurfaceVariant: original.onSurfaceVariant,
+    outline: original.outline,
+    onInverseSurface: original.onInverseSurface,
+    inverseSurface: original.inverseSurface,
+    inversePrimary: original.inversePrimary,
+    shadow: original.shadow,
+    surfaceTint: original.surfaceTint,
+  );
 }
