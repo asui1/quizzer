@@ -29,7 +29,8 @@ PageView로 퀴즈 추천하는 뷰 만들기.
 
 TODO later
 TableCalendar에서 vertical drag가 table calendar로 가던, SingleScrollView로 가던 해야되는데 아에 무시됨.
-QuizGenerator4 지속적인 드래그 인풋 개선 필요.
+QuizGenerator4 지속적인 드래그 인풋 개
+선 필요.
 QuizGenerator4 수정 필요 -> 왼쪽 점과 오른쪽 점 사이 거리 dx, 오른쪽 점들의 거리 dy 구하기.
   ->  시작점에서 끝나는 위치까지 dx, dy 계산해서 연결 설정하기.
 MakingQuizLayout 색 자동젠 개선 필.

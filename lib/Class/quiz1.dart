@@ -47,8 +47,6 @@ class Quiz1 extends AbstractQuiz {
 
   @override
   bool check() {
-    print(ans);
-    print(viewerAns);
     for (int i = 0; i < answers.length; i++) {
       if (ans[i] != viewerAns[viewerAnswers.indexOf(answers[i])]) {
         return false;
@@ -98,7 +96,6 @@ class Quiz1 extends AbstractQuiz {
     // 예시에서는 json이 Map<String, dynamic> 타입이라고 가정합니다.
     // 실제로는 json 타입을 확인하고 적절히 변환하는 로직이 필요할 수 있습니다.
     Map<String, dynamic> jsonData = json as Map<String, dynamic>;
-    print(jsonData);
     List<String> answersList = List<String>.from(
         jsonData['answers'].map((answer) => answer.toString()));
     List<bool> ansList =
@@ -208,7 +205,6 @@ class Quiz1 extends AbstractQuiz {
 
   @override
   List<String> getAnswers() {
-    print("getAnswers: $answers");
     return answers;
   }
 

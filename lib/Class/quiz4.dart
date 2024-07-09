@@ -16,6 +16,7 @@ class Quiz4 extends AbstractQuiz {
   /////////////////
   List<int> userConnectionIndex = [];
 
+
   Quiz4({
     int layoutType = 4,
     required List<String> answers,
@@ -42,12 +43,13 @@ class Quiz4 extends AbstractQuiz {
 
   @override
   bool check() {
-    print(connectionAnswerIndex);
-    print(userConnectionIndex);
-    if(connectionAnswerIndex == userConnectionIndex){
-      return true;
+    for (int i = 0; i < connectionAnswerIndex.length; i++) {
+      if (connectionAnswerIndex[i] != userConnectionIndex[i]) {
+        return false;
+      }
     }
-    return false;
+
+    return true;
   }
 
   void setUserConnectionIndexAt(int index, int newIndex) {
@@ -58,8 +60,7 @@ class Quiz4 extends AbstractQuiz {
   Color getState() {
     if (connectionAnswerIndex.every((index) => index == -1)) {
       return MyColors().red;
-    }
-    else if (connectionAnswerIndex.contains(-1)) {
+    } else if (connectionAnswerIndex.contains(-1)) {
       return MyColors().orange;
     } else {
       return MyColors().green;

@@ -37,14 +37,20 @@ class Quiz2 extends AbstractQuiz {
   }
 
   @override
-  bool check(){
-    print(answerDate);
-    print(viewerAnswers);
-    if(answerDate.length != viewerAnswers.length){
+  bool check() {
+    if (answerDate.length != viewerAnswers.length) {
       return false;
     }
     for (int i = 0; i < answerDate.length; i++) {
-      if (!viewerAnswers.contains(DateTime(answerDate[i][0], answerDate[i][1], answerDate[i][2]))) {
+      List<int> answer = [
+        viewerAnswers[i].year,
+        viewerAnswers[i].month,
+        viewerAnswers[i].day
+      ];
+      bool containsAnswer = answerDate.any((list) =>
+          list.length == answer.length &&
+          list.asMap().entries.every((entry) => entry.value == answer[entry.key]));
+      if (!containsAnswer) {
         return false;
       }
     }
@@ -55,11 +61,10 @@ class Quiz2 extends AbstractQuiz {
   Color getState() {
     if (viewerAnswers.length == 0) {
       return MyColors().red;
-    } else if(viewerAnswers.length == answerDate.length){
+    } else if (viewerAnswers.length == answerDate.length) {
       return MyColors().green;
-      }
-      else{
-        return MyColors().orange;
+    } else {
+      return MyColors().orange;
     }
   }
 

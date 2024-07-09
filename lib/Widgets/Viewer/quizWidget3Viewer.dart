@@ -66,7 +66,7 @@ class _QuizView3State extends State<QuizView3> {
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Text(
-                          _items[_items.length - 1],
+                          _items[0],
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: widget.quizLayout.getAnswerFont(),
@@ -81,7 +81,7 @@ class _QuizView3State extends State<QuizView3> {
                     buildDefaultDragHandles: false,
                     itemCount: _items.length - 1,
                     itemBuilder: (context, index) {
-                      final item = _items[index];
+                      final item = _items[index+1];
                       return Column(
                         key: Key('$item-$index'), // Column에 고유한 Key 추가
                         children: [
@@ -109,7 +109,7 @@ class _QuizView3State extends State<QuizView3> {
                                       4.0), // 테두리의 모서리를 둥글게
                                 ),
                                 child: Text(
-                                  _items[index],
+                                  _items[index+1],
                                   textAlign: TextAlign.center, // 텍스트를 가운데 정렬
                                   style: TextStyle(
                                     fontSize: AppConfig.fontSize *
@@ -133,8 +133,8 @@ class _QuizView3State extends State<QuizView3> {
                           newIndex -= 1;
                         }
                         final item =
-                            widget.quiz.removeShuffledAnswerAt(oldIndex);
-                        widget.quiz.addShuffledAnswerAt(newIndex, item);
+                            widget.quiz.removeShuffledAnswerAt(oldIndex+1);
+                        widget.quiz.addShuffledAnswerAt(newIndex+1, item);
                         _items = widget.quiz.getShuffledAnswers();});
                     },
                   ),

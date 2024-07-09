@@ -12,7 +12,6 @@ class ImageColor {
   ImageColor({this.imagePath, this.color});
 
   void setImage(String imagePath) {
-    print("Image Set: $imagePath");
     this.imagePath = imagePath;
     this.color = null;
     this.mainColor = null;
@@ -51,7 +50,6 @@ class ImageColor {
   }
 
   Widget getImage(double width, double height) {
-    print("IsImage: ${!isColor()}");
     return isColor()
         ? CustomPaint(
             size: Size(width, height),

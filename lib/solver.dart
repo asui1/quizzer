@@ -106,7 +106,6 @@ class _QuizSolverState extends State<QuizSolver> {
                     setState(() {
                       curIndex = index;
                       pageHistory.add(index);
-                      print("onPageChanged: $index");
                     });
                   },
                   itemCount: widget.quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수

@@ -29,16 +29,16 @@ class Quiz3 extends AbstractQuiz {
     tempShuffled.shuffle();
     shuffledAnswers = [...answers];
 
-    shuffledAnswers.replaceRange(0, answers.length - 1, tempShuffled);
-    shuffledAnswers[answers.length - 1] = answers[0];
+    shuffledAnswers.replaceRange(1, answers.length, tempShuffled);
+    shuffledAnswers[0] = answers[0];
   }
 
   @override
   bool check() {
-    print(shuffledAnswers);
-    print(answers);
-    if(shuffledAnswers == answers) return true;
-    return false;
+    for(int i = 0; i < answers.length; i++) {
+      if(shuffledAnswers[i] != answers[i]) return false;
+    }
+    return true;
   }
 
   @override

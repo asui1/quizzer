@@ -123,8 +123,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                                   if (tempImageFile != null) {
                                     // 이미지 파일 처리
                                     setState(() {
-                                      print(
-                                          "Image Path: " + tempImageFile.path);
                                       imageFile = tempImageFile;
                                     });
                                   }

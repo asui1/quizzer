@@ -48,7 +48,6 @@ class _QuizWidget1State extends State<QuizWidget1> {
   @override
   Widget build(BuildContext context) {
     List<String> answers = widget.quiz.getAnswers();
-    print(answers);
     int trueCount = widget.quiz.getAnsLength();
     bool shuffleAnswers = widget.quiz.getShuffleAnswers();
     int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();

@@ -86,9 +86,6 @@ class _QuizView4State extends State<QuizView4> {
         return GlobalPosition;
       }).toList();
       needUpdate = false;
-      print(leftDotGlobal);
-      print(leftDotLinePaintLocal);
-      print(rightDotGlobal);
     }
   }
 
@@ -166,9 +163,6 @@ class _QuizView4State extends State<QuizView4> {
                               child: GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTapDown: (details) {
-                                  print("onTapDown");
-                                  print(
-                                      "SET START AT: ${details.localPosition}");
                                   setState(() {
                                     isDragging[index] = true;
                                     widget.changePageViewState(false);
@@ -180,7 +174,6 @@ class _QuizView4State extends State<QuizView4> {
                                   });
                                 },
                                 onTapUp: (details) {
-                                  print("onTapUp");
                                   widget.changePageViewState(true);
                                   dragStart = Offset(0, 0);
                                 },
@@ -192,7 +185,6 @@ class _QuizView4State extends State<QuizView4> {
                                   });
                                 },
                                 onPanEnd: (details) {
-                                  print("onPanEnd");
                                   if (isDragging[index] == false) {
                                     widget.changePageViewState(true);
                                     return;
@@ -202,16 +194,12 @@ class _QuizView4State extends State<QuizView4> {
                                     for (var key in rightKeys) {
                                       Offset globalPosition = rightDotGlobal[
                                           rightKeys.indexOf(key)];
-                                      print(globalPosition);
-                                      print(diff);
 
                                       double distance = (globalPosition -
                                               diff)
                                           .distance;
-                                      print("DISTANCE: $distance");
                                       if (distance <= 20) {
                                         Offset position = rightDotGlobal[rightKeys.indexOf(key)] - leftDotGlobal[index];
-                                        print("SET END AT: $position");
                                         Offset start = widget.quiz.getStartAt(index)!;
                                         widget.quiz.setEndAt(index, start + position);
                                         widget.quiz.setUserConnectionIndexAt(

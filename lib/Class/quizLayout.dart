@@ -84,9 +84,7 @@ class QuizLayout {
   }
 
   Future<void> loadQuizLayout(dynamic inputJson) async {
-    print(inputJson);
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
-    print(inputData['isTopBarVisible']);
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
     }
@@ -149,7 +147,6 @@ class QuizLayout {
     }
     if (inputData['titleColor'] != null) {
       titleColor = Color(inputData['titleColor'] as int);
-      print(titleColor);
     }
     if (inputData['bodyTextColor'] != null) {
       bodyTextColor = Color(inputData['bodyTextColor'] as int);
@@ -428,7 +425,6 @@ class QuizLayout {
 
   Future<void> generateAdequateColors() async {
     Color backgroundColorMain = await backgroundImage.getMainColor() as Color;
-    print(backgroundColorMain);
     ColorSchemeGenerator colorSchemeGenerator =
         ColorSchemeGenerator(backgroundColorMain);
     titleColor = colorSchemeGenerator.getStandingOutColor();
@@ -643,7 +639,6 @@ class QuizLayout {
 
     //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
     Map<String, dynamic> json = toJson();
-    print("saved as : ${json}");
     // 문서 디렉토리의 경로를 얻습니다.
     // JSON 파일을 저장할 경로를 생성합니다.
     final file = File('${directory.path}/$uuid.json');

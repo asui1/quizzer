@@ -177,7 +177,6 @@ class _ScoringScreenState extends State<ScoringScreen> {
   }
 
   void _onPopInvoked(bool didPop) {
-    print("Pop Invoked: $didPop");
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 }
