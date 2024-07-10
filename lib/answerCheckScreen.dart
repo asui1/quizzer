@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/scoringScreen.dart';
 
@@ -28,9 +29,7 @@ class AnswerCheckScreen extends StatelessWidget {
         ),
         Text(
           quizLayout.getTitle(),
-          style: TextStyle(
-            fontSize: AppConfig.fontSize * 1.3,
-          ),
+          style: quizLayout.getTitleStyle(),
         ),
         SizedBox(
           height: AppConfig.padding,
@@ -48,14 +47,14 @@ class AnswerCheckScreen extends StatelessWidget {
                     Spacer(
                       flex: 1,
                     ),
-                    answerBox(actualIndex, stateColor1),
+                    answerBox(actualIndex, stateColor1, quizLayout),
                   ];
 
                   // quizCount가 홀수인 경우를 처리
                   if (actualIndex + 1 < quizCount) {
                     Color stateColor2 =
                         quizLayout.getQuiz(actualIndex + 1).getState();
-                    rowChildren.add(answerBox(actualIndex + 1, stateColor2));
+                    rowChildren.add(answerBox(actualIndex + 1, stateColor2, quizLayout));
                   } else {
                     // 홀수 번째 항목에 대해 눈에 보이지 않는 answerBox 추가
                     rowChildren.add(InvisibleAnswerBox());
@@ -101,15 +100,16 @@ class AnswerCheckScreen extends StatelessWidget {
   Widget InvisibleAnswerBox() {
     return Opacity(
       opacity: 0.0,
-      child: answerBox(0, Colors.transparent,
+      child: answerBox(0, Colors.transparent, quizLayout,
           isLast: true), // 인덱스와 색상은 실제로 사용되지 않음
     );
   }
 
-  Widget answerBox(int index, Color stateColor, {bool isLast = false}) {
+  Widget answerBox(int index, Color stateColor, QuizLayout quizLayout, {bool isLast = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
+          color: quizLayout.getColorScheme().onSurface,
           width: 2.0, // 테두리 두께
         ),
       ),
@@ -129,13 +129,15 @@ class AnswerCheckScreen extends StatelessWidget {
               Text(
                 '문제 ${index + 1} : ',
                 style: TextStyle(
+                  fontFamily: quizLayout.getAnswerFont(),
                   fontSize: AppConfig.fontSize,
+                  color: quizLayout.getColorScheme().onSurface,
                 ),
               ), // Displaying quiz number
               Container(
                 width: AppConfig.fontSize,
                 height: AppConfig.fontSize,
-                color: stateColor,
+                color: stateColor == MyColors().red ? quizLayout.getColorScheme().error : MyColors().green,
               ),
               SizedBox(width: AppConfig.padding), // Add space between columns
             ],

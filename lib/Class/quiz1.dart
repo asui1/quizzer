@@ -59,10 +59,8 @@ class Quiz1 extends AbstractQuiz {
   Color getState() {
     int trueCount = ans.where((element) => element == true).length;
     int userTrueCount = viewerAns.where((element) => element == true).length;
-    if (trueCount == userTrueCount) {
+    if (userTrueCount > 0) {
       return MyColors().green;
-    } else if (userTrueCount > 0) {
-      return MyColors().orange;
     } else {
       return MyColors().red;
     }

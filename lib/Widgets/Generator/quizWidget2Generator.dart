@@ -8,6 +8,7 @@ import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Widgets/dateChooser.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 class QuizWidget2 extends StatefulWidget {
   final QuizLayout quizLayout;
@@ -45,7 +46,8 @@ class _QuizWidget2State extends State<QuizWidget2> {
     );
     textStyle = TextStyle(
         fontFamily: widget.quizLayout.getAnswerFont(),
-        fontSize: AppConfig.fontSize);
+        fontSize: AppConfig.fontSize,
+        color: widget.quizLayout.getColor(5));
   }
 
   @override
@@ -121,6 +123,10 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                           31),
                                       focusedDay: curFocus,
                                       headerStyle: HeaderStyle(
+                                        titleTextFormatter: (date, locale) {
+                                          return DateFormat('yyyy.MM').format(
+                                              date); // Formats date as "YYYY.MM"
+                                        },
                                         formatButtonVisible: false,
                                         titleCentered: true,
                                         titleTextStyle: TextStyle(
@@ -192,8 +198,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                                   '${day.day}',
                                                   style: TextStyle(
                                                       color: widget.quizLayout
-                                                          .getColor(
-                                                              8)), // Text color
+                                                          .getColorScheme().onTertiary), // Text color
                                                 ),
                                               ),
                                             );

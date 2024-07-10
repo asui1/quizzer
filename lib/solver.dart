@@ -100,7 +100,7 @@ class _QuizSolverState extends State<QuizSolver> {
                       quizLayout: widget.quizLayout,
                       index: index, // 현재 페이지 인덱스를 QuizView에 전달
                       screenHeightModifier: heightModifier,
-                      screenWidthModifier: 0.80,
+                      screenWidthModifier: 0.90,
                       moveToQuiz: (int newIndex) {
                         setState(() {
                           if (_pageController.hasClients &&
@@ -132,6 +132,7 @@ class _QuizSolverState extends State<QuizSolver> {
                           "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
                           style: TextStyle(
                             fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
+                            color: widget.quizLayout.getColorScheme().primary,
                           ),
                         ),
                       ),
@@ -141,7 +142,10 @@ class _QuizSolverState extends State<QuizSolver> {
                         bottom: 10, // 하단에서의 거리
                         left: 10, // 오른쪽에서의 거리
                         child: IconButton(
-                          icon: Icon(Icons.arrow_back_ios_rounded),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: widget.quizLayout.getColorScheme().primary,
+                          ),
                           onPressed: () {
                             Navigator.pop(context, curIndex);
                           },

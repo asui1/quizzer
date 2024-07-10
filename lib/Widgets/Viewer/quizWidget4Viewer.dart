@@ -94,212 +94,231 @@ class _QuizView4State extends State<QuizView4> {
     starts = widget.quiz.getStarts();
     ends = widget.quiz.getEnds();
     // Future가 완료되면 UI 빌드
-    return Scaffold(
-      body: Container(
-        decoration: backgroundDecoration(quizLayout: widget.quizLayout),
-        child: Padding(
-          padding: EdgeInsets.all(AppConfig.padding),
-          child: Center(
-            // Wrap the Column with a Center widget for horizontal centering
-            child: Column(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Vertically center the content
-              children: <Widget>[
-                QuestionViewer(
-                    question: widget.quiz.getQuestion(),
-                    fontSizeModifier: widget.screenWidthModifier,
-                    quizLayout: widget.quizLayout),
-                SizedBox(height: AppConfig.padding),
-                Expanded(
-                  // ListView.builder를 Expanded로 감싸기
-                  child: ListView.builder(
-                    itemCount:
-                        widget.quiz.getAnswers().length, // 마지막 "+" 버튼을 위해 +1
-                    itemBuilder: (context, index) {
-                      // 나머지 요소들은 기존 로직을 따름
-                      return Padding(
-                        padding: EdgeInsets.only(
-                            bottom: AppConfig.padding *
-                                widget.screenHeightModifier),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConfig.padding *
-                                        2 *
-                                        widget.screenWidthModifier,
-                                    vertical: AppConfig.padding *
-                                        widget
-                                            .screenWidthModifier), // 텍스트 주변에 여백 추가
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.transparent,
-                                      width: 2), // 테두리 색상과 너비 설정
-                                  borderRadius:
-                                      BorderRadius.circular(5), // 테두리 둥근 모서리 설정
-                                ),
-                                child: Text(
-                                  widget.quiz.getAnswerAt(index),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
+    return Theme(
+      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      child: Scaffold(
+        body: Container(
+          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+          child: Padding(
+            padding: EdgeInsets.all(AppConfig.padding),
+            child: Center(
+              // Wrap the Column with a Center widget for horizontal centering
+              child: Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Vertically center the content
+                children: <Widget>[
+                  QuestionViewer(
+                      question: widget.quiz.getQuestion(),
+                      fontSizeModifier: widget.screenWidthModifier,
+                      quizLayout: widget.quizLayout),
+                  SizedBox(height: AppConfig.padding),
+                  Expanded(
+                    // ListView.builder를 Expanded로 감싸기
+                    child: ListView.builder(
+                      itemCount:
+                          widget.quiz.getAnswers().length, // 마지막 "+" 버튼을 위해 +1
+                      itemBuilder: (context, index) {
+                        // 나머지 요소들은 기존 로직을 따름
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              bottom: AppConfig.padding *
+                                  widget.screenHeightModifier),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConfig.padding *
+                                          2 *
+                                          widget.screenWidthModifier,
+                                      vertical: AppConfig.padding *
+                                          widget
+                                              .screenWidthModifier), // 텍스트 주변에 여백 추가
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: widget.quizLayout
+                                            .getColorScheme()
+                                            .onSurface,
+                                        width: 2), // 테두리 색상과 너비 설정
+                                    borderRadius: BorderRadius.circular(
+                                        5), // 테두리 둥근 모서리 설정
+                                  ),
+                                  child: Text(
+                                    widget.quiz.getAnswerAt(index),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
                                       fontFamily:
                                           widget.quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,
                                       fontSize: AppConfig.fontSize *
-                                          widget
-                                              .screenWidthModifier), // 텍스트 스타일 설정
+                                          widget.screenWidthModifier,
+                                      color: widget.quizLayout
+                                          .getColorScheme()
+                                          .secondary,
+                                    ), // 텍스트 스타일 설정
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: AppConfig.screenWidth *
-                                  0.5 *
-                                  widget.screenWidthModifier,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: AppConfig.largePadding *
-                                      widget.screenWidthModifier),
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTapDown: (details) {
-                                  setState(() {
-                                    isDragging[index] = true;
-                                    widget.changePageViewState(false);
-                                    Offset position =
-                                        leftDotLinePaintLocal[index];
-                                    widget.quiz.setStartAt(index, position);
-                                    widget.quiz.setEndAt(index, position);
-                                    dragStart = details.localPosition;
-                                  });
-                                },
-                                onTapUp: (details) {
-                                  widget.changePageViewState(true);
-                                  dragStart = Offset(0, 0);
-                                },
-                                onPanUpdate: (details) {
-                                  if (isDragging[index] == false) return;
-                                  setState(() {
-                                    widget.quiz
-                                        .setEndAt(index, details.localPosition);
-                                  });
-                                },
-                                onPanEnd: (details) {
-                                  if (isDragging[index] == false) {
+                              Container(
+                                width: AppConfig.screenWidth *
+                                    0.5 *
+                                    widget.screenWidthModifier,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppConfig.largePadding *
+                                        widget.screenWidthModifier),
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTapDown: (details) {
+                                    setState(() {
+                                      isDragging[index] = true;
+                                      widget.changePageViewState(false);
+                                      Offset position =
+                                          leftDotLinePaintLocal[index];
+                                      widget.quiz.setStartAt(index, position);
+                                      widget.quiz.setEndAt(index, position);
+                                      dragStart = details.localPosition;
+                                    });
+                                  },
+                                  onTapUp: (details) {
                                     widget.changePageViewState(true);
-                                    return;
-                                  }
-                                  setState(() {
-                                    Offset diff = details.localPosition -
-                                        dragStart +
-                                        leftDotGlobal[index];
-                                    for (var key in rightKeys) {
-                                      Offset globalPosition = rightDotGlobal[
-                                          rightKeys.indexOf(key)];
-
-                                      double distance =
-                                          (globalPosition - diff).distance;
-                                      if (distance <= 20) {
-                                        Offset position = rightDotGlobal[
-                                                rightKeys.indexOf(key)] -
-                                            leftDotGlobal[index];
-                                        Offset start =
-                                            widget.quiz.getStartAt(index)!;
-                                        widget.quiz
-                                            .setEndAt(index, start + position);
-                                        widget.quiz.setUserConnectionIndexAt(
-                                            index, rightKeys.indexOf(key));
-                                        break;
-                                      } else {
-                                        widget.quiz.setEndAt(index, null);
-                                      }
+                                    dragStart = Offset(0, 0);
+                                  },
+                                  onPanUpdate: (details) {
+                                    if (isDragging[index] == false) return;
+                                    setState(() {
+                                      widget.quiz.setEndAt(
+                                          index, details.localPosition);
+                                    });
+                                  },
+                                  onPanEnd: (details) {
+                                    if (isDragging[index] == false) {
                                       widget.changePageViewState(true);
+                                      return;
                                     }
+                                    setState(() {
+                                      Offset diff = details.localPosition -
+                                          dragStart +
+                                          leftDotGlobal[index];
+                                      for (var key in rightKeys) {
+                                        Offset globalPosition = rightDotGlobal[
+                                            rightKeys.indexOf(key)];
 
-                                    // 드래그 종료 후 필요한 작업 수행
-                                    isDragging[index] = false;
-                                  });
-                                },
-                                child: CustomPaint(
-                                  key: lineKeys[index],
-                                  painter: starts[index] != null &&
-                                          ends[index] != null
-                                      ? LinePainter(
-                                          start: starts[index]!,
-                                          end: ends[index]!,
-                                          color: widget.quizLayout
-                                              .getColorScheme()
-                                              .tertiary,
-                                        )
-                                      : null,
-                                  child: Container(
-                                    height: AppConfig.screenHeight *
-                                        0.15 *
-                                        widget.screenHeightModifier,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          key: leftKeys[index],
-                                          height:
-                                              15.0 * widget.screenWidthModifier,
-                                          width:
-                                              15.0 * widget.screenWidthModifier,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
+                                        double distance =
+                                            (globalPosition - diff).distance;
+                                        if (distance <= 20) {
+                                          Offset position = rightDotGlobal[
+                                                  rightKeys.indexOf(key)] -
+                                              leftDotGlobal[index];
+                                          Offset start =
+                                              widget.quiz.getStartAt(index)!;
+                                          widget.quiz.setEndAt(
+                                              index, start + position);
+                                          widget.quiz.setUserConnectionIndexAt(
+                                              index, rightKeys.indexOf(key));
+                                          break;
+                                        } else {
+                                          widget.quiz.setEndAt(index, null);
+                                        }
+                                        widget.changePageViewState(true);
+                                      }
+
+                                      // 드래그 종료 후 필요한 작업 수행
+                                      isDragging[index] = false;
+                                    });
+                                  },
+                                  child: CustomPaint(
+                                    key: lineKeys[index],
+                                    painter: starts[index] != null &&
+                                            ends[index] != null
+                                        ? LinePainter(
+                                            start: starts[index]!,
+                                            end: ends[index]!,
+                                            color: widget.quizLayout
+                                                .getColorScheme()
+                                                .tertiary,
+                                          )
+                                        : null,
+                                    child: Container(
+                                      height: AppConfig.screenHeight *
+                                          0.15 *
+                                          widget.screenHeightModifier,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            key: leftKeys[index],
+                                            height: 15.0 *
+                                                widget.screenWidthModifier,
+                                            width: 15.0 *
+                                                widget.screenWidthModifier,
+                                            decoration: BoxDecoration(
+                                              color: widget.quizLayout
+                                                  .getColorScheme()
+                                                  .tertiary,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
-                                        ),
-                                        Container(
-                                          key: rightKeys[index],
-                                          height:
-                                              15.0 * widget.screenWidthModifier,
-                                          width:
-                                              15.0 * widget.screenWidthModifier,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
+                                          Container(
+                                            key: rightKeys[index],
+                                            height: 15.0 *
+                                                widget.screenWidthModifier,
+                                            width: 15.0 *
+                                                widget.screenWidthModifier,
+                                            decoration: BoxDecoration(
+                                              color: widget.quizLayout
+                                                  .getColorScheme()
+                                                  .tertiary,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConfig.largePadding *
-                                        widget.screenWidthModifier,
-                                    vertical: AppConfig.padding *
-                                        widget
-                                            .screenWidthModifier), // 텍스트 주변에 여백 추가
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.transparent,
-                                      width: 2), // 테두리 색상과 너비 설정
-                                  borderRadius:
-                                      BorderRadius.circular(5), // 테두리 둥근 모서리 설정
-                                ),
-                                child: Text(
-                                  widget.quiz.getConnectionAnswerAt(index),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: AppConfig.largePadding *
+                                          widget.screenWidthModifier,
+                                      vertical: AppConfig.padding *
+                                          widget
+                                              .screenWidthModifier), // 텍스트 주변에 여백 추가
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: widget.quizLayout
+                                            .getColorScheme()
+                                            .onSurface,
+                                        width: 2), // 테두리 색상과 너비 설정
+                                    borderRadius: BorderRadius.circular(
+                                        5), // 테두리 둥근 모서리 설정
+                                  ),
+                                  child: Text(
+                                    widget.quiz.getConnectionAnswerAt(index),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
                                       fontFamily:
                                           widget.quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,
                                       fontSize: AppConfig.fontSize *
-                                          widget
-                                              .screenWidthModifier), // 텍스트 스타일 설정
+                                          widget.screenWidthModifier,
+                                      color: widget.quizLayout
+                                          .getColorScheme()
+                                          .secondary,
+                                    ), // 텍스트 스타일 설정
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

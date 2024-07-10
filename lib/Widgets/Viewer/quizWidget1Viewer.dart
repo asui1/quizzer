@@ -36,7 +36,10 @@ class _QuizView1State extends State<QuizView1> {
     List<bool> currentAnswer = widget.quiz.getViewerAns();
 
     // Future가 완료되면 UI 빌드
-    return Scaffold(
+    return 
+    Theme(
+      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      child:Scaffold(
       body: Container(
         decoration: backgroundDecoration(quizLayout: widget.quizLayout),
         child: Padding(
@@ -81,7 +84,8 @@ class _QuizView1State extends State<QuizView1> {
                           style: TextStyle(
                               fontSize: AppConfig.fontSize *
                                   widget.screenWidthModifier,
-                              fontFamily: widget.quizLayout.getAnswerFont()),
+                              fontFamily: widget.quizLayout.getAnswerFont(),
+                              color: widget.quizLayout.getColorScheme().secondary),
                         ),
                         onTap: () {
                           setState(() {
@@ -102,7 +106,7 @@ class _QuizView1State extends State<QuizView1> {
           ),
         ),
       ),
-    );
+    ),);
   }
 }
 
@@ -113,10 +117,12 @@ Widget _buildQuizBody(
       return Container();
     case 1:
       return Container(
-        width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
-        padding: EdgeInsets.all(8.0), // Add padding around the text
+        width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
+
+        padding: EdgeInsets.all(3.0), // Add padding around the text
         decoration: BoxDecoration(
-          border: Border.all(), // Add black border around the container
+          border: Border.all(color: quizLayout.getColorScheme().outline), // Add black border around the container
+          color: quizLayout.getColorScheme().primaryContainer,
           borderRadius:
               BorderRadius.circular(4.0), // Optional: Add rounded corners
         ),
@@ -125,13 +131,14 @@ Widget _buildQuizBody(
           style: TextStyle(
             fontSize: AppConfig.fontSize * screenWidthModifier,
             fontFamily: quizLayout.getBodyFont(),
+            color: quizLayout.getColorScheme().onPrimaryContainer,
           ),
         ),
       );
     case 2:
       return Image.file(
         height: AppConfig.screenHeight * 0.3 * screenWidthModifier,
-        width: AppConfig.screenWidth * 0.8 * screenWidthModifier,
+        width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
         File(quiz.getImageFile().path),
         fit: BoxFit.cover,
       );

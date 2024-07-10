@@ -90,6 +90,7 @@ class QuizLayout {
 
     // Iterate through quizzes and adjust scores based on quiz.check()
     for (int i = 0; i < n; i++) {
+      print(quizzes[i].check());
       if (quizzes[i].check()) {
         score += scores[i];
       }

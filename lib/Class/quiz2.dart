@@ -61,10 +61,8 @@ class Quiz2 extends AbstractQuiz {
   Color getState() {
     if (viewerAnswers.length == 0) {
       return MyColors().red;
-    } else if (viewerAnswers.length == answerDate.length) {
-      return MyColors().green;
     } else {
-      return MyColors().orange;
+      return MyColors().green;
     }
   }
 

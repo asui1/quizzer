@@ -37,7 +37,9 @@ class _QuizView3State extends State<QuizView3> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Theme(
+      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      child:Scaffold(
       body: Container(
         decoration: backgroundDecoration(quizLayout: widget.quizLayout),
         child: Padding(
@@ -56,8 +58,11 @@ class _QuizView3State extends State<QuizView3> {
                         padding: EdgeInsets.all(AppConfig.smallPadding *
                             widget.screenWidthModifier),
                         decoration: BoxDecoration(
+                          color: widget.quizLayout.getColorScheme().primaryContainer,
                           border: Border.all(
-                              width: 2.0),
+                              width: 2.0,
+                              color: widget.quizLayout.getColorScheme().outline,
+                              ),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: Text(
@@ -68,6 +73,7 @@ class _QuizView3State extends State<QuizView3> {
                             fontSize: AppConfig.fontSize *
                                 1.3 *
                                 widget.screenWidthModifier,
+                                color: widget.quizLayout.getColorScheme().onPrimaryContainer,
                           ),
                         ),
                       ),
@@ -84,6 +90,7 @@ class _QuizView3State extends State<QuizView3> {
                             size: AppConfig.fontSize *
                                 1.3 *
                                 widget.screenWidthModifier,
+                                color: widget.quizLayout.getColorScheme().outline,
                           ),
                           ReorderableDragStartListener(
                             index: index,
@@ -94,8 +101,11 @@ class _QuizView3State extends State<QuizView3> {
                                     widget
                                         .screenWidthModifier), // 텍스트 주변에 패딩 추가
                                 decoration: BoxDecoration(
+                                  color: widget.quizLayout.getColorScheme().secondaryContainer,
                                   border: Border.all(
-                                      width: 2.0), // 테두리 색상과 두께 설정
+                                      width: 2.0,
+                                      color: widget.quizLayout.getColorScheme().onSurface,
+                                      ), // 테두리 색상과 두께 설정
                                   borderRadius: BorderRadius.circular(
                                       4.0), // 테두리의 모서리를 둥글게
                                 ),
@@ -108,6 +118,7 @@ class _QuizView3State extends State<QuizView3> {
                                         widget.screenWidthModifier,
                                     fontFamily:
                                         widget.quizLayout.getAnswerFont(),
+                                        color: widget.quizLayout.getColorScheme().onSecondaryContainer
                                   ),
                                 ),
                               ),
@@ -132,7 +143,7 @@ class _QuizView3State extends State<QuizView3> {
           ),
         ),
       ),
-    );
+    ),);
   }
 }
 

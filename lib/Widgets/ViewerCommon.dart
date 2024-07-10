@@ -18,14 +18,19 @@ class QuestionViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: AppConfig.screenWidth * 0.85, // 너비를 화면 너비의 80%로 설정
+      width: AppConfig.screenWidth * fontSizeModifier, // 너비를 화면 너비의 80%로 설정
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: quizLayout.getColorScheme().onSurface, // 밑줄 색상 설정
+            width: 2.0, // 밑줄 두께 설정
+          ),
+        ),
+      ),
       child: Text(
         question,
         textAlign: TextAlign.left,
-        style: TextStyle(
-          fontSize: AppConfig.fontSize * 1.5 * fontSizeModifier,
-          fontFamily: quizLayout.getFontFamily(0),
-        ),
+        style: quizLayout.getTitleStyle(),
       ),
     );
   }

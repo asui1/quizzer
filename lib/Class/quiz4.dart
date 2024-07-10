@@ -16,7 +16,6 @@ class Quiz4 extends AbstractQuiz {
   /////////////////
   List<int> userConnectionIndex = [];
 
-
   Quiz4({
     int layoutType = 4,
     required List<String> answers,
@@ -60,8 +59,6 @@ class Quiz4 extends AbstractQuiz {
   Color getState() {
     if (connectionAnswerIndex.every((index) => index == -1)) {
       return MyColors().red;
-    } else if (connectionAnswerIndex.contains(-1)) {
-      return MyColors().orange;
     } else {
       return MyColors().green;
     }
