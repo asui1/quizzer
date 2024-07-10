@@ -34,7 +34,9 @@ class QuestionViewer extends StatelessWidget {
 BoxDecoration backgroundDecoration({required QuizLayout quizLayout}) {
   ImageColor? backgroundImage = quizLayout.getImage(0);
   return backgroundImage == null
-      ? BoxDecoration()
+      ? BoxDecoration(
+          color: quizLayout.getColorScheme().surface,
+        )
       : backgroundImage.isColor()
           ? BoxDecoration(
               color: backgroundImage.getColor(),
@@ -61,8 +63,7 @@ PreferredSizeWidget? viewerAppBar(
                       ? Stack(
                           alignment: Alignment.bottomCenter,
                           children: <Widget>[
-                            Icon(Icons.drag_handle,
-                                color: Colors.white), // Add this line
+                            Icon(Icons.drag_handle), // Add this line
                           ],
                         )
                       : null,
@@ -75,8 +76,7 @@ PreferredSizeWidget? viewerAppBar(
                           ? Stack(
                               alignment: Alignment.bottomCenter,
                               children: <Widget>[
-                                Icon(Icons.drag_handle,
-                                    color: Colors.white), // Add this line
+                                Icon(Icons.drag_handle), // Add this line
                               ],
                             )
                           : null,
@@ -95,8 +95,7 @@ PreferredSizeWidget? viewerAppBar(
                           ? Stack(
                               alignment: Alignment.bottomCenter,
                               children: <Widget>[
-                                Icon(Icons.drag_handle,
-                                    color: Colors.white), // Add this line
+                                Icon(Icons.drag_handle), // Add this line
                               ],
                             )
                           : null,

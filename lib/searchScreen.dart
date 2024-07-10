@@ -12,13 +12,13 @@ class _SearchScreenState extends State<SearchScreen> {
   List<QuizCard> _searchResults = [
     QuizCard(
       title: "loadQuizLayoutMaker",
-      uuid: "cc08fdd7-323c-5fee-91d9-9203ead380c5",
+      uuid: "c2ce5a9b-bfcf-5699-9c02-bbf19bde2a5f",
       titleImagePath: "assets/images/question2.png",
       additionalData: "로드 후 QuizLayoutMaker로 이동.",
     ),
     QuizCard(
       title: "loadQuizLayoutSolver",
-      uuid: "cc08fdd7-323c-5fee-91d9-9203ead380c5",
+      uuid: "c2ce5a9b-bfcf-5699-9c02-bbf19bde2a5f",
       titleImagePath: "assets/images/question2.png",
       additionalData: "로드 후 QuizLayoutSolver로 이동.",
     ),

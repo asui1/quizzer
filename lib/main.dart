@@ -216,6 +216,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     homeLists(
                         ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                    SizedBox(
+                      height: AppConfig.largePadding*2,
+                    ),
                   ],
                 ),
               ),

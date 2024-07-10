@@ -12,6 +12,7 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
@@ -23,6 +24,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
+import 'package:quizzer/solver.dart';
 import 'package:uuid/uuid.dart';
 
 import 'Class/quizLayout.dart';
@@ -52,8 +54,7 @@ class _MakingQuizState extends State<MakingQuiz> {
   Widget build(BuildContext context) {
     maxQuizIndex = widget.quizLayout.getQuizCount();
 
-    return 
-    Theme(
+    return Theme(
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
         body: SafeArea(
@@ -139,8 +140,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                           child: Container(
                                             width: 100, // 너비 설정
                                             height: 100, // 높이 설정
-                                            decoration: BoxDecoration(
-                                            ),
+                                            decoration: BoxDecoration(),
                                             child: Center(
                                               child: Icon(
                                                 Icons.add, // 추가 아이콘
@@ -180,6 +180,21 @@ class _MakingQuizState extends State<MakingQuiz> {
                             setState(() {});
                           },
                         ),
+                        SizedBox(
+                          width: AppConfig.padding,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (widget.quizLayout.getQuizCount() >
+                                  curQuizIndex) {
+                                widget.quizLayout.removeQuiz(curQuizIndex);
+                              }
+                            });
+                            // Delete current quiz logic here
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
                       ],
                     ),
                     Spacer(flex: 3),
@@ -188,7 +203,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                           MainAxisAlignment.spaceEvenly, // 버튼들 사이에 균등한 공간 배분
                       children: <Widget>[
                         // 첫 번째 버튼: 체크박스와 텍스트 조합으로 "문제 순서 섞기" 구현
-                        Row(
+                        Column(
                           mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
                           children: [
                             Checkbox(
@@ -209,22 +224,31 @@ class _MakingQuizState extends State<MakingQuiz> {
                             Text("문제 순서 섞기"), // 체크박스 옆에 표시될 텍스트
                           ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (widget.quizLayout.getQuizCount() >
-                                  curQuizIndex) {
-                                widget.quizLayout.removeQuiz(curQuizIndex);
-                              }
-                            });
-                            // Delete current quiz logic here
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
                         // 두 번째 버튼: 임시 저장 버튼
                         ElevatedButton(
+                          onPressed: () {},
+                          child: Text('임시저장'),
+                        ),
+                        ElevatedButton(
                           onPressed: () {
-                            // 퀴즈들을 전체화면으로 미리보기.
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => QuizSolver(
+                                  quizLayout: widget.quizLayout,
+                                  index: curQuizIndex,
+                                  isPreview: true,
+                                ),
+                              ),
+                            ).then((value) {
+                              if (value is int) {
+                                setState(() {
+                                  // curQuizIndex를 value로 업데이트
+                                  curQuizIndex = value;
+                                  _pageController.jumpToPage(value);
+                                });
+                              }
+                            });
                           },
                           child: Text('미리보기'),
                         ),
@@ -288,7 +312,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         Expanded(
                           flex: 1,
                           child: Center(
-                            child: Text('Item $index'),
+                            child: Text(stringResources['quizItem$index']!),
                           ),
                         ),
                       ],

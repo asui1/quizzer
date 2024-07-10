@@ -27,11 +27,13 @@ import 'Class/quiz2.dart';
 class QuizSolver extends StatefulWidget {
   final QuizLayout quizLayout;
   final int index;
+  final bool isPreview;
 
   const QuizSolver({
     Key? key,
     required this.quizLayout,
     required this.index,
+    this.isPreview = false,
   }) : super(key: key);
 
   @override
@@ -72,7 +74,8 @@ class _QuizSolverState extends State<QuizSolver> {
         }
       },
       child: Scaffold(
-        appBar: viewerAppBar(quizLayout: widget.quizLayout, showDragHandle: false),
+        appBar:
+            viewerAppBar(quizLayout: widget.quizLayout, showDragHandle: false),
         body: SafeArea(
           child: Container(
             decoration: backgroundDecoration(quizLayout: widget.quizLayout),
@@ -89,7 +92,9 @@ class _QuizSolverState extends State<QuizSolver> {
                       pageHistory.add(index);
                     });
                   },
-                  itemCount: widget.quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수
+                  itemCount: widget.isPreview
+                      ? widget.quizLayout.getQuizCount()
+                      : widget.quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수
                   itemBuilder: (context, index) {
                     return QuizView(
                       quizLayout: widget.quizLayout,
@@ -128,6 +133,18 @@ class _QuizSolverState extends State<QuizSolver> {
                           style: TextStyle(
                             fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
                           ),
+                        ),
+                      ),
+                curIndex == widget.quizLayout.getQuizCount()
+                    ? Container()
+                    : Positioned(
+                        bottom: 10, // 하단에서의 거리
+                        left: 10, // 오른쪽에서의 거리
+                        child: IconButton(
+                          icon: Icon(Icons.arrow_back_ios_rounded),
+                          onPressed: () {
+                            Navigator.pop(context, curIndex);
+                          },
                         ),
                       ),
               ],

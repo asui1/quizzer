@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart'; // Import the material.dart package
+import 'package:flutter/widgets.dart';
 import 'package:material_theme_builder/material_theme_builder.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -52,6 +53,23 @@ class QuizLayout {
     return TextStyle(
       fontFamily: answerFont,
       fontSize: AppConfig.fontSize,
+      color: colorScheme.secondary,
+    );
+  }
+
+  TextStyle getBodyTextStyle() {
+    return TextStyle(
+      fontFamily: bodyFont,
+      fontSize: AppConfig.fontSize,
+      color: colorScheme.tertiary,
+    );
+  }
+
+  TextStyle getTitleStyle() {
+    return TextStyle(
+      fontFamily: questionFont,
+      fontSize: AppConfig.fontSize * 1.3,
+      color: colorScheme.primary,
     );
   }
 
@@ -261,7 +279,6 @@ class QuizLayout {
       'answerFont': answerFont,
       'titleImagePath': titleImagePath,
       'colorScheme': colorSchemeToJson(colorScheme),
-
     };
   }
 
@@ -363,12 +380,13 @@ class QuizLayout {
     } else {
       backgroundColorMain = await backgroundImage!.getMainColor() as Color;
     }
-    colorScheme = MaterialThemeBuilder(
+    MaterialThemeBuilder temp = MaterialThemeBuilder(
       primary: colorScheme.primary,
       secondary: colorScheme.secondary,
       tertiary: colorScheme.tertiary,
       neutral: backgroundColorMain,
-    ) as ColorScheme;
+    );
+    colorScheme = temp.toScheme();
   }
 
   ImageColor getImageColorNotNull(int index) {
@@ -384,6 +402,20 @@ class QuizLayout {
       } else {
         return bottomBarImage!;
       }
+    } else if (index == 3) {
+      return ImageColor(color: colorScheme.primary);
+    } else if (index == 4) {
+      return ImageColor(color: colorScheme.secondary);
+    } else if (index == 5) {
+      return ImageColor(color: colorScheme.tertiary);
+    } else if (index == 6) {
+      return ImageColor(color: colorScheme.primaryContainer);
+    } else if (index == 7) {
+      return ImageColor(color: colorScheme.secondaryContainer);
+    } else if (index == 8) {
+      return ImageColor(color: colorScheme.tertiaryContainer);
+    } else if (index == 9) {
+      return ImageColor(color: colorScheme.error);
     } else {
       if (backgroundImage == null) {
         return ImageColor(color: colorScheme.surface);
@@ -401,31 +433,13 @@ class QuizLayout {
     } else if (index == 5) {
       return colorScheme.tertiary;
     } else if (index == 6) {
-      return colorScheme.onPrimary;
-    } else if (index == 7) {
-      return colorScheme.onSecondary;
-    } else if (index == 8) {
-      return colorScheme.onTertiary;
-    } else if (index == 9) {
       return colorScheme.primaryContainer;
-    } else if (index == 10) {
-      return colorScheme.onPrimaryContainer;
-    } else if (index == 11) {
+    } else if (index == 7) {
       return colorScheme.secondaryContainer;
-    } else if (index == 12) {
-      return colorScheme.onSecondaryContainer;
-    } else if (index == 13) {
+    } else if (index == 8) {
       return colorScheme.tertiaryContainer;
-    } else if (index == 14) {
-      return colorScheme.onTertiaryContainer;
-    } else if (index == 15) {
+    } else if (index == 9) {
       return colorScheme.error;
-    } else if (index == 16) {
-      return colorScheme.onError;
-    } else if (index == 17) {
-      return colorScheme.errorContainer;
-    } else if (index == 18) {
-      return colorScheme.onErrorContainer;
     } else {
       return colorScheme.surface;
     }
@@ -439,38 +453,18 @@ class QuizLayout {
     } else if (index == 5) {
       colorScheme = updateTertiaryColorUsingCopyWith(colorScheme, color);
     } else if (index == 6) {
-      colorScheme = updateOnPrimaryColorUsingCopyWith(colorScheme, color);
-    } else if (index == 7) {
-      colorScheme = updateOnSecondaryColorUsingCopyWith(colorScheme, color);
-    } else if (index == 8) {
-      colorScheme = updateOnTertiaryColorUsingCopyWith(colorScheme, color);
-    } else if (index == 9) {
       colorScheme =
           updatePrimaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 10) {
+    } else if (index == 7) {
       colorScheme =
-          updateOnPrimaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 11) {
-      colorScheme =
-          updateOnSecondaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 12) {
-      colorScheme =
-          updateOnSecondaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 13) {
+          updateSecondaryContainerColorUsingCopyWith(colorScheme, color);
+    } else if (index == 8) {
       colorScheme =
           updateTertiaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 14) {
-      colorScheme =
-          updateOnTertiaryContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 15) {
+    } else if (index == 9) {
       colorScheme = updateErrorColorUsingCopyWith(colorScheme, color);
-    } else if (index == 16) {
+    } else if (index == 10) {
       colorScheme = updateOnErrorColorUsingCopyWith(colorScheme, color);
-    } else if (index == 17) {
-      colorScheme = updateErrorContainerColorUsingCopyWith(colorScheme, color);
-    } else if (index == 18) {
-      colorScheme =
-          updateOnErrorContainerColorUsingCopyWith(colorScheme, color);
     }
   }
 

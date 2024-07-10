@@ -32,13 +32,17 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
     if (widget.index > 2) {
       pickerColor = widget.quizLayout.getColor(widget.index);
     } else {
-      pickerColor = widget.quizLayout.getImageColorNotNull(widget.index).isColor()
-          ? widget.quizLayout.getImageColorNotNull(widget.index).getColor()
-          : Colors.white;
+      pickerColor =
+          widget.quizLayout.getImageColorNotNull(widget.index).isColor()
+              ? widget.quizLayout.getImageColorNotNull(widget.index).getColor()
+              : Colors.white;
     }
-    imageFile = widget.quizLayout.getImageColorNotNull(widget.index).imagePath == null
-        ? null
-        : XFile(widget.quizLayout.getImageColorNotNull(widget.index).getImagePath());
+    imageFile =
+        widget.quizLayout.getImageColorNotNull(widget.index).imagePath == null
+            ? null
+            : XFile(widget.quizLayout
+                .getImageColorNotNull(widget.index)
+                .getImagePath());
     hexController.text = colorToHex(pickerColor, enableAlpha: false);
   }
 
@@ -51,6 +55,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
       lastTenChars = path.length > 10 ? path.substring(path.length - 10) : path;
     }
     return AlertDialog(
+      backgroundColor: widget.quizLayout.getColorScheme().surface,
       content: SingleChildScrollView(
         child: Container(
           width: AppConfig.screenWidth / 3,

@@ -5,19 +5,11 @@ const Map<String, String> stringResources = {
   'imageSet3': '메인 색1',
   'imageSet4': "메인 색2",
   'imageSet5': '메인 색3',
-  'imageSet6': '텍스트 색1',
-  'imageSet7': '텍스트 색2',
-  'imageSet8': '텍스트 색3',
-  'imageSet9': '채우기 색1',
-  'imageSet10': '채우기 색1 강조',
-  'imageSet11': '채우기 색2',
-  'imageSet12': '채우기 색2 강조',
-  'imageSet13': '채우기 색3',
-  'imageSet14': '채우기 색3 강조',
-  'imageSet15': '오류 색',
-  'imageSet16': '오류 텍스트 색',
-  'imageSet17': '오류 채우기 색',
-  'imageSet18': '오류 채우기 색 강조',
+  'imageSet6': '채우기 색1',
+  'imageSet7': '채우기 색2',
+  'imageSet8': '채우기 색3',
+  'imageSet9': '오류 색',
+  'imageSet10': '오류 텍스트 색',
 
 
   
@@ -35,6 +27,11 @@ const Map<String, String> stringResources = {
   'quizLayoutSetup3' : '본문 폰트 설정',
   'quizLayoutSetup4' : '이후 추가 예정입니다.',
   'quzLayoutSetup5' : '미개발',
+
+  'quizItem0' : '기본 선택형',
+  'quizItem1' : '날짜 선택형',
+  'quizItem2' : '순서 정렬형',
+  'quizItem3' : '정답 연결형',
 
 
 };
