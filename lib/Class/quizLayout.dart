@@ -13,6 +13,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -90,7 +91,6 @@ class QuizLayout {
 
     // Iterate through quizzes and adjust scores based on quiz.check()
     for (int i = 0; i < n; i++) {
-      print(quizzes[i].check());
       if (quizzes[i].check()) {
         score += scores[i];
       }
@@ -100,6 +100,7 @@ class QuizLayout {
 
   Future<void> loadQuizLayout(dynamic inputJson) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
+    print(inputData);
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
     }
@@ -184,6 +185,7 @@ class QuizLayout {
     if (inputData['colorScheme'] != null) {
       colorScheme = jsonToColorScheme(inputData['colorScheme']);
     }
+    print("SETUP DOne");
   }
 
   void setFontFamily(int index, String fontFamily) {
@@ -593,7 +595,7 @@ class QuizLayout {
     selectedLayout = layout;
   }
 
-  Future<void> saveQuizLayout() async {
+  Future<void> saveQuizLayout(BuildContext context) async {
     String uuid = generateUuid();
     final directory = await getApplicationDocumentsDirectory();
     List<Future> futures = [];
@@ -631,6 +633,13 @@ class QuizLayout {
     // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
+    await uploadFile(uuid);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('저장되었습니다.'),
+      ),
+    );
   }
 
   copyImage(String s, String t) {

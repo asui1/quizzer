@@ -255,12 +255,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         // 세 번째 버튼: 저장 버튼
                         ElevatedButton(
                           onPressed: () async {
-                            await widget.quizLayout.saveQuizLayout();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('저장되었습니다.'),
-                              ),
-                            );
+                            widget.quizLayout.saveQuizLayout(context);
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -24,10 +25,31 @@ class _SearchScreenState extends State<SearchScreen> {
     ),
     QuizCard(
       title: "emptyTest",
-      uuid: "11111",
+      uuid: "9d6a4831-12f2-4fd7-b5b2-6df9aa3509a0",
       titleImagePath: "assets/images/question2.png",
     )
   ];
+  FocusNode _focusNode = FocusNode();
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _isFocused = _focusNode.hasFocus;
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   // Needs UUID, title, and titleImage.
 
@@ -37,62 +59,71 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: TextField(
+          focusNode: _focusNode,
           autofocus: true,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.search,
           onChanged: (value) {
             _searchText = value;
-            if (_searchText.startsWith('#')) {
-              // This is a hashtag, handle it accordingly
-            }
           },
           onSubmitted: (value) {
-            // Add your search logic here
+            _handleSearch(_searchText);
           },
           decoration: InputDecoration(
             hintText: 'Search',
             suffixIcon: IconButton(
               onPressed: () {
-                // Add your search logic here
+                _handleSearch(_searchText);
               },
               icon: Icon(Icons.search),
             ),
           ),
         ),
       ),
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-            // Column is also a layout widget. It takes a list of children and
-            // arranges them vertically. By default, it sizes itself to fit its
-            // children horizontally, and tries to be as tall as its parent.
-            //
-            // Column has various properties to control how it sizes itself and
-            // how it positions its children. Here we use mainAxisAlignment to
-            // center the children vertically; the main axis here is the vertical
-            // axis because Columns are vertical (the cross axis would be
-            // horizontal).
-            //
-            // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-            // action in the IDE, or press "p" in the console), to see the
-            // wireframe for each widget.
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _searchResults.length,
-                  itemBuilder: (context, index) {
-                    return _searchResults[index];
-                  },
-                ),
-              ),
-            ],
-          ),
+      body: _isFocused ? _buildSearchBody() : _buildNormalBody(),
+    );
+  }
+
+  void _handleSearch(String searchText) {
+    setState(() {
+      _searchResults = [
+        QuizCard(
+          title: "loadQuizLayoutMaker",
+          uuid: _searchText,
+          titleImagePath: "assets/images/question2.png",
+          additionalData: "로드 후 QuizLayoutMaker로 이동.",
         ),
+        QuizCard(
+          title: "loadQuizLayoutSolver",
+          uuid: _searchText,
+          titleImagePath: "assets/images/question2.png",
+          additionalData: "로드 후 QuizLayoutSolver로 이동.",
+        ),
+      ];
+    });
+  }
+
+  Widget _buildSearchBody() {
+    // Build your search body here
+    return Center(
+      child: Text("Searching..."),
+    );
+  }
+
+  Widget _buildNormalBody() {
+    // Build your normal body here
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: _searchResults.length,
+              itemBuilder: (context, index) {
+                return _searchResults[index];
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

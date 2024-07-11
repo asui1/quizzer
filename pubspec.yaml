@@ -44,6 +44,7 @@ dependencies:
   palette_generator: ^0.3.3+3
   image: ^4.2.0
   material_theme_builder: ^1.0.4
+  http: ^0.13.3
 
 
 dev_dependencies:

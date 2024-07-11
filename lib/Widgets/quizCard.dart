@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -32,31 +35,43 @@ class QuizCard extends StatelessWidget {
             .transparency, // This makes the material widget transparent
         child: InkWell(
           onTap: () async {
-            String jsonString =
-                await rootBundle.loadString('assets/jsons/$uuid.json');
-            final jsonResponse = json.decode(jsonString);
+            String dataJson = "";
+            Map<String, dynamic> dataString;
+            final directory = await getApplicationDocumentsDirectory();
+            try {
+              await downloadJson(directory, uuid);
+              String jsonString = await loadFileContent(directory, uuid);
+              final jsonResponse = json.decode(jsonString);
+              dataString = jsonResponse['data'];
+            } catch (e) {
+              Logger.log("Error in downloadJson");
+              Logger.log(e);
+              return;
+            }
+            // Logger.log(dataJson);
+
+            // final jsonResponse = json.decode(dataJson);
             // jsonResponse를 사용하여 필요한 작업 수행
 
             QuizLayout quizLayout = QuizLayout();
-            await quizLayout.loadQuizLayout(jsonResponse);
-            if(title.contains("Maker")){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MakingQuizscreen(
-                        quizLayout: quizLayout,
-                      )),
-            );
-            }
-            else{
+            await quizLayout.loadQuizLayout(dataString);
+            if (title.contains("Maker")) {
               Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => QuizSolver(
-                        quizLayout: quizLayout,
-                        index: 0,
-                      )),
-            );
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MakingQuizscreen(
+                          quizLayout: quizLayout,
+                        )),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => QuizSolver(
+                          quizLayout: quizLayout,
+                          index: 0,
+                        )),
+              );
             }
           },
           child: Card(

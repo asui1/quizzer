@@ -217,7 +217,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     homeLists(
                         ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
                     SizedBox(
-                      height: AppConfig.largePadding*2,
+                      height: AppConfig.largePadding * 2,
+                    ),
+                    Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '문의: whwkd122@gmail.com',
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondary
+                                  .withAlpha(130),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -265,7 +283,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         selectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
-        unselectedItemColor: Theme.of(context).colorScheme.onSecondary,
+        unselectedItemColor:
+            Theme.of(context).colorScheme.onSecondaryContainer.withAlpha(130),
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
