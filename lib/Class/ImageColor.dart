@@ -1,13 +1,17 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class ImageColor {
-  String? imagePath;
+  String? imagePath; //IMAGE NAME.
   Color? color;
   Color? mainColor = null;
+  String? imageName;
 
   ImageColor({this.imagePath, this.color});
 
@@ -17,9 +21,30 @@ class ImageColor {
     this.mainColor = null;
   }
 
-  ImageColor fromJson(Map<String, dynamic> json) {
+  void setImageName(String imageName) {
+    this.imageName = imageName;
+  }
+
+  Future<ImageColor> fromJson(Map<String, dynamic> json) async {
+    if (json.containsKey('imageData') && json['imageName'] != null) {
+      // Decode the Base64 string to bytes
+      Uint8List bytes = base64Decode(json['imageData']);
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+
+      // Use imageName for the file name, ensure imageName is not null
+      String fileName = json['imageName'];
+      String fullPath = path.join(appDocPath, fileName);
+
+      // Write the bytes to a file at the application directory with imageName
+      await File(fullPath).writeAsBytes(bytes);
+
+      // Update imagePath to the new path
+      imagePath = fullPath;
+    }
+
     return ImageColor(
-      imagePath: json['imagePath'],
+      imagePath: imagePath,
       color: json['color'] != null ? Color(json['color']) : null,
     );
   }
@@ -59,10 +84,19 @@ class ImageColor {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> json = {
       'imagePath': imagePath,
       'color': color?.value,
+      'imageName': imageName,
     };
+
+    if (imagePath != null) {
+      File imageFile = File(imagePath!);
+      String base64Image = base64Encode(imageFile.readAsBytesSync());
+      json['imageData'] = base64Image;
+    }
+
+    return json;
   }
 }
 

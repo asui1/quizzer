@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as path; // Add this line
 
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class ColorPickerField extends StatefulWidget {
@@ -156,17 +158,34 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
       actions: <Widget>[
         TextButton(
           child: Text('확인'),
-          onPressed: () {
+          onPressed: () async {
             if (widget.index > 2) {
               widget.quizLayout.setColor(widget.index, pickerColor);
               Navigator.of(context).pop(pickerColor);
             } else {
               if (imageFile != null) {
-                saveFileToPermanentDirectory(imageFile!).then((value) {
-                  widget.quizLayout.setImage(widget.index,
-                      ImageColor(imagePath: value.path, color: pickerColor));
-                  Navigator.of(context).pop(pickerColor);
-                });
+                double width = AppConfig.screenWidth;
+                double height;
+                if (widget.index == 0) {
+                  height = AppConfig.screenHeight -
+                      widget.quizLayout.getAppBarHeight() -
+                      widget.quizLayout.getBottomBarHeight();
+                } else if (widget.index == 1) {
+                  height = widget.quizLayout.getAppBarHeight();
+                } else {
+                  height = widget.quizLayout.getBottomBarHeight();
+                }
+                final File? compressedImage = await checkCompressImage(
+                    imageFile, width.toInt(), height.toInt());
+                if (compressedImage != null) {
+                  widget.quizLayout.setImage(
+                      widget.index,
+                      ImageColor(
+                          imagePath: compressedImage!.path,
+                          color: pickerColor));
+                }
+
+                Navigator.of(context).pop(pickerColor);
               } else {
                 widget.quizLayout.setImage(widget.index,
                     ImageColor(imagePath: imageFile?.path, color: pickerColor));

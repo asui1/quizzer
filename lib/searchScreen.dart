@@ -86,20 +86,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _handleSearch(String searchText) {
     setState(() {
-      _searchResults = [
-        QuizCard(
-          title: "loadQuizLayoutMaker",
-          uuid: _searchText,
-          titleImagePath: "assets/images/question2.png",
-          additionalData: "로드 후 QuizLayoutMaker로 이동.",
-        ),
-        QuizCard(
-          title: "loadQuizLayoutSolver",
-          uuid: _searchText,
-          titleImagePath: "assets/images/question2.png",
-          additionalData: "로드 후 QuizLayoutSolver로 이동.",
-        ),
-      ];
+      _searchResults = []; // 검색 결과를 비웁니다.
+    });
+
+    Future<List<QuizCard>> result = searchRequest(searchText);
+    result.then((value) {
+      setState(() {
+        _searchResults = value;
+      });
     });
   }
 

@@ -1,17 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart'; // Import the material.dart package
 import 'package:flutter/widgets.dart';
 import 'package:material_theme_builder/material_theme_builder.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:path/path.dart' as path;
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Setup/Colors.dart';
@@ -46,7 +48,10 @@ class QuizLayout {
   String bodyFont = MyFonts.gothicA1ExtraBold;
   String answerFont = MyFonts.gothicA1;
   String titleImagePath = 'assets/images/question2.png';
+  String titleImageName = '';
   bool titleImageSet = false;
+  String _creator = "GUEST";
+  String titleImageBytes = '';
 
   QuizLayout({this.highlightedIndex = 0});
 
@@ -153,13 +158,14 @@ class QuizLayout {
       isWidgetSizeSet = inputData['isWidgetSizeSet'];
     }
     if (inputData['backgroundImage'] != null) {
-      backgroundImage = ImageColor().fromJson(inputData['backgroundImage']);
+      backgroundImage =
+          await ImageColor().fromJson(inputData['backgroundImage']);
     }
     if (inputData['topBarImage'] != null) {
-      topBarImage = ImageColor().fromJson(inputData['topBarImage']);
+      topBarImage = await ImageColor().fromJson(inputData['topBarImage']);
     }
     if (inputData['bottomBarImage'] != null) {
-      bottomBarImage = ImageColor().fromJson(inputData['bottomBarImage']);
+      bottomBarImage = await ImageColor().fromJson(inputData['bottomBarImage']);
     }
     if (inputData['shuffleQuestions'] != null) {
       shuffleQuestions = inputData['shuffleQuestions'];
@@ -176,16 +182,30 @@ class QuizLayout {
     if (inputData['answerFont'] != null) {
       answerFont = inputData['answerFont'];
     }
-    if (inputData['titleImagePath'] != null) {
-      titleImagePath = inputData['titleImagePath'];
-    }
     if (inputData['titleImageSet'] != null) {
       titleImageSet = inputData['titleImageSet'];
+    }
+    if (titleImageSet == true && inputData['titleImage'] != null) {
+      Uint8List bytes = base64Decode(inputData['titleImage']);
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String appDocPath = appDocDir.path;
+
+      // Use imageName for the file name, ensure imageName is not null
+      String fileName = inputData['titleImageName'];
+      String fullPath = path.join(appDocPath, fileName);
+
+      // Write the bytes to a file at the application directory with imageName
+      await File(fullPath).writeAsBytes(bytes);
+    }
+    if (inputData['titleImagePath'] != null) {
+      titleImagePath = inputData['titleImagePath'];
     }
     if (inputData['colorScheme'] != null) {
       colorScheme = jsonToColorScheme(inputData['colorScheme']);
     }
-    print("SETUP DOne");
+    if (inputData['creator'] != null) {
+      _creator = inputData['creator'];
+    }
   }
 
   void setFontFamily(int index, String fontFamily) {
@@ -244,9 +264,26 @@ class QuizLayout {
     return title;
   }
 
+  String getCreator() {
+    return _creator;
+  }
+
   void setTitleImage(String path) {
     titleImagePath = path;
     titleImageSet = true;
+  }
+
+  Future<String?> getTitleImageString() async {
+    if (titleImageSet) {
+      final bytes = await File(titleImagePath).readAsBytes();
+      titleImageBytes = base64Encode(bytes);
+      return titleImageBytes;
+    }
+    return null;
+  }
+
+  String getTitleImageNow() {
+    return titleImageBytes;
   }
 
   void setIsTitleSet(bool value) {
@@ -280,8 +317,10 @@ class QuizLayout {
       'questionFont': questionFont,
       'bodyFont': bodyFont,
       'answerFont': answerFont,
-      'titleImagePath': titleImagePath,
       'colorScheme': colorSchemeToJson(colorScheme),
+      'creator': _creator,
+      'titleImage': getTitleImageNow(),
+      'titleImageName': titleImageName,
     };
   }
 
@@ -599,26 +638,53 @@ class QuizLayout {
     String uuid = generateUuid();
     final directory = await getApplicationDocumentsDirectory();
     List<Future> futures = [];
+    String fileType = 'jpg';
 
     if (backgroundImage != null && backgroundImage!.isColor() == false) {
+      if (backgroundImage!.imagePath!.contains('.png')) {
+        fileType = 'png';
+      } else {
+        fileType = 'jpg';
+      }
+
       futures.add(copyImage(backgroundImage!.imagePath!,
-              '${directory.path}/$uuid-backgroundImage.png')
-          .then((newPath) => backgroundImage!.setImage(newPath)));
+              '${directory.path}/$uuid-backgroundImage.$fileType')
+          .then((newPath) => backgroundImage!
+              .setImageName('$uuid-backgroundImage.$fileType')));
     }
     if (topBarImage != null && topBarImage!.isColor() == false) {
+      if (topBarImage!.imagePath!.contains('.png')) {
+        fileType = 'png';
+      } else {
+        fileType = 'jpg';
+      }
       futures.add(copyImage(topBarImage!.imagePath!,
-              '${directory.path}/$uuid-topBarImage.png')
-          .then((newPath) => topBarImage!.setImage(newPath)));
+              '${directory.path}/$uuid-topBarImage.$fileType')
+          .then((newPath) =>
+              topBarImage!.setImageName('$uuid-topBarImage.$fileType')));
     }
     if (bottomBarImage != null && bottomBarImage!.isColor() == false) {
+      if (bottomBarImage!.imagePath!.contains('.png')) {
+        fileType = 'png';
+      } else {
+        fileType = 'jpg';
+      }
       futures.add(copyImage(bottomBarImage!.imagePath!,
               '${directory.path}/$uuid-bottomBarImage.png')
-          .then((newPath) => bottomBarImage!.setImage(newPath)));
+          .then((newPath) =>
+              bottomBarImage!.setImageName('$uuid-bottomBarImage.png')));
     }
     if (titleImageSet == true) {
-      futures.add(
-          copyImage(titleImagePath, '${directory.path}/$uuid-titleImage.png')
-              .then((newPath) => titleImagePath = newPath));
+      if (titleImagePath.contains('.png')) {
+        fileType = 'png';
+      } else {
+        fileType = 'jpg';
+      }
+      futures.add(copyImage(
+              titleImagePath, '${directory.path}/$uuid-titleImage.$fileType')
+          .then((newPath) => titleImagePath = newPath));
+      titleImageName = '$uuid-titleImage.$fileType';
+      futures.add(getTitleImageString());
     }
 
     // 모든 이미지 복사 작업이 완료될 때까지 기다립니다.
@@ -633,7 +699,7 @@ class QuizLayout {
     // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
-    await uploadFile(uuid);
+    await uploadFile(uuid, this);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

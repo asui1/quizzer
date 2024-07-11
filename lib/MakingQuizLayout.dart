@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
@@ -185,10 +187,17 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                   source: ImageSource.gallery);
                                           if (tempImageFile != null) {
                                             // 이미지 파일 처리
-                                            setState(() {
-                                              widget.quizLayout.setTitleImage(
-                                                  tempImageFile.path);
-                                            });
+                                            final File? compressedFile =
+                                                await checkCompressImage(
+                                                    tempImageFile, 50, 50);
+
+                                            if (compressedFile != null) {
+                                              setState(() {
+                                                widget.quizLayout.setTitleImage(
+                                                    compressedFile.path);
+                                              });
+                                            }
+                                            setState(() {});
                                           }
                                           // Handle user upload with image picker
                                         },

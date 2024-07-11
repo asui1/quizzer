@@ -45,7 +45,7 @@ dependencies:
   image: ^4.2.0
   material_theme_builder: ^1.0.4
   http: ^0.13.3
-
+  flutter_image_compress: ^1.1.0
 
 dev_dependencies:
   flutter_test:
