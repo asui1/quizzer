@@ -4,6 +4,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/Strings.dart';
@@ -20,7 +21,9 @@ import 'package:quizzer/Setup/testpage.dart';
 import 'searchScreen.dart';
 import 'dart:math' as math;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserPreferences.init();
   runApp(const MyApp());
 }
 
@@ -200,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: AppConfig.largePadding,
                     ),
                     homeLists(
-                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                        ["register test", "login test", "empty3", "empty4"], "빈 공간입니다."),
                     SizedBox(
                       height: AppConfig.largePadding,
                     ),
@@ -326,6 +329,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     if (list[index].contains('vie')) {
                       navigateToQuizPage(context, 2 * index + 2);
+                    }
+                    if(list[index] == 'register test'){
+                      AuthService().registerWithGoogle();
+                    }
+                    if(list[index] == 'login test'){
+                      AuthService().signInWithGoogle();
                     }
                   },
                   child: Container(

@@ -46,6 +46,8 @@ dependencies:
   material_theme_builder: ^1.0.4
   http: ^0.13.3
   flutter_image_compress: ^1.1.0
+  google_sign_in: ^6.2.1
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:

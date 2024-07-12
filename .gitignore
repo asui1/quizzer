@@ -47,3 +47,5 @@ keys.dart
 android/key.properties.properties
 android/gradle.properties
 android/app/google-services.json
+android/gradle.properties
+android/app/build.gradle
