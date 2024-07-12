@@ -44,3 +44,6 @@ app.*.map.json
 
 # keys.dart 파일 무시
 keys.dart
+android/key.properties.properties
+android/gradle.properties
+android/app/google-services.json
