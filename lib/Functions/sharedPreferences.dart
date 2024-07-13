@@ -11,6 +11,8 @@ class UserPreferences {
 
   static const _keyUsername = 'username';
   static const _keyLoggedIn = 'loggedIn';
+  static const _userImageName = 'userImageName';
+  static const _userEmail = 'userEmail';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -23,15 +25,26 @@ class UserPreferences {
     return prefs.getString('userName');
   }
 
-  static Future<String?> getUserEmail() async {
+  static Future setUserImageName(String userImageName) async =>
+      await _preferences.setString(_userImageName, userImageName);
+
+  static Future<String?> getUserImageName() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userEmail');
+    return prefs.getString('userImageName');
   }
+
 
   static Future setLoggedIn(bool loggedIn) async =>
       await _preferences.setBool(_keyLoggedIn, loggedIn);
 
   static bool? getLoggedIn() => _preferences.getBool(_keyLoggedIn);
+
+  static Future<void> clear() async => await _preferences.clear();
+  static Future setUserEmail(String email) async => // 추가된 부분
+      await _preferences.setString(_userEmail, email); // 추가된 부분
+
+  static Future<String?> getUserEmail() async => // 수정된 부분
+      _preferences.getString(_userEmail); // 수정된 부분
 }
 
 class AuthService {
@@ -40,8 +53,10 @@ class AuthService {
   Future<bool?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
+      Logger.log("SIGN IN COMPLETE : $account.email");
       if (account != null) {
         // Google 로그인 성공 후 SharedPreferences에 사용자 정보 저장
+
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userName', account.displayName ?? '');
         await prefs.setString('userEmail', account.email);

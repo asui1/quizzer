@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +7,9 @@ import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'dart:convert';
 import 'package:quizzer/Functions/keys.dart';
+import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> downloadJson(Directory directory, String uuid) async {
@@ -118,10 +121,82 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
       ));
     }
     return _searchResults;
-    
   } else {
     // Handle error
     Logger.log('Request failed with status: ${response.statusCode}');
   }
   return [];
+}
+
+Future<void> checkDuplicate(
+    String nickname, StreamController<bool> _streamController) async {
+  final url = loginUrl + '?nickname=$nickname';
+  var response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    Logger.log("DUPLICATE CHECK SUCCESS");
+    _streamController.add(true);
+  } else {
+    Logger.log("DUPLICATE CHECK FAILED");
+    _streamController.add(false);
+  }
+}
+
+Future<bool> registerUser(String nickname, String email, String image) async {
+  final url = loginUrl;
+  var response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'nickname': nickname,
+      'email': email,
+      'idIcon': null,
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    Logger.log("REGISTER SUCCESS");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', nickname);
+    await prefs.setString('userEmail', email);
+    await prefs.setString('userImage', image);
+    await prefs.setBool('isLoggedIn', true);
+
+    return true;
+  } else {
+    Logger.log("REGISTER FAILED");
+    return false;
+  }
+}
+
+Future<void> signOut() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
+}
+
+Future<int> loginCheck(String email, String image) async {
+  final url = loginUrl + '?email=$email';
+  var response = await http.get(Uri.parse(url));
+  if (response.statusCode == 200) {
+    Logger.log("LOGIN SUCCESS");
+    print(response.body);
+
+    // 응답 본문을 `,`로 분리하여 배열로 변환
+    var parts = response.body.split(', ');
+    // 각 부분에서 정보 추출
+    String nickname = parts.firstWhere((part) => part.startsWith('Nickname: ')).substring('Nickname: '.length);
+
+    UserPreferences.setUsername(nickname);
+    UserPreferences.setUserImageName(image);
+    UserPreferences.setUserEmail(email);
+    UserPreferences.setLoggedIn(true);
+    return 200;
+  } else if (response.statusCode == 400) {
+    Logger.log("User Not Registered");
+    return 400;
+  } else {
+    Logger.log("LOGIN FAILED");
+    return 404;
+  }
 }

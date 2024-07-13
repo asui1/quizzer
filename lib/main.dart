@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/Colors.dart';
@@ -18,6 +23,8 @@ import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Setup/testpage.dart';
+import 'package:quizzer/Widgets/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'searchScreen.dart';
 import 'dart:math' as math;
 
@@ -88,6 +95,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double screenHeight = AppConfig.screenHeight;
   double screenWidth = AppConfig.screenWidth;
+  bool isLoggedIn = false;
+  String userImageName = '';
+  String userNickname = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadPreferences();
+  }
+
+  _loadPreferences() async {
+    isLoggedIn = await UserPreferences.getLoggedIn() ?? false;
+    userImageName = await UserPreferences.getUserImageName() ?? '';
+    userNickname = await UserPreferences.getUserName() ?? '';
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,13 +159,35 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            IconButton(
-              iconSize: AppConfig.iconSize * 0.8,
-              icon: Icon(Icons.person), // Example icon
-              onPressed: () {
-                //TODO 로그인 화면 구현 필요.
-              },
-            ),
+            isLoggedIn
+                ? IconButton(
+                    iconSize: AppConfig.iconSize * 0.8,
+                    icon: ClipOval(
+                      child: Image.network(
+                        userImageName,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Icon(
+                            Icons.person,
+                            color: Theme.of(context).colorScheme.primary,
+                          );
+                        },
+                      ),
+                    ), // ClipOval로 감싸서 이미지를 원형으로 만듦
+                    onPressed: () async {
+                      _showLogoutConfirmationDialog(context);
+                    },
+                  )
+                : IconButton(
+                    iconSize: AppConfig.iconSize * 0.8,
+                    icon: Icon(Icons.person), // Example icon
+                    onPressed: () {
+                      _showLoginDialog(context);
+                    },
+                  ),
           ],
         ),
       ),
@@ -203,7 +249,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: AppConfig.largePadding,
                     ),
                     homeLists(
-                        ["register test", "login test", "empty3", "empty4"], "빈 공간입니다."),
+                        ["register test", "login test", "empty3", "empty4"],
+                        "빈 공간입니다."),
                     SizedBox(
                       height: AppConfig.largePadding,
                     ),
@@ -294,6 +341,91 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _showLoginDialog(BuildContext context) async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // 로그인 버튼
+              SizedBox(
+                width: double.infinity, // 버튼을 대화상자 너비에 맞춤
+                child: ElevatedButton(
+                  child: Text('로그인', style: TextStyle(fontSize: 20)),
+                  onPressed: () async {
+                    final account = await _googleSignIn.signIn();
+                    if (account != null) {
+                      String photoUrl =
+                          account.photoUrl == null ? '' : account.photoUrl!;
+                      Logger.log(photoUrl);
+                      int loginStatus =
+                          await loginCheck(account.email, photoUrl);
+                      if (loginStatus == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('로그인에 성공하였습니다.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      } else if (loginStatus == 400) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('등록되지 않은 사용자입니다.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('로그인에 실패하였습니다.'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('구글 로그인에 실패하였습니다.'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
+
+                    // 로그인 로직 구현
+                  },
+                ),
+              ),
+              SizedBox(height: 20), // 버튼 사이의 간격
+              // 등록 텍스트 버튼
+              GestureDetector(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Register()),
+                  );
+                },
+                child: Text('회원가입',
+                    style: TextStyle(
+                        fontSize: 16, decoration: TextDecoration.underline)),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    setState(() {
+      _loadPreferences();
+    });
+  }
+
   Widget homeLists(List<String> list, String title) {
     return Container(
       width: AppConfig.screenWidth * 0.9,
@@ -330,10 +462,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (list[index].contains('vie')) {
                       navigateToQuizPage(context, 2 * index + 2);
                     }
-                    if(list[index] == 'register test'){
+                    if (list[index] == 'register test') {
                       AuthService().registerWithGoogle();
                     }
-                    if(list[index] == 'login test'){
+                    if (list[index] == 'login test') {
                       AuthService().signInWithGoogle();
                     }
                   },
@@ -507,5 +639,38 @@ class _MyHomePageState extends State<MyHomePage> {
         // Handle the case when n is not matched with any of the cases
         break;
     }
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text('로그아웃 하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('아니오'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dialog를 닫습니다.
+              },
+            ),
+            TextButton(
+              child: Text('예'),
+              onPressed: () async {
+                UserPreferences.clear();
+                Navigator.of(context).pop(); // Dialog를 닫습니다.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('로그아웃 되었습니다.'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                _loadPreferences(); // 상태를 새로고침합니다.
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
