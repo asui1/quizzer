@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
@@ -25,6 +27,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
   void initState() {
     super.initState();
     score = widget.quizLayout.getScore();
+    sendResultToServer(score, widget.quizLayout);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   }
 
@@ -74,14 +77,24 @@ class _ScoringScreenState extends State<ScoringScreen> {
                       ],
                     ),
                     SizedBox(
-                      height: AppConfig.largePadding,
+                      height: AppConfig.padding,
                     ),
-
+                    Text(
+                      widget.quizLayout.getCreator(),
+                      style:TextStyle(
+                        fontSize: AppConfig.fontSize * 0.7,
+                        fontWeight: FontWeight.w300,
+                        color: widget.quizLayout.getColorScheme().primary,
+                      ),
+                    ),
+                    SizedBox(
+                      height: AppConfig.padding,
+                    ),
                     //TODO: 컨테이너 클릭하면 뒤집어지면서 틀린 문제 확인.
                     Container(
                       width: AppConfig.screenWidth * 0.8,
                       height:
-                          AppConfig.screenHeight * 0.6 * widget.heightModifier,
+                          AppConfig.screenHeight * 0.55 * widget.heightModifier,
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                       decoration: BoxDecoration(

@@ -84,7 +84,6 @@ class AnswerCheckScreen extends StatelessWidget {
                 ),
               );
               
-              // 채점 로직
             },
             child: const Text("채점하기"),
             // FloatingActionButton의 기본 크기를 무시하고, SizedBox의 크기에 맞춰서 조절됩니다.

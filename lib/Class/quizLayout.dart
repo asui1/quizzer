@@ -52,8 +52,14 @@ class QuizLayout {
   bool titleImageSet = false;
   String _creator = "GUEST";
   String titleImageBytes = '';
+  String? uuid = null;
 
   QuizLayout({this.highlightedIndex = 0});
+
+  String getUuid(){
+    Logger.log(uuid);
+    return uuid!;
+  }
 
   TextStyle getAnswerTextStyle() {
     return TextStyle(
@@ -103,7 +109,7 @@ class QuizLayout {
     return score;
   }
 
-  Future<void> loadQuizLayout(dynamic inputJson) async {
+  Future<void> loadQuizLayout(dynamic inputJson, String setUuid) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
     print(inputData);
     if (inputData['isTopBarVisible'] != null) {
@@ -206,7 +212,18 @@ class QuizLayout {
     if (inputData['creator'] != null) {
       _creator = inputData['creator'];
     }
+    print("UUID: $setUuid");
+    uuid = setUuid;
   }
+
+  void setCreator(String creator) {
+    _creator = creator;
+  }
+
+  String getCreator() {
+    return _creator;
+  }
+
 
   void setFontFamily(int index, String fontFamily) {
     if (index == 0) {
@@ -264,10 +281,6 @@ class QuizLayout {
     return title;
   }
 
-  String getCreator() {
-    return _creator;
-  }
-
   void setTitleImage(String path) {
     titleImagePath = path;
     titleImageSet = true;
@@ -321,6 +334,7 @@ class QuizLayout {
       'creator': _creator,
       'titleImage': getTitleImageNow(),
       'titleImageName': titleImageName,
+      'uuid': uuid,
     };
   }
 
@@ -635,7 +649,9 @@ class QuizLayout {
   }
 
   Future<void> saveQuizLayout(BuildContext context) async {
-    String uuid = generateUuid();
+    if(uuid == null) {
+      uuid = generateUuid();
+    }
     final directory = await getApplicationDocumentsDirectory();
     List<Future> futures = [];
     String fileType = 'jpg';
@@ -699,7 +715,7 @@ class QuizLayout {
     // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
-    await uploadFile(uuid, this);
+    await uploadFile(uuid!, this);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

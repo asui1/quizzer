@@ -185,7 +185,9 @@ Future<int> loginCheck(String email, String image) async {
     // 응답 본문을 `,`로 분리하여 배열로 변환
     var parts = response.body.split(', ');
     // 각 부분에서 정보 추출
-    String nickname = parts.firstWhere((part) => part.startsWith('Nickname: ')).substring('Nickname: '.length);
+    String nickname = parts
+        .firstWhere((part) => part.startsWith('Nickname: '))
+        .substring('Nickname: '.length);
 
     UserPreferences.setUsername(nickname);
     UserPreferences.setUserImageName(image);
@@ -198,5 +200,31 @@ Future<int> loginCheck(String email, String image) async {
   } else {
     Logger.log("LOGIN FAILED");
     return 404;
+  }
+}
+
+Future<void> sendResultToServer(int score, QuizLayout quizLayout) async {
+  final url = activityUrl;
+  String email = await UserPreferences.getUserEmail() ?? "GUEST";
+  String uuid = quizLayout.getUuid();
+  print(uuid);
+  final response = await http.post(
+    Uri.parse(url),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'email': email,
+      'type': 1,
+      'item_uuid': uuid,
+      'score': score,
+    }),
+  );
+  
+
+  if (response.statusCode == 200) {
+    Logger.log("SEND RESULT SUCCESS");
+  } else {
+    Logger.log("SEND RESULT FAILED");
   }
 }
