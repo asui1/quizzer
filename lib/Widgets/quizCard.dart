@@ -54,7 +54,7 @@ class QuizCard extends StatelessWidget {
             // jsonResponse를 사용하여 필요한 작업 수행
 
             QuizLayout quizLayout = QuizLayout();
-            await quizLayout.loadQuizLayout(dataString, uuid);
+            await quizLayout.loadQuizLayout(dataString);
             if (title.contains("Maker")) {
               Navigator.push(
                 context,

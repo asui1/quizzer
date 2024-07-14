@@ -226,7 +226,11 @@ class _MakingQuizState extends State<MakingQuiz> {
                         ),
                         // 두 번째 버튼: 임시 저장 버튼
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async{
+                            await widget.quizLayout.saveQuizLayout(context, true);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
                           child: Text('임시저장'),
                         ),
                         ElevatedButton(
@@ -255,7 +259,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         // 세 번째 버튼: 저장 버튼
                         ElevatedButton(
                           onPressed: () async {
-                            widget.quizLayout.saveQuizLayout(context);
+                            widget.quizLayout.saveQuizLayout(context, false);
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())

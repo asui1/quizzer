@@ -27,7 +27,7 @@ class FilpStyle12 extends StatelessWidget {
               flipStyle == 2 ? Alignment.bottomLeft : Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                5.0, 5.0, 5.0, flipStyle == 2 ? 80.0 : 5.0), // 조건에 따라 바닥 패딩 조정
+                5.0, 5.0, 5.0, flipStyle == 2 ? 5.0 : 5.0), // 조건에 따라 바닥 패딩 조정
             child: Container(
               width: 35,
               height: 35,
@@ -60,7 +60,7 @@ class FilpStyle12 extends StatelessWidget {
               flipStyle == 2 ? Alignment.bottomRight : Alignment.centerRight,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-                5.0, 5.0, 5.0, flipStyle == 2 ? 80.0 : 5.0), // 조건에 따라 바닥 패딩 조정
+                5.0, 5.0, 5.0, flipStyle == 2 ? 5.0 : 5.0), // 조건에 따라 바닥 패딩 조정
             child: Container(
               width: 35,
               height: 35,

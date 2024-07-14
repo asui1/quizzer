@@ -56,7 +56,7 @@ class QuizLayout {
 
   QuizLayout({this.highlightedIndex = 0});
 
-  String getUuid(){
+  String getUuid() {
     Logger.log(uuid);
     return uuid!;
   }
@@ -109,7 +109,7 @@ class QuizLayout {
     return score;
   }
 
-  Future<void> loadQuizLayout(dynamic inputJson, String setUuid) async {
+  Future<void> loadQuizLayout(dynamic inputJson) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
     print(inputData);
     if (inputData['isTopBarVisible'] != null) {
@@ -212,8 +212,9 @@ class QuizLayout {
     if (inputData['creator'] != null) {
       _creator = inputData['creator'];
     }
-    print("UUID: $setUuid");
-    uuid = setUuid;
+    if (inputData['uuid'] != null) {
+      uuid = inputData['uuid'];
+    }
   }
 
   void setCreator(String creator) {
@@ -223,7 +224,6 @@ class QuizLayout {
   String getCreator() {
     return _creator;
   }
-
 
   void setFontFamily(int index, String fontFamily) {
     if (index == 0) {
@@ -648,58 +648,42 @@ class QuizLayout {
     selectedLayout = layout;
   }
 
-  Future<void> saveQuizLayout(BuildContext context) async {
-    if(uuid == null) {
+  Future<void> saveQuizLayout(BuildContext context, bool isTemp) async {
+    String fileName = '';
+    if (uuid == null && !isTemp) {
       uuid = generateUuid();
+      fileName = uuid!;
+    } else if (isTemp) {
+      fileName = "temp_$title";
+    } else {
+      fileName = uuid!;
     }
     final directory = await getApplicationDocumentsDirectory();
     List<Future> futures = [];
-    String fileType = 'jpg';
 
     if (backgroundImage != null && backgroundImage!.isColor() == false) {
-      if (backgroundImage!.imagePath!.contains('.png')) {
-        fileType = 'png';
-      } else {
-        fileType = 'jpg';
-      }
-
       futures.add(copyImage(backgroundImage!.imagePath!,
-              '${directory.path}/$uuid-backgroundImage.$fileType')
-          .then((newPath) => backgroundImage!
-              .setImageName('$uuid-backgroundImage.$fileType')));
+              '${directory.path}/$fileName-backgroundImage.png')
+          .then((newPath) =>
+              backgroundImage!.setImageName('$fileName-backgroundImage.png')));
     }
     if (topBarImage != null && topBarImage!.isColor() == false) {
-      if (topBarImage!.imagePath!.contains('.png')) {
-        fileType = 'png';
-      } else {
-        fileType = 'jpg';
-      }
       futures.add(copyImage(topBarImage!.imagePath!,
-              '${directory.path}/$uuid-topBarImage.$fileType')
+              '${directory.path}/$fileName-topBarImage.png')
           .then((newPath) =>
-              topBarImage!.setImageName('$uuid-topBarImage.$fileType')));
+              topBarImage!.setImageName('$fileName-topBarImage.png')));
     }
     if (bottomBarImage != null && bottomBarImage!.isColor() == false) {
-      if (bottomBarImage!.imagePath!.contains('.png')) {
-        fileType = 'png';
-      } else {
-        fileType = 'jpg';
-      }
       futures.add(copyImage(bottomBarImage!.imagePath!,
-              '${directory.path}/$uuid-bottomBarImage.png')
+              '${directory.path}/$fileName-bottomBarImage.png')
           .then((newPath) =>
-              bottomBarImage!.setImageName('$uuid-bottomBarImage.png')));
+              bottomBarImage!.setImageName('$fileName-bottomBarImage.png')));
     }
     if (titleImageSet == true) {
-      if (titleImagePath.contains('.png')) {
-        fileType = 'png';
-      } else {
-        fileType = 'jpg';
-      }
       futures.add(copyImage(
-              titleImagePath, '${directory.path}/$uuid-titleImage.$fileType')
+              titleImagePath, '${directory.path}/$fileName-titleImage.png')
           .then((newPath) => titleImagePath = newPath));
-      titleImageName = '$uuid-titleImage.$fileType';
+      titleImageName = '$fileName-titleImage.png';
       futures.add(getTitleImageString());
     }
 
@@ -710,16 +694,16 @@ class QuizLayout {
     Map<String, dynamic> json = toJson();
     // 문서 디렉토리의 경로를 얻습니다.
     // JSON 파일을 저장할 경로를 생성합니다.
-    final file = File('${directory.path}/$uuid.json');
+    final file = File('${directory.path}/$fileName.json');
 
     // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
-    await uploadFile(uuid!, this);
+    if (!isTemp) await uploadFile(fileName!, this);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('저장되었습니다.'),
+        content: isTemp ? Text('저장되었습니다.') : Text('업로드되었습니다.'),
       ),
     );
   }
