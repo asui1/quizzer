@@ -32,6 +32,19 @@ class Quiz2 extends AbstractQuiz {
           question: question,
         );
 
+  Quiz2.copy(Quiz2 original)
+      : this(
+          layoutType: original.layoutType,
+          answers: List<String>.from(original.answers),
+          ans: List<bool>.from(original.ans),
+          question: original.question,
+          maxAnswerSelection: original.maxAnswerSelection,
+          centerDate: List<int>.from(original.centerDate),
+          yearRange: original.yearRange,
+          answerDate: List<List<int>>.from(
+              original.answerDate.map((date) => List<int>.from(date))),
+        );
+
   void setCurFocus(DateTime newCurFocus) {
     curFocus = newCurFocus;
   }
@@ -49,7 +62,10 @@ class Quiz2 extends AbstractQuiz {
       ];
       bool containsAnswer = answerDate.any((list) =>
           list.length == answer.length &&
-          list.asMap().entries.every((entry) => entry.value == answer[entry.key]));
+          list
+              .asMap()
+              .entries
+              .every((entry) => entry.value == answer[entry.key]));
       if (!containsAnswer) {
         return false;
       }

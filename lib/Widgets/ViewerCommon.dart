@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
 
@@ -19,18 +20,12 @@ class QuestionViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: AppConfig.screenWidth * fontSizeModifier, // 너비를 화면 너비의 80%로 설정
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: quizLayout.getColorScheme().onSurface, // 밑줄 색상 설정
-            width: 2.0, // 밑줄 두께 설정
-          ),
-        ),
-      ),
-      child: Text(
-        question,
-        textAlign: TextAlign.left,
-        style: quizLayout.getTitleStyle(),
+      child: TextStyleWidget(
+        textStyle: quizLayout.getTextStyle(0),
+        text: question,
+        colorScheme: quizLayout.getColorScheme(),
+        modifier: fontSizeModifier,
+      
       ),
     );
   }

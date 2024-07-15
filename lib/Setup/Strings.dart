@@ -22,11 +22,11 @@ const Map<String, String> stringResources = {
   'quiz7' : '퀴즈 4 생성',
   'quiz8' : '퀴즈 4 뷰어',
 
-  'quizLayoutSetup1' : "퀴즈 폰트 설정",
-  'quizLayoutSetup2' : '예문 폰트 설정',
-  'quizLayoutSetup3' : '본문 폰트 설정',
-  'quizLayoutSetup4' : '이후 추가 예정입니다.',
-  'quzLayoutSetup5' : '미개발',
+  'quizLayoutSetup1' : "질문 텍스트 설정",
+  'quizLayoutSetup2' : '예문 텍스트 설정',
+  'quizLayoutSetup3' : '본문 텍스트 설정',
+  'quizLayoutSetup4' : '넘기기 버튼 설정.',
+  'quizLayoutSetup5' : '이후 추가 예정입니다.',
 
   'quizItem0' : '기본 선택형',
   'quizItem1' : '날짜 선택형',

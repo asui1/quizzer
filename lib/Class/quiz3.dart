@@ -24,6 +24,17 @@ class Quiz3 extends AbstractQuiz {
             ans: ans,
             question: question);
 
+  Quiz3.copy(Quiz3 original)
+      : super(
+          layoutType: original.layoutType,
+          answers: List<String>.from(original.answers),
+          ans: List<bool>.from(original.ans),
+          question: original.question,
+        ) {
+    shuffledAnswers = List<String>.from(original.shuffledAnswers);
+    maxAnswerSelection = original.maxAnswerSelection;
+  }
+
   void setShuffledAnswers() {
     if (shuffledAnswers.isNotEmpty) return;
     List<String> tempShuffled = answers.sublist(1);
@@ -36,8 +47,8 @@ class Quiz3 extends AbstractQuiz {
 
   @override
   bool check() {
-    for(int i = 0; i < answers.length; i++) {
-      if(shuffledAnswers[i] != answers[i]) return false;
+    for (int i = 0; i < answers.length; i++) {
+      if (shuffledAnswers[i] != answers[i]) return false;
     }
     return true;
   }
@@ -57,7 +68,6 @@ class Quiz3 extends AbstractQuiz {
   }
 
   int getAnswersLength() {
-    Logger.log("answers length: ${answers.length}");
     return answers.length;
   }
 

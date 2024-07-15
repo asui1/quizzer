@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
@@ -31,7 +33,12 @@ import 'dart:math' as math;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -43,33 +50,36 @@ class MyApp extends StatelessWidget {
     AppConfig.setUp(context);
     var brightness = MediaQuery.of(context).platformBrightness;
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: brightness == Brightness.light
-            ? MyLightColorScheme
-            : MyDarkColorScheme,
-        // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
+    return ChangeNotifierProvider(
+      create: (context) => QuizLayout(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // TRY THIS: Try running your application with "flutter run". You'll see
+          // the application has a purple toolbar. Then, without quitting the app,
+          // try changing the seedColor in the colorScheme below to Colors.green
+          // and then invoke "hot reload" (save your changes or press the "hot
+          // reload" button in a Flutter-supported IDE, or press "r" if you used
+          // the command line to start the app).
+          //
+          // Notice that the counter didn't reset back to zero; the application
+          // state is not lost during the reload. To reset the state, use hot
+          // restart instead.
+          //
+          // This works for code too, not just values: Most code changes can be
+          // tested with just a hot reload.
+          colorScheme: brightness == Brightness.light
+              ? MyLightColorScheme
+              : MyDarkColorScheme,
+          // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
 
-        useMaterial3: true,
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(
+            title: 'Quizzer :  Customable Quiz App to Meet All Your Purposes'),
       ),
-      home: const MyHomePage(
-          title: 'Quizzer :  Customable Quiz App to Meet All Your Purposes'),
     );
   }
 }
@@ -104,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     _loadPreferences();
+    final quizLayout = Provider.of<QuizLayout>(context, listen: false);
   }
 
   _loadPreferences() async {
@@ -281,12 +292,12 @@ class _MyHomePageState extends State<MyHomePage> {
             bottom: 16, // Adjust the distance from the bottom as needed
             child: FloatingActionButton(
               onPressed: () {
-                QuizLayout quizLayout = QuizLayout();
+                Provider.of<QuizLayout>(context, listen: false).reset();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => MakingQuizscreen(
-                            quizLayout: quizLayout,
+                            
                           )),
                 );
               },
@@ -486,7 +497,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
               quiz: quiz,
-              quizLayout: quizLayout,
             ),
           ),
         );
@@ -508,7 +518,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     quiz: quiz,
                     screenHeightModifier: 1,
                     screenWidthModifier: 1,
-                    quizLayout: quizLayout,
                   )),
         );
         break;
@@ -524,7 +533,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
               builder: (context) => QuizWidget2(
                     quiz: quiz,
-                    quizLayout: quizLayout,
                   )),
         );
         break;
@@ -546,7 +554,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
               builder: (context) => QuizView2(
                     quiz: quiz,
-                    quizLayout: quizLayout,
                   )),
         );
         break;
@@ -562,7 +569,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
               builder: (context) => QuizWidget3(
                     quiz: quiz,
-                    quizLayout: quizLayout,
                   )),
         );
         break;
@@ -578,7 +584,6 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute(
               builder: (context) => QuizView3(
                 quiz: quiz,
-                quizLayout: quizLayout,
               ),
             ));
         break;
@@ -596,7 +601,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
               builder: (context) => QuizWidget4(
                     quiz: quiz,
-                    quizLayout: quizLayout,
                   )),
         );
         break;
@@ -614,7 +618,6 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(
               builder: (context) => QuizView4(
                     quiz: quiz,
-                    quizLayout: quizLayout,
                     changePageViewState: (bool tint) {},
                   )),
         );

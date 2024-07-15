@@ -59,6 +59,9 @@ class _LoadTempState extends State<LoadTemp> {
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
         extendBodyBehindAppBar: false,
+        appBar: AppBar(
+          title: Text('불러오기'),
+        ),
         body: SafeArea(
           child: Center(
             child: ListView.builder(
@@ -79,6 +82,8 @@ class _LoadTempState extends State<LoadTemp> {
                     File(_items[index]['titleImage']),
                     width: 50,
                     height: 50,
+                    errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/question2.png'),
+                    
                   ), // Display the image
                   title: Text(
                     _items[index]['title'],

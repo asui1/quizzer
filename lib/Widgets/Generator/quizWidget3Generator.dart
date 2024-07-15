@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
@@ -6,10 +7,8 @@ import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class QuizWidget3 extends StatefulWidget {
-  final QuizLayout quizLayout;
   final Quiz3 quiz;
-  QuizWidget3({Key? key, required this.quiz, required this.quizLayout})
-      : super(key: key);
+  QuizWidget3({Key? key, required this.quiz}) : super(key: key);
 
   @override
   _QuizWidget3State createState() => _QuizWidget3State();
@@ -64,8 +63,9 @@ class _QuizWidget3State extends State<QuizWidget3> {
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -75,7 +75,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
             child: Container(
               height: AppConfig.screenHeight,
               width: AppConfig.screenWidth,
-              decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+              decoration: backgroundDecoration(quizLayout: quizLayout),
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -88,7 +88,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                             onChanged: (value) {
                               widget.quiz.setQuestion(value);
                             },
-                            quizLayout: widget.quizLayout,
+                            quizLayout: quizLayout,
                           ),
                           SizedBox(height: AppConfig.padding),
                           Expanded(
@@ -103,60 +103,57 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                         SizedBox(height: AppConfig.padding),
                                         Expanded(
                                           child: TextField(
-                                              focusNode: _focusNodes[index],
-                                              textInputAction: index ==
-                                                      widget.quiz
-                                                              .getAnswersLength() -
-                                                          1
-                                                  ? TextInputAction.done
-                                                  : TextInputAction.next,
-                                              onSubmitted: (_) {
-                                                // Step 4: Move focus on submission
-                                                if (index <
+                                            focusNode: _focusNodes[index],
+                                            textInputAction: index ==
                                                     widget.quiz
                                                             .getAnswersLength() -
-                                                        1) {
-                                                  FocusScope.of(context)
-                                                      .requestFocus(_focusNodes[
-                                                          index + 1]);
-                                                } else {
-                                                  _focusNodes[index].unfocus();
-                                                }
-                                              },
-                                              key: ValueKey(
-                                                  index), // TextField에 대한 Key
-                                              controller: _controllers[index],
-                                              decoration: InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  // 활성화되지 않았을 때의 테두리 스타일
-                                                  borderSide: BorderSide(
-                                                    width: 2.0, // 테두리 두께 변경
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10), // 테두리 모서리 둥글기 변경
+                                                        1
+                                                ? TextInputAction.done
+                                                : TextInputAction.next,
+                                            onSubmitted: (_) {
+                                              // Step 4: Move focus on submission
+                                              if (index <
+                                                  widget.quiz
+                                                          .getAnswersLength() -
+                                                      1) {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        _focusNodes[index + 1]);
+                                              } else {
+                                                _focusNodes[index].unfocus();
+                                              }
+                                            },
+                                            key: ValueKey(
+                                                index), // TextField에 대한 Key
+                                            controller: _controllers[index],
+                                            decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                // 활성화되지 않았을 때의 테두리 스타일
+                                                borderSide: BorderSide(
+                                                  width: 2.0, // 테두리 두께 변경
                                                 ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  // 포커스를 받았을 때의 테두리 스타일
-                                                  borderSide: BorderSide(
-                                                    width: 2.5, // 테두리 두께 변경
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10), // 테두리 모서리 둥글기 변경
-                                                ),
-                                                hintText: '답변 ${index + 1}',
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // 테두리 모서리 둥글기 변경
                                               ),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  widget.quiz.setAnswerAt(
-                                                      index, value);
-                                                });
-                                              },
-                                              style: widget.quizLayout
-                                                  .getAnswerTextStyle()),
+                                              focusedBorder: OutlineInputBorder(
+                                                // 포커스를 받았을 때의 테두리 스타일
+                                                borderSide: BorderSide(
+                                                  width: 2.5, // 테두리 두께 변경
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        10), // 테두리 모서리 둥글기 변경
+                                              ),
+                                              hintText: '답변 ${index + 1}',
+                                            ),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                widget.quiz
+                                                    .setAnswerAt(index, value);
+                                              });
+                                            },
+                                          ),
                                         ),
                                         IconButton(
                                           icon:

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -12,15 +14,13 @@ class QuizView2 extends StatefulWidget {
   final Quiz2 quiz; // 퀴즈 태그
   final double screenWidthModifier;
   final double screenHeightModifier;
-  final QuizLayout quizLayout;
 
-  QuizView2(
-      {Key? key,
-      required this.quiz,
-      this.screenWidthModifier = 1,
-      this.screenHeightModifier = 1,
-      required this.quizLayout})
-      : super(key: key);
+  QuizView2({
+    Key? key,
+    required this.quiz,
+    this.screenWidthModifier = 1,
+    this.screenHeightModifier = 1,
+  }) : super(key: key);
 
   @override
   _QuizView2State createState() => _QuizView2State();
@@ -34,37 +34,50 @@ class _QuizView2State extends State<QuizView2> {
   @override
   void initState() {
     super.initState();
-    bodyTextStyle = TextStyle(
-      fontFamily: widget.quizLayout.getBodyFont(),
-      color: widget.quizLayout.getColor(4),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     curFocus = widget.quiz.getCurFocus();
     highlightedDates = widget.quiz.getViewerAnswers();
+    double strongScreenWidthModifier =
+        widget.screenWidthModifier * widget.screenWidthModifier;
+    bodyTextStyle = TextStyle(
+      fontFamily: quizLayout.getBodyFont(),
+      color: quizLayout.getColor(4),
+      fontSize: AppConfig.fontSize *
+          widget.screenWidthModifier *
+          widget.screenWidthModifier,
+    );
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
         body: Container(
-          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+          decoration: backgroundDecoration(quizLayout: quizLayout),
           child: Padding(
-            padding: EdgeInsets.all(AppConfig.padding),
+            padding:
+                EdgeInsets.all(AppConfig.padding * widget.screenWidthModifier),
             child: Column(
               children: <Widget>[
                 QuestionViewer(
                   question: widget.quiz.getQuestion(),
                   fontSizeModifier: widget.screenWidthModifier,
-                  quizLayout: widget.quizLayout,
+                  quizLayout: quizLayout,
                 ),
                 Container(
                   height: AppConfig.screenHeight *
-                      0.5 *
+                      0.50 *
                       widget.screenHeightModifier,
                   width:
                       AppConfig.screenWidth * 0.95 * widget.screenWidthModifier,
                   child: TableCalendar(
+                    rowHeight: AppConfig.screenHeight *
+                        0.05 *
+                        widget.screenHeightModifier,
+                    daysOfWeekHeight: AppConfig.screenHeight *
+                        0.05 *
+                        widget.screenHeightModifier,
                     shouldFillViewport: true,
                     pageJumpingEnabled: true,
                     firstDay: DateTime.utc(
@@ -87,26 +100,26 @@ class _QuizView2State extends State<QuizView2> {
                       titleCentered: true,
                       headerMargin: EdgeInsets.all(AppConfig.padding *
                           widget.screenHeightModifier *
-                          0.5),
+                          0.4),
                       headerPadding: EdgeInsets.all(
-                          AppConfig.padding * widget.screenWidthModifier * 0.5),
+                          AppConfig.padding * strongScreenWidthModifier * 0.2),
                       titleTextStyle: TextStyle(
-                        fontFamily: widget.quizLayout.getBodyFont(),
+                        fontFamily: quizLayout.getBodyFont(),
                         fontSize:
-                            AppConfig.fontSize * widget.screenHeightModifier,
+                            AppConfig.fontSize * strongScreenWidthModifier,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
-                        color: widget.quizLayout.getColor(3),
+                        color: quizLayout.getColor(3),
                       ),
                       leftChevronIcon: Icon(
                         Icons.chevron_left,
-                        size: AppConfig.iconSize * widget.screenWidthModifier,
-                        color: widget.quizLayout.getColor(3),
+                        size: AppConfig.iconSize * strongScreenWidthModifier,
+                        color: quizLayout.getColor(3),
                       ),
                       rightChevronIcon: Icon(
                         Icons.chevron_right,
-                        size: AppConfig.iconSize * widget.screenWidthModifier,
-                        color: widget.quizLayout.getColor(3),
+                        size: AppConfig.iconSize * strongScreenWidthModifier,
+                        color: quizLayout.getColor(3),
                       ),
                     ),
                     onPageChanged: (focusedDay) {
@@ -124,9 +137,17 @@ class _QuizView2State extends State<QuizView2> {
                     calendarFormat:
                         CalendarFormat.month, // Set your desired format here
                     calendarStyle: CalendarStyle(
+                      cellMargin:
+                          EdgeInsets.all(1.0 * strongScreenWidthModifier),
                       isTodayHighlighted: false,
                       defaultTextStyle: bodyTextStyle, // 일반 날짜의 텍스트 색상 설정
                       weekendTextStyle: bodyTextStyle,
+                      outsideTextStyle: TextStyle(
+                        fontFamily: quizLayout.getBodyFont(),
+                        fontSize:
+                            AppConfig.fontSize * strongScreenWidthModifier,
+                        color: quizLayout.getColor(4).withAlpha(100),
+                      ),
                     ),
                     onDaySelected: (selectedDay, focusedDay) {
                       setState(() {
@@ -140,10 +161,7 @@ class _QuizView2State extends State<QuizView2> {
                             widget.quiz.removeViewerAnswerAt(existingIndex);
                           } else {
                             // If it's not, add it, respecting the maximum selectable limit
-                            if (highlightedDates.length <
-                                widget.quiz.getMaxAnswerSelection()) {
-                              widget.quiz.addViewerAnswer(selectedDay);
-                            }
+                            widget.quiz.addViewerAnswer(selectedDay);
                           }
                         }
                         widget.quiz.setCurFocus(focusedDay);
@@ -161,18 +179,15 @@ class _QuizView2State extends State<QuizView2> {
                         if (isHighlighted) {
                           return Container(
                             decoration: BoxDecoration(
-                              color: widget.quizLayout
-                                  .getColorScheme().secondaryContainer, // Highlight color
+                              color: quizLayout
+                                  .getColorScheme()
+                                  .secondaryContainer, // Highlight color
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
                                 '${day.day}',
-                                style: TextStyle(
-                                    fontFamily: widget.quizLayout.getBodyFont(),
-                                    color: widget.quizLayout
-                                        .getColorScheme()
-                                        .onSecondaryContainer), // Text color
+                                style: bodyTextStyle, // Text color
                                 // Text color
                               ),
                             ),
@@ -189,7 +204,7 @@ class _QuizView2State extends State<QuizView2> {
                             child: Text(
                               '${day.day}',
                               style: TextStyle(
-                                  fontFamily: widget.quizLayout
+                                  fontFamily: quizLayout
                                       .getBodyFont()), // Making text color similar to other days
                             ),
                           ),
@@ -198,47 +213,50 @@ class _QuizView2State extends State<QuizView2> {
                     ),
                   ),
                 ),
-                SizedBox(height: AppConfig.padding),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: widget.quizLayout
-                            .getColorScheme()
-                            .onSurface, // 밑줄 색상 설정
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    "선택된 날짜들",
-                    style: TextStyle(
-                        fontFamily: widget.quizLayout.getAnswerFont(),
-                        color: widget.quizLayout.getColorScheme().primary,
-                        fontSize:
-                            AppConfig.fontSize * widget.screenWidthModifier),
+                SizedBox(
+                    height: AppConfig.padding * widget.screenWidthModifier),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: AppConfig.largePadding *
+                          3 *
+                          strongScreenWidthModifier,
+                      right: AppConfig.largePadding *
+                          3 *
+                          strongScreenWidthModifier), // 왼쪽에 16.0의 패딩 추가
+                  child: TextStyleWidget(
+                    textStyle: quizLayout.getTextStyle(1),
+                    text: "선택된 날짜들",
+                    colorScheme: quizLayout.getColorScheme(),
+                    modifier: widget.screenWidthModifier,
                   ),
                 ),
-                SizedBox(height: AppConfig.padding),
-                Center(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: highlightedDates.length,
-                    itemBuilder: (context, index) {
-                      DateTime date = highlightedDates[index];
-                      return Text(
-                        '${index + 1}. ${date.year}. ${date.month}. ${date.day}',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: AppConfig.fontSize *
-                              1.5 *
-                              widget.screenWidthModifier,
-                          fontFamily: widget.quizLayout.getAnswerFont(),
-                          color: widget.quizLayout.getColorScheme().secondary,
-                        ),
-                      );
-                    },
+                SizedBox(
+                    height: AppConfig.padding * widget.screenWidthModifier),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        left: AppConfig.largePadding *
+                            3 *
+                            strongScreenWidthModifier,
+                        right: AppConfig.largePadding *
+                            3 *
+                            strongScreenWidthModifier), // 왼쪽에 16.0의 패딩 추가
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: highlightedDates.length,
+                      itemBuilder: (context, index) {
+                        DateTime date = highlightedDates[index];
+                        return TextStyleWidget(
+                          textStyle: quizLayout.getTextStyle(2),
+                          text:
+                              '${index + 1}. ${date.year}. ${date.month}. ${date.day}',
+                          colorScheme: quizLayout.getColorScheme(),
+                          modifier: widget.screenWidthModifier,
+                        );
+                      },
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),

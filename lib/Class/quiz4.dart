@@ -30,6 +30,21 @@ class Quiz4 extends AbstractQuiz {
             ans: ans,
             question: question);
 
+  Quiz4.copy(Quiz4 original)
+      : super(
+          layoutType: original.layoutType,
+          answers: List<String>.from(original.answers),
+          ans: List<bool>.from(original.ans),
+          question: original.question,
+        ) {
+    maxAnswerSelection:
+    original.maxAnswerSelection;
+    connectionAnswers:
+    List<String>.from(original.connectionAnswers);
+    connectionAnswerIndex:
+    List<int?>.from(original.connectionAnswerIndex);
+  }
+
   void initOffsets() {
     if (starts.isEmpty) {
       for (int i = 0; i < answers.length; i++) {

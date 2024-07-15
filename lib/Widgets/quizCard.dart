@@ -60,7 +60,6 @@ class QuizCard extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => MakingQuizscreen(
-                          quizLayout: quizLayout,
                         )),
               );
             } else {

@@ -21,7 +21,7 @@ import 'package:quizzer/Setup/config.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:uuid/uuid.dart';
 
-class QuizLayout {
+class QuizLayout extends ChangeNotifier {
   bool isTopBarVisible = false;
   bool isBottomBarVisible = false;
   double appBarHeight = 75.0;
@@ -53,36 +53,142 @@ class QuizLayout {
   String _creator = "GUEST";
   String titleImageBytes = '';
   String? uuid = null;
+  List<int> questionTextStyle = [0, 0, 1, 0];
+  List<int> bodyTextStyle = [0, 0, 2, 1];
+  List<int> answerTextStyle = [0, 0, 0, 2];
+  // -> FONT FAMILY, Color, BoderStyle, FontWeight
 
   QuizLayout({this.highlightedIndex = 0});
+
+  void reset(){
+    isTopBarVisible = false;
+    isBottomBarVisible = false;
+    appBarHeight = 75.0;
+    bottomBarHeight = 50.0;
+    highlightedIndex = 0;
+    selectedLayout = 0;
+    quizzes = [];
+    curQuizIndex = 0;
+    isTitleSet = false;
+    isFlipStyleSet = false;
+    isBackgroundImageSet = false;
+    isWidgetSizeSet = false;
+    colorScheme = deepCopyColorScheme(MyLightColorScheme);
+    backgroundImage = null;
+    topBarImage = ImageColor(color: const Color.fromARGB(255, 186, 220, 248));
+    bottomBarImage = ImageColor(color: Color.fromARGB(255, 186, 220, 248));
+    shuffleQuestions = false;
+    title = '';
+    questionFont = MyFonts.gothicA1Bold;
+    bodyFont = MyFonts.gothicA1ExtraBold;
+    answerFont = MyFonts.gothicA1;
+    titleImagePath = 'assets/images/question2.png';
+    titleImageName = '';
+    titleImageSet = false;
+    _creator = "GUEST";
+    titleImageBytes = '';
+    uuid = null;
+    questionTextStyle = [0, 0, 1, 0];
+    bodyTextStyle = [0, 0, 2, 1];
+    answerTextStyle = [0, 0, 0, 2];
+  }
+
+  List<int> getTextStyle(int index) {
+    if (index == 0) {
+      return questionTextStyle;
+    } else if (index == 1) {
+      return bodyTextStyle;
+    } else if (index == 2) {
+      return answerTextStyle;
+    }
+    return [0, 0, 0, 2];
+  }
+
+  void decrementTextStyle(int index, int subindex) {
+    int maxCount = 0;
+    if (subindex == 0) {
+      maxCount = AppConfig.fontFamilys.length - 1;
+    } else if (subindex == 1) {
+      maxCount = AppConfig.colorStyles.length - 1;
+    } else if (subindex == 2) {
+      maxCount = AppConfig.borderType.length - 1;
+    } else if (subindex == 3) {
+      maxCount = AppConfig.fontWeights.length - 1;
+    }
+    if (index == 0) {
+      if (questionTextStyle[subindex] == 0)
+        questionTextStyle[subindex] = maxCount;
+      else
+        questionTextStyle[subindex]--;
+    } else if (index == 1) {
+      if (bodyTextStyle[subindex] == 0)
+        bodyTextStyle[subindex] = maxCount;
+      else
+        bodyTextStyle[subindex]--;
+    } else if (index == 2) {
+      if (answerTextStyle[subindex] == 0)
+        answerTextStyle[subindex] = maxCount;
+      else
+        answerTextStyle[subindex]--;
+    }
+  }
+
+  void incrementTextStyle(int index, int subindex) {
+    int maxCount = 0;
+    if (subindex == 0) {
+      maxCount = AppConfig.fontFamilys.length - 1;
+    } else if (subindex == 1) {
+      maxCount = AppConfig.colorStyles.length - 1;
+    } else if (subindex == 2) {
+      maxCount = AppConfig.borderType.length - 1;
+    } else if (subindex == 3) {
+      maxCount = AppConfig.fontWeights.length - 1;
+    }
+    if (index == 0) {
+      if (questionTextStyle[subindex] == maxCount)
+        questionTextStyle[subindex] = 0;
+      else
+        questionTextStyle[subindex]++;
+    } else if (index == 1) {
+      if (bodyTextStyle[subindex] == maxCount)
+        bodyTextStyle[subindex] = 0;
+      else
+        bodyTextStyle[subindex]++;
+    } else if (index == 2) {
+      if (answerTextStyle[subindex] == maxCount)
+        answerTextStyle[subindex] = 0;
+      else
+        answerTextStyle[subindex]++;
+    }
+  }
+
+  List<int> getQuestionTextStyle() {
+    return questionTextStyle;
+  }
+
+  List<int> getBodyTextStyle() {
+    return bodyTextStyle;
+  }
+
+  List<int> getAnswerTextStyle() {
+    return answerTextStyle;
+  }
+
+  void setQuestionTextStyle(int index, int value) {
+    questionTextStyle[index] = value;
+  }
+
+  void setBodyTextStyle(int index, int value) {
+    bodyTextStyle[index] = value;
+  }
+
+  void setAnswerTextStyle(int index, int value) {
+    answerTextStyle[index] = value;
+  }
 
   String getUuid() {
     Logger.log(uuid);
     return uuid!;
-  }
-
-  TextStyle getAnswerTextStyle() {
-    return TextStyle(
-      fontFamily: answerFont,
-      fontSize: AppConfig.fontSize,
-      color: colorScheme.secondary,
-    );
-  }
-
-  TextStyle getBodyTextStyle() {
-    return TextStyle(
-      fontFamily: bodyFont,
-      fontSize: AppConfig.fontSize,
-      color: colorScheme.tertiary,
-    );
-  }
-
-  TextStyle getTitleStyle() {
-    return TextStyle(
-      fontFamily: questionFont,
-      fontSize: AppConfig.fontSize * 1.3,
-      color: colorScheme.primary,
-    );
   }
 
   int getScore() {
@@ -353,13 +459,23 @@ class QuizLayout {
   void addQuizAt(AbstractQuiz quiz, int index) {
     if (index > quizzes.length) {
       quizzes.add(quiz);
+      notifyListeners();
       return;
     }
     quizzes.insert(index, quiz);
+    notifyListeners();
   }
 
   void addQuiz(AbstractQuiz quiz) {
     quizzes.add(quiz);
+    notifyListeners();
+  }
+
+  void setQuizAt(AbstractQuiz quiz, int index) {
+    if (index < quizzes.length) {
+      quizzes[index] = quiz;
+      notifyListeners();
+    }
   }
 
   AbstractQuiz getQuiz(int index) {

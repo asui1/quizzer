@@ -29,7 +29,6 @@ class AnswerCheckScreen extends StatelessWidget {
         ),
         Text(
           quizLayout.getTitle(),
-          style: quizLayout.getTitleStyle(),
         ),
         SizedBox(
           height: AppConfig.padding,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
@@ -13,10 +14,8 @@ import 'package:quizzer/Widgets/quizBodyTextImageYoutube.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class QuizWidget1 extends StatefulWidget {
-  final QuizLayout quizLayout;
   final Quiz1 quiz;
-  QuizWidget1({Key? key, required this.quiz, required this.quizLayout})
-      : super(key: key);
+  QuizWidget1({Key? key, required this.quiz}) : super(key: key);
   @override
   _QuizWidget1State createState() => _QuizWidget1State();
 }
@@ -81,8 +80,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
     int trueCount = widget.quiz.getAnsLength();
     bool shuffleAnswers = widget.quiz.getShuffleAnswers();
     int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -93,7 +93,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
             child: Container(
               height: AppConfig.screenHeight,
               width: AppConfig.screenWidth,
-              decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+              decoration: backgroundDecoration(quizLayout: quizLayout),
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -107,7 +107,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                             onChanged: (value) {
                               widget.quiz.setQuestion(value);
                             },
-                            quizLayout: widget.quizLayout,
+                            quizLayout: quizLayout,
                           ),
                           Expanded(
                             child: SingleChildScrollView(
@@ -129,7 +129,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                       });
                                     },
                                     quiz1: widget.quiz,
-                                    quizLayout: widget.quizLayout,
+                                    quizLayout: quizLayout,
                                   ),
                                   SizedBox(
                                       height: AppConfig.screenHeight * 0.02),
@@ -152,14 +152,12 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                                 widget.quiz.addAnswer('');
                                                 FocusNode newNode = FocusNode();
                                                 newNode.addListener(() {
-                                                  if (newNode
-                                                      .hasFocus) {
+                                                  if (newNode.hasFocus) {
                                                     if (_prevFocusNode !=
                                                             null &&
                                                         _prevFocusNode !=
                                                             newNode) {
-                                                      newNode
-                                                          .unfocus();
+                                                      newNode.unfocus();
                                                       _prevFocusNode = null;
                                                       Future.delayed(
                                                           Duration(
@@ -229,8 +227,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           },
                                           style: TextStyle(
                                             fontSize: AppConfig.fontSize,
-                                            fontFamily: widget.quizLayout
-                                                .getAnswerFont(),
+                                            fontFamily:
+                                                quizLayout.getAnswerFont(),
                                           ),
                                           controller: _controllers[index],
                                           onChanged: (value) {
@@ -315,7 +313,13 @@ class _QuizWidget1State extends State<QuizWidget1> {
                     bottom: AppConfig.padding, // Adjust the position as needed
                     child: GeneratorDoneButton(
                       onPressed: () {
-                        Navigator.pop(context, widget.quiz);
+                        FocusScope.of(context).unfocus();
+
+                        // Wait for the keyboard to close
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          // Pop the current screen
+                          Navigator.pop(context, widget.quiz);
+                        });
                       },
                     ),
                   ),

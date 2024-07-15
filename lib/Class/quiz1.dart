@@ -33,6 +33,33 @@ class Quiz1 extends AbstractQuiz {
             ans: ans,
             question: question);
 
+  Quiz1.copy(Quiz1 original)
+      : super(
+            layoutType: original.layoutType,
+            answers: List<String>.from(original.answers),
+            ans: List<bool>.from(original.ans),
+            question: original.question) {
+    bodyType = original.bodyType;
+    imageFile = original.imageFile;
+    bodyText = original.bodyText;
+    shuffleAnswers = original.shuffleAnswers;
+    maxAnswerSelection = original.maxAnswerSelection;
+  }
+
+  void printQuiz1() {
+    print('Layout Type: $layoutType');
+    print('Body Type: $bodyType');
+    print('Image File: ${imageFile?.path}');
+    print('Body Text: $bodyText');
+    print('Shuffle Answers: $shuffleAnswers');
+    print('Max Answer Selection: $maxAnswerSelection');
+    print('Answers: $answers');
+    print('Correct Answers: $ans');
+    print('Question: $question');
+    print('Viewer Answers: $viewerAnswers');
+    print('Viewer Correct Answers: $viewerAns');
+  }
+
   void viewerInit() {
     if (viewerAnswers.length == 0) {
       viewerAnswers =
@@ -71,6 +98,7 @@ class Quiz1 extends AbstractQuiz {
   }
 
   List<bool> getViewerAns() {
+    if (viewerAns.length == 0) viewerInit();
     return viewerAns;
   }
 

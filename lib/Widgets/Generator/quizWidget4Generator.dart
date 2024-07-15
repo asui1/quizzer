@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
@@ -8,10 +9,8 @@ import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class QuizWidget4 extends StatefulWidget {
-  final QuizLayout quizLayout;
   final Quiz4 quiz;
-  QuizWidget4({Key? key, required this.quiz, required this.quizLayout})
-      : super(key: key);
+  QuizWidget4({Key? key, required this.quiz}) : super(key: key);
   @override
   _QuizWidget4State createState() => _QuizWidget4State();
 }
@@ -99,8 +98,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -110,7 +110,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
             child: Container(
               height: AppConfig.screenHeight,
               width: AppConfig.screenWidth,
-              decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+              decoration: backgroundDecoration(quizLayout: quizLayout),
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -123,7 +123,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                             onChanged: (value) {
                               widget.quiz.setQuestion(value);
                             },
-                            quizLayout: widget.quizLayout,
+                            quizLayout: quizLayout,
                           ),
                           SizedBox(height: AppConfig.padding),
                           Expanded(
@@ -191,8 +191,6 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                 widget.quiz
                                                     .setAnswerAt(index, value);
                                               },
-                                              style: widget.quizLayout
-                                                  .getAnswerTextStyle(),
                                             ),
                                           ),
                                           Container(
@@ -264,7 +262,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                     ? LinePainter(
                                                         start: starts[index]!,
                                                         end: ends[index]!,
-                                                        color: widget.quizLayout
+                                                        color: quizLayout
                                                             .getColorScheme()
                                                             .tertiary)
                                                     : null,
@@ -281,8 +279,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                         width: 15.0,
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: widget
-                                                              .quizLayout
+                                                          color: quizLayout
                                                               .getColorScheme()
                                                               .tertiary,
                                                           shape:
@@ -295,8 +292,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                         width: 15.0,
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: widget
-                                                              .quizLayout
+                                                          color: quizLayout
                                                               .getColorScheme()
                                                               .tertiary,
                                                           shape:
@@ -321,8 +317,6 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                     .setConnectionAnswerAt(
                                                         index, value);
                                               },
-                                              style: widget.quizLayout
-                                                  .getAnswerTextStyle(),
                                             ),
                                           ),
                                           IconButton(

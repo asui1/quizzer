@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/Strings.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 
@@ -20,6 +21,10 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
     return Theme(
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
+        appBar: AppBar(
+          title: Text('불러오기'),
+          backgroundColor: widget.quizLayout.getColorScheme().inversePrimary,
+        ),
         body: Container(
           decoration: backgroundDecoration(quizLayout: widget.quizLayout),
           child: Column(
@@ -30,97 +35,124 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                 child: ListView.builder(
                   itemCount: itemCount,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        index != itemCount - 1
-                            ? showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('폰트 선택'),
-                                    content: Container(
-                                      width: double.maxFinite,
-                                      child: GridView.builder(
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2, // 한 줄에 2개의 항목을 표시
-                                          childAspectRatio:
-                                              1.5, // 항목의 가로 세로 비율을 1:1로 설정
-                                          crossAxisSpacing: 10, // 가로 방향 항목의 간격
-                                          mainAxisSpacing: 10, // 세로 방향 항목의 간격
-                                        ),
-                                        itemCount: MyFonts.count, // 전체 항목 수
-                                        itemBuilder: (context, index2) {
-                                          return InkWell(
-                                            onTap: () {
-                                              // 여기에 탭 이벤트 처리 로직을 추가하세요.
-                                              // 예: 선택된 폰트를 사용하여 무언가를 업데이트하거나, 사용자에게 알림을 표시합니다.
-                                              widget.quizLayout.setFontFamily(
-                                                  index,
-                                                  MyFonts.getFontByIndex(
-                                                      index2));
-                                              Navigator.of(context).pop();
-                                              setState(() {});
-                                            },
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                '가나다 abc 123', // 표시할 텍스트
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      MyFonts.getFontByIndex(
-                                                          index2), // 폰트 패밀리 적용
-                                                  fontSize: AppConfig.fontSize *
-                                                      0.8, // 폰트 크기
-                                                ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200], // 배경색
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10), // 모서리 둥글게
-                                              ),
+                    return Column(
+                      children: [
+                        if (index != 0) Divider(),
+                        InkWell(
+                          onTap: () {
+                            index != itemCount - 1
+                                ? showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      int selectedValue = 0; // 초기 선택값 설정
+                                      return StatefulBuilder(
+                                        // 상태 변경을 위한 StatefulBuilder 사용
+                                        builder: (context, setState) {
+                                          return AlertDialog(
+                                            title: Text(stringResources[
+                                                'quizLayoutSetup${index + 1}']!),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                setValueRow(
+                                                    AppConfig.fontFamilys,
+                                                    widget.quizLayout
+                                                        .getTextStyle(index)[0],
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .decrementTextStyle(
+                                                                    index, 0);
+                                                          },
+                                                        ),
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .incrementTextStyle(
+                                                                    index, 0);
+                                                          },
+                                                        ),
+                                                    false,
+                                                    widget.quizLayout
+                                                        .getTextStyle(
+                                                            index)), //SET BORDER
+                                                setValueRow(
+                                                    AppConfig.colorStyles,
+                                                    widget.quizLayout
+                                                        .getTextStyle(index)[1],
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .decrementTextStyle(
+                                                                    index, 1);
+                                                          },
+                                                        ),
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .incrementTextStyle(
+                                                                    index, 1);
+                                                          },
+                                                        ),
+                                                    true,
+                                                    widget.quizLayout
+                                                        .getTextStyle(
+                                                            index)), //SET BORDER
+                                                setValueRow(
+                                                    AppConfig.borderType,
+                                                    widget.quizLayout
+                                                        .getTextStyle(index)[2],
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .decrementTextStyle(
+                                                                    index, 2);
+                                                          },
+                                                        ), //SET BORDER
+                                                    () => setState(
+                                                          () {
+                                                            widget.quizLayout
+                                                                .incrementTextStyle(
+                                                                    index, 2);
+                                                          },
+                                                        ),
+                                                    false,
+                                                    widget.quizLayout
+                                                        .getTextStyle(
+                                                            index)), //SET BORDER
+                                              ],
                                             ),
+                                            actions: <Widget>[
+                                              ElevatedButton(
+                                                child: Text('닫기'),
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                              ),
+                                            ],
                                           );
                                         },
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      ElevatedButton(
-                                        child: Text('취소'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              )
-                            : null;
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: AppConfig.largePadding,
-                            vertical: AppConfig.padding),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent, // 컨테이너를 투명하게 만듭니다.
-                          border: Border.all(width: 2),
-                          borderRadius:
-                              BorderRadius.circular(10), // 모서리를 둥글게 처리합니다.
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(AppConfig.padding),
-                          child: Text(
-                            stringResources['quizLayoutSetup${index + 1}']!,
-                            style: TextStyle(
-                              fontSize: AppConfig.fontSize,
-                              fontFamily:
-                                  widget.quizLayout.getFontFamily(index),
-                            ),
+                                      );
+                                    },
+                                  ).then((value) {
+                                    setState(() {});
+                                  })
+                                : null;
+                          },
+                          child: Container(
+                            height: AppConfig.screenHeight * 0.08,
+                            width: AppConfig.screenWidth * 0.8,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: AppConfig.largePadding,
+                                vertical: AppConfig.padding),
+                            child: TextStyleWidget(
+                                textStyle: widget.quizLayout.getTextStyle(index),
+                                text: stringResources[
+                                    'quizLayoutSetup${index + 1}']!,
+                                colorScheme:
+                                    widget.quizLayout.getColorScheme()),
                           ),
                         ),
-                      ),
+                      ],
                     );
                   },
                 ),
@@ -128,6 +160,39 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget setValueRow(List parent, int selectedValue, void Function()? prev,
+      void Function()? next, bool isColor, List<int> styleSet) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: AppConfig.padding),
+      height: AppConfig.screenHeight * 0.05,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_left),
+            onPressed: prev,
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: AppConfig.screenWidth * 0.4,
+            child: isColor
+                ? TextStyleWidget(
+                    textStyle: styleSet,
+                    text: parent[selectedValue],
+                    colorScheme: widget.quizLayout.getColorScheme(),
+                  )
+                : Text(parent[selectedValue]),
+          ),
+          IconButton(
+            icon: Icon(Icons.arrow_right),
+            onPressed: next,
+          ),
+        ],
       ),
     );
   }

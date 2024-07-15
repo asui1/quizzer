@@ -15,6 +15,13 @@ class AppConfig {
   static double largerPadding = 0;
   static double largestPadding = 0;
   static double iconSize = 0;
+  static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans];
+  static List<String> borderType = ["테두리 없음", '밑줄', '네모 박스'];
+  static List<String> colorStyles = ["색 설정0", "색 설정1", "색 설정2", "색 설정3", "색 설정4", "색 설정5", "색 설정6", "색 설정7", "색 설정8", "색 설정9"];
+
+  //ORDER IN QUESTION, BODY, ANSWER
+  static List<double> fontSizes = [];
+  static List<FontWeight> fontWeights = [FontWeight.w500, FontWeight.w700, FontWeight.w300];
 
   static void setUp(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
@@ -26,6 +33,7 @@ class AppConfig {
     AppConfig.smallPadding = AppConfig.padding / 2;
     AppConfig.largePadding = AppConfig.padding * 2;
     AppConfig.iconSize = AppConfig.fontSize * 2;
+    AppConfig.fontSizes = [AppConfig.fontSize* 1.3, AppConfig.fontSize, AppConfig.fontSize];
   }
 }
 

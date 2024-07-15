@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
@@ -11,10 +12,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class QuizWidget2 extends StatefulWidget {
-  final QuizLayout quizLayout;
   final Quiz2 quiz;
-  QuizWidget2({Key? key, required this.quiz, required this.quizLayout})
-      : super(key: key);
+  QuizWidget2({Key? key, required this.quiz}) : super(key: key);
 
   @override
   _QuizWidget2State createState() => _QuizWidget2State();
@@ -40,14 +39,6 @@ class _QuizWidget2State extends State<QuizWidget2> {
         TextEditingController(text: widget.quiz.getCenterDate()[0].toString());
     curFocus = DateTime(widget.quiz.getCenterDate()[0],
         widget.quiz.getCenterDate()[1], widget.quiz.getCenterDate()[2]);
-    bodyTextStyle = TextStyle(
-      fontFamily: widget.quizLayout.getBodyFont(),
-      color: widget.quizLayout.getColor(4),
-    );
-    textStyle = TextStyle(
-        fontFamily: widget.quizLayout.getAnswerFont(),
-        fontSize: AppConfig.fontSize,
-        color: widget.quizLayout.getColor(5));
   }
 
   @override
@@ -62,14 +53,23 @@ class _QuizWidget2State extends State<QuizWidget2> {
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
     TextEditingController controller =
         TextEditingController(text: maxAnswerSelection.toString());
+    bodyTextStyle = TextStyle(
+      fontFamily: quizLayout.getBodyFont(),
+      color: quizLayout.getColor(4),
+    );
+    textStyle = TextStyle(
+        fontFamily: quizLayout.getAnswerFont(),
+        fontSize: AppConfig.fontSize,
+        color: quizLayout.getColor(5));
     final highlightedDates = widget.quiz.getAnswerDate().map((date) {
       return DateTime.utc(date[0], date[1], date[2]);
     }).toList();
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -79,7 +79,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
             child: Container(
               height: AppConfig.screenHeight,
               width: AppConfig.screenWidth,
-              decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+              decoration: backgroundDecoration(quizLayout: quizLayout),
               child: Stack(
                 children: [
                   Positioned.fill(
@@ -92,7 +92,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                             onChanged: (value) {
                               widget.quiz.setQuestion(value);
                             },
-                            quizLayout: widget.quizLayout,
+                            quizLayout: quizLayout,
                           ),
                           Expanded(
                             child: SingleChildScrollView(
@@ -131,17 +131,17 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                         titleCentered: true,
                                         titleTextStyle: TextStyle(
                                             fontFamily:
-                                                widget.quizLayout.getBodyFont(),
+                                                quizLayout.getBodyFont(),
                                             fontWeight: FontWeight.bold,
-                                            color: widget.quizLayout
+                                            color: quizLayout
                                                 .getColor(3)), // 헤더 제목 색상
                                         leftChevronIcon: Icon(
                                             Icons.chevron_left,
-                                            color: widget.quizLayout
+                                            color: quizLayout
                                                 .getColor(3)), // 왼쪽 화살표 아이콘 색상
                                         rightChevronIcon: Icon(
                                             Icons.chevron_right,
-                                            color: widget.quizLayout
+                                            color: quizLayout
                                                 .getColor(3)), // 오른쪽 화살표 아이콘 색상
                                       ),
                                       daysOfWeekStyle: DaysOfWeekStyle(
@@ -164,7 +164,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                             bodyTextStyle, // 일반 날짜의 텍스트 색상 설정
                                         weekendTextStyle: bodyTextStyle,
                                         outsideTextStyle: TextStyle(
-                                          color: widget.quizLayout
+                                          color: quizLayout
                                               .getColor(4)
                                               .withAlpha(100),
                                         ),
@@ -188,7 +188,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                           if (isHighlighted) {
                                             return Container(
                                               decoration: BoxDecoration(
-                                                color: widget.quizLayout
+                                                color: quizLayout
                                                     .getColor(
                                                         5), // Highlight color
                                                 shape: BoxShape.circle,
@@ -197,8 +197,9 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                                 child: Text(
                                                   '${day.day}',
                                                   style: TextStyle(
-                                                      color: widget.quizLayout
-                                                          .getColorScheme().onTertiary), // Text color
+                                                      color: quizLayout
+                                                          .getColorScheme()
+                                                          .onTertiary), // Text color
                                                 ),
                                               ),
                                             );

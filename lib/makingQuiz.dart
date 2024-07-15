@@ -7,11 +7,13 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
@@ -30,9 +32,7 @@ import 'package:uuid/uuid.dart';
 import 'Class/quizLayout.dart';
 
 class MakingQuiz extends StatefulWidget {
-  final QuizLayout quizLayout;
-
-  MakingQuiz({required this.quizLayout});
+  MakingQuiz({Key? key}) : super(key: key);
 
   @override
   _MakingQuizState createState() => _MakingQuizState();
@@ -46,33 +46,51 @@ class _MakingQuizState extends State<MakingQuiz> {
   @override
   void initState() {
     super.initState();
-    curQuizIndex = widget.quizLayout.getCurQuizIndex();
-    maxQuizIndex = widget.quizLayout.getQuizCount();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    maxQuizIndex = widget.quizLayout.getQuizCount();
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
+    maxQuizIndex = quizLayout.getQuizCount();
 
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
         body: SafeArea(
           child: Container(
-            decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+            decoration: backgroundDecoration(quizLayout: quizLayout),
             child: Stack(
               children: [
                 FilpStyle12(
-                  quizLayout: widget.quizLayout,
+                  quizLayout: quizLayout,
                   onPressedBack: onPressedBack,
                   onPressedForward: onPressedForward,
+                ),
+                Positioned(
+                  top: 10.0, // Set to 0.0 to align at the top
+                  left: 10.0, // Set to 0.0 to align at the left
+                  child: IconButton(
+                    iconSize: AppConfig.fontSize * 1.5,
+                    icon: Icon(Icons.arrow_back_ios,
+                        color: quizLayout.getColorScheme().primary),
+                    onPressed: () {
+                      Navigator.pop(
+                          context); // Pops the current route from the navigator to get out of the page
+                    },
+                  ),
                 ),
                 Center(
                     child: Column(
                   children: [
                     Spacer(flex: 1),
                     Text(
-                      widget.quizLayout.getTitle(),
+                      quizLayout.getTitle(),
                       style: TextStyle(
                         fontSize: AppConfig.fontSize * 2, // Adjust as needed
                         fontWeight: FontWeight.bold,
@@ -82,10 +100,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                       flex: 2,
                     ),
                     Container(
-                      height: AppConfig.screenHeight /
-                          2, // AppConfig.ScreenHeight의 1/2 크기로 설정
+                      height: AppConfig.screenHeight * 0.6,
                       width: AppConfig.screenWidth *
-                          0.65, // AppConfig.ScreenWidth의 1/2 크기로 설정
+                          0.9, // AppConfig.ScreenWidth의 1/2 크기로 설정
 
                       child: PageView.builder(
                           controller: _pageController,
@@ -94,7 +111,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               curQuizIndex = index;
                             });
                           },
-                          itemCount: widget.quizLayout.getQuizCount() + 1,
+                          itemCount: quizLayout.getQuizCount() + 1,
                           itemBuilder: (context, index) {
                             return Container(
                               margin: EdgeInsets.symmetric(horizontal: 10),
@@ -104,11 +121,13 @@ class _MakingQuizState extends State<MakingQuiz> {
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: index < widget.quizLayout.getQuizCount()
+                              child: index < quizLayout.getQuizCount()
                                   ? GestureDetector(
                                       onDoubleTap: () {
                                         navigateToQuizWidgetGenerator(
-                                            widget.quizLayout.getQuiz(index));
+                                            quizLayout.getQuiz(index),
+                                            quizLayout,
+                                            index);
                                       },
                                       child: Container(
                                         margin: EdgeInsets.symmetric(
@@ -120,10 +139,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                                         child: IgnorePointer(
                                           ignoring: true,
                                           child: getQuizView(
-                                              widget.quizLayout
+                                              quizLayout
                                                   .getQuiz(index)
                                                   .getLayoutType(),
-                                              widget.quizLayout.getQuiz(index)),
+                                              quizLayout.getQuiz(index)),
                                         ),
                                       ),
                                     )
@@ -160,15 +179,29 @@ class _MakingQuizState extends State<MakingQuiz> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
                       children: <Widget>[
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (quizLayout.getQuizCount() > curQuizIndex) {
+                                quizLayout.removeQuiz(curQuizIndex);
+                              }
+                            });
+                            // Delete current quiz logic here
+                          },
+                          icon: Icon(Icons.delete),
+                        ),
+                        SizedBox(
+                          width: AppConfig.largePadding,
+                        ),
                         Text(
-                          '${min(curQuizIndex + 1, widget.quizLayout.getQuizCount())} / ${widget.quizLayout.getQuizCount()}',
+                          '${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
                           style: TextStyle(
                             fontSize:
                                 AppConfig.fontSize * 1.5, // Adjust as needed
                           ),
                         ),
                         SizedBox(
-                          width: AppConfig.padding,
+                          width: AppConfig.largePadding,
                         ),
                         IconButton(
                           icon: Icon(
@@ -180,21 +213,6 @@ class _MakingQuizState extends State<MakingQuiz> {
                             setState(() {});
                           },
                         ),
-                        SizedBox(
-                          width: AppConfig.padding,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (widget.quizLayout.getQuizCount() >
-                                  curQuizIndex) {
-                                widget.quizLayout.removeQuiz(curQuizIndex);
-                              }
-                            });
-                            // Delete current quiz logic here
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
                       ],
                     ),
                     Spacer(flex: 3),
@@ -202,32 +220,17 @@ class _MakingQuizState extends State<MakingQuiz> {
                       mainAxisAlignment:
                           MainAxisAlignment.spaceEvenly, // 버튼들 사이에 균등한 공간 배분
                       children: <Widget>[
-                        // 첫 번째 버튼: 체크박스와 텍스트 조합으로 "문제 순서 섞기" 구현
-                        Column(
-                          mainAxisSize: MainAxisSize.min, // 최소 크기로 설정
-                          children: [
-                            Checkbox(
-                              value: widget.quizLayout
-                                  .getShuffleQuestions(), // 초기 선택 상태 설정, 실제 사용 시 변수로 관리
-                              onChanged: (bool? newValue) {
-                                if (newValue != null) {
-                                  setState(() {
-                                    widget.quizLayout
-                                        .setShuffleQuestions(newValue);
-                                  });
-                                }
-
-                                // 체크박스 클릭 시 동작
-                                // 여기에 체크박스 상태 변경 로직 추가
-                              },
-                            ),
-                            Text("문제 순서 섞기"), // 체크박스 옆에 표시될 텍스트
-                          ],
-                        ),
                         // 두 번째 버튼: 임시 저장 버튼
                         ElevatedButton(
-                          onPressed: () async{
-                            await widget.quizLayout.saveQuizLayout(context, true);
+                          onPressed: () async {
+                            if (quizLayout.getTitle() == '') {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('제목없이 저장할 수 없습니다.'),
+                              ));
+                              return;
+                            }
+                            await quizLayout.saveQuizLayout(context, true);
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
@@ -239,7 +242,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => QuizSolver(
-                                  quizLayout: widget.quizLayout,
+                                  quizLayout: quizLayout,
                                   index: curQuizIndex,
                                   isPreview: true,
                                 ),
@@ -259,7 +262,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         // 세 번째 버튼: 저장 버튼
                         ElevatedButton(
                           onPressed: () async {
-                            widget.quizLayout.saveQuizLayout(context, false);
+                            quizLayout.saveQuizLayout(context, false);
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())
@@ -326,66 +329,69 @@ class _MakingQuizState extends State<MakingQuiz> {
     );
   }
 
-  void navigateToQuizWidgetGenerator(AbstractQuiz quiz) {
+  void navigateToQuizWidgetGenerator(
+      AbstractQuiz quiz, QuizLayout quizLayout, int index) {
     int n = quiz.getLayoutType();
     switch (n) {
       case 1:
+        Quiz1 copy = Quiz1.copy(quiz as Quiz1);
+
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
-              quiz: quiz as Quiz1,
-              quizLayout: widget.quizLayout,
+              quiz: copy,
             ),
           ),
         ).then((result) {
           if (result is Quiz1) {
-            setState(() {});
+            quizLayout.setQuizAt(result, index);
           }
         });
         break;
       case 2:
+        Quiz2 copy = Quiz2.copy(quiz as Quiz2);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget2(
-              quiz: quiz as Quiz2,
-              quizLayout: widget.quizLayout,
+              quiz: copy,
             ),
           ),
         ).then((result) {
           if (result is Quiz2) {
-            setState(() {});
+            quizLayout.setQuizAt(result, index);
           }
         });
         break;
       case 3:
+        Quiz3 copy = Quiz3.copy(quiz as Quiz3);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget3(
-              quiz: quiz as Quiz3,
-              quizLayout: widget.quizLayout,
+              quiz: copy,
             ),
           ),
         ).then((result) {
           if (result is Quiz3) {
-            setState(() {});
+            Logger.log("Quiz3 added");
+            quizLayout.setQuizAt(result, index);
           }
         });
         break;
       case 4:
+        Quiz4 copy = Quiz4.copy(quiz as Quiz4);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget4(
               quiz: quiz as Quiz4,
-              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
           if (result is Quiz4) {
-            setState(() {});
+            quizLayout.setQuizAt(result, index);
           }
         });
         break;
@@ -393,6 +399,7 @@ class _MakingQuizState extends State<MakingQuiz> {
   }
 
   void moveToQuizWidgetGenerator(int n, int quizIndex) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context, listen: false);
     switch (n) {
       case 0:
         Quiz1 quiz = Quiz1(
@@ -405,13 +412,13 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget1(
               quiz: quiz,
-              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
           if (result is Quiz1) {
             setState(() {
-              widget.quizLayout.addQuizAt(result, quizIndex);
+              quizLayout.addQuizAt(result, quizIndex);
+              Logger.log("Quiz1 added");
             });
             // 필요한 추가 작업을 여기에 수행합니다.
           }
@@ -430,13 +437,12 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget2(
               quiz: quiz,
-              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
           if (result is Quiz2) {
             setState(() {
-              widget.quizLayout.addQuizAt(result, quizIndex);
+              quizLayout.addQuizAt(result, quizIndex);
             });
             // 필요한 추가 작업을 여기에 수행합니다.
           }
@@ -454,13 +460,12 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget3(
               quiz: quiz,
-              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
           if (result is Quiz3) {
             setState(() {
-              widget.quizLayout.addQuizAt(result, quizIndex);
+              quizLayout.addQuizAt(result, quizIndex);
             });
             // 필요한 추가 작업을 여기에 수행합니다.
           }
@@ -480,13 +485,12 @@ class _MakingQuizState extends State<MakingQuiz> {
           MaterialPageRoute(
             builder: (context) => QuizWidget4(
               quiz: quiz,
-              quizLayout: widget.quizLayout,
             ),
           ),
         ).then((result) {
           if (result is Quiz4) {
             setState(() {
-              widget.quizLayout.addQuizAt(result, quizIndex);
+              quizLayout.addQuizAt(result, quizIndex);
             });
             // 필요한 추가 작업을 여기에 수행합니다.
           }
@@ -503,30 +507,26 @@ class _MakingQuizState extends State<MakingQuiz> {
       case 1:
         return QuizView1(
           quiz: quiz as Quiz1,
-          screenHeightModifier: 0.5,
-          screenWidthModifier: 0.65,
-          quizLayout: widget.quizLayout,
+          screenHeightModifier: 0.7,
+          screenWidthModifier: 0.7,
         );
       case 2:
         return QuizView2(
           quiz: quiz as Quiz2,
-          screenHeightModifier: 0.5,
-          screenWidthModifier: 0.65,
-          quizLayout: widget.quizLayout,
+          screenHeightModifier: 0.7,
+          screenWidthModifier: 0.7,
         );
       case 3:
         return QuizView3(
           quiz: quiz as Quiz3,
-          screenHeightModifier: 0.5,
-          screenWidthModifier: 0.65,
-          quizLayout: widget.quizLayout,
+          screenHeightModifier: 0.7,
+          screenWidthModifier: 0.7,
         );
       case 4:
         return QuizView4(
           quiz: quiz as Quiz4,
-          screenHeightModifier: 0.5,
-          screenWidthModifier: 0.65,
-          quizLayout: widget.quizLayout,
+          screenHeightModifier: 0.7,
+          screenWidthModifier: 0.7,
           changePageViewState: (bool tint) {},
         );
       default:

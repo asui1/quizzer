@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
@@ -10,7 +12,6 @@ class QuizView4 extends StatefulWidget {
   final Quiz4 quiz;
   final double screenWidthModifier;
   final double screenHeightModifier;
-  final QuizLayout quizLayout;
   final Function(bool) changePageViewState;
 
   QuizView4({
@@ -18,7 +19,6 @@ class QuizView4 extends StatefulWidget {
     required this.quiz,
     this.screenHeightModifier = 1,
     this.screenWidthModifier = 1,
-    required this.quizLayout,
     required this.changePageViewState,
   }) : super(key: key);
 
@@ -91,14 +91,19 @@ class _QuizView4State extends State<QuizView4> {
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     starts = widget.quiz.getStarts();
     ends = widget.quiz.getEnds();
+    final screenSize = MediaQuery.of(context).size;
+    Logger.log(screenSize);
+    Logger.log(AppConfig.screenWidth);
     // Future가 완료되면 UI 빌드
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
-        body: Container(
-          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+        body: 
+        Container(
+          decoration: backgroundDecoration(quizLayout: quizLayout),
           child: Padding(
             padding: EdgeInsets.all(AppConfig.padding),
             child: Center(
@@ -110,7 +115,7 @@ class _QuizView4State extends State<QuizView4> {
                   QuestionViewer(
                       question: widget.quiz.getQuestion(),
                       fontSizeModifier: widget.screenWidthModifier,
-                      quizLayout: widget.quizLayout),
+                      quizLayout: quizLayout),
                   SizedBox(height: AppConfig.padding),
                   Expanded(
                     // ListView.builder를 Expanded로 감싸기
@@ -125,7 +130,8 @@ class _QuizView4State extends State<QuizView4> {
                                   widget.screenHeightModifier),
                           child: Row(
                             children: <Widget>[
-                              Expanded(
+                              Flexible(
+                                fit: FlexFit.tight,
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConfig.padding *
@@ -136,7 +142,7 @@ class _QuizView4State extends State<QuizView4> {
                                               .screenWidthModifier), // 텍스트 주변에 여백 추가
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: widget.quizLayout
+                                        color: quizLayout
                                             .getColorScheme()
                                             .onSurface,
                                         width: 2), // 테두리 색상과 너비 설정
@@ -148,24 +154,19 @@ class _QuizView4State extends State<QuizView4> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily:
-                                          widget.quizLayout.getAnswerFont(),
+                                          quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,
                                       fontSize: AppConfig.fontSize *
-                                          widget.screenWidthModifier,
-                                      color: widget.quizLayout
+                                          widget.screenWidthModifier * widget.screenWidthModifier,
+                                      color: quizLayout
                                           .getColorScheme()
                                           .secondary,
                                     ), // 텍스트 스타일 설정
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: AppConfig.screenWidth *
-                                    0.5 *
-                                    widget.screenWidthModifier,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: AppConfig.largePadding *
-                                        widget.screenWidthModifier),
+                              Flexible(
+                                fit: FlexFit.tight,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onTapDown: (details) {
@@ -233,7 +234,7 @@ class _QuizView4State extends State<QuizView4> {
                                         ? LinePainter(
                                             start: starts[index]!,
                                             end: ends[index]!,
-                                            color: widget.quizLayout
+                                            color: quizLayout
                                                 .getColorScheme()
                                                 .tertiary,
                                           )
@@ -253,7 +254,7 @@ class _QuizView4State extends State<QuizView4> {
                                             width: 15.0 *
                                                 widget.screenWidthModifier,
                                             decoration: BoxDecoration(
-                                              color: widget.quizLayout
+                                              color: quizLayout
                                                   .getColorScheme()
                                                   .tertiary,
                                               shape: BoxShape.circle,
@@ -266,7 +267,7 @@ class _QuizView4State extends State<QuizView4> {
                                             width: 15.0 *
                                                 widget.screenWidthModifier,
                                             decoration: BoxDecoration(
-                                              color: widget.quizLayout
+                                              color: quizLayout
                                                   .getColorScheme()
                                                   .tertiary,
                                               shape: BoxShape.circle,
@@ -278,17 +279,18 @@ class _QuizView4State extends State<QuizView4> {
                                   ),
                                 ),
                               ),
-                              Expanded(
+                              Flexible(
+                                fit: FlexFit.tight,
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: AppConfig.largePadding *
-                                          widget.screenWidthModifier,
+                                          widget.screenWidthModifier * widget.screenWidthModifier,
                                       vertical: AppConfig.padding *
                                           widget
-                                              .screenWidthModifier), // 텍스트 주변에 여백 추가
+                                              .screenWidthModifier * widget.screenWidthModifier), // 텍스트 주변에 여백 추가
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: widget.quizLayout
+                                        color: quizLayout
                                             .getColorScheme()
                                             .onSurface,
                                         width: 2), // 테두리 색상과 너비 설정
@@ -300,11 +302,11 @@ class _QuizView4State extends State<QuizView4> {
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily:
-                                          widget.quizLayout.getAnswerFont(),
+                                          quizLayout.getAnswerFont(),
                                       overflow: TextOverflow.ellipsis,
                                       fontSize: AppConfig.fontSize *
-                                          widget.screenWidthModifier,
-                                      color: widget.quizLayout
+                                          widget.screenWidthModifier * widget.screenWidthModifier,
+                                      color: quizLayout
                                           .getColorScheme()
                                           .secondary,
                                     ), // 텍스트 스타일 설정
