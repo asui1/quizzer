@@ -15,6 +15,9 @@ class Quiz4 extends AbstractQuiz {
   List<Offset?> ends = [];
   /////////////////
   List<int> userConnectionIndex = [];
+  bool needUpdate = true;
+  List<Offset? >userStarts = [];
+  List<Offset?> userEnds = [];
 
   Quiz4({
     int layoutType = 4,
@@ -37,22 +40,46 @@ class Quiz4 extends AbstractQuiz {
           ans: List<bool>.from(original.ans),
           question: original.question,
         ) {
-    maxAnswerSelection:
+    maxAnswerSelection =
     original.maxAnswerSelection;
-    connectionAnswers:
+    connectionAnswers = 
     List<String>.from(original.connectionAnswers);
-    connectionAnswerIndex:
+    connectionAnswerIndex =
     List<int?>.from(original.connectionAnswerIndex);
+    starts = List<Offset?>.from(original.starts);
+    ends = List<Offset?>.from(original.ends);
+    userConnectionIndex = List<int>.from(original.userConnectionIndex);
+    needUpdate = original.needUpdate;
+    userStarts = List<Offset?>.from(original.userStarts);
+    userEnds = List<Offset?>.from(original.userEnds);
   }
 
   void initOffsets() {
-    if (starts.isEmpty) {
-      for (int i = 0; i < answers.length; i++) {
-        starts.add(null);
-        ends.add(null);
-      }
+    while(starts.length < answers.length){
+      starts.add(null);
+      ends.add(null);
     }
-    userConnectionIndex = List<int>.generate(answers.length, (index) => -1);
+  }
+
+  void initUserOffsets(){
+    while(userStarts.length < answers.length){
+      userStarts.add(null);
+      userEnds.add(null);
+    }
+    while(userConnectionIndex.length < answers.length){
+      userConnectionIndex.add(-1);
+    }
+  }
+
+  List<Offset?> getUserStarts() {
+    if(userStarts.length < answers.length){
+      initUserOffsets();
+    }
+    return userStarts;
+  }
+
+  List<Offset?> getUserEnds(){
+    return userEnds;
   }
 
   @override
@@ -88,11 +115,26 @@ class Quiz4 extends AbstractQuiz {
   }
 
   List<Offset?> getStarts() {
+    if(starts.length < answers.length){
+      initOffsets();
+    }
     return starts;
+  }
+
+  Offset? getUserStartAt(int index){
+    return userStarts[index];
   }
 
   Offset? getStartAt(int index) {
     return starts[index];
+  }
+
+  void setUserStartAt(int index, Offset? newOffset) {
+    userStarts[index] = newOffset;
+  }
+
+  void setUserEndAt(int index, Offset? newOffset) {
+    userEnds[index] = newOffset;
   }
 
   void setStartAt(int index, Offset newOffset) {
@@ -121,6 +163,7 @@ class Quiz4 extends AbstractQuiz {
 
   void addConnectionAnswer(String newString) {
     connectionAnswers.add(newString);
+    needUpdate = true;
   }
 
   void setConnectionAnswerAt(int index, String newString) {
@@ -139,6 +182,7 @@ class Quiz4 extends AbstractQuiz {
     answers.removeAt(index);
     connectionAnswers.removeAt(index);
     connectionAnswerIndex.removeAt(index);
+    needUpdate = true;
   }
 
   @override
@@ -155,6 +199,7 @@ class Quiz4 extends AbstractQuiz {
     answers.add('');
     connectionAnswers.add('');
     connectionAnswerIndex.add(null);
+    needUpdate = true;
   }
 
   @override
@@ -184,6 +229,7 @@ class Quiz4 extends AbstractQuiz {
     answers.removeAt(index);
     connectionAnswers.removeAt(index);
     connectionAnswerIndex.removeAt(index);
+    needUpdate = true;
   }
 
   @override
@@ -250,5 +296,13 @@ class Quiz4 extends AbstractQuiz {
         "question": question
       }
     };
+  }
+
+  bool getNeedUpdate() {
+    if(needUpdate){
+      needUpdate = false;
+      return true;
+    }
+    return needUpdate;
   }
 }

@@ -733,10 +733,20 @@ class CustomRow extends StatelessWidget {
 }
 
 void navigateToMakingQuizPage(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => MakingQuiz(),
-    ),
-  );
+  Navigator.of(context).push(PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => MakingQuiz(), // 여기서 NewPage()는 새로운 페이지 위젯입니다.
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: child,
+      );
+    },
+  ));
 }

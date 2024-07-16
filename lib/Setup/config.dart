@@ -15,7 +15,7 @@ class AppConfig {
   static double largerPadding = 0;
   static double largestPadding = 0;
   static double iconSize = 0;
-  static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans];
+  static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans, MyFonts.maruBuriRegular, MyFonts.spoqaHanSansNeoRegular];
   static List<String> borderType = ["테두리 없음", '밑줄', '네모 박스'];
   static List<String> colorStyles = ["색 설정0", "색 설정1", "색 설정2", "색 설정3", "색 설정4", "색 설정5", "색 설정6", "색 설정7", "색 설정8", "색 설정9"];
 
@@ -87,5 +87,18 @@ class MyFonts{
   static const notoSansMedium = 'NotoSansKR-Medium';
   static const notoSansRegular = 'NotoSansKR-Regular';
   static const notoSansThin = 'NotoSansKR-Thin';
-  
+
+  static const maruBuriBold = 'MaruBuri-Bold';
+  static const maruBuriExtraLight = 'MaruBuri-ExtraLight';
+  static const maruBuriLight = 'MaruBuri-Light';
+  static const maruBuriRegular = 'MaruBuri';
+  static const maruBuriSemiBold = 'MaruBuri-SemiBold';
+
+  static const spoqaHanSansNeoBold = 'SpoqaHanSansNeo-Bold';
+  static const spoqaHanSansNeoLight = 'SpoqaHanSansNeo-Light';
+  static const spoqaHanSansNeoMedium = 'SpoqaHanSansNeo-Medium';
+  static const spoqaHanSansNeoRegular = 'SpoqaHanSansNeo';
+  static const spoqaHanSansNeoThin = 'SpoqaHanSansNeo-Thin';
+
+
 }

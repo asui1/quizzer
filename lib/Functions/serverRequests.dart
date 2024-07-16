@@ -18,7 +18,6 @@ Future<void> downloadJson(Directory directory, String uuid) async {
 
   if (response.statusCode == 200) {
     // 응답으로 받은 데이터를 파일에 저장
-    print(response.body);
     final file = File('${directory.path}/$uuid.json');
     await file.writeAsString(response.body, encoding: utf8); // 인코딩을 utf8로 지정
     Logger.log("JSON 파일 다운로드 성공");
@@ -32,7 +31,6 @@ Future<String> loadFileContent(Directory directory, String uuid) async {
     final file = File('${directory.path}/$uuid.json');
     if (await file.exists()) {
       String contents = await file.readAsString(encoding: utf8);
-      print(contents);
       return contents;
     } else {
       return 'File does not exist';
@@ -180,7 +178,6 @@ Future<int> loginCheck(String email, String image) async {
   var response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     Logger.log("LOGIN SUCCESS");
-    print(response.body);
 
     // 응답 본문을 `,`로 분리하여 배열로 변환
     var parts = response.body.split(', ');
@@ -207,7 +204,6 @@ Future<void> sendResultToServer(int score, QuizLayout quizLayout) async {
   final url = activityUrl;
   String email = await UserPreferences.getUserEmail() ?? "GUEST";
   String uuid = quizLayout.getUuid();
-  print(uuid);
   final response = await http.post(
     Uri.parse(url),
     headers: {

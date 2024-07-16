@@ -345,7 +345,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           ),
         ).then((result) {
           if (result is Quiz1) {
-            quizLayout.setQuizAt(result, index);
+            quizLayout.setQuiz1At(result, index);
           }
         });
         break;
@@ -360,7 +360,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           ),
         ).then((result) {
           if (result is Quiz2) {
-            quizLayout.setQuizAt(result, index);
+            quizLayout.setQuiz2At(result, index);
           }
         });
         break;
@@ -375,8 +375,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           ),
         ).then((result) {
           if (result is Quiz3) {
-            Logger.log("Quiz3 added");
-            quizLayout.setQuizAt(result, index);
+            quizLayout.setQuiz3At(result, index);
           }
         });
         break;
@@ -386,12 +385,12 @@ class _MakingQuizState extends State<MakingQuiz> {
           context,
           MaterialPageRoute(
             builder: (context) => QuizWidget4(
-              quiz: quiz as Quiz4,
+              quiz: copy,
             ),
           ),
         ).then((result) {
           if (result is Quiz4) {
-            quizLayout.setQuizAt(result, index);
+            quizLayout.setQuiz4At(result, index);
           }
         });
         break;
@@ -418,7 +417,6 @@ class _MakingQuizState extends State<MakingQuiz> {
           if (result is Quiz1) {
             setState(() {
               quizLayout.addQuizAt(result, quizIndex);
-              Logger.log("Quiz1 added");
             });
             // 필요한 추가 작업을 여기에 수행합니다.
           }

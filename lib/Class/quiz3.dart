@@ -18,6 +18,7 @@ class Quiz3 extends AbstractQuiz {
     required List<bool> ans,
     required String question,
     this.maxAnswerSelection = 1,
+    this.shuffledAnswers = const [],
   }) : super(
             layoutType: layoutType,
             answers: answers,
@@ -81,10 +82,12 @@ class Quiz3 extends AbstractQuiz {
 
   void setAnswerAt(int index, String newString) {
     answers[index] = newString;
+    shuffledAnswers = [];
   }
 
   void removeAnswerAt(int index) {
     answers.removeAt(index);
+    shuffledAnswers = [];
   }
 
   @override
@@ -95,6 +98,7 @@ class Quiz3 extends AbstractQuiz {
   @override
   void addAnswer(String newString) {
     answers.add(newString);
+    shuffledAnswers = [];
   }
 
   @override

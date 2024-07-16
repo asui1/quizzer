@@ -45,7 +45,7 @@ class _QuizView2State extends State<QuizView2> {
         widget.screenWidthModifier * widget.screenWidthModifier;
     bodyTextStyle = TextStyle(
       fontFamily: quizLayout.getBodyFont(),
-      color: quizLayout.getColor(4),
+      color: quizLayout.getColor(3),
       fontSize: AppConfig.fontSize *
           widget.screenWidthModifier *
           widget.screenWidthModifier,
@@ -146,7 +146,7 @@ class _QuizView2State extends State<QuizView2> {
                         fontFamily: quizLayout.getBodyFont(),
                         fontSize:
                             AppConfig.fontSize * strongScreenWidthModifier,
-                        color: quizLayout.getColor(4).withAlpha(100),
+                        color: quizLayout.getColor(3).withAlpha(100),
                       ),
                     ),
                     onDaySelected: (selectedDay, focusedDay) {
@@ -181,13 +181,21 @@ class _QuizView2State extends State<QuizView2> {
                             decoration: BoxDecoration(
                               color: quizLayout
                                   .getColorScheme()
-                                  .secondaryContainer, // Highlight color
+                                  .primaryContainer, // Highlight color
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: Text(
                                 '${day.day}',
-                                style: bodyTextStyle, // Text color
+                                style: TextStyle(
+                                  fontFamily: quizLayout.getBodyFont(),
+                                  color: quizLayout
+                                      .getColorScheme()
+                                      .onPrimaryContainer,
+                                  fontSize: AppConfig.fontSize *
+                                      widget.screenWidthModifier *
+                                      widget.screenWidthModifier,
+                                ), // Text color
                                 // Text color
                               ),
                             ),

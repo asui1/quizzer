@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class ContentWidget extends StatefulWidget {
@@ -32,7 +33,8 @@ class _ContentWidgetState extends State<ContentWidget> {
   @override
   void initState() {
     super.initState();
-    _bodyTextController = TextEditingController(text: widget.quiz1.getBodyText());
+    _bodyTextController =
+        TextEditingController(text: widget.quiz1.getBodyText());
   }
 
   @override
@@ -78,7 +80,8 @@ class _ContentWidgetState extends State<ContentWidget> {
                       ElevatedButton(
                         child: Text(
                           '유튜브',
-                          style: TextStyle(decoration: TextDecoration.lineThrough),
+                          style:
+                              TextStyle(decoration: TextDecoration.lineThrough),
                         ),
                         onPressed: () {
                           widget.updateStateCallback(3);
@@ -94,11 +97,21 @@ class _ContentWidgetState extends State<ContentWidget> {
           },
         );
       case 1:
+        Color? bodyTextColor = getTextColor(
+            widget.quizLayout.getBodyTextStyle(),
+            widget.quizLayout.getColorScheme());
+        Color? bodyBackgroundColor = getBackGroundColor(
+            widget.quizLayout.getBodyTextStyle(),
+            widget.quizLayout.getColorScheme());
         return Stack(
           children: [
             TextField(
+              cursorColor: bodyTextColor,
               controller: _bodyTextController,
               decoration: InputDecoration(
+                fillColor: bodyBackgroundColor,
+                filled: true,
+                focusColor: bodyTextColor,
                 border: OutlineInputBorder(
                   borderSide: BorderSide(),
                 ),
@@ -106,10 +119,7 @@ class _ContentWidgetState extends State<ContentWidget> {
               minLines: 1, // 최소 줄 수 설정
               maxLines: null, // 최대 줄 수를 무제한으로 설정
               keyboardType: TextInputType.multiline, // 멀티라인 입력 활성화
-              style: TextStyle(
-                fontFamily: widget.quizLayout.getBodyFont(),
-                fontSize: AppConfig.fontSize,
-              ),
+              style:getTextFieldTextStyle(widget.quizLayout.getBodyTextStyle(), widget.quizLayout.getColorScheme()),
               onChanged: (value) {
                 widget.updateBodyTextCallback(value);
               },
@@ -118,7 +128,7 @@ class _ContentWidgetState extends State<ContentWidget> {
               right: 0,
               top: 0,
               child: IconButton(
-                icon: Icon(Icons.close, color: Colors.black),
+                icon: Icon(Icons.close, color: bodyTextColor),
                 onPressed: () {
                   widget.updateStateCallback(0);
                 },
@@ -127,7 +137,7 @@ class _ContentWidgetState extends State<ContentWidget> {
           ],
         );
       case 2:
-      // 플러터 웹에서 테스트 불가. 실제 기기에서 테스트 필요
+        // 플러터 웹에서 테스트 불가. 실제 기기에서 테스트 필요
         if (widget.quiz1.isImageSet()) {
           // 이미지 파일이 선택되었을 때, 선택된 이미지를 표시
           return Center(
@@ -150,7 +160,7 @@ class _ContentWidgetState extends State<ContentWidget> {
           );
         }
       case 3:
-      //나중에 구현 예정.
+        //나중에 구현 예정.
         return ElevatedButton(
           child: Text('Search Youtube'),
           onPressed: () {

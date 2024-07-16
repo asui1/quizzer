@@ -187,7 +187,6 @@ class QuizLayout extends ChangeNotifier {
   }
 
   String getUuid() {
-    Logger.log(uuid);
     return uuid!;
   }
 
@@ -217,7 +216,6 @@ class QuizLayout extends ChangeNotifier {
 
   Future<void> loadQuizLayout(dynamic inputJson) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
-    print(inputData);
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
     }
@@ -472,6 +470,34 @@ class QuizLayout extends ChangeNotifier {
   }
 
   void setQuizAt(AbstractQuiz quiz, int index) {
+    if (index < quizzes.length) {
+      quizzes[index] = quiz;
+      notifyListeners();
+    }
+  }
+
+  void setQuiz1At(Quiz1 quiz, int index) {
+    if (index < quizzes.length) {
+      quizzes[index] = quiz;
+      notifyListeners();
+    }
+  }
+
+  void setQuiz2At(Quiz2 quiz, int index) {
+    if (index < quizzes.length) {
+      quizzes[index] = quiz;
+      notifyListeners();
+    }
+  }
+
+  void setQuiz3At(Quiz3 quiz, int index) {
+    if (index < quizzes.length) {
+      quizzes[index] = quiz;
+      notifyListeners();
+    }
+  }
+
+  void setQuiz4At(Quiz4 quiz, int index) {
     if (index < quizzes.length) {
       quizzes[index] = quiz;
       notifyListeners();

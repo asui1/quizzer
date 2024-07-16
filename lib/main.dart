@@ -356,7 +356,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (account != null) {
                       String photoUrl =
                           account.photoUrl == null ? '' : account.photoUrl!;
-                      Logger.log(photoUrl);
                       int loginStatus =
                           await loginCheck(account.email, photoUrl);
                       if (loginStatus == 200) {

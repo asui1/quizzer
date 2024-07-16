@@ -59,12 +59,12 @@ class _QuizWidget2State extends State<QuizWidget2> {
         TextEditingController(text: maxAnswerSelection.toString());
     bodyTextStyle = TextStyle(
       fontFamily: quizLayout.getBodyFont(),
-      color: quizLayout.getColor(4),
+      color: quizLayout.getColor(3),
     );
     textStyle = TextStyle(
         fontFamily: quizLayout.getAnswerFont(),
         fontSize: AppConfig.fontSize,
-        color: quizLayout.getColor(5));
+        color: quizLayout.getColor(3));
     final highlightedDates = widget.quiz.getAnswerDate().map((date) {
       return DateTime.utc(date[0], date[1], date[2]);
     }).toList();
@@ -165,7 +165,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                         weekendTextStyle: bodyTextStyle,
                                         outsideTextStyle: TextStyle(
                                           color: quizLayout
-                                              .getColor(4)
+                                              .getColor(3)
                                               .withAlpha(100),
                                         ),
                                       ),
@@ -190,7 +190,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                               decoration: BoxDecoration(
                                                 color: quizLayout
                                                     .getColor(
-                                                        5), // Highlight color
+                                                        6), // Highlight color
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Center(
@@ -199,7 +199,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                                   style: TextStyle(
                                                       color: quizLayout
                                                           .getColorScheme()
-                                                          .onTertiary), // Text color
+                                                          .onPrimaryContainer), // Text color
                                                 ),
                                               ),
                                             );

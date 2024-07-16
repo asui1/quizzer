@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
@@ -59,13 +60,13 @@ class _QuizWidget4State extends State<QuizWidget4> {
         .map((answer) => TextEditingController(text: answer))
         .toList();
     for (int i = 0; i < widget.quiz.getAnswers().length; i++) {
-      starts.add(null);
-      ends.add(null);
       isDragging.add(false);
       leftKeys.add(GlobalKey());
       rightKeys.add(GlobalKey());
       lineKeys.add(GlobalKey());
     }
+    starts = widget.quiz.getStarts();
+    ends = widget.quiz.getEnds();
   }
 
   void setOffsets() {
@@ -198,7 +199,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 16.0),
                                             child: GestureDetector(
-                                              onTapDown: (details) {
+                                              behavior: HitTestBehavior.opaque,
+                                              onPanStart: (details) {
                                                 setState(() {
                                                   isDragging[index] = true;
                                                   Offset position =
@@ -229,7 +231,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                                 details
                                                                     .globalPosition)
                                                             .distance;
-                                                    if (distance <= 20) {
+                                                    if (distance <= 40) {
                                                       RenderBox linePaint = lineKeys[
                                                                   index]
                                                               .currentContext!

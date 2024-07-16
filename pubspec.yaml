@@ -109,6 +109,20 @@ flutter:
           - asset: fonts/NotoSansKr-Regular.ttf
           - asset: fonts/NotoSansKr-SemiBold.ttf
           - asset: fonts/NotoSansKr-Thin.ttf
+      - family: MaruBuri
+        fonts:
+          - asset: fonts/MaruBuri-Bold.ttf
+          - asset: fonts/MaruBuri-ExtraLight.ttf
+          - asset: fonts/MaruBuri-Light.ttf
+          - asset: fonts/MaruBuri.ttf
+          - asset: fonts/MaruBuri-SemiBold.ttf
+      - family: SpoqaHanSansNeo
+        fonts:
+          - asset: fonts/SpoqaHanSansNeo-Bold.otf
+          - asset: fonts/SpoqaHanSansNeo-Light.otf
+          - asset: fonts/SpoqaHanSansNeo-Medium.otf
+          - asset: fonts/SpoqaHanSansNeo.otf
+          - asset: fonts/SpoqaHanSansNeo-Thin.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

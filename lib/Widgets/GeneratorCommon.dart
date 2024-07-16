@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class questionInputTextField extends StatelessWidget {
@@ -7,19 +8,33 @@ class questionInputTextField extends StatelessWidget {
   final Function(String) onChanged;
   final QuizLayout quizLayout;
 
-  questionInputTextField({required this.controller, required this.onChanged, required this.quizLayout});
+  questionInputTextField(
+      {required this.controller,
+      required this.onChanged,
+      required this.quizLayout});
 
   @override
   Widget build(BuildContext context) {
+    Color? textQuestionColor = getTextColor(
+        quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme());
+    Color? backgroundQuestionColor = getBackGroundColor(
+        quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme());
     return TextField(
       controller: controller,
+      cursorColor: textQuestionColor,
       decoration: InputDecoration(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: textQuestionColor ?? quizLayout.getColorScheme().primary,
+          ),
+        ),
+        filled: true,
+        focusColor: textQuestionColor,
+        fillColor: backgroundQuestionColor,
         hintText: '질문을 입력해주세요.',
       ),
-      style: TextStyle(
-        fontFamily: quizLayout.getQuestionFont(),
-        fontSize: AppConfig.fontSize * 1.3,
-      ),
+      style: getTextFieldTextStyle(
+          quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme()),
       onChanged: onChanged,
     );
   }

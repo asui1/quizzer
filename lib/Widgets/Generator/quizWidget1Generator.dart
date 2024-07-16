@@ -8,6 +8,7 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/customScrollPhysic.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Widgets/quizBodyTextImageYoutube.dart';
@@ -81,6 +82,10 @@ class _QuizWidget1State extends State<QuizWidget1> {
     bool shuffleAnswers = widget.quiz.getShuffleAnswers();
     int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
+    Color? textAnswerColor = getTextColor(
+        quizLayout.getAnswerTextStyle(), quizLayout.getColorScheme());
+    Color? backgroundAnswerColor = getBackGroundColor(
+        quizLayout.getAnswerTextStyle(), quizLayout.getColorScheme());
     return Theme(
       data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
@@ -211,6 +216,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                         ),
                                         title: TextField(
                                           focusNode: _focusNodes[index],
+                                          cursorColor: textAnswerColor,
                                           textInputAction:
                                               index == answers.length - 1
                                                   ? TextInputAction.done
@@ -225,11 +231,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                               _focusNodes[index].unfocus();
                                             }
                                           },
-                                          style: TextStyle(
-                                            fontSize: AppConfig.fontSize,
-                                            fontFamily:
-                                                quizLayout.getAnswerFont(),
-                                          ),
+                                          style: getTextFieldTextStyle(
+                                              quizLayout.getAnswerTextStyle(),
+                                              quizLayout.getColorScheme()),
                                           controller: _controllers[index],
                                           onChanged: (value) {
                                             setState(() {
@@ -238,6 +242,17 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                             });
                                           },
                                           decoration: InputDecoration(
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: textAnswerColor ??
+                                                    quizLayout
+                                                        .getColorScheme()
+                                                        .primary,
+                                              ),
+                                            ),
+                                            filled: true,
+                                            focusColor: textAnswerColor,
+                                            fillColor: backgroundAnswerColor,
                                             hintText: 'Answer ${index + 1}',
                                           ),
                                         ),
@@ -262,7 +277,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('정답 섞기 여부 : '),
+                                      const Text(
+                                        '정답 섞기 여부 : ',
+                                      ),
                                       Checkbox(
                                         value: shuffleAnswers,
                                         onChanged: (bool? newValue) {
@@ -274,7 +291,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           });
                                         },
                                       ),
-                                      Text('선택 가능한 정답 수 : '),
+                                      const Text('선택 가능한 정답 수 : '),
                                       Container(
                                         width: 50.0,
                                         child: TextField(

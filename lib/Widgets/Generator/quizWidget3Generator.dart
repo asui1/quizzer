@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
@@ -64,6 +67,10 @@ class _QuizWidget3State extends State<QuizWidget3> {
   @override
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
+    Color? textAnswerColor = getTextColor(
+        quizLayout.getAnswerTextStyle(), quizLayout.getColorScheme());
+    Color? backgroundAnswerColor = getBackGroundColor(
+        quizLayout.getAnswerTextStyle(), quizLayout.getColorScheme());
     return Theme(
       data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: GestureDetector(
@@ -104,6 +111,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                         Expanded(
                                           child: TextField(
                                             focusNode: _focusNodes[index],
+                                            cursorColor: textAnswerColor,
                                             textInputAction: index ==
                                                     widget.quiz
                                                             .getAnswersLength() -
@@ -123,6 +131,9 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                                 _focusNodes[index].unfocus();
                                               }
                                             },
+                                            style: getTextFieldTextStyle(
+                                                quizLayout.getAnswerTextStyle(),
+                                                quizLayout.getColorScheme()),
                                             key: ValueKey(
                                                 index), // TextField에 대한 Key
                                             controller: _controllers[index],
@@ -130,6 +141,10 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                               enabledBorder: OutlineInputBorder(
                                                 // 활성화되지 않았을 때의 테두리 스타일
                                                 borderSide: BorderSide(
+                                                  color: 
+                                                      quizLayout
+                                                          .getColorScheme()
+                                                          .onSurface,
                                                   width: 2.0, // 테두리 두께 변경
                                                 ),
                                                 borderRadius:
@@ -139,12 +154,16 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                               focusedBorder: OutlineInputBorder(
                                                 // 포커스를 받았을 때의 테두리 스타일
                                                 borderSide: BorderSide(
+                                                  color: getTextColor(quizLayout.getAnswerTextStyle(), quizLayout.getColorScheme())??quizLayout.getColorScheme().primary,
                                                   width: 2.5, // 테두리 두께 변경
                                                 ),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         10), // 테두리 모서리 둥글기 변경
                                               ),
+                                              filled: true,
+                                              focusColor: textAnswerColor,
+                                              fillColor: backgroundAnswerColor,
                                               hintText: '답변 ${index + 1}',
                                             ),
                                             onChanged: (value) {
