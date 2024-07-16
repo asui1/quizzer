@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -59,6 +60,7 @@ class QuizLayout extends ChangeNotifier {
   // -> FONT FAMILY, Color, BoderStyle, FontWeight
 
   QuizLayout({this.highlightedIndex = 0});
+
 
   void reset(){
     isTopBarVisible = false;

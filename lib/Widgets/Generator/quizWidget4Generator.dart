@@ -196,8 +196,6 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           ),
                                           Container(
                                             width: AppConfig.screenWidth * 0.5,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0),
                                             child: GestureDetector(
                                               behavior: HitTestBehavior.opaque,
                                               onPanStart: (details) {
@@ -256,52 +254,63 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                   isDragging[index] = false;
                                                 });
                                               },
-                                              child: CustomPaint(
-                                                key: lineKeys[index],
-                                                painter: starts[index] !=
-                                                            null &&
-                                                        ends[index] != null
-                                                    ? LinePainter(
-                                                        start: starts[index]!,
-                                                        end: ends[index]!,
-                                                        color: quizLayout
-                                                            .getColorScheme()
-                                                            .tertiary)
-                                                    : null,
-                                                child: Container(
-                                                  height: 100.0,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: <Widget>[
-                                                      Container(
-                                                        key: leftKeys[index],
-                                                        height: 15.0,
-                                                        width: 15.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: quizLayout
-                                                              .getColorScheme()
-                                                              .tertiary,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
+                                              child: IgnorePointer(
+                                                ignoring: true,
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: AppConfig
+                                                          .largePadding),
+                                                  child: CustomPaint(
+                                                    key: lineKeys[index],
+                                                    painter: starts[index] !=
+                                                                null &&
+                                                            ends[index] != null
+                                                        ? LinePainter(
+                                                            start:
+                                                                starts[index]!,
+                                                            end: ends[index]!,
+                                                            color: quizLayout
+                                                                .getColorScheme()
+                                                                .primary)
+                                                        : null,
+                                                    child: Container(
+                                                      height: 100.0,
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            key:
+                                                                leftKeys[index],
+                                                            height: 15.0,
+                                                            width: 15.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: quizLayout
+                                                                  .getColorScheme()
+                                                                  .primary,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            key: rightKeys[
+                                                                index],
+                                                            height: 15.0,
+                                                            width: 15.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: quizLayout
+                                                                  .getColorScheme()
+                                                                  .primary,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                      Container(
-                                                        key: rightKeys[index],
-                                                        height: 15.0,
-                                                        width: 15.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: quizLayout
-                                                              .getColorScheme()
-                                                              .tertiary,
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),

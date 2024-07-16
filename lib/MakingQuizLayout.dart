@@ -41,11 +41,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     super.initState();
     // Initialize the TextEditingController with the current title
     _titleController = TextEditingController();
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    // context.read를 사용하여 상태 관리 객체에 접근
-  String title = Provider.of<QuizLayout>(context, listen: false).getTitle();
-  _titleController.text = title; // String을 직접 할당
-  });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // context.read를 사용하여 상태 관리 객체에 접근
+      String title = Provider.of<QuizLayout>(context, listen: false).getTitle();
+      _titleController.text = title; // String을 직접 할당
+    });
   }
 
   void changeColorScheme(ColorScheme newScheme) {
@@ -75,493 +75,490 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     if (quizLayout.getSelectedLayout() == 3) {
       quizLayout.setBottomBarVisibility(true);
     }
-    return Theme(
-      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
-      child: Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: quizLayout.getIsTopBarVisible()
-            ? PreferredSize(
-                // 상단 바 추가
-                preferredSize:
-                    Size.fromHeight(quizLayout.getAppBarHeight()),
-                child: GestureDetector(
-                  onVerticalDragUpdate: (DragUpdateDetails details) {
-                    setState(() {
-                      tempAppBarHeight +=
-                          details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
-                      tempAppBarHeight = tempAppBarHeight.clamp(
-                          AppConfig.screenHeight * 0.075,
-                          AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
-                      quizLayout.setAppBarHeight(tempAppBarHeight);
-                    });
-                  },
-                  child: viewerAppBar(
-                      quizLayout: quizLayout, showDragHandle: true),
-                ),
-              )
-            : null,
-        body: SafeArea(
-          child: Container(
-            decoration: backgroundDecoration(quizLayout: quizLayout),
-            child: Stack(
-              children: [
-                FilpStyle12(
-                  quizLayout: quizLayout,
-                  onPressedBack: () {},
-                  onPressedForward: () {},
-                ),
-                Positioned(
-                  top: 30.0,
-                  left: AppConfig.screenWidth / 2 -
-                      28, // Subtract half the width of the button to center it
-                  child: FloatingActionButton(
-                    foregroundColor: quizLayout.getColorScheme().primary,
-                    heroTag: 'topBarToggle',
-                    child: Icon(
-                      quizLayout.getIsTopBarVisible()
-                          ? Icons.remove
-                          : Icons.add,
-                      color: quizLayout.getColorScheme().onPrimary,
-                    ),
-                    onPressed: () {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        popDialog(context, quizLayout);
+      },
+      child: Theme(
+        data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
+        child: Scaffold(
+          extendBodyBehindAppBar: false,
+          appBar: quizLayout.getIsTopBarVisible()
+              ? PreferredSize(
+                  // 상단 바 추가
+                  preferredSize: Size.fromHeight(quizLayout.getAppBarHeight()),
+                  child: GestureDetector(
+                    onVerticalDragUpdate: (DragUpdateDetails details) {
                       setState(() {
-                        quizLayout.toggleTopBarVisibility();
+                        tempAppBarHeight +=
+                            details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                        tempAppBarHeight = tempAppBarHeight.clamp(
+                            AppConfig.screenHeight * 0.075,
+                            AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
+                        quizLayout.setAppBarHeight(tempAppBarHeight);
                       });
                     },
+                    child: viewerAppBar(
+                        quizLayout: quizLayout, showDragHandle: true),
                   ),
-                ),
-                Positioned(
-                  top: 10.0, // Set to 0.0 to align at the top
-                  left: 10.0, // Set to 0.0 to align at the left
-                  child: IconButton(
-                    iconSize: AppConfig.fontSize * 1.5,
-                    icon: Icon(Icons.arrow_back_ios,
-                        color: quizLayout.getColorScheme().primary),
-                    onPressed: () {
-                      Navigator.pop(
-                          context); // Pops the current route from the navigator to get out of the page
-                    },
-                  ),
-                ),
-                Positioned(
-                  right: 10.0, // Align to the right
-                  bottom: 10.0, // Align to the bottom
-                  child: IconButton(
-                    iconSize: AppConfig.fontSize * 1.5,
-                    icon: Icon(Icons.arrow_forward,
-                        color: quizLayout.getColorScheme().primary),
-                    onPressed: () =>
-                        navigateToMakingQuizPage(context),
-                  ),
-                ),
-                Positioned(
-                  right: 10.0, // Align to the right
-                  top: 10.0, // Align to the top
-                  child: IconButton(
-                    iconSize: AppConfig.fontSize * 1.5,
-                    icon: Icon(Icons.download_sharp,
-                        color: quizLayout.getColorScheme().primary),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              LoadTemp(quizLayout: quizLayout),
-                        ),
-                      ).then((_) {
-                        updateLoad();
-                        setState(() {});
-                      });
-                    },
-                  ),
-                ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CustomContainer(
-                        text: '1. 퀴즈 제목 설정.',
-                        quizLayout: quizLayout,
-                        index: 0,
-                        onPressed: () async {
-                          final layoutSelected = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(// Add this
-                                  builder: (BuildContext context,
-                                      StateSetter setState) {
-                                return AlertDialog(
-                                  title: Center(
-                                    child: Text(
-                                      '퀴즈 제목 설정',
-                                    ),
-                                  ),
-                                  backgroundColor: quizLayout
-                                      .getColorScheme()
-                                      .surface,
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: AppConfig.screenHeight * 0.02,
-                                      ),
-                                      TextField(
-                                        controller:
-                                            _titleController, // Bind the controller to the TextField
-                                        decoration: InputDecoration(
-                                          labelText: '퀴즈 제목을 입력하세요.',
-                                        ),
-                                        onChanged: (value) {
-                                          // Optionally update the title in real-time
-                                          quizLayout.setTitle(value);
-                                          setState(() {});
-                                        },
-                                      ),
-                                      SizedBox(
-                                        height: AppConfig.screenHeight * 0.02,
-                                      ),
-                                      Text(
-                                        '표지 이미지를 선택하세요:',
-                                      ),
-                                      SizedBox(
-                                        height: AppConfig.screenHeight * 0.02,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          final ImagePicker _picker =
-                                              ImagePicker();
-                                          final XFile? tempImageFile =
-                                              await _picker.pickImage(
-                                                  source: ImageSource.gallery);
-                                          if (tempImageFile != null) {
-                                            // 이미지 파일 처리
-                                            final File? compressedFile =
-                                                await checkCompressImage(
-                                                    tempImageFile, 50, 50);
-
-                                            if (compressedFile != null) {
-                                              setState(() {
-                                                quizLayout.setTitleImage(
-                                                    compressedFile.path);
-                                              });
-                                            }
-                                            setState(() {});
-                                          }
-                                          // Handle user upload with image picker
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: quizLayout
-                                                .getColorScheme()
-                                                .primaryContainer,
-                                          ),
-                                          width: AppConfig.screenWidth / 4,
-                                          height: AppConfig.screenWidth /
-                                              4, // 가로 크기를 기준으로 정사각형 크기 설정
-                                          child: quizLayout
-                                                  .isTitleImageSet()
-                                              ? quizLayout
-                                                  .getTitleImage()
-                                              : Icon(
-                                                  Icons.add_a_photo,
-                                                  size:
-                                                      AppConfig.screenWidth / 4,
-                                                  color: quizLayout
-                                                      .getColorScheme()
-                                                      .onPrimaryContainer,
-                                                ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: AppConfig.screenHeight * 0.02,
-                                      ),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    ConfirmButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(quizLayout
-                                            .getSelectedLayout());
-                                      },
-                                      selection:
-                                          quizLayout.getTitle() == ''
-                                              ? 0
-                                              : 1,
-                                    ),
-                                  ],
-                                );
-                              });
-                            },
-                          ).then(
-                            (value) {
-                              if (value != null) {
-                                setState(() {
-                                  quizLayout.setIsTitleSet(true);
-                                  highlightedIndex = quizLayout
-                                      .getNextHighlightedIndex();
-                                });
-                              }
-                            },
-                          );
-                        },
-                      ),
-                      CustomContainer(
-                        text: '2. 넘기기 스타일 설정.',
-                        quizLayout: quizLayout,
-                        index: 1,
-                        onPressed: () async {
-                          final layoutSelected = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(// Add this
-                                  builder: (BuildContext context,
-                                      StateSetter setState) {
-                                return AlertDialog(
-                                  backgroundColor: quizLayout
-                                      .getColorScheme()
-                                      .surface,
-                                  title: Center(
-                                      child: Text(
-                                    '넘기기 스타일 설정',
-                                  )),
-                                  content: Container(
-                                    // Set a fixed height to avoid layout issues in AlertDialog
-                                    width: double
-                                        .maxFinite, // Use maximum width available
-                                    child: GridView.builder(
-                                      shrinkWrap: true,
-                                      itemCount:
-                                          4, // Adjust the item count as needed
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, // 2 items per row
-                                        crossAxisSpacing:
-                                            10, // Spacing between items horizontally
-                                        mainAxisSpacing:
-                                            10, // Spacing between items vertically
-                                      ),
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return LayoutOption(
-                                          layoutNumber: index + 1,
-                                          quizLayout: quizLayout,
-                                          onSelected: (layoutNumber) {
-                                            setState(() {
-                                              quizLayout
-                                                  .setSelectedLayout(
-                                                      layoutNumber);
-                                            });
-                                          },
-                                          imagePath:
-                                              'assets/images/layoutOption${index + 1}.jpg',
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    ConfirmButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop(quizLayout
-                                            .getSelectedLayout());
-                                      },
-                                      selection:
-                                          quizLayout.getSelectedLayout(),
-                                    ),
-                                  ],
-                                );
-                              });
-                            },
-                          );
-                          if (quizLayout.getSelectedLayout() != 0) {
-                            {
-                              setState(() {
-                                quizLayout.setIsFlipStyleSet(true);
-                                highlightedIndex =
-                                    quizLayout.getNextHighlightedIndex();
-                              });
-                            }
-                          }
-                        },
-                      ),
-                      CustomContainer(
-                        text: '3. 배경/색상 설정.',
-                        quizLayout: quizLayout,
-                        index: 2,
-                        onPressed: () async {
-                          final layoutSelected = await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return StatefulBuilder(// Add this
-                                  builder: (BuildContext context,
-                                      StateSetter setState) {
-                                return AlertDialog(
-                                  backgroundColor: quizLayout
-                                      .getColorScheme()
-                                      .surface,
-                                  title: Center(
-                                      child: Text(
-                                    '배경/색상 설정',
-                                  )),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        Column(
-                                          children: List.generate(10, (index) {
-                                            return Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom:
-                                                      8.0), // Adjust the value as needed
-                                              child: CustomRow(
-                                                onPressed: () async {
-                                                  // Show color picker
-                                                  final selectedColor =
-                                                      await showDialog<Color>(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return ColorPickerField(
-                                                        quizLayout:
-                                                            quizLayout,
-                                                        index: index,
-                                                      );
-                                                    },
-                                                  );
-
-                                                  if (selectedColor != null) {
-                                                    setState(() {});
-                                                  }
-                                                },
-                                                isActive: quizLayout
-                                                    .getVisibility(index),
-                                                quizLayout: quizLayout,
-                                                buttonText: stringResources[
-                                                        'imageSet$index'] ??
-                                                    '',
-                                                image: quizLayout
-                                                    .getImageColorNotNull(
-                                                        index),
-                                              ),
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .spaceBetween, // 좌우 정렬
-                                      children: <Widget>[
-                                        IconButton(
-                                          onPressed: () {
-                                            quizLayout
-                                                .generateAdequateColors();
-                                            setState(() {});
-                                          },
-                                          icon: Icon(Icons.autorenew),
-                                        ),
-                                        Expanded(
-                                            child:
-                                                SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
-                                        ConfirmButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(1);
-                                          },
-                                          selection: 1,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              });
-                            },
-                          ).then((_) {
-                            setState(() {
-                              changeColorScheme(
-                                  quizLayout.getColorScheme());
-                            });
-                          });
-                          if (quizLayout.getSelectedLayout() != 0) {
-                            {
-                              setState(() {
-                                quizLayout.setIsBackgroundImageSet(true);
-                                highlightedIndex =
-                                    quizLayout.getNextHighlightedIndex();
-                              });
-                            }
-                          }
-                        },
-                      ),
-                      CustomContainer(
-                        text: '4. 기타 추가 설정.',
-                        quizLayout: quizLayout,
-                        index: 3,
-                        onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => quizLayoutAdditionalSetup(
-                                  quizLayout: quizLayout),
-                            ),
-                          ).then((_) {
-                            setState(() {});
-                          });
-                          // 버튼 3의 동작을 여기에 구현합니다.
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  bottom: 30.0,
-                  left: AppConfig.screenWidth / 2 -
-                      28, // Subtract half the width of the button to center it
-                  child: FloatingActionButton(
-                    foregroundColor: quizLayout.getColorScheme().primary,
-                    heroTag: 'bottomBarToggle',
-                    child: Icon(
-                      quizLayout.getIsBottomBarVisible()
-                          ? Icons.remove
-                          : Icons.add,
-                      color: quizLayout.getColorScheme().onPrimary,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        quizLayout.toggleBottomBarVisibility();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: quizLayout.getIsBottomBarVisible()
-            ? PreferredSize(
-                // 하단 바 추가
-                preferredSize:
-                    Size.fromHeight(quizLayout.getBottomBarHeight()),
-                child: GestureDetector(
-                  onVerticalDragUpdate: (DragUpdateDetails details) {
-                    setState(() {
-                      tempBottomBarHeight -=
-                          details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
-                      tempBottomBarHeight = tempBottomBarHeight.clamp(
-                          AppConfig.screenHeight / 40,
-                          AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
-                      quizLayout.setBottomBarHeight(tempBottomBarHeight);
-                    });
-                  },
-                  child: viewerBottomBar(
+                )
+              : null,
+          body: SafeArea(
+            child: Container(
+              decoration: backgroundDecoration(quizLayout: quizLayout),
+              child: Stack(
+                children: [
+                  FilpStyle12(
                     quizLayout: quizLayout,
                     onPressedBack: () {},
                     onPressedForward: () {},
-                    showDragHandle: true,
-                    showSwitchButton: true,
                   ),
-                ),
-              )
-            : null,
+                  Positioned(
+                    top: 30.0,
+                    left: AppConfig.screenWidth / 2 -
+                        28, // Subtract half the width of the button to center it
+                    child: FloatingActionButton(
+                      foregroundColor: quizLayout.getColorScheme().primary,
+                      heroTag: 'topBarToggle',
+                      child: Icon(
+                        quizLayout.getIsTopBarVisible()
+                            ? Icons.remove
+                            : Icons.add,
+                        color: quizLayout.getColorScheme().onPrimary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          quizLayout.toggleTopBarVisibility();
+                        });
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    top: 10.0, // Set to 0.0 to align at the top
+                    left: 10.0, // Set to 0.0 to align at the left
+                    child: IconButton(
+                      iconSize: AppConfig.fontSize * 1.5,
+                      icon: Icon(Icons.arrow_back_ios,
+                          color: quizLayout.getColorScheme().primary),
+                      onPressed: () {
+                        popDialog(context, quizLayout);
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    right: 10.0, // Align to the right
+                    bottom: 10.0, // Align to the bottom
+                    child: IconButton(
+                      iconSize: AppConfig.fontSize * 1.5,
+                      icon: Icon(Icons.arrow_forward,
+                          color: quizLayout.getColorScheme().primary),
+                      onPressed: () => navigateToMakingQuizPage(context),
+                    ),
+                  ),
+                  Positioned(
+                    right: 10.0, // Align to the right
+                    top: 10.0, // Align to the top
+                    child: IconButton(
+                      iconSize: AppConfig.fontSize * 1.5,
+                      icon: Icon(Icons.download_sharp,
+                          color: quizLayout.getColorScheme().primary),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                LoadTemp(quizLayout: quizLayout),
+                          ),
+                        ).then((_) {
+                          updateLoad();
+                          setState(() {});
+                        });
+                      },
+                    ),
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CustomContainer(
+                          text: '1. 퀴즈 제목 설정.',
+                          quizLayout: quizLayout,
+                          index: 0,
+                          onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(// Add this
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                  return AlertDialog(
+                                    title: Center(
+                                      child: Text(
+                                        '퀴즈 제목 설정',
+                                      ),
+                                    ),
+                                    backgroundColor:
+                                        quizLayout.getColorScheme().surface,
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: AppConfig.screenHeight * 0.02,
+                                        ),
+                                        TextField(
+                                          controller:
+                                              _titleController, // Bind the controller to the TextField
+                                          decoration: InputDecoration(
+                                            labelText: '퀴즈 제목을 입력하세요.',
+                                          ),
+                                          onChanged: (value) {
+                                            // Optionally update the title in real-time
+                                            quizLayout.setTitle(value);
+                                            setState(() {});
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: AppConfig.screenHeight * 0.02,
+                                        ),
+                                        Text(
+                                          '표지 이미지를 선택하세요:',
+                                        ),
+                                        SizedBox(
+                                          height: AppConfig.screenHeight * 0.02,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final ImagePicker _picker =
+                                                ImagePicker();
+                                            final XFile? tempImageFile =
+                                                await _picker.pickImage(
+                                                    source:
+                                                        ImageSource.gallery);
+                                            if (tempImageFile != null) {
+                                              // 이미지 파일 처리
+                                              final File? compressedFile =
+                                                  await checkCompressImage(
+                                                      tempImageFile, 50, 50);
+
+                                              if (compressedFile != null) {
+                                                setState(() {
+                                                  quizLayout.setTitleImage(
+                                                      compressedFile.path);
+                                                });
+                                              }
+                                              setState(() {});
+                                            }
+                                            // Handle user upload with image picker
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: quizLayout
+                                                  .getColorScheme()
+                                                  .primaryContainer,
+                                            ),
+                                            width: AppConfig.screenWidth / 4,
+                                            height: AppConfig.screenWidth /
+                                                4, // 가로 크기를 기준으로 정사각형 크기 설정
+                                            child: quizLayout.isTitleImageSet()
+                                                ? quizLayout.getTitleImage()
+                                                : Icon(
+                                                    Icons.add_a_photo,
+                                                    size:
+                                                        AppConfig.screenWidth /
+                                                            4,
+                                                    color: quizLayout
+                                                        .getColorScheme()
+                                                        .onPrimaryContainer,
+                                                  ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: AppConfig.screenHeight * 0.02,
+                                        ),
+                                      ],
+                                    ),
+                                    actions: <Widget>[
+                                      ConfirmButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                              quizLayout.getSelectedLayout());
+                                        },
+                                        selection:
+                                            quizLayout.getTitle() == '' ? 0 : 1,
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            ).then(
+                              (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    quizLayout.setIsTitleSet(true);
+                                    highlightedIndex =
+                                        quizLayout.getNextHighlightedIndex();
+                                  });
+                                }
+                              },
+                            );
+                          },
+                        ),
+                        CustomContainer(
+                          text: '2. 넘기기 스타일 설정.',
+                          quizLayout: quizLayout,
+                          index: 1,
+                          onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(// Add this
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        quizLayout.getColorScheme().surface,
+                                    title: Center(
+                                        child: Text(
+                                      '넘기기 스타일 설정',
+                                    )),
+                                    content: Container(
+                                      // Set a fixed height to avoid layout issues in AlertDialog
+                                      width: double
+                                          .maxFinite, // Use maximum width available
+                                      child: GridView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            4, // Adjust the item count as needed
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2, // 2 items per row
+                                          crossAxisSpacing:
+                                              10, // Spacing between items horizontally
+                                          mainAxisSpacing:
+                                              10, // Spacing between items vertically
+                                        ),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return LayoutOption(
+                                            layoutNumber: index + 1,
+                                            quizLayout: quizLayout,
+                                            onSelected: (layoutNumber) {
+                                              setState(() {
+                                                quizLayout.setSelectedLayout(
+                                                    layoutNumber);
+                                              });
+                                            },
+                                            imagePath:
+                                                'assets/images/layoutOption${index + 1}.jpg',
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      ConfirmButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                              quizLayout.getSelectedLayout());
+                                        },
+                                        selection:
+                                            quizLayout.getSelectedLayout(),
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            );
+                            if (quizLayout.getSelectedLayout() != 0) {
+                              {
+                                setState(() {
+                                  quizLayout.setIsFlipStyleSet(true);
+                                  highlightedIndex =
+                                      quizLayout.getNextHighlightedIndex();
+                                });
+                              }
+                            }
+                          },
+                        ),
+                        CustomContainer(
+                          text: '3. 배경/색상 설정.',
+                          quizLayout: quizLayout,
+                          index: 2,
+                          onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(// Add this
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        quizLayout.getColorScheme().surface,
+                                    title: Center(
+                                        child: Text(
+                                      '배경/색상 설정',
+                                    )),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Column(
+                                            children:
+                                                List.generate(10, (index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom:
+                                                        8.0), // Adjust the value as needed
+                                                child: CustomRow(
+                                                  onPressed: () async {
+                                                    // Show color picker
+                                                    final selectedColor =
+                                                        await showDialog<Color>(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return ColorPickerField(
+                                                          quizLayout:
+                                                              quizLayout,
+                                                          index: index,
+                                                        );
+                                                      },
+                                                    );
+
+                                                    if (selectedColor != null) {
+                                                      setState(() {});
+                                                    }
+                                                  },
+                                                  isActive: quizLayout
+                                                      .getVisibility(index),
+                                                  quizLayout: quizLayout,
+                                                  buttonText: stringResources[
+                                                          'imageSet$index'] ??
+                                                      '',
+                                                  image: quizLayout
+                                                      .getImageColorNotNull(
+                                                          index),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceBetween, // 좌우 정렬
+                                        children: <Widget>[
+                                          IconButton(
+                                            onPressed: () {
+                                              quizLayout
+                                                  .generateAdequateColors();
+                                              setState(() {});
+                                            },
+                                            icon: Icon(Icons.autorenew),
+                                          ),
+                                          Expanded(
+                                              child:
+                                                  SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
+                                          ConfirmButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(1);
+                                            },
+                                            selection: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            ).then((_) {
+                              setState(() {
+                                changeColorScheme(quizLayout.getColorScheme());
+                              });
+                            });
+                            if (quizLayout.getSelectedLayout() != 0) {
+                              {
+                                setState(() {
+                                  quizLayout.setIsBackgroundImageSet(true);
+                                  highlightedIndex =
+                                      quizLayout.getNextHighlightedIndex();
+                                });
+                              }
+                            }
+                          },
+                        ),
+                        CustomContainer(
+                          text: '4. 기타 추가 설정.',
+                          quizLayout: quizLayout,
+                          index: 3,
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => quizLayoutAdditionalSetup(
+                                    quizLayout: quizLayout),
+                              ),
+                            ).then((_) {
+                              setState(() {});
+                            });
+                            // 버튼 3의 동작을 여기에 구현합니다.
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 30.0,
+                    left: AppConfig.screenWidth / 2 -
+                        28, // Subtract half the width of the button to center it
+                    child: FloatingActionButton(
+                      foregroundColor: quizLayout.getColorScheme().primary,
+                      heroTag: 'bottomBarToggle',
+                      child: Icon(
+                        quizLayout.getIsBottomBarVisible()
+                            ? Icons.remove
+                            : Icons.add,
+                        color: quizLayout.getColorScheme().onPrimary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          quizLayout.toggleBottomBarVisibility();
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          bottomNavigationBar: quizLayout.getIsBottomBarVisible()
+              ? PreferredSize(
+                  // 하단 바 추가
+                  preferredSize:
+                      Size.fromHeight(quizLayout.getBottomBarHeight()),
+                  child: GestureDetector(
+                    onVerticalDragUpdate: (DragUpdateDetails details) {
+                      setState(() {
+                        tempBottomBarHeight -=
+                            details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                        tempBottomBarHeight = tempBottomBarHeight.clamp(
+                            AppConfig.screenHeight / 40,
+                            AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
+                        quizLayout.setBottomBarHeight(tempBottomBarHeight);
+                      });
+                    },
+                    child: viewerBottomBar(
+                      quizLayout: quizLayout,
+                      onPressedBack: () {},
+                      onPressedForward: () {},
+                      showDragHandle: true,
+                      showSwitchButton: true,
+                    ),
+                  ),
+                )
+              : null,
+        ),
       ),
     );
   }
@@ -734,7 +731,8 @@ class CustomRow extends StatelessWidget {
 
 void navigateToMakingQuizPage(BuildContext context) {
   Navigator.of(context).push(PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => MakingQuiz(), // 여기서 NewPage()는 새로운 페이지 위젯입니다.
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        MakingQuiz(), // 여기서 NewPage()는 새로운 페이지 위젯입니다.
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
       var end = Offset.zero;
@@ -749,4 +747,31 @@ void navigateToMakingQuizPage(BuildContext context) {
       );
     },
   ));
+}
+
+void popDialog(BuildContext context1, QuizLayout quizLayout) {
+  showDialog<bool>(
+    context: context1,
+    builder: (context) => AlertDialog(
+      title: Text('주의'),
+      content: Text('이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?'),
+      actions: <Widget>[
+        TextButton(
+          child: Text(
+            '나가기',
+            style: TextStyle(
+              color: quizLayout.getColorScheme().error,
+            ),
+          ),
+          onPressed: () =>
+              Navigator.of(context).popUntil((route) => route.isFirst),
+        ),
+        TextButton(
+          child: Text('취소'),
+          onPressed: () =>
+              Navigator.of(context).pop(false), // Do not pop the screen.
+        ),
+      ],
+    ),
+  );
 }

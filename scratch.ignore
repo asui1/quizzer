@@ -21,6 +21,7 @@ Quiz4 -> starts, ends, connectionAnswerIndex
 userStarts, userEnds, userConnectionIndex
 이렇게 2세트를 관리하는걸로.
 
+나중에 TODO: theme 미리 만들어서 textfield, text 관리하기.
 
 4. 도메인 구입해서 외부망 접속가능하게 연결.
 
