@@ -564,24 +564,28 @@ class _MakingQuizState extends State<MakingQuiz> {
     switch (n) {
       case 1:
         return QuizView1(
+          key: ValueKey(quiz.id),
           quiz: quiz as Quiz1,
           screenHeightModifier: 0.7,
           screenWidthModifier: 0.7,
         );
       case 2:
         return QuizView2(
+          key: ValueKey(quiz.id),
           quiz: quiz as Quiz2,
           screenHeightModifier: 0.7,
           screenWidthModifier: 0.7,
         );
       case 3:
         return QuizView3(
+          key: ValueKey(quiz.id),
           quiz: quiz as Quiz3,
           screenHeightModifier: 0.7,
           screenWidthModifier: 0.7,
         );
       case 4:
         return QuizView4(
+          key: ValueKey(quiz.id),
           quiz: quiz as Quiz4,
           screenHeightModifier: 0.7,
           screenWidthModifier: 0.7,

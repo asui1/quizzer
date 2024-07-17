@@ -349,6 +349,8 @@ void main() {
         await tester.ensureVisible(answerField);
         await tester.pumpAndSettle();
         await tester.enterText(answerField, '테스트용 답변 $i');
+        await tester.pumpAndSettle();
+        FocusManager.instance.primaryFocus?.unfocus();
         await tester.pumpAndSettle(Durations.extralong1);
       }
 
@@ -384,7 +386,7 @@ void main() {
       await tester.pumpAndSettle();
 
       FocusManager.instance.primaryFocus?.unfocus();
-      await tester.pumpAndSettle(); // 위젯 트리가 안정될 때까지 기다립니다.
+        await tester.pumpAndSettle(Durations.extralong1);
 
       final addAnswerButton3 = find.byKey(const ValueKey('addAnswerButton'));
       await tester.tap(addAnswerButton3);
@@ -394,10 +396,9 @@ void main() {
 
       for (int i = 0; i < 4; i += 1) {
         final dotRow = find.byKey(ValueKey('dots$i'));
-        final firstChildFinder = find.descendant(
-            of: dotRow,
-            matching: find
-                .byType(Container)).at(0); // Replace WidgetType with the actual type
+        final firstChildFinder = find
+            .descendant(of: dotRow, matching: find.byType(Container))
+            .at(0); // Replace WidgetType with the actual type
         final secondChildFinder = find
             .descendant(of: dotRow, matching: find.byType(Container))
             .at(1); // Use .at(1) to get the second instance
@@ -415,7 +416,7 @@ void main() {
         await tester.enterText(answerFieldRight, '테스트용 right $i');
         await tester.pumpAndSettle();
         FocusManager.instance.primaryFocus?.unfocus();
-        await tester.pumpAndSettle(); // 위젯 트리가 안정될 때까지 기다립니다.
+        await tester.pumpAndSettle(Durations.extralong1);
       }
 
       final removeAnswerKey = find.byKey(const ValueKey('removeAnswerButton2'));
@@ -424,10 +425,12 @@ void main() {
 
       confirmButtonFinder6 = find.text('완료');
       await tester.tap(confirmButtonFinder6);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Durations.extralong4);
 
+      //여기서 뭔가 오류 발생.
       //하나 더 만들고 삭제버튼 누르기.
-      await tester.tap(addQuizButton);
+      final addQuizButton2 = find.byKey(const ValueKey('addQuizButton'));
+      await tester.tap(addQuizButton2);
       await tester.pumpAndSettle();
 
       final quizSelection5 = find.byKey(const ValueKey('quizSelectionDialog3'));
@@ -436,7 +439,7 @@ void main() {
 
       confirmButtonFinder6 = find.text('완료');
       await tester.tap(confirmButtonFinder6);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Durations.extralong4);
 
       final removeQuizButton = find.byKey(const ValueKey('deleteQuizButton'));
       await tester.tap(removeQuizButton);

@@ -512,6 +512,7 @@ class QuizLayout extends ChangeNotifier {
 
   void removeQuiz(int index) {
     quizzes.removeAt(index);
+    notifyListeners();
   }
 
   int getQuizCount() {

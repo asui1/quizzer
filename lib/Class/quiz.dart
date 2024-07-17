@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Setup/Colors.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class AbstractQuiz {
   int layoutType;
@@ -12,12 +13,13 @@ abstract class AbstractQuiz {
   Image? image;
   String question;
   Color state = MyColors().red;
+  String id = '';
 
   AbstractQuiz(
       {required this.layoutType,
       required this.answers,
       required this.ans,
-      required this.question});
+      required this.question}): id = Uuid().v4();
 
   Color getState();
 
