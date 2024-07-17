@@ -77,7 +77,7 @@ class _QuizView1State extends State<QuizView1> {
                               onChanged: (bool? newValue) {
                                 setState(() {
                                   if (newValue != null) {
-                                    if (widget.quiz.getViewAnsCount() <
+                                    if (widget.quiz.getViewAnsTrueCount() <
                                             widget.quiz
                                                 .getMaxAnswerSelection() ||
                                         newValue == false) {
@@ -90,14 +90,14 @@ class _QuizView1State extends State<QuizView1> {
                           ),
                           title: TextStyleWidget(
                             textStyle: quizLayout.getTextStyle(2),
-                            text: widget.quiz.getViewerAnsAt(index),
+                            text: widget.quiz.getViewerAnswerAt(index),
                             colorScheme: quizLayout.getColorScheme(),
                             modifier: widget.screenWidthModifier,
                           ),
                           onTap: () {
                             setState(() {
                               if (currentAnswer[index] == false) {
-                                if (widget.quiz.getViewAnsCount() <
+                                if (widget.quiz.getViewAnsTrueCount() <
                                     widget.quiz.getMaxAnswerSelection()) {
                                   currentAnswer[index] = !currentAnswer[index];
                                 }

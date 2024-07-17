@@ -78,7 +78,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
   @override
   Widget build(BuildContext context) {
     List<String> answers = widget.quiz.getAnswers();
-    int trueCount = widget.quiz.getAnsLength();
+    int trueCount = widget.quiz.getAnsTrueLength();
     bool shuffleAnswers = widget.quiz.getShuffleAnswers();
     int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
@@ -207,7 +207,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                                         widget.quiz
                                                             .getMaxAnswerSelection() ||
                                                     newValue == false) {
-                                                  widget.quiz.changeCorrectAns(
+                                                  widget.quiz.setAnsAt(
                                                       index, newValue);
                                                 }
                                               }

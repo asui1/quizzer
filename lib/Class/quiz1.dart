@@ -84,7 +84,6 @@ class Quiz1 extends AbstractQuiz {
 
   @override
   Color getState() {
-    int trueCount = ans.where((element) => element == true).length;
     int userTrueCount = viewerAns.where((element) => element == true).length;
     if (userTrueCount > 0) {
       return MyColors().green;
@@ -93,7 +92,7 @@ class Quiz1 extends AbstractQuiz {
     }
   }
 
-  String getViewerAnsAt(int index) {
+  String getViewerAnswerAt(int index) {
     return viewerAnswers[index];
   }
 
@@ -106,7 +105,7 @@ class Quiz1 extends AbstractQuiz {
     return viewerAnswers;
   }
 
-  int getViewAnsCount() {
+  int getViewAnsTrueCount() {
     return viewerAns.where((element) => element == true).length;
   }
 
@@ -154,7 +153,7 @@ class Quiz1 extends AbstractQuiz {
     return maxAnswerSelection;
   }
 
-  void changeCorrectAns(int index, bool value) {
+  void setAnsAt(int index, bool value) {
     ans[index] = value;
   }
 
@@ -166,7 +165,7 @@ class Quiz1 extends AbstractQuiz {
     return shuffleAnswers;
   }
 
-  int getAnsLength() {
+  int getAnsTrueLength() {
     int trueCount = ans.where((element) => element == true).length;
     return trueCount;
   }
@@ -195,8 +194,9 @@ class Quiz1 extends AbstractQuiz {
     imageFile = newImageFile;
   }
 
-  void removeImageFile(){
-    imageFile = null;  }
+  void removeImageFile() {
+    imageFile = null;
+  }
 
   void setBodyType(int newBodyType) {
     bodyType = newBodyType;
@@ -292,7 +292,7 @@ class Quiz1 extends AbstractQuiz {
     if (maxAnswerSelection < trueCount) {
       maxAnswerSelection = trueCount;
     }
-    if(bodyType == 2 && imageFile == null){
+    if (bodyType == 2 && imageFile == null) {
       setBodyType(0);
     }
 
