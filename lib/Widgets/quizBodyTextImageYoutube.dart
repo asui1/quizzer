@@ -119,7 +119,8 @@ class _ContentWidgetState extends State<ContentWidget> {
               minLines: 1, // 최소 줄 수 설정
               maxLines: null, // 최대 줄 수를 무제한으로 설정
               keyboardType: TextInputType.multiline, // 멀티라인 입력 활성화
-              style:getTextFieldTextStyle(widget.quizLayout.getBodyTextStyle(), widget.quizLayout.getColorScheme()),
+              style: getTextFieldTextStyle(widget.quizLayout.getBodyTextStyle(),
+                  widget.quizLayout.getColorScheme()),
               onChanged: (value) {
                 widget.updateBodyTextCallback(value);
               },
@@ -138,27 +139,45 @@ class _ContentWidgetState extends State<ContentWidget> {
         );
       case 2:
         // 플러터 웹에서 테스트 불가. 실제 기기에서 테스트 필요
-        if (widget.quiz1.isImageSet()) {
-          // 이미지 파일이 선택되었을 때, 선택된 이미지를 표시
-          return Center(
-            child: Image.file(File(widget.quiz1.getImageFile().path)),
-          );
-        } else {
-          // 이미지 파일이 선택되지 않았을 때, 기존의 IconButton을 유지
-          return IconButton(
-            icon: Icon(Icons.image),
-            onPressed: () async {
-              final picker = ImagePicker();
-              final pickedFileTemp =
-                  await picker.pickImage(source: ImageSource.gallery);
-              if (pickedFileTemp != null) {
-                setState(() {
-                  widget.quiz1.setImageFile(pickedFileTemp); // 상태 업데이트
-                });
-              }
-            },
-          );
-        }
+        return Stack(
+          children: [
+            Container(
+              height: AppConfig.screenHeight * 0.3,
+              width: AppConfig.screenWidth * 0.95,
+              child: widget.quiz1.isImageSet()
+                  ? Image.file(
+                      File(widget.quiz1.getImageFile().path),
+                      fit: BoxFit.contain,
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.image),
+                      onPressed: () async {
+                        final picker = ImagePicker();
+                        final pickedFileTemp =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        if (pickedFileTemp != null) {
+                          setState(() {
+                            widget.quiz1
+                                .setImageFile(pickedFileTemp); // 상태 업데이트
+                          });
+                        }
+                      },
+                    ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  widget.quiz1.removeImageFile(); // 이미지 파일 초기화
+                  widget.updateStateCallback(0); // 상태 업데이트
+                },
+              ),
+            ),
+          ],
+        );
+
       case 3:
         //나중에 구현 예정.
         return ElevatedButton(

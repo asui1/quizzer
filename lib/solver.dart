@@ -228,22 +228,22 @@ Widget QuizView({
   switch (layoutType) {
     case 1:
       return QuizView1(
-          quiz: quiz as Quiz1,
-          screenWidthModifier: screenWidthModifier,
-          screenHeightModifier: screenHeightModifier,
-          );
+        quiz: quiz as Quiz1,
+        screenWidthModifier: screenWidthModifier,
+        screenHeightModifier: screenHeightModifier,
+      );
     case 2:
       return QuizView2(
-          quiz: quiz as Quiz2,
-          screenWidthModifier: screenWidthModifier,
-          screenHeightModifier: screenHeightModifier,
-          );
+        quiz: quiz as Quiz2,
+        screenWidthModifier: screenWidthModifier,
+        screenHeightModifier: screenHeightModifier,
+      );
     case 3:
       return QuizView3(
-          quiz: quiz as Quiz3,
-          screenWidthModifier: screenWidthModifier,
-          screenHeightModifier: screenHeightModifier,
-          );
+        quiz: quiz as Quiz3,
+        screenWidthModifier: screenWidthModifier,
+        screenHeightModifier: screenHeightModifier,
+      );
     case 4:
       return QuizView4(
         quiz: quiz as Quiz4,

@@ -194,11 +194,29 @@ class _MakingQuizState extends State<MakingQuiz> {
                           width: AppConfig.largePadding,
                         ),
                         Text(
-                          '${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
+                          '퀴즈 : ${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
                           style: TextStyle(
+                            fontFamily: MyFonts.gothicA1Bold,
+                            fontWeight: FontWeight.bold,
                             fontSize:
                                 AppConfig.fontSize * 1.5, // Adjust as needed
                           ),
+                        ),
+                        SizedBox(
+                          width: AppConfig.largePadding,
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            size: AppConfig.fontSize * 1.5,
+                          ), // "+" 아이콘과 크기 설정
+                          onPressed: () {
+                            if (curQuizIndex < quizLayout.getQuizCount())
+                              navigateToQuizWidgetGenerator(
+                                  quizLayout.getQuiz(curQuizIndex),
+                                  quizLayout,
+                                  curQuizIndex);
+                          },
                         ),
                         SizedBox(
                           width: AppConfig.largePadding,
@@ -262,13 +280,26 @@ class _MakingQuizState extends State<MakingQuiz> {
                         // 세 번째 버튼: 저장 버튼
                         ElevatedButton(
                           onPressed: () async {
-                            quizLayout.saveQuizLayout(context, false);
-                            if (Navigator.of(context).canPop())
-                              Navigator.of(context).pop();
-                            if (Navigator.of(context).canPop())
-                              Navigator.of(context).pop();
+                            int savable =
+                                await quizLayout.checkSavable(context);
+                            if (savable == -3) {
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                            } else if (savable == -1) {
+                              quizLayout.saveQuizLayout(context, false);
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                            } else if (savable == -2) {
+                            } else {
+                              setState(() {
+                                curQuizIndex = savable;
+                                _pageController.jumpToPage(savable);
+                              });
+                            }
                           },
-                          child: Text('저장'),
+                          child: Text('업로드'),
                         ),
                       ],
                     ),
@@ -296,7 +327,7 @@ class _MakingQuizState extends State<MakingQuiz> {
               shrinkWrap: true,
               physics: ScrollPhysics(),
               crossAxisCount: 2,
-              childAspectRatio: 1,
+              childAspectRatio: 1 / 2,
               children: List.generate(4, (index) {
                 return GestureDetector(
                   onTap: () {
@@ -308,8 +339,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                       children: <Widget>[
                         Expanded(
                           flex: 3,
-                          child: Image.asset('assets/images/question2.png',
-                              fit: BoxFit.cover),
+                          child: Image.asset(
+                              'assets/images/questiontype${index + 1}.jpg',
+                              fit: BoxFit.contain),
                         ),
                         Expanded(
                           flex: 1,
@@ -324,6 +356,14 @@ class _MakingQuizState extends State<MakingQuiz> {
               }),
             ),
           ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('닫기'),
+            ),
+          ],
         );
       },
     );
@@ -448,7 +488,7 @@ class _MakingQuizState extends State<MakingQuiz> {
         break;
       case 2:
         Quiz3 quiz = Quiz3(
-          answers: ['', ''],
+          answers: ['', '', ''],
           ans: [],
           question: '',
           maxAnswerSelection: 1,

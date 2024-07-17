@@ -43,6 +43,7 @@ abstract class AbstractQuiz {
   bool checkAns(String userAns);
   Image? getImage();
   void setImage(Image newImage);
+  String isSavable();
 
   int getLayoutType() {
     return layoutType;

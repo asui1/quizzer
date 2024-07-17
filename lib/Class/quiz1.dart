@@ -195,6 +195,9 @@ class Quiz1 extends AbstractQuiz {
     imageFile = newImageFile;
   }
 
+  void removeImageFile(){
+    imageFile = null;  }
+
   void setBodyType(int newBodyType) {
     bodyType = newBodyType;
   }
@@ -269,5 +272,30 @@ class Quiz1 extends AbstractQuiz {
         "question": question
       }
     };
+  }
+
+  @override
+  String isSavable() {
+    if (question == "") {
+      return "질문을 입력해주세요.";
+    }
+    for (String i in answers) {
+      if (i == "") {
+        return "답변을 모두 입력해주세요.";
+      }
+    }
+    if (!ans.contains(true)) {
+      return "정답을 선택해주세요.";
+    }
+    int trueCount = ans.where((element) => element == true).length;
+
+    if (maxAnswerSelection < trueCount) {
+      maxAnswerSelection = trueCount;
+    }
+    if(bodyType == 2 && imageFile == null){
+      setBodyType(0);
+    }
+
+    return "ok";
   }
 }

@@ -46,6 +46,36 @@ class _MakingQuizState extends State<MakingQuizscreen> {
       String title = Provider.of<QuizLayout>(context, listen: false).getTitle();
       _titleController.text = title; // String을 직접 할당
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showAlert());
+  }
+
+  void _showAlert() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            Logger.log("BACKPRESSED");
+              Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+          child: AlertDialog(
+            title: Text('사용 동의서'),
+            content: Text(
+                '퀴즈를 작성함에 있어서 퀴즈의 내용이 비하, 조롱 등의 사회적 물의를 일으킬 수 있는 내용을 포함하고 있거나 저작권, 초상권 등의 권리를 침해하는 내용을 포함하고 있을 경우, 해당 퀴즈는 제작자 동의 없이 삭제될 수 있습니다.\n또한, 작성한 퀴즈로 인해 발생되는 문제는 사용자의 책임으로 quizzer는 이를 책임지지 않습니다.\n이에 동의하신다면 확인 버튼을 눌러주세요.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('확인'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // 알림 창 닫기
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void changeColorScheme(ColorScheme newScheme) {
@@ -78,6 +108,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
+        Logger.log("BACKPRESSED");
         popDialog(context, quizLayout);
       },
       child: Theme(
@@ -690,7 +721,7 @@ class CustomContainer extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 20.0),
+          style: TextStyle(fontSize: 20.0, fontFamily: MyFonts.notoSans),
         ),
         onPressed: () => onPressed(),
       ),

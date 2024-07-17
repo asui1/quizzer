@@ -226,7 +226,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   //시작 날짜 ~ 끝나는 날 설정하도록 하기
                                   SizedBox(height: AppConfig.smallPadding),
                                   Text(
-                                    "중심 날짜를 선택하세요.",
+                                    "중심 날짜를 선택하세요. ±20년",
                                     style: textStyle,
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),

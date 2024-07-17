@@ -136,12 +136,16 @@ Widget _buildQuizBody(
         ),
       );
     case 2:
+      if (quiz.isImageSet()){
       return Image.file(
         height: AppConfig.screenHeight * 0.3 * screenWidthModifier,
         width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
         File(quiz.getImageFile().path),
         fit: BoxFit.cover,
       );
+      } else{
+        return Container();
+      }
     default:
       return Container();
   }

@@ -305,4 +305,30 @@ class Quiz4 extends AbstractQuiz {
     }
     return needUpdate;
   }
+  
+  @override
+  String isSavable() {
+    if (question == "") {
+      return "질문을 입력해주세요.";
+    }
+    for (String i in answers) {
+      if (i == "") {
+        return "답변을 모두 입력해주세요.";
+      }
+    }
+    for (String i in connectionAnswers) {
+      if (i == "") {
+        return "답변을 모두 입력해주세요.";
+      }
+    }
+    if(answers.length < 2){
+      return "답변을 2개 이상 입력해주세요.";
+    }
+    for (int? i in connectionAnswerIndex) {
+      if (i == null || i == -1) {
+        return "답변을 모두 연결해주세요.";
+      }
+    }
+    return "ok";
+  }
 }

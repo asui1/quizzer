@@ -154,10 +154,12 @@ class _QuizView4State extends State<QuizView4> {
                                 fit: FlexFit.tight,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
-                                  onPanStart: (details) {
+                                  onHorizontalDragStart: (details) {
+                                    Logger.log("Drag start");
                                     setState(() {
                                       isDragging[index] = true;
-                                      widget.changePageViewState(false);
+                                      widget.changePageViewState(
+                                          false); // Disable PageView swipe
                                       Offset position =
                                           leftDotLinePaintLocal[index];
                                       widget.quiz
@@ -166,19 +168,19 @@ class _QuizView4State extends State<QuizView4> {
                                       dragStart = details.localPosition;
                                     });
                                   },
-                                  onPanUpdate: (details) {
-                                    if (isDragging[index] == false) return;
+                                  onHorizontalDragUpdate: (details) {
+                                    if (!isDragging[index]) return;
                                     setState(() {
                                       widget.quiz.setUserEndAt(
                                           index, details.localPosition);
                                     });
                                   },
-                                  onPanEnd: (details) {
-                                    if (isDragging[index] == false) {
-                                      widget.changePageViewState(true);
+                                  onHorizontalDragEnd: (details) {
+                                    if (!isDragging[index]) {
+                                      widget.changePageViewState(
+                                          true); // Enable PageView swipe
                                       return;
                                     }
-                                    setState(() {
                                       Offset diff = details.localPosition -
                                           dragStart +
                                           leftDotGlobal[index];
@@ -206,6 +208,7 @@ class _QuizView4State extends State<QuizView4> {
                                       }
 
                                       // 드래그 종료 후 필요한 작업 수행
+                                    setState(() {
                                       isDragging[index] = false;
                                     });
                                   },

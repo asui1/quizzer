@@ -265,9 +265,23 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           ),
                                           onPressed: () {
                                             setState(() {
-                                              widget.quiz.removeAnswerAt(index);
-                                              _controllers.removeAt(index);
-                                              _focusNodes.removeAt(index);
+                                              if (widget.quiz.answers.length ==
+                                                  2) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        '최소 2개의 정답이 필요합니다.'),
+                                                    duration:
+                                                        Duration(seconds: 1),
+                                                  ),
+                                                );
+                                              } else {
+                                                widget.quiz
+                                                    .removeAnswerAt(index);
+                                                _controllers.removeAt(index);
+                                                _focusNodes.removeAt(index);
+                                              }
                                             });
                                           },
                                         ),

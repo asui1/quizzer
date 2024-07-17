@@ -159,4 +159,20 @@ class Quiz3 extends AbstractQuiz {
       }
     };
   }
+  
+  @override
+  String isSavable() {
+    if (question == "") {
+      return "질문을 입력해주세요.";
+    }
+    for (String i in answers) {
+      if (i == "") {
+        return "답변을 모두 입력해주세요.";
+      }
+    }
+    if(answers.length < 3){
+      return "답변을 3개 이상 입력해주세요.";
+    }
+    return "ok";
+  }
 }

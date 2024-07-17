@@ -335,24 +335,39 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                 Icons.remove_circle_outline),
                                             onPressed: () {
                                               setState(() {
-                                                updateEnds(index);
-                                                widget.quiz.removeAnswerPairAt(
-                                                    index); // 퀴즈에서 해당 답변 제거
-                                                _controllersLeft.removeAt(
-                                                    index); // 왼쪽 컨트롤러 리스트에서 제거
-                                                _controllersRight.removeAt(
-                                                    index); // 오른쪽 컨트롤러 리스트에서 제거
-                                                starts.removeAt(index);
-                                                ends.removeAt(index);
-                                                isDragging.removeAt(index);
-                                                leftKeys.removeAt(index);
-                                                rightKeys.removeAt(index);
-                                                lineKeys.removeAt(index);
-                                                needUpdate = true;
-                                                WidgetsBinding.instance!
-                                                    .addPostFrameCallback((_) {
-                                                  setOffsets();
-                                                });
+                                                if (widget
+                                                        .quiz.answers.length ==
+                                                    2) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                          '최소 2개의 정답이 필요합니다.'),
+                                                      duration:
+                                                          Duration(seconds: 1),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  updateEnds(index);
+                                                  widget.quiz.removeAnswerPairAt(
+                                                      index); // 퀴즈에서 해당 답변 제거
+                                                  _controllersLeft.removeAt(
+                                                      index); // 왼쪽 컨트롤러 리스트에서 제거
+                                                  _controllersRight.removeAt(
+                                                      index); // 오른쪽 컨트롤러 리스트에서 제거
+                                                  starts.removeAt(index);
+                                                  ends.removeAt(index);
+                                                  isDragging.removeAt(index);
+                                                  leftKeys.removeAt(index);
+                                                  rightKeys.removeAt(index);
+                                                  lineKeys.removeAt(index);
+                                                  needUpdate = true;
+                                                  WidgetsBinding.instance!
+                                                      .addPostFrameCallback(
+                                                          (_) {
+                                                    setOffsets();
+                                                  });
+                                                }
                                               });
                                             },
                                           ),

@@ -254,4 +254,33 @@ class Quiz2 extends AbstractQuiz {
       }
     };
   }
+
+  @override
+  String isSavable() {
+    if (question == "") {
+      return "질문을 입력해주세요.";
+    }
+    if (answerDate.length == 0) {
+      return "답변을 입력해주세요.";
+    }
+
+    answerDate = answerDate.toSet().toList();
+    DateTime centerDateTime =
+        DateTime(centerDate[0], centerDate[1], centerDate[2]);
+    // 유효한 날짜 범위를 계산합니다.
+    DateTime startDate =
+        centerDateTime.subtract(Duration(days: 365 * yearRange));
+    DateTime endDate = centerDateTime.add(Duration(days: 365 * yearRange));
+
+    // 각 answerDate가 유효 범위 내에 있는지 확인합니다.
+    for (List<int> date in answerDate) {
+      DateTime answerDateTime = DateTime(date[0], date[1], date[2]);
+      if (answerDateTime.isBefore(startDate) ||
+          answerDateTime.isAfter(endDate)) {
+        return "답변 날짜가 유효 범위를 벗어났습니다.";
+      }
+    }
+
+    return 'ok';
+  }
 }

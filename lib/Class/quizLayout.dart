@@ -855,4 +855,37 @@ class QuizLayout extends ChangeNotifier {
   copyImage(String s, String t) {
     return File(s).copy(t).then((_) => t);
   }
+
+  Future<int> checkSavable(BuildContext context) {
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('제목을 입력해주세요.'),
+        ),
+      );
+      return Future.value(-3);
+    }
+    if (quizzes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('퀴즈를 추가해주세요.'),
+        ),
+      );
+      return Future.value(-2);
+    }
+    for(int i = 0; i < quizzes.length; i++){
+      String savable = quizzes[i].isSavable();
+      if(savable != 'ok'){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 2),
+            content: Text('퀴즈${i+1}이 미완성입니다. $savable'),
+          ),
+        );
+        return Future.value(i);
+      }
+    }
+    return Future.value(-1);
+  }
+
 }

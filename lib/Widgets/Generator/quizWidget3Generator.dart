@@ -179,10 +179,23 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                               Icon(Icons.remove_circle_outline),
                                           onPressed: () {
                                             setState(() {
+                                              if (widget.quiz.answers.length ==
+                                                  3) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        '최소 3개의 정답이 필요합니다.'),
+                                                    duration:
+                                                        Duration(seconds: 1),
+                                                  ),
+                                                );
+                                              } else {
                                               widget.quiz.removeAnswerAt(index);
                                               _controllers.removeAt(
                                                   index); // 컨트롤러 리스트에서도 해당 항목 제거
                                               _focusNodes.removeAt(index);
+                                              }
                                             });
                                           },
                                         ),
