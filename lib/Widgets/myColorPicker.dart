@@ -82,6 +82,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                     enableAlpha: false,
                   ),
                   TextField(
+                    key: const ValueKey("quizLayoutHexField"),
                     controller: hexController,
                     maxLength: 6,
                     decoration: InputDecoration(
@@ -157,6 +158,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
       ),
       actions: <Widget>[
         TextButton(
+          key: const ValueKey('ColorPickerConfirm'),
           child: Text('확인'),
           onPressed: () async {
             if (widget.index > 2) {

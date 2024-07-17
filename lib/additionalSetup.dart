@@ -22,7 +22,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('불러오기'),
+          title: Text('추가 설정'),
           backgroundColor: widget.quizLayout.getColorScheme().inversePrimary,
         ),
         body: Container(
@@ -39,6 +39,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                       children: [
                         if (index != 0) Divider(),
                         InkWell(
+                          key: ValueKey('quizLayoutAdditionalSetupInkWell$index'),
                           onTap: () {
                             index != itemCount - 1
                                 ? showDialog(
@@ -189,6 +190,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                 : Text(parent[selectedValue]),
           ),
           IconButton(
+            key: ValueKey('additionalSetupNext${parent.length}'),
             icon: Icon(Icons.arrow_right),
             onPressed: next,
           ),

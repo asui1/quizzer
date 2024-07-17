@@ -33,6 +33,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
   double tempBottomBarHeight = 30.0;
   late TextEditingController _titleController;
   ColorScheme colorScheme;
+  bool isDialogAlreadyPopped = false;
+  bool inCheckDialog = true;
 
   _MakingQuizState() : colorScheme = MyLightColorScheme;
 
@@ -54,11 +56,18 @@ class _MakingQuizState extends State<MakingQuizscreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
+        bool isConfirm = false;
+        bool singleRun = true;
         return PopScope(
           canPop: false,
           onPopInvoked: (didPop) async {
-            Logger.log("BACKPRESSED");
-              Navigator.of(context).popUntil((route) => route.isFirst);
+            if (!isConfirm && singleRun && inCheckDialog) {
+              singleRun = false;
+              Future.delayed(Duration.zero, () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                inCheckDialog = false;
+              });
+            }
           },
           child: AlertDialog(
             title: Text('사용 동의서'),
@@ -68,7 +77,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               TextButton(
                 child: Text('확인'),
                 onPressed: () {
-                  Navigator.of(context).pop(); // 알림 창 닫기
+                  isConfirm = true;
+                  inCheckDialog = false;
+                  Future.delayed(Duration.zero, () {
+                    Navigator.of(context).pop(); // 알림 창 닫기
+                  });
                 },
               ),
             ],
@@ -108,8 +121,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        Logger.log("BACKPRESSED");
-        popDialog(context, quizLayout);
+        if (!isDialogAlreadyPopped && !inCheckDialog) {
+          popDialog(context, quizLayout);
+        }
       },
       child: Theme(
         data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
@@ -150,6 +164,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     left: AppConfig.screenWidth / 2 -
                         28, // Subtract half the width of the button to center it
                     child: FloatingActionButton(
+                      key: const ValueKey('MakingQuizLayoutTopBarToggle'),
                       foregroundColor: quizLayout.getColorScheme().primary,
                       heroTag: 'topBarToggle',
                       child: Icon(
@@ -188,6 +203,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     ),
                   ),
                   Positioned(
+                    key: const ValueKey('loadQuizLayoutButton'),
                     right: 10.0, // Align to the right
                     top: 10.0, // Align to the top
                     child: IconButton(
@@ -238,6 +254,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                           height: AppConfig.screenHeight * 0.02,
                                         ),
                                         TextField(
+                                          key: const ValueKey("MakingQuizLayoutTitleTextField"),
                                           controller:
                                               _titleController, // Bind the controller to the TextField
                                           decoration: InputDecoration(
@@ -481,6 +498,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                             .spaceBetween, // 좌우 정렬
                                         children: <Widget>[
                                           IconButton(
+                                            key: const ValueKey(
+                                                "MakingQuizLayoutColorSchemeRefreshButton"
+                                            ),
                                             onPressed: () {
                                               quizLayout
                                                   .generateAdequateColors();
@@ -544,6 +564,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     left: AppConfig.screenWidth / 2 -
                         28, // Subtract half the width of the button to center it
                     child: FloatingActionButton(
+                      key: const ValueKey('MakingQuizLayoutBottomBarToggle'),
                       foregroundColor: quizLayout.getColorScheme().primary,
                       heroTag: 'bottomBarToggle',
                       child: Icon(
@@ -593,6 +614,37 @@ class _MakingQuizState extends State<MakingQuizscreen> {
       ),
     );
   }
+
+  void popDialog(BuildContext context1, QuizLayout quizLayout) {
+    if (!isDialogAlreadyPopped) {
+      // 여기에 popDialog 로직 구현
+      isDialogAlreadyPopped = true;
+      showDialog<bool>(
+        context: context1,
+        builder: (context) => AlertDialog(
+          title: Text('주의'),
+          content: Text('이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                '나가기',
+                style: TextStyle(
+                  color: quizLayout.getColorScheme().error,
+                ),
+              ),
+              onPressed: () =>
+                  Navigator.of(context).popUntil((route) => route.isFirst),
+            ),
+            TextButton(
+              child: Text('취소'),
+              onPressed: () =>
+                  Navigator.of(context).pop(false), // Do not pop the screen.
+            ),
+          ],
+        ),
+      );
+    }
+  }
 }
 
 class ConfirmButton extends StatelessWidget {
@@ -633,6 +685,7 @@ class LayoutOption extends StatelessWidget {
             : Colors.transparent,
       ),
       child: GestureDetector(
+        key: ValueKey("MakingQuizLayoutLayoutOption$layoutNumber"),
         child: layoutNumber < 4
             ? Image(
                 image: AssetImage(imagePath),
@@ -665,6 +718,7 @@ class ImageSetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: TextButton(
+        key: ValueKey("MakingQuizLayoutImageSetButton$buttonText"),
         onPressed: onPressed,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -714,6 +768,7 @@ class CustomContainer extends StatelessWidget {
       height: AppConfig.screenHeight / 16,
       width: AppConfig.screenWidth * 0.6,
       child: TextButton(
+        key: ValueKey("MakingQuizLayoutCustomContainer$index"),
         style: TextButton.styleFrom(
           foregroundColor: quizLayout.getNextHighlightedIndex() == index
               ? quizLayout.getColorScheme().primary
@@ -778,31 +833,4 @@ void navigateToMakingQuizPage(BuildContext context) {
       );
     },
   ));
-}
-
-void popDialog(BuildContext context1, QuizLayout quizLayout) {
-  showDialog<bool>(
-    context: context1,
-    builder: (context) => AlertDialog(
-      title: Text('주의'),
-      content: Text('이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?'),
-      actions: <Widget>[
-        TextButton(
-          child: Text(
-            '나가기',
-            style: TextStyle(
-              color: quizLayout.getColorScheme().error,
-            ),
-          ),
-          onPressed: () =>
-              Navigator.of(context).popUntil((route) => route.isFirst),
-        ),
-        TextButton(
-          child: Text('취소'),
-          onPressed: () =>
-              Navigator.of(context).pop(false), // Do not pop the screen.
-        ),
-      ],
-    ),
-  );
 }

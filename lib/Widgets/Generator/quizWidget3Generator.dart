@@ -175,6 +175,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                           ),
                                         ),
                                         IconButton(
+                                          key: ValueKey('deleteIcon$index'),
                                           icon:
                                               Icon(Icons.remove_circle_outline),
                                           onPressed: () {
@@ -219,6 +220,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                   ],
                                   SizedBox(height: 20.0),
                                   ElevatedButton(
+                                    key: ValueKey('addAnswerButton'),
                                     child: Icon(Icons.add),
                                     onPressed: () {
                                       setState(() {

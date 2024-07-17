@@ -99,7 +99,7 @@ class Quiz4 extends AbstractQuiz {
 
   @override
   Color getState() {
-    if (connectionAnswerIndex.every((index) => index == -1)) {
+    if (userConnectionIndex.every((index) => index == -1)) {
       return MyColors().red;
     } else {
       return MyColors().green;

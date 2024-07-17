@@ -247,6 +247,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                     textStyle,
                                     yearController: yearController,
                                     yearRangeController: yearRangeController,
+                                    uniqueId: 9999,
                                   ),
                                   SizedBox(height: AppConfig.padding),
                                   Text(
@@ -277,11 +278,13 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                         },
                                         index,
                                         textStyle,
+                                        uniqueId: index
                                       );
                                     },
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),
                                   ElevatedButton(
+                                    key: const ValueKey('add_answer_date'),
                                     child: Text('+'),
                                     onPressed: () {
                                       setState(() {

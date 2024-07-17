@@ -4,13 +4,8 @@ import 'package:test/test.dart';
 
 void main() {
   group('Testing Quiz1 class', () {
-    var quiz1 = Quiz1(
-      answers: ['A', 'B', 'C', 'D'],
-      ans: [true, false, false, false],
-      question: 'Question 1',
-    );
-    var emptyQuiz =
-        Quiz1(answers: ['', '', ''], ans: [false, false, false], question: '');
+    late Quiz1 quiz1;
+    late Quiz1 emptyQuiz;
     setUp(() {
       quiz1 = Quiz1(
         answers: ['A', 'B', 'C', 'D'],

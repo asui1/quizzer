@@ -151,6 +151,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           bottom: AppConfig.padding * 6),
                                       width: 64.0,
                                       child: ElevatedButton(
+                                        key: const ValueKey('addAnswerButton'),
                                         onPressed: () {
                                           needUpdate = true;
                                           setState(() {
@@ -183,6 +184,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                         children: <Widget>[
                                           Expanded(
                                             child: TextField(
+                                              key: ValueKey('answerLeft$index'),
                                               controller:
                                                   _controllersLeft[index],
                                               decoration: InputDecoration(
@@ -197,6 +199,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           Container(
                                             width: AppConfig.screenWidth * 0.5,
                                             child: GestureDetector(
+                                              key: ValueKey('dragline$index'),
                                               behavior: HitTestBehavior.opaque,
                                               onPanStart: (details) {
                                                 setState(() {
@@ -276,6 +279,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                     child: Container(
                                                       height: 100.0,
                                                       child: Row(
+                                                        key: ValueKey('dots$index'),
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .spaceBetween,
@@ -318,6 +322,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           ),
                                           Expanded(
                                             child: TextField(
+                                              key: ValueKey('answerRight$index'),
                                               controller:
                                                   _controllersRight[index],
                                               decoration: InputDecoration(
@@ -331,6 +336,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                             ),
                                           ),
                                           IconButton(
+                                            key: ValueKey('removeAnswerButton$index'),
                                             icon: Icon(
                                                 Icons.remove_circle_outline),
                                             onPressed: () {

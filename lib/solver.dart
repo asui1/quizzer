@@ -139,6 +139,7 @@ class _QuizSolverState extends State<QuizSolver> {
                 curIndex == widget.quizLayout.getQuizCount()
                     ? Container()
                     : Positioned(
+                      key: const ValueKey('solverBackbutton'),
                         bottom: 10, // 하단에서의 거리
                         left: 10, // 오른쪽에서의 거리
                         child: IconButton(

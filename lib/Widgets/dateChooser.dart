@@ -14,7 +14,8 @@ Widget buildDatePicker(
     int inputType,
     TextStyle answerStyle,
     {TextEditingController? yearController = null,
-    TextEditingController? yearRangeController = null}) {
+    TextEditingController? yearRangeController = null,
+    int uniqueId = 0}) {
   List<int> selectedDate = [];
   if (inputType == -1) {
     selectedDate = quiz.getCenterDate();
@@ -62,6 +63,7 @@ Widget buildDatePicker(
           width: AppConfig
               .padding), // Space between the text field and the dropdown
       DropdownButton<int>(
+        key: ValueKey('yearDropdown$uniqueId'),
         value: selectedYear,
         items: years.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
@@ -95,6 +97,7 @@ Widget buildDatePicker(
         },
       ),
       DropdownButton<int>(
+        key: ValueKey('dayDropdown$uniqueId'),
         value: selectedDay,
         items: days.map<DropdownMenuItem<int>>((int value) {
           return DropdownMenuItem<int>(
@@ -113,6 +116,7 @@ Widget buildDatePicker(
 
       getDeleteButton
           ? IconButton(
+            key: ValueKey('deleteButton$uniqueId'),
               icon: Icon(
                 Icons.delete,
               ),

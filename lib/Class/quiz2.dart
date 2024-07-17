@@ -60,12 +60,10 @@ class Quiz2 extends AbstractQuiz {
         viewerAnswers[i].month,
         viewerAnswers[i].day
       ];
+
       bool containsAnswer = answerDate.any((list) =>
-          list.length == answer.length &&
-          list
-              .asMap()
-              .entries
-              .every((entry) => entry.value == answer[entry.key]));
+        list.length == answer.length &&
+        list.asMap().entries.every((entry) => entry.value == answer[entry.key]));
       if (!containsAnswer) {
         return false;
       }
@@ -109,15 +107,6 @@ class Quiz2 extends AbstractQuiz {
 
   void updateAnswerDateAt(int index, List<int> newAnswerDate) {
     List<int> nextDay = newAnswerDate;
-    while (answerDate.contains(nextDay)) {
-      nextDay[2] += 1;
-    }
-    answerDate[index] = nextDay;
-  }
-
-  void updateAnserDate(List<int> originalDate, List<int> newDate) {
-    int index = answerDate.indexOf(originalDate);
-    List<int> nextDay = newDate;
     while (answerDate.contains(nextDay)) {
       nextDay[2] += 1;
     }

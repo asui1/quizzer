@@ -146,6 +146,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                               height: AppConfig.screenHeight *
                                                   0.02),
                                           ElevatedButton(
+                                            key: const ValueKey('add_answer'),
                                             child: Text(
                                               '정답 추가.',
                                               style: TextStyle(
@@ -192,6 +193,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     } else {
                                       return ListTile(
                                         leading: Checkbox(
+                                          key: ValueKey('answer_checkbox_$index'),
                                           activeColor: Theme.of(context)
                                               .colorScheme
                                               .primary, // 체크박스 활성화 색상을 테마의 주 색상으로 설정
@@ -215,6 +217,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           },
                                         ),
                                         title: TextField(
+                                          key: ValueKey('answer_textfield_$index'),
                                           focusNode: _focusNodes[index],
                                           cursorColor: textAnswerColor,
                                           textInputAction:
@@ -257,6 +260,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           ),
                                         ),
                                         trailing: IconButton(
+                                          key: ValueKey('delete_answer_$index'),
                                           icon: Icon(
                                             Icons.delete,
                                             color: Theme.of(context)

@@ -291,6 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 16, // Adjust the distance from the right as needed
             bottom: 16, // Adjust the distance from the bottom as needed
             child: FloatingActionButton(
+              key: const ValueKey('moveToMakingQuizScreen'),
               onPressed: () {
                 Provider.of<QuizLayout>(context, listen: false).reset();
                 Navigator.push(

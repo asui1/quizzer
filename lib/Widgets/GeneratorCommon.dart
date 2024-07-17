@@ -20,6 +20,7 @@ class questionInputTextField extends StatelessWidget {
     Color? backgroundQuestionColor = getBackGroundColor(
         quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme());
     return TextField(
+      key: const ValueKey("QuizGeneratorQuestionField"),
       controller: controller,
       cursorColor: textQuestionColor,
       decoration: InputDecoration(
