@@ -49,6 +49,7 @@ dependencies:
   google_sign_in: ^6.2.1
   shared_preferences: ^2.2.3
   provider: ^6.1.2
+  flip_card: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -126,6 +127,15 @@ flutter:
           - asset: fonts/SpoqaHanSansNeo-Medium.otf
           - asset: fonts/SpoqaHanSansNeo.otf
           - asset: fonts/SpoqaHanSansNeo-Thin.otf
+      - family: Diary
+        fonts:
+          - asset: fonts/EF_Diary(otf).otf
+      - family: OngleYunu
+        fonts:
+          - asset: fonts/온글잎 윤우체.ttf
+      - family: OngleEuyen
+        fonts:
+          - asset: fonts/온글잎 의연체.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

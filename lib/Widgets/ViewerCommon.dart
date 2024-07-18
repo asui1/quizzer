@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
@@ -25,7 +26,6 @@ class QuestionViewer extends StatelessWidget {
         text: question,
         colorScheme: quizLayout.getColorScheme(),
         modifier: fontSizeModifier,
-      
       ),
     );
   }
@@ -47,6 +47,109 @@ BoxDecoration backgroundDecoration({required QuizLayout quizLayout}) {
                 fit: BoxFit.cover,
               ),
             );
+}
+
+BoxDecoration backgroundDecorationWithBorder(
+    {required QuizLayout quizLayout, Color? color = null}) {
+  if (color != null) {
+    return BoxDecoration(
+      color: color,
+      borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+      boxShadow: [
+        BoxShadow(
+          color: quizLayout.getColorScheme().outline.withOpacity(0.5), // 그림자 색상
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 3), // 그림자 위치 조정
+        ),
+      ],
+    );
+  }
+  ImageColor? backgroundImage = quizLayout.getImage(0);
+  return backgroundImage == null
+      ? BoxDecoration(
+          color: quizLayout.getColorScheme().surface,
+          borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+          boxShadow: [
+            BoxShadow(
+              color: quizLayout
+                  .getColorScheme()
+                  .outline
+                  .withOpacity(0.5), // 그림자 색상
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: Offset(0, 3), // 그림자 위치 조정
+            ),
+          ],
+        )
+      : backgroundImage.isColor()
+          ? BoxDecoration(
+              color: backgroundImage.getColor(),
+              borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+              boxShadow: [
+                BoxShadow(
+                  color: quizLayout
+                      .getColorScheme()
+                      .outline
+                      .withOpacity(0.5), // 그림자 색상
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // 그림자 위치 조정
+                ),
+              ],
+            )
+          : BoxDecoration(
+              image: DecorationImage(
+                image: Image.file(File(backgroundImage.getImagePath())).image,
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+              boxShadow: [
+                BoxShadow(
+                  color: quizLayout
+                      .getColorScheme()
+                      .outline
+                      .withOpacity(0.5), // 그림자 색상
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // 그림자 위치 조정
+                ),
+              ],
+            );
+}
+
+Widget setValueRow(List parent, int selectedValue, void Function()? prev,
+    void Function()? next, bool isColor, List<int> styleSet, QuizLayout quizLayout) {
+  return Container(
+    margin: EdgeInsets.symmetric(vertical: AppConfig.padding),
+    height: AppConfig.screenHeight * 0.05,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: prev,
+        ),
+        Container(
+          alignment: Alignment.center,
+          width: AppConfig.screenWidth * 0.4,
+          child: isColor
+              ? TextStyleWidget(
+                  textStyle: styleSet,
+                  text: parent[selectedValue],
+                  colorScheme: quizLayout.getColorScheme(),
+                )
+              : Text(parent[selectedValue]),
+        ),
+        IconButton(
+          key: ValueKey('additionalSetupNext${parent.length}'),
+          icon: Icon(Icons.arrow_right),
+          onPressed: next,
+        ),
+      ],
+    ),
+  );
 }
 
 PreferredSizeWidget? viewerAppBar(

@@ -14,6 +14,7 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
+import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -57,6 +58,12 @@ class QuizLayout extends ChangeNotifier {
   List<int> questionTextStyle = [0, 0, 1, 0];
   List<int> bodyTextStyle = [0, 0, 2, 1];
   List<int> answerTextStyle = [0, 0, 0, 2];
+  List<String> tags = [];
+  ScoreCard _scoreCard = ScoreCard(
+    size: 100,
+    position: Offset(100, 100),
+    backgroundImage: null,
+  );
   // -> FONT FAMILY, Color, BoderStyle, FontWeight
 
   QuizLayout({this.highlightedIndex = 0});
@@ -93,6 +100,35 @@ class QuizLayout extends ChangeNotifier {
     questionTextStyle = [0, 0, 1, 0];
     bodyTextStyle = [0, 0, 2, 1];
     answerTextStyle = [0, 0, 0, 2];
+    tags = [];
+    _scoreCard = ScoreCard(
+      size: 100,
+      position: Offset(100, 100),
+      backgroundImage: null,
+    );
+  }
+
+  ScoreCard getScoreCard(){
+    return _scoreCard;
+  }
+
+  void setScoreCard(ScoreCard scoreCard){
+    _scoreCard = scoreCard;
+    notifyListeners();
+  }
+
+  List<String> getTags(){
+    return tags;
+  }
+
+  void addTag(String newTags){
+    if(newTags == '') return;
+    if(tags.contains(newTags)) return;
+    tags.add(newTags);
+  }
+
+  void removeTags(String newTags){
+    tags.remove(newTags);
   }
 
   List<int> getTextStyle(int index) {

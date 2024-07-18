@@ -60,3 +60,22 @@ class GeneratorDoneButton extends StatelessWidget {
     );
   }
 }
+
+ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
+    ElevatedButton(
+      key: const ValueKey('tempSaveButton'),
+      onPressed: () async {
+        if (quizLayout.getTitle() == '') {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('제목없이 저장할 수 없습니다.'),
+          ));
+          return;
+        }
+        await quizLayout.saveQuizLayout(context, true);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      child: Text('임시저장'),
+    );
+
+

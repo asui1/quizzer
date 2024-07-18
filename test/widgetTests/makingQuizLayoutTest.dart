@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/MakingQuizLayout.dart';
 
 Widget createMakingQuizLayoutScreen() => ChangeNotifierProvider<QuizLayout>(
       create: (context) => QuizLayout(),

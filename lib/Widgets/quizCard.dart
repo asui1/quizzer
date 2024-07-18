@@ -5,12 +5,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
-import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
-import 'package:quizzer/solver.dart';
+import 'package:quizzer/Screens/solver.dart';
 
 class QuizCard extends StatelessWidget {
   final String uuid;

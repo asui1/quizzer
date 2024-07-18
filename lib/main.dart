@@ -12,7 +12,8 @@ import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
-import 'package:quizzer/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
@@ -27,7 +28,6 @@ import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Setup/testpage.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'searchScreen.dart';
 import 'dart:math' as math;
 
 void main() async {

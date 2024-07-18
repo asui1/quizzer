@@ -155,7 +155,6 @@ class _QuizView4State extends State<QuizView4> {
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.opaque,
                                   onHorizontalDragStart: (details) {
-                                    Logger.log("Drag start");
                                     setState(() {
                                       isDragging[index] = true;
                                       widget.changePageViewState(

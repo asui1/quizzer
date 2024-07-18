@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
-import 'package:quizzer/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/main.dart';
 import 'dart:math';
