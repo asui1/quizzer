@@ -86,8 +86,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                       direction: FlipDirection.HORIZONTAL,
                       onFlipDone: (isFront) {
                         scoreCard.nextBackgroundColor(quizLayout);
-                        setState(() {
-                        });
+                        setState(() {});
                       },
                       front: Container(
                         width: AppConfig.screenWidth * 0.8,
@@ -121,7 +120,29 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                       child: FloatingActionButton(
                         foregroundColor:
                             quizLayout.getColorScheme().secondaryContainer,
-                        onPressed: () {},
+                        onPressed: () async {
+                          int savable = await quizLayout.checkSavable(context);
+                          if (savable == -3) {
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                          } else if (savable == -1) {
+                            quizLayout.saveQuizLayout(context, false);
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                          } else if (savable == -2) {
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop();
+                          } else {
+                            if (Navigator.of(context).canPop())
+                              Navigator.of(context).pop(savable);
+                          }
+                        },
                         child: Text("업로드하기",
                             style: TextStyle(
                               color: quizLayout

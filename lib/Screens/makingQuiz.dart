@@ -266,8 +266,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                                 iconSize: AppConfig.fontSize * 1.5,
                                 icon: Icon(Icons.arrow_forward,
                                     color: quizLayout.getColorScheme().primary),
-                                onPressed: () {
-                                  Navigator.of(context).push(PageRouteBuilder(
+                                onPressed: () async {
+                                  final result = await Navigator.of(context)
+                                      .push(PageRouteBuilder(
                                     pageBuilder: (context, animation,
                                             secondaryAnimation) =>
                                         ScoreCardGenerator(), // 여기서 NewPage()는 새로운 페이지 위젯입니다.
@@ -288,30 +289,14 @@ class _MakingQuizState extends State<MakingQuiz> {
                                       );
                                     },
                                   ));
-                                },
-                              ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  int savable =
-                                      await quizLayout.checkSavable(context);
-                                  if (savable == -3) {
-                                    if (Navigator.of(context).canPop())
-                                      Navigator.of(context).pop();
-                                  } else if (savable == -1) {
-                                    quizLayout.saveQuizLayout(context, false);
-                                    if (Navigator.of(context).canPop())
-                                      Navigator.of(context).pop();
-                                    if (Navigator.of(context).canPop())
-                                      Navigator.of(context).pop();
-                                  } else if (savable == -2) {
-                                  } else {
+                                  if (result != null && result as int >= 0) {
+                                    int result2 = result as int;
                                     setState(() {
-                                      curQuizIndex = savable;
-                                      _pageController.jumpToPage(savable);
+                                      curQuizIndex = result2;
+                                      _pageController.jumpToPage(result2);
                                     });
                                   }
                                 },
-                                child: Text('업로드'),
                               ),
                             ],
                           ),
