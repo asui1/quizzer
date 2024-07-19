@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class ScoreCard {
@@ -21,11 +22,16 @@ class ScoreCard {
   Map<String, dynamic> toJson() {
     return {
       'size': size,
-      'position': position,
+      'dx': position.dx,
+      'dy': position.dy,
       'imageState': imageState,
     };
   }
 
+  ScoreCard.fromJson(Map<String, dynamic> json)
+      : size = json['size'],
+        position = Offset(json['dx'], json['dy']),
+        imageState = json['imageState'];
   void initbackGroundImage(QuizLayout quizLayout) {
     if (backgroundImage != null) return;
     if (imageState == 0) {

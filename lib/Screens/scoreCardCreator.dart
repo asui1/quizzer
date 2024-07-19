@@ -34,14 +34,15 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
         (AppConfig.screenHeight);
     scoreCard.initbackGroundImage(quizLayout);
     Widget card = Container(
-      width: AppConfig.screenWidth * 0.8,
-      height: AppConfig.screenHeight * 0.55 * heightModifier,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      decoration: scoreCard.getBackgroundImage(),
-      child: DraggableTextWidget(
-        scoreCard: scoreCard,
-      ),
-    );
+                        width: AppConfig.screenWidth * 0.8,
+                        height: AppConfig.screenHeight * 0.55 * heightModifier,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        decoration: scoreCard.getBackgroundImage(),
+                        child: DraggableTextWidget(
+                          scoreCard: scoreCard,
+                        ),
+                      );
 
     return Theme(
       data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
@@ -88,26 +89,8 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                         scoreCard.nextBackgroundColor(quizLayout);
                         setState(() {});
                       },
-                      front: Container(
-                        width: AppConfig.screenWidth * 0.8,
-                        height: AppConfig.screenHeight * 0.55 * heightModifier,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        decoration: scoreCard.getBackgroundImage(),
-                        child: DraggableTextWidget(
-                          scoreCard: scoreCard,
-                        ),
-                      ),
-                      back: Container(
-                        width: AppConfig.screenWidth * 0.8,
-                        height: AppConfig.screenHeight * 0.55 * heightModifier,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        decoration: scoreCard.getBackgroundImage(),
-                        child: DraggableTextWidget(
-                          scoreCard: scoreCard,
-                        ),
-                      ),
+                      front: card,
+                      back: card,
                     ),
                     SizedBox(
                       height: AppConfig.padding * heightModifier,

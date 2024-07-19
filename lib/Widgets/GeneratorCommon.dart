@@ -72,10 +72,10 @@ ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
           return;
         }
         await quizLayout.saveQuizLayout(context, true);
-        Navigator.pop(context);
-        Navigator.pop(context);
-      },
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+
+      });}, 
       child: Text('임시저장'),
     );
-
-

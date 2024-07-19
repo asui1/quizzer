@@ -68,8 +68,7 @@ class QuizLayout extends ChangeNotifier {
 
   QuizLayout({this.highlightedIndex = 0});
 
-
-  void reset(){
+  void reset() {
     isTopBarVisible = false;
     isBottomBarVisible = false;
     appBarHeight = 75.0;
@@ -108,26 +107,26 @@ class QuizLayout extends ChangeNotifier {
     );
   }
 
-  ScoreCard getScoreCard(){
+  ScoreCard getScoreCard() {
     return _scoreCard;
   }
 
-  void setScoreCard(ScoreCard scoreCard){
+  void setScoreCard(ScoreCard scoreCard) {
     _scoreCard = scoreCard;
     notifyListeners();
   }
 
-  List<String> getTags(){
+  List<String> getTags() {
     return tags;
   }
 
-  void addTag(String newTags){
-    if(newTags == '') return;
-    if(tags.contains(newTags)) return;
+  void addTag(String newTags) {
+    if (newTags == '') return;
+    if (tags.contains(newTags)) return;
     tags.add(newTags);
   }
 
-  void removeTags(String newTags){
+  void removeTags(String newTags) {
     tags.remove(newTags);
   }
 
@@ -357,6 +356,24 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['uuid'] != null) {
       uuid = inputData['uuid'];
     }
+    if (inputData['questionTextStyle'] != null) {
+      questionTextStyle = List<int>.from(inputData['questionTextStyle']);
+    }
+    if (inputData['bodyTextStyle'] != null) {
+      bodyTextStyle = List<int>.from(inputData['bodyTextStyle']);
+    }
+    if (inputData['answerTextStyle'] != null) {
+      answerTextStyle = List<int>.from(inputData['answerTextStyle']);
+    }
+    if (inputData['tags'] != null) {
+      tags = List<String>.from(inputData['tags']);
+    }
+    if (inputData['scoreCard'] != null) {
+      Map<String, dynamic> scoreCardData =
+          inputData['scoreCard'] as Map<String, dynamic>;
+      _scoreCard = ScoreCard.fromJson(scoreCardData);
+    }
+    notifyListeners();
   }
 
   void setCreator(String creator) {
@@ -477,6 +494,11 @@ class QuizLayout extends ChangeNotifier {
       'titleImage': getTitleImageNow(),
       'titleImageName': titleImageName,
       'uuid': uuid,
+      'questionTextStyle': questionTextStyle,
+      'bodyTextStyle': bodyTextStyle,
+      'answerTextStyle': answerTextStyle,
+      'tags': tags,
+      'scoreCard': _scoreCard.toJson(),
     };
   }
 
@@ -910,13 +932,13 @@ class QuizLayout extends ChangeNotifier {
       );
       return Future.value(-2);
     }
-    for(int i = 0; i < quizzes.length; i++){
+    for (int i = 0; i < quizzes.length; i++) {
       String savable = quizzes[i].isSavable();
-      if(savable != 'ok'){
+      if (savable != 'ok') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(seconds: 2),
-            content: Text('퀴즈${i+1}이 미완성입니다. $savable'),
+            content: Text('퀴즈${i + 1}이 미완성입니다. $savable'),
           ),
         );
         return Future.value(i);
@@ -924,5 +946,4 @@ class QuizLayout extends ChangeNotifier {
     }
     return Future.value(-1);
   }
-
 }

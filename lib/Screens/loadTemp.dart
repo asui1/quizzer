@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class LoadTemp extends StatefulWidget {
@@ -51,7 +52,23 @@ class _LoadTempState extends State<LoadTemp> {
       _items = loadedItems;
     });
   }
+Future<void> deleteTempFiles(String title) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final dir = Directory(directory.path);
+  final files = dir.listSync(); // 디렉토리 내의 모든 파일과 디렉토리를 가져옵니다.
 
+  for (var file in files) {
+    // 파일 이름이 'temp_${title}'로 시작하는지 확인합니다.
+    String fileName = file.path.split('/').last;
+    if (fileName.startsWith('temp_${title}')) {
+      try {
+        file.deleteSync(); // 조건에 맞는 파일을 삭제합니다.
+      } catch (e) {
+        Logger.log("Error deleting file: $e");
+      }
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     // Use widget.quizLayout to access the QuizLayout object passed from the parent
@@ -78,13 +95,25 @@ class _LoadTempState extends State<LoadTemp> {
                           .setTitleImage(_items[index]['titleImage']);
                     Navigator.pop(context);
                   },
-                  leading: Image.file(
-                    File(_items[index]['titleImage']),
-                    width: 50,
-                    height: 50,
-                    errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/question2.png'),
-                    
-                  ), // Display the image
+                  leading: Row(
+    mainAxisSize: MainAxisSize.min, // Row의 크기를 내부 위젯에 맞춤
+    children: [
+      IconButton(
+        icon: Icon(Icons.delete), // 예시 아이콘, 필요에 따라 변경 가능
+        onPressed: () async {
+          await deleteTempFiles(_items[index]['title']); // 파일 삭제
+          _loadItems(); // 아이템 목록 다시 로드
+
+        },
+      ),
+      Image.file(
+        File(_items[index]['titleImage']),
+        width: 50,
+        height: 50,
+        errorBuilder: (context, error, stackTrace) => Image.asset('assets/images/question2.png'),
+      ),
+    ],
+  ), // Display the image
                   title: Text(
                     _items[index]['title'],
                   ), // Display the title

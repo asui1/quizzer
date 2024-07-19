@@ -62,6 +62,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         return PopScope(
           canPop: false,
           onPopInvoked: (didPop) async {
+            Logger.log('onPopInvoked: $didPop');
             if (!isConfirm && singleRun && inCheckDialog) {
               singleRun = false;
               Future.delayed(Duration.zero, () {
@@ -99,7 +100,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
   }
 
   void updateLoad() {
-    _titleController.text = Provider.of<QuizLayout>(context).getTitle();
+    _titleController.text = Provider.of<QuizLayout>(context, listen: false).getTitle();
   }
 
   @override
@@ -122,7 +123,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        if (!isDialogAlreadyPopped && !inCheckDialog) {
+        Logger.log("onPopInvoked: $didPop");
+        if (!isDialogAlreadyPopped && !inCheckDialog&& !didPop) {
           popDialog(context, quizLayout);
         }
       },

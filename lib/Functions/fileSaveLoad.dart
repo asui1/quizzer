@@ -22,25 +22,44 @@ Future<File?> checkCompressImage(
       fileSize < 5 * 1024 * 1024) {
     return await saveFileToPermanentDirectory(tempImageFile);
   }
-  final File? compressedFile = tempImageFile.path.contains('.jpg')
-      ? await FlutterImageCompress.compressAndGetFile(
-          tempImageFile.path,
-          tempImageFile.path.replaceFirst(
-              '.jpg', '_compressed.jpg'), // Example path, adjust accordingly
-          quality: 80, // Adjust based on testing
-          minWidth: width,
-          minHeight: height,
-        )
-      : await FlutterImageCompress.compressAndGetFile(
-          tempImageFile.path,
-          tempImageFile.path.replaceFirst(
-              '.png', '_compressed.png'), // Adjust the path for PNG
-          quality:
-              80, // Quality adjustment for PNG might not have as noticeable an effect as with JPEG
-          minWidth: width,
-          minHeight: height,
-          format: CompressFormat.png, // Specify the format as PNG
-        );
+
+  int targetSize = 11;
+  if (width == 50)
+    targetSize = 512 * 1024;
+  else if (height < AppConfig.screenHeight / 3)
+    targetSize = 2 * 1024 * 1024;
+  else if (height > AppConfig.screenHeight / 3) targetSize = 5 * 1024 * 1024;
+  final File? compressedFile =
+      await compressImageToTargetSize(tempImageFile, targetSize);
+  return compressedFile;
+}
+
+Future<File?> compressImageToTargetSize(
+    XFile imageFile, int targetSizeInBytes) async {
+  int quality = 90; // 시작 품질
+  File? compressedFile;
+  var currentSize = await File(imageFile.path).length();
+
+  while (currentSize > targetSizeInBytes && quality > 0) {
+    // 임시 파일 경로 생성
+    String targetPath =
+        imageFile.path.replaceFirst('.jpg', '_compressed.jpg');
+    // 이미지 압축
+    compressedFile = await FlutterImageCompress.compressAndGetFile(
+      imageFile.path,
+      targetPath,
+      quality: quality,
+      format: CompressFormat.jpeg,
+    );
+
+    if (compressedFile == null) {
+      return null; // 압축 실패
+    }
+
+    currentSize = await compressedFile.length();
+    quality -= 10; // 품질 감소
+  }
+
   return compressedFile;
 }
 

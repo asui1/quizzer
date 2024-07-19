@@ -45,7 +45,7 @@ Future<http.Response> postJsonToFileOnServer(
   final body = json.encode({
     "id": uuid,
     'title': quizlayout.getTitle(),
-    'tags': '',
+    'tags': quizlayout.getTags(),
     'images': quizlayout.getTitleImageNow(),
     'creator': quizlayout.getCreator(),
     "data": json.decode(jsonString),
@@ -223,4 +223,10 @@ Future<void> sendResultToServer(int score, QuizLayout quizLayout) async {
   } else {
     Logger.log("SEND RESULT FAILED");
   }
+}
+Map<String, dynamic> offsetToJson(Offset offset) {
+  return {
+    'dx': offset.dx,
+    'dy': offset.dy,
+  };
 }
