@@ -911,7 +911,7 @@ class QuizLayout extends ChangeNotifier {
     // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
     await file.writeAsString(jsonEncode(json));
     // 이미지들 전부 이름을 바꾸어 저장합니다.
-    if (!isTemp) await uploadFile(fileName!, this);
+    if (!isTemp) await uploadFile(fileName, this);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

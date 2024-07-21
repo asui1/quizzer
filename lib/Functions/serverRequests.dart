@@ -43,17 +43,25 @@ Future<String> loadFileContent(Directory directory, String uuid) async {
 
 Future<http.Response> postJsonToFileOnServer(
     String uuid, String jsonString, QuizLayout quizlayout) async {
+  Logger.log(uuid);
+  Logger.log(quizlayout.getTitle());
+  Logger.log(quizlayout.getTags());
+  Logger.log(quizlayout.getTitleImageNow());
+  Logger.log(quizlayout.getCreator());
+
   final body = json.encode({
     "id": uuid,
     'title': quizlayout.getTitle(),
     'tags': quizlayout.getTags(),
-    'images': quizlayout.getTitleImageNow(),
+    'image': quizlayout.getTitleImageNow(),
     'creator': quizlayout.getCreator(),
-    "data": json.decode(jsonString),
+    "data": jsonString,
   });
 
+  Logger.log(body);
+
   final response = await http.post(
-    Uri.parse(serverUrl),
+    Uri.parse(serverUrl + 'addQuiz/'),
     headers: {"Content-Type": "application/json", 'Authorization': serverAuth},
     body: body,
   );
@@ -63,6 +71,7 @@ Future<http.Response> postJsonToFileOnServer(
 
 void uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
   final response = await postJsonToFileOnServer(uuid, jsonString, quizLayout);
+  Logger.log(response.body);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     Logger.log("UPLOAD SUCCESS");
@@ -86,7 +95,8 @@ Future<void> uploadFile(String uuid, QuizLayout quizLayout) async {
 
 Future<List<QuizCard>> searchRequest(String searchText) async {
   // Send GET request to server with query parameter
-  final url = serverUrl + '?search=$searchText';
+  final url = serverUrl + 'searchQuiz/?search=$searchText';
+  Logger.log(url);
   var response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
   List<QuizCard> _searchResults = [];
@@ -94,32 +104,45 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
   // Process the response
   if (response.statusCode == 200 || response.statusCode == 201) {
     // Parse the response body
-    Logger.log("DOWNLOAD RESULT");
-    var responseBody = response.body;
-    List<dynamic> jsonList = json.decode(responseBody);
-    for (var jsonItem in jsonList) {
-      // Process each JSON item
-      // Decode the base64 image
-      List<int> imageBytes = base64.decode(jsonItem['image']);
+    String decodedString = utf8.decode(response.bodyBytes);
+    Logger.log(decodedString);
+    List<dynamic> jsonList = jsonDecode(decodedString);
+    Logger.log(jsonList);
+    for (var item in jsonList) {
+      Logger.log("????");
+      Logger.log(item);
+      Map<String, dynamic> jsonItem = item;
+      Logger.log("JSONITEM : $jsonItem");
+      Logger.log("????");
 
-      // Get the application documents directory
-      Directory directory = await getApplicationDocumentsDirectory();
+      // Initialize filePath as null
+      String? filePath;
 
-      // Create the file path
-      String filePath = '${directory.path}/${jsonItem['id']}-titleImage}';
+      // Check if 'image' is not null
+      if (jsonItem['Image'] != null && jsonItem['Image'] != '') {
+        // Decode the base64 image
+        List<int> imageBytes = base64.decode(jsonItem['Image']);
 
-      // Write the image file
-      await File(filePath).writeAsBytes(imageBytes);
+        // Get the application documents directory
+        Directory directory = await getApplicationDocumentsDirectory();
+
+        // Create the file path
+        filePath = '${directory.path}/${jsonItem['ID']}-titleImage';
+
+        // Write the image file
+        await File(filePath).writeAsBytes(imageBytes);
+      }
 
       // Add the QuizCard to the search results
       _searchResults.add(QuizCard(
-        title: jsonItem['title'],
-        tags: jsonItem['tags'],
-        additionalData: jsonItem['creator'],
-        uuid: jsonItem['id'],
+        title: jsonItem['Title'],
+        tags: jsonItem['Tags'],
+        additionalData: jsonItem['Creator'],
+        uuid: jsonItem['ID'],
         titleImagePath: filePath,
       ));
     }
+    Logger.log("search result len: ${_searchResults.length}");
     return _searchResults;
   } else {
     // Handle error
@@ -209,15 +232,16 @@ Future<void> updateUserAgreed() async {
     Uri.parse(url),
     headers: {
       'Authorization': serverAuth,
-      'Content-Type': 'application/json', // Add this if your server expects JSON body
+      'Content-Type':
+          'application/json', // Add this if your server expects JSON body
     },
     // Uncomment and modify the body if you need to send data in the body
     // body: jsonEncode({
     //   'email': email,
     // }),
   );
-      Logger.log(response.statusCode);
-      Logger.log(response.body);
+  Logger.log(response.statusCode);
+  Logger.log(response.body);
   if (response.statusCode == 200) {
     Logger.log("UPDATE AGREED SUCCESS");
     UserPreferences.agreed = true;

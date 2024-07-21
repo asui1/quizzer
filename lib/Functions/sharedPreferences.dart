@@ -98,7 +98,6 @@ class AuthService {
         }
 
         final SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userName', account.displayName ?? '');
         await prefs.setString('userEmail', account.email);
         // 필요한 경우 추가 정보 저장
         return true;

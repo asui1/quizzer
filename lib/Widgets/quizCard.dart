@@ -17,7 +17,7 @@ class QuizCard extends StatelessWidget {
   final String title;
   final String tags;
   final String additionalData;
-  final String titleImagePath;
+  final String? titleImagePath;
 
   QuizCard(
       {required this.uuid,
@@ -58,9 +58,7 @@ class QuizCard extends StatelessWidget {
             if (title.contains("Maker")) {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => MakingQuizscreen(
-                        )),
+                MaterialPageRoute(builder: (context) => MakingQuizscreen()),
               );
             } else {
               Navigator.push(
@@ -83,9 +81,9 @@ class QuizCard extends StatelessWidget {
                     SizedBox(
                       width: AppConfig.shortestSide / 6, // 이미지 너비
                       height: AppConfig.shortestSide / 6, // 이미지 높이
-                      child: titleImagePath.startsWith('assets/')
-                          ? Image.asset(titleImagePath) // 에셋 이미지 사용
-                          : Image.file(File(titleImagePath)), // 파일 이미지 사용
+                      child: titleImagePath == null
+                          ? Image.asset('assets/images/question2.png') // 에셋 이미지 사용
+                          : Image.file(File(titleImagePath!)), // 파일 이미지 사용
                     ),
                     SizedBox(
                       width: AppConfig.shortestSide * 0.05,

@@ -48,10 +48,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     inCheckDialog = true;
     // Initialize the TextEditingController with the current title
     _titleController = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       // context.read를 사용하여 상태 관리 객체에 접근
       String title = Provider.of<QuizLayout>(context, listen: false).getTitle();
       _titleController.text = title; // String을 직접 할당
+      String creator = await UserPreferences.getUserName() ?? "GUEST";
+      Provider.of<QuizLayout>(context, listen: false).setCreator(creator);
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _showAlert());
   }
