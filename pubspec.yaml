@@ -50,6 +50,10 @@ dependencies:
   shared_preferences: ^2.2.3
   provider: ^6.1.2
   flip_card: ^0.7.0
+  crypto: ^3.0.1
+  package_info_plus: ^8.0.0
+  connectivity_plus: ^2.0.2
+  url_launcher: ^6.0.12
 
 dev_dependencies:
   flutter_test:

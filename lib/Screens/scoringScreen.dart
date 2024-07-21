@@ -72,10 +72,6 @@ class _ScoringScreenState extends State<ScoringScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // widget.quizLayout.titleImagePath.startsWith('images/')
-                        //     ? Container()
-                        //     : Image.file(
-                        //         File(widget.quizLayout.titleImagePath)),
                         Text(
                           widget.quizLayout.getTitle(),
                           style: TextStyle(
@@ -123,7 +119,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
                                     .transparent, // Keep the container transparent
                               ),
                               child: Text(
-                                '90',
+                                score.toString(),
                                 style: TextStyle(
                                   fontSize: size / 2,
                                   fontWeight: FontWeight.w800,

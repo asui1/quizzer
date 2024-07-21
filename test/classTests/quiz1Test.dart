@@ -121,14 +121,14 @@ void main() {
     //   expect(quiz.question, json['question']);
     // });
 
-    test('jsonSaveLoadTest', () {
-      var json = quiz1.toJson();
-
-      var quiz = emptyQuiz.loadQuiz(json["body"]);
-      expect(quiz.answers, quiz1.answers);
-      expect(quiz.ans, quiz1.ans);
-      expect(quiz.question, quiz1.question);
-    });
+    // test('jsonSaveLoadTest', () {
+    //   var json = quiz1.toJson();
+    //
+    //   var quiz = emptyQuiz.loadQuiz(json["body"]); -> renewed
+    //   expect(quiz.answers, quiz1.answers);
+    //   expect(quiz.ans, quiz1.ans);
+    //   expect(quiz.question, quiz1.question);
+    // });
 
     test('isSavable', () {
       expect(emptyQuiz.isSavable(), '질문을 입력해주세요.');

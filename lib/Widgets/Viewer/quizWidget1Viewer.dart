@@ -116,37 +116,37 @@ class _QuizView1State extends State<QuizView1> {
       ),
     );
   }
-}
 
-Widget _buildQuizBody(
-    Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
-  switch (quiz.getBodyType()) {
-    case 0:
-      return Container();
-    case 1:
-      return Container(
-        width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
-
-        padding: EdgeInsets.all(3.0), // Add padding around the text
-        child: TextStyleWidget(
-          textStyle: quizLayout.getTextStyle(1),
-          text: quiz.getBodyText(),
-          colorScheme: quizLayout.getColorScheme(),
-          modifier: screenWidthModifier,
-        ),
-      );
-    case 2:
-      if (quiz.isImageSet()){
-      return Image.file(
-        height: AppConfig.screenHeight * 0.3 * screenWidthModifier,
-        width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
-        File(quiz.getImageFile().path),
-        fit: BoxFit.cover,
-      );
-      } else{
+  Widget _buildQuizBody(
+      Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
+    switch (quiz.getBodyType()) {
+      case 0:
         return Container();
-      }
-    default:
-      return Container();
+      case 1:
+        return Container(
+          width: AppConfig.screenWidth * 0.95 * screenWidthModifier,
+
+          padding: EdgeInsets.all(3.0), // Add padding around the text
+          child: TextStyleWidget(
+            textStyle: quizLayout.getTextStyle(1),
+            text: quiz.getBodyText(),
+            colorScheme: quizLayout.getColorScheme(),
+            modifier: screenWidthModifier,
+          ),
+        );
+      case 2:
+        if (quiz.isImageSet()) {
+          return Image.file(
+            height: 400 * widget.screenWidthModifier,
+            width: 400 * widget.screenWidthModifier,
+            File(quiz.getImageFile().path),
+            fit: BoxFit.cover,
+          );
+        } else {
+          return Container();
+        }
+      default:
+        return Container();
+    }
   }
 }

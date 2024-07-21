@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -10,8 +11,10 @@ import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
+import 'package:quizzer/Functions/versionCheck.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Setup/Colors.dart';
@@ -26,6 +29,7 @@ import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Setup/testpage.dart';
+import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
@@ -33,12 +37,35 @@ import 'dart:math' as math;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    runApp(NoInternet());
+    return;
+  }
+  bool isUpdateAvailable = await VersionCheckService().checkForUpdate();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(MyApp());
+    if (isUpdateAvailable) {
+      runApp(UpdateApp()); // 업데이트 권장 앱 실행
+    } else {
+      runApp(MyApp()); // 메인 앱 실행
+    }
   });
+}
+
+class UpdateApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('새로운 버전이 있습니다. 업데이트해주세요.'),
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -108,6 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isLoggedIn = false;
   String userImageName = '';
   String userNickname = '';
+  List<String> userTags = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -118,9 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _loadPreferences() async {
-    isLoggedIn = await UserPreferences.getLoggedIn() ?? false;
+    Logger.log("LOADING PREFERENCES");
+    isLoggedIn = UserPreferences.loggedIn;
     userImageName = await UserPreferences.getUserImageName() ?? '';
     userNickname = await UserPreferences.getUserName() ?? '';
+    Logger.log("USER NICKNAME: $userNickname");
+    userTags = await UserPreferences.getTagsJson() ?? [];
+
     setState(() {});
   }
 
@@ -132,34 +165,35 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _selectedIndex = index;
       });
+      if (index == 3) {
+        _scaffoldKey.currentState?.openEndDrawer();
+      }
     }
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Row(
-          children: <Widget>[
-            IconButton(
-              iconSize: AppConfig.iconSize,
-              icon: ImageIcon(
-                  AssetImage('assets/icon/quizzerImage.png')), // Example icon
-              onPressed: () {
-                //TODO : 홈 새로고침.
-              },
-            ),
-            Spacer(
-              flex: 1,
-            ),
+          // TRY THIS: Try changing the color here to a specific color (to
+          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+          // change color while the other colors stay the same.
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Row(
+            children: <Widget>[
+              Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+          leading: IconButton(
+            iconSize: AppConfig.iconSize,
+            icon: ImageIcon(
+                AssetImage('assets/icon/quizzerImage.png')), // Example icon
+            onPressed: () {
+              //TODO : 홈 새로고침.
+            },
+          ),
+          actions: [
             IconButton(
               iconSize: AppConfig.iconSize * 0.8,
               icon: Icon(Icons.search), // Example icon
@@ -189,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ), // ClipOval로 감싸서 이미지를 원형으로 만듦
                     onPressed: () async {
-                      _showLogoutConfirmationDialog(context);
+                      _scaffoldKey.currentState?.openEndDrawer();
                     },
                   )
                 : IconButton(
@@ -199,113 +233,113 @@ class _MyHomePageState extends State<MyHomePage> {
                       _showLoginDialog(context);
                     },
                   ),
-          ],
-        ),
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: screenHeight / 30,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SearchScreen()),
-                        );
-                      },
-                      child: Container(
-                        width: screenWidth * 0.7,
-                        child: AbsorbPointer(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: 'Search',
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SearchScreen()),
-                                  );
-                                },
-                                icon: Icon(Icons.search),
+          ]),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: screenHeight / 30,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchScreen()),
+                          );
+                        },
+                        child: Container(
+                          width: screenWidth * 0.7,
+                          child: AbsorbPointer(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Search',
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SearchScreen()),
+                                    );
+                                  },
+                                  icon: Icon(Icons.search),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: AppConfig.largePadding,
-                    ),
-                    homeLists([
-                      "generator1",
-                      "generator2",
-                      "generator3",
-                      "generator4"
-                    ], "퀴즈 생성자 테스트."),
-                    SizedBox(
-                      height: AppConfig.largePadding,
-                    ),
-                    homeLists(["viewer1", "viewer2", "viewer3", "viewer4"],
-                        "퀴즈 풀이 테스트"),
-                    SizedBox(
-                      height: AppConfig.largePadding,
-                    ),
-                    homeLists(
-                        ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
-                    SizedBox(
-                      height: AppConfig.largePadding * 2,
-                    ),
-                    Container(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '문의: whwkd122@gmail.com',
-                            style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondary
-                                  .withAlpha(130),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        height: AppConfig.largePadding,
                       ),
-                    ),
-                  ],
+                      homeLists([
+                        "generator1",
+                        "generator2",
+                        "generator3",
+                        "generator4"
+                      ], "퀴즈 생성자 테스트."),
+                      SizedBox(
+                        height: AppConfig.largePadding,
+                      ),
+                      homeLists(["viewer1", "viewer2", "viewer3", "viewer4"],
+                          "퀴즈 풀이 테스트"),
+                      SizedBox(
+                        height: AppConfig.largePadding,
+                      ),
+                      homeLists(
+                          ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
+                      SizedBox(
+                        height: AppConfig.largePadding * 2,
+                      ),
+                      Container(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '문의: whwkd122@gmail.com',
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withAlpha(130),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            right: 16, // Adjust the distance from the right as needed
-            bottom: 16, // Adjust the distance from the bottom as needed
-            child: FloatingActionButton(
-              key: const ValueKey('moveToMakingQuizScreen'),
-              onPressed: () {
-                Provider.of<QuizLayout>(context, listen: false).reset();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MakingQuizscreen(
-                            
-                          )),
-                );
-              },
-              child: Icon(Icons.add), // "+" icon
+            Positioned(
+              right: 16, // Adjust the distance from the right as needed
+              bottom: 16, // Adjust the distance from the bottom as needed
+              child: FloatingActionButton(
+                key: const ValueKey('moveToMakingQuizScreen'),
+                onPressed: () {
+                  Provider.of<QuizLayout>(context, listen: false).reset();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MakingQuizscreen()),
+                  );
+                },
+                child: Icon(Icons.add), // "+" icon
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -334,6 +368,209 @@ class _MyHomePageState extends State<MyHomePage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
+      endDrawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      ClipOval(
+                        child: Image.network(
+                          userImageName,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return Icon(
+                              Icons.person,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        userNickname,
+                        style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Spacer(),
+                      IconButton(
+                        icon: Icon(Icons.logout),
+                        onPressed: () {
+                          _showLogoutConfirmationDialog(context);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    title: Text(
+                      '프로필',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                      '설정',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 20,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  // Other ListTiles can go here
+                ],
+              ),
+            ),
+            // This ListTile will be positioned at the bottom
+            ListTile(
+              title: Text(
+                '공지사항',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 20,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text(
+                '문의',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              onTap: () {
+                _showRequestDialog(context);
+                // Handle the tap
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showRequestDialog(BuildContext context) async {
+    final TextEditingController _emailContentController =
+        TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<String> items = ['버그 제보', '퀴즈 신고', '개발 일정 문의', '기타 문의'];
+        String dropdownValue = items[0]; // Default value for the dropdown
+        return AlertDialog(
+          title: Text('문의하기'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Use minimum space
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "이메일로 답변드립니다.",
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+                    Container(
+                      width:
+                          double.infinity, // Make the container fill the width
+                      child: DropdownButton<String>(
+                        isExpanded:
+                            true, // Make the dropdown button fill the container
+                        value: dropdownValue,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                        },
+                        items:
+                            items.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    TextField(
+                      controller: _emailContentController,
+                      decoration: InputDecoration(
+                        hintText: '문의사항을 입력하세요',
+                        border: OutlineInputBorder(
+                          // Add an outline border
+                          borderRadius: BorderRadius.circular(
+                              5.0), // Optional: Round the corners
+                        ),
+                      ),
+                      minLines: 5,
+                      maxLines: 5,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('제출'),
+              onPressed: () async {
+                await sendEmail(
+                    dropdownValue,
+                    _emailContentController
+                        .text); // Replace 'UserEmail' with the actual user email variable
+                _scaffoldKey.currentState?.closeEndDrawer();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -366,7 +603,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             duration: Duration(seconds: 2),
                           ),
                         );
-                        Navigator.pop(context);
+                        _loadPreferences();
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
                       } else if (loginStatus == 400) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -456,12 +695,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     if (list[index].contains('vie')) {
                       navigateToQuizPage(context, 2 * index + 2);
-                    }
-                    if (list[index] == 'register test') {
-                      AuthService().registerWithGoogle();
-                    }
-                    if (list[index] == 'login test') {
-                      AuthService().signInWithGoogle();
                     }
                   },
                   child: Container(
@@ -638,14 +871,13 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               child: Text('아니오'),
               onPressed: () {
-                Navigator.of(context).pop(); // Dialog를 닫습니다.
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
             TextButton(
               child: Text('예'),
               onPressed: () async {
                 UserPreferences.clear();
-                Navigator.of(context).pop(); // Dialog를 닫습니다.
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('로그아웃 되었습니다.'),
@@ -653,6 +885,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
                 _loadPreferences(); // 상태를 새로고침합니다.
+                _scaffoldKey.currentState?.closeEndDrawer();
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
           ],

@@ -140,7 +140,8 @@ class _RegisterState extends State<Register> {
                             bool registerResult = await registerUser(
                                 textController.value.text,
                                 account!.email,
-                                account!.photoUrl!);
+                                account!.photoUrl ?? '',
+                                context);
                             if (registerResult) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -152,14 +153,6 @@ class _RegisterState extends State<Register> {
                               Navigator.pop(context);
                               Navigator.pop(context);
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('가입에 실패했습니다.. 잠시 후 다시 시도해주세요.'),
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                              Navigator.pop(context);
-                              Navigator.pop(context);
                             }
                           }
                         },

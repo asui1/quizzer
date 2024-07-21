@@ -253,6 +253,7 @@ class QuizLayout extends ChangeNotifier {
 
   Future<void> loadQuizLayout(dynamic inputJson) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
+    final directory = await getApplicationDocumentsDirectory();
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
     }
@@ -271,11 +272,20 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['selectedLayout'] != null) {
       selectedLayout = inputData['selectedLayout'];
     }
+    if (inputData['uuid'] != null) {
+      uuid = inputData['uuid'];
+    }
+    if (inputData['title'] != null) {
+      title = inputData['title'];
+    }
     if (inputData['quizzes'] != null) {
+      int count = 0;
       for (var quiz in inputData['quizzes']) {
+        count += 1;
+
         if (quiz['layoutType'] == 1) {
-          quizzes.add(
-              Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
+          quizzes.add(Quiz1(answers: [], ans: [], question: "")
+              .loadQuiz(quiz["body"], uuid?? "temp_$title", count, directory));
         } else if (quiz['layoutType'] == 2) {
           quizzes.add(
               Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1)
@@ -317,9 +327,6 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['shuffleQuestions'] != null) {
       shuffleQuestions = inputData['shuffleQuestions'];
     }
-    if (inputData['title'] != null) {
-      title = inputData['title'];
-    }
     if (inputData['questionFont'] != null) {
       questionFont = inputData['questionFont'];
     }
@@ -352,9 +359,6 @@ class QuizLayout extends ChangeNotifier {
     }
     if (inputData['creator'] != null) {
       _creator = inputData['creator'];
-    }
-    if (inputData['uuid'] != null) {
-      uuid = inputData['uuid'];
     }
     if (inputData['questionTextStyle'] != null) {
       questionTextStyle = List<int>.from(inputData['questionTextStyle']);
@@ -888,6 +892,11 @@ class QuizLayout extends ChangeNotifier {
           .then((newPath) => titleImagePath = newPath));
       titleImageName = '$fileName-titleImage.png';
       futures.add(getTitleImageString());
+    }
+    for (AbstractQuiz quiz in quizzes) {
+      if (quiz is Quiz1) {
+        futures.add(quiz.setImageString());
+      }
     }
 
     // 모든 이미지 복사 작업이 완료될 때까지 기다립니다.

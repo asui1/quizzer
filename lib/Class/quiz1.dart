@@ -8,11 +8,11 @@ import 'package:quizzer/Setup/Colors.dart';
 
 class Quiz1 extends AbstractQuiz {
   int bodyType = 0;
-  XFile? imageFile;
+  File? imageFile;
   String bodyText = '';
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
-
+  var titleImageBytes = null;
   ////////////// 뷰어용 변수들
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
@@ -116,7 +116,7 @@ class Quiz1 extends AbstractQuiz {
     answers[index] = newAnswer;
   }
 
-  Quiz1 loadQuiz(dynamic json) {
+  Quiz1 loadQuiz(dynamic json, String uuid, int count, Directory directory) {
     // JSON 데이터를 처리하는 로직을 구현합니다.
     // 예시에서는 json이 Map<String, dynamic> 타입이라고 가정합니다.
     // 실제로는 json 타입을 확인하고 적절히 변환하는 로직이 필요할 수 있습니다.
@@ -125,10 +125,21 @@ class Quiz1 extends AbstractQuiz {
         jsonData['answers'].map((answer) => answer.toString()));
     List<bool> ansList =
         List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
+    var titleImageBytes = jsonData['image'];
+    if (titleImageBytes != null) {
+      final bytes = base64Decode(titleImageBytes);
+      // 이미지 파일 이름을 uuid와 count를 사용하여 지정합니다.
+      final imagePath = '${directory.path}/$uuid\_$count.jpg';
+      File(imagePath).writeAsBytesSync(bytes);
+      // imagePath를 사용하여 Quiz1 객체를 생성합니다.
+    }
+
     return Quiz1(
       layoutType: 1,
       bodyType: jsonData['bodyType'],
-      imageFile: jsonData['imageFile'],
+      imageFile: titleImageBytes != null
+          ? File('${directory.path}/$uuid\_$count.jpg')
+          : null, // 수정된 부분
       bodyText: jsonData['bodyText'],
       shuffleAnswers: jsonData['shuffleAnswers'],
       maxAnswerSelection: jsonData['maxAnswerSelection'],
@@ -178,7 +189,7 @@ class Quiz1 extends AbstractQuiz {
     return imageFile != null;
   }
 
-  XFile getImageFile() {
+  File getImageFile() {
     return imageFile!;
   }
 
@@ -190,12 +201,13 @@ class Quiz1 extends AbstractQuiz {
     bodyText = newBodyText;
   }
 
-  void setImageFile(XFile newImageFile) {
+  void setImageFile(File newImageFile) {
     imageFile = newImageFile;
   }
 
   void removeImageFile() {
     imageFile = null;
+    titleImageBytes = null;
   }
 
   void setBodyType(int newBodyType) {
@@ -257,12 +269,29 @@ class Quiz1 extends AbstractQuiz {
     image = newImage;
   }
 
+  String getImageString() {
+    if (imageFile != null) {
+      return imageFile!.path;
+    }
+    return "";
+  }
+
+  Future<void> setImageString() async {
+    if (imageFile != null && bodyType == 2) {
+      final bytes = await File(imageFile!.path).readAsBytes();
+      titleImageBytes = base64Encode(bytes);
+      return;
+    }
+    return;
+  }
+
   @override
   Map<String, dynamic> toJson() {
     return {
       "layoutType": layoutType,
       "body": {
         "bodyType": bodyType,
+        "image": titleImageBytes,
         "imageFile": imageFile?.path,
         "bodyText": bodyText,
         "shuffleAnswers": shuffleAnswers,

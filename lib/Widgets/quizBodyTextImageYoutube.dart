@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
 
@@ -77,18 +78,18 @@ class _ContentWidgetState extends State<ContentWidget> {
                           // Add your action for Image button here
                         },
                       ),
-                      ElevatedButton(
-                        child: Text(
-                          '유튜브',
-                          style:
-                              TextStyle(decoration: TextDecoration.lineThrough),
-                        ),
-                        onPressed: () {
-                          widget.updateStateCallback(3);
-                          Navigator.of(context).pop(); // 다이얼로그 종료
-                          // Add your action for Youtube button here
-                        },
-                      ),
+                      // ElevatedButton(
+                      //   child: Text(
+                      //     '유튜브',
+                      //     style:
+                      //         TextStyle(decoration: TextDecoration.lineThrough),
+                      //   ),
+                      //   onPressed: () {
+                      //     widget.updateStateCallback(3);
+                      //     Navigator.of(context).pop(); // 다이얼로그 종료
+                      //     // Add your action for Youtube button here
+                      //   },
+                      // ),
                     ],
                   ),
                 );
@@ -142,8 +143,8 @@ class _ContentWidgetState extends State<ContentWidget> {
         return Stack(
           children: [
             Container(
-              height: AppConfig.screenHeight * 0.3,
-              width: AppConfig.screenWidth * 0.95,
+              height: 400,
+              width: 400,
               child: widget.quiz1.isImageSet()
                   ? Image.file(
                       File(widget.quiz1.getImageFile().path),
@@ -156,9 +157,15 @@ class _ContentWidgetState extends State<ContentWidget> {
                         final pickedFileTemp =
                             await picker.pickImage(source: ImageSource.gallery);
                         if (pickedFileTemp != null) {
+                          final File? compressedFile = await checkCompressImage(
+                              pickedFileTemp,
+                              600,
+                              600);
                           setState(() {
-                            widget.quiz1
-                                .setImageFile(pickedFileTemp); // 상태 업데이트
+                            if (compressedFile != null) {
+                              widget.quiz1
+                                  .setImageFile(compressedFile); // 상태 업데이트
+                            }
                           });
                         }
                       },

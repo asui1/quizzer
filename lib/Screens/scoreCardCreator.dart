@@ -95,8 +95,16 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                     SizedBox(
                       height: AppConfig.padding * heightModifier,
                     ),
+                    Text(
+                      "사용자 닉네임",
+                      style: TextStyle(
+                        fontSize: AppConfig.fontSize * 0.7,
+                        fontWeight: FontWeight.w300,
+                        color: quizLayout.getColorScheme().primary,
+                      ),
+                    ),
                     SizedBox(
-                      height: AppConfig.padding * heightModifier,
+                      height: AppConfig.largePadding * 2 * heightModifier,
                     ),
                     SizedBox(
                       width: AppConfig.screenWidth * 0.8,
@@ -111,7 +119,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                           } else if (savable == -1) {
-                            quizLayout.saveQuizLayout(context, false);
+                            quizLayout.saveQuizLayout(context, false); //실제 저장(업로드)가 이루어지는 함수.
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())
