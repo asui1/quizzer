@@ -80,7 +80,6 @@ class AuthService {
   Future<bool?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      Logger.log("SIGN IN COMPLETE : $account.email");
       if (account != null) {
         // Google 로그인 성공 후 SharedPreferences에 사용자 정보 저장
         final response = await http.get(

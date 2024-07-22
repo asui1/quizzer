@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -18,7 +19,7 @@ class ScoreCard {
     required this.backgroundImage,
     this.imageState = 0,
   });
- 
+
   Map<String, dynamic> toJson() {
     return {
       'size': size,
@@ -87,7 +88,6 @@ class ScoreCard {
   }
 
   void nextBackgroundColor(QuizLayout quizLayout) {
-
     if (imageState == 0) {
       backgroundImage = backgroundDecorationWithBorder(
           quizLayout: quizLayout, color: quizLayout.getColorScheme().primary);

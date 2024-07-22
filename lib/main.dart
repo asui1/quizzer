@@ -147,11 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _loadPreferences() async {
-    Logger.log("LOADING PREFERENCES");
     isLoggedIn = UserPreferences.loggedIn;
     userImageName = await UserPreferences.getUserImageName() ?? '';
     userNickname = await UserPreferences.getUserName() ?? '';
-    Logger.log("USER NICKNAME: $userNickname");
     userTags = await UserPreferences.getTagsJson() ?? [];
 
     setState(() {});

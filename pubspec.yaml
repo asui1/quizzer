@@ -54,6 +54,7 @@ dependencies:
   package_info_plus: ^8.0.0
   connectivity_plus: ^2.0.2
   url_launcher: ^6.0.12
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -88,10 +89,12 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/question2.png
     - assets/images/
     - assets/jsons/test.json
     - assets/jsons/
     - assets/icon/
+
 
   fonts:
       - family : GothicA1

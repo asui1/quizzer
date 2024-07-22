@@ -13,22 +13,22 @@ Future<File?> checkCompressImage(
   File file = File(tempImageFile.path);
   int fileSize = await file.length();
 
-  if (width == 50 && fileSize < 512 * 1024) {
+  if (width == 50 && fileSize < 64 * 1024) {
     return await saveFileToPermanentDirectory(tempImageFile);
   } else if (height < AppConfig.screenHeight / 3 &&
-      fileSize < 2 * 1024 * 1024) {
+      fileSize < 258 * 1024) {
     return await saveFileToPermanentDirectory(tempImageFile);
   } else if (height > AppConfig.screenHeight / 3 &&
-      fileSize < 5 * 1024 * 1024) {
+      fileSize < 1024 * 1024) {
     return await saveFileToPermanentDirectory(tempImageFile);
   }
 
   int targetSize = 11;
   if (width == 50)
-    targetSize = 512 * 1024;
+    targetSize = 64 * 1024;
   else if (height < AppConfig.screenHeight / 3)
-    targetSize = 2 * 1024 * 1024;
-  else if (height > AppConfig.screenHeight / 3) targetSize = 5 * 1024 * 1024;
+    targetSize = 258 * 1024;
+  else if (height > AppConfig.screenHeight / 3) targetSize = 1024 * 1024;
   final File? compressedFile =
       await compressImageToTargetSize(tempImageFile, targetSize);
   return compressedFile;

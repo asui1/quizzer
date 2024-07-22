@@ -69,7 +69,6 @@ class _MakingQuizState extends State<MakingQuizscreen> {
           return PopScope(
             canPop: false,
             onPopInvoked: (didPop) async {
-              Logger.log('onPopInvoked: $didPop');
               if (!isConfirm && singleRun && inCheckDialog) {
                 singleRun = false;
                 Future.delayed(Duration.zero, () {
@@ -99,8 +98,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
           );
         },
       );
-    }
-    else{
+    } else {
       inCheckDialog = false;
     }
   }
@@ -136,7 +134,6 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) async {
-        Logger.log("onPopInvoked: $didPop");
         if (!isDialogAlreadyPopped && !inCheckDialog && !didPop) {
           popDialog(context, quizLayout);
         }
@@ -210,7 +207,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                   ),
                   Positioned(
                     right: 10.0, // Align to the right
-                    bottom: 10.0, // Align to the bottom
+                    bottom: quizLayout.getSelectedLayout() == 2
+                        ? 50
+                        : 10, // 하단에서의 거리
                     child: IconButton(
                       iconSize: AppConfig.fontSize * 1.5,
                       icon: Icon(Icons.arrow_forward,
@@ -242,7 +241,9 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                   ),
                   Positioned(
                     left: 10,
-                    bottom: 10,
+                    bottom: quizLayout.getSelectedLayout() == 2
+                        ? 50
+                        : 10, // 하단에서의 거리
                     child: tempSaveButton(context, quizLayout),
                   ),
                   Center(

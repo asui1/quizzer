@@ -13,14 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 Future<void> downloadJson(Directory directory, String uuid) async {
-  final url = serverUrl + '' + uuid;
+  final url = serverUrl + 'getQuizData/?uuid=$uuid';
   final response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
 
   if (response.statusCode == 200) {
     // 응답으로 받은 데이터를 파일에 저장
+    String decodedString = utf8.decode(response.bodyBytes);
+
     final file = File('${directory.path}/$uuid.json');
-    await file.writeAsString(response.body, encoding: utf8); // 인코딩을 utf8로 지정
+    await file.writeAsString(decodedString, encoding: utf8); // 인코딩을 utf8로 지정
     Logger.log("JSON 파일 다운로드 성공");
   } else {
     Logger.log("JSON 파일 다운로드 실패");
@@ -43,11 +45,6 @@ Future<String> loadFileContent(Directory directory, String uuid) async {
 
 Future<http.Response> postJsonToFileOnServer(
     String uuid, String jsonString, QuizLayout quizlayout) async {
-  Logger.log(uuid);
-  Logger.log(quizlayout.getTitle());
-  Logger.log(quizlayout.getTags());
-  Logger.log(quizlayout.getTitleImageNow());
-  Logger.log(quizlayout.getCreator());
 
   final body = json.encode({
     "id": uuid,
@@ -57,8 +54,6 @@ Future<http.Response> postJsonToFileOnServer(
     'creator': quizlayout.getCreator(),
     "data": jsonString,
   });
-
-  Logger.log(body);
 
   final response = await http.post(
     Uri.parse(serverUrl + 'addQuiz/'),
@@ -71,7 +66,6 @@ Future<http.Response> postJsonToFileOnServer(
 
 void uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
   final response = await postJsonToFileOnServer(uuid, jsonString, quizLayout);
-  Logger.log(response.body);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     Logger.log("UPLOAD SUCCESS");
@@ -96,7 +90,6 @@ Future<void> uploadFile(String uuid, QuizLayout quizLayout) async {
 Future<List<QuizCard>> searchRequest(String searchText) async {
   // Send GET request to server with query parameter
   final url = serverUrl + 'searchQuiz/?search=$searchText';
-  Logger.log(url);
   var response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
   List<QuizCard> _searchResults = [];
@@ -105,15 +98,9 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
   if (response.statusCode == 200 || response.statusCode == 201) {
     // Parse the response body
     String decodedString = utf8.decode(response.bodyBytes);
-    Logger.log(decodedString);
     List<dynamic> jsonList = jsonDecode(decodedString);
-    Logger.log(jsonList);
     for (var item in jsonList) {
-      Logger.log("????");
-      Logger.log(item);
       Map<String, dynamic> jsonItem = item;
-      Logger.log("JSONITEM : $jsonItem");
-      Logger.log("????");
 
       // Initialize filePath as null
       String? filePath;
@@ -132,17 +119,24 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
         // Write the image file
         await File(filePath).writeAsBytes(imageBytes);
       }
-
-      // Add the QuizCard to the search results
+      String tags = jsonItem['Tags'];
+      if (tags.startsWith('[') && tags.endsWith(']')) {
+        tags = tags.substring(1, tags.length - 1);
+      }
+      List<String> tagsList;
+      if (tags.isEmpty) {
+        tagsList = [];
+      } else {
+        tagsList = tags.split(',').map((e) => e.trim()).toList();
+      }
       _searchResults.add(QuizCard(
         title: jsonItem['Title'],
-        tags: jsonItem['Tags'],
+        tags: tagsList,
         additionalData: jsonItem['Creator'],
         uuid: jsonItem['ID'],
         titleImagePath: filePath,
       ));
     }
-    Logger.log("search result len: ${_searchResults.length}");
     return _searchResults;
   } else {
     // Handle error
@@ -227,7 +221,6 @@ Future<void> updateUserAgreed() async {
   }
   String email = await UserPreferences.getUserEmail() ?? "GUEST";
   final url = serverUrl + 'UpdateUserAgreed/' + '?email=${email}';
-  Logger.log(url);
   var response = await http.post(
     Uri.parse(url),
     headers: {
@@ -240,8 +233,6 @@ Future<void> updateUserAgreed() async {
     //   'email': email,
     // }),
   );
-  Logger.log(response.statusCode);
-  Logger.log(response.body);
   if (response.statusCode == 200) {
     Logger.log("UPDATE AGREED SUCCESS");
     UserPreferences.agreed = true;
@@ -254,15 +245,12 @@ Future<int> loginCheck(String email, String image) async {
   final url = serverUrl + 'login/' + '?email=$email';
   var response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
-  Logger.log(response.statusCode);
-  Logger.log(response.body);
   if (response.statusCode == 200) {
-    Logger.log("LOGIN SUCCESS");
 
     // 응답 본문을 `,`로 분리하여 배열로 변환
     String decodedString = utf8.decode(response.bodyBytes);
     var responseBody = jsonDecode(decodedString);
-    Logger.log(responseBody);
+
     // JSON 객체에서 필요한 정보 추출
     String idIcon = responseBody['IDIcon'];
     String nickname = responseBody['Nickname'];
@@ -273,8 +261,6 @@ Future<int> loginCheck(String email, String image) async {
       tagsList = List<String>.from(responseBody['Tags'] ?? []);
     }
     bool agreed = responseBody['Agreed'];
-
-    Logger.log(nickname);
 
     UserPreferences.setUserImageName(idIcon); // IDIcon을 이미지 이름으로 가정
     UserPreferences.setUsername(nickname);
@@ -293,8 +279,8 @@ Future<int> loginCheck(String email, String image) async {
   return 401;
 }
 
-Future<void> sendResultToServer(int score, QuizLayout quizLayout) async {
-  final url = serverUrl;
+Future<String> sendResultToServer(int score, QuizLayout quizLayout) async {
+  final url = serverUrl + "submitQuiz/";
   String email = await UserPreferences.getUserEmail() ?? "GUEST";
   String uuid = quizLayout.getUuid();
   final response = await http.post(
@@ -302,16 +288,17 @@ Future<void> sendResultToServer(int score, QuizLayout quizLayout) async {
     headers: {'Content-Type': 'application/json', 'Authorization': serverAuth},
     body: jsonEncode({
       'email': email,
-      'type': 1,
-      'item_uuid': uuid,
+      'uuid': uuid,
       'score': score,
     }),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 201) {
     Logger.log("SEND RESULT SUCCESS");
+    return "";
   } else {
     Logger.log("SEND RESULT FAILED");
+    return "fail";
   }
 }
 

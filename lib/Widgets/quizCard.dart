@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -15,7 +16,7 @@ import 'package:quizzer/Screens/solver.dart';
 class QuizCard extends StatelessWidget {
   final String uuid;
   final String title;
-  final String tags;
+  final List<String> tags;
   final String additionalData;
   final String? titleImagePath;
 
@@ -23,7 +24,7 @@ class QuizCard extends StatelessWidget {
       {required this.uuid,
       required this.title,
       required this.titleImagePath,
-      this.tags = '#테스트',
+      this.tags = const ['#테스트'],
       this.additionalData = '테스트를 위한 문구입니다.'});
 
   @override
@@ -42,7 +43,7 @@ class QuizCard extends StatelessWidget {
               await downloadJson(directory, uuid);
               String jsonString = await loadFileContent(directory, uuid);
               final jsonResponse = json.decode(jsonString);
-              dataString = jsonResponse['data'];
+              dataJson = jsonResponse['Data'];
             } catch (e) {
               Logger.log("Error in downloadJson");
               Logger.log(e);
@@ -50,26 +51,21 @@ class QuizCard extends StatelessWidget {
             }
             // Logger.log(dataJson);
 
-            // final jsonResponse = json.decode(dataJson);
+            final jsonResponse = json.decode(dataJson);
+            Logger.log(jsonResponse);
             // jsonResponse를 사용하여 필요한 작업 수행
 
-            QuizLayout quizLayout = QuizLayout();
-            await quizLayout.loadQuizLayout(dataString);
-            if (title.contains("Maker")) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MakingQuizscreen()),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => QuizSolver(
-                          quizLayout: quizLayout,
-                          index: 0,
-                        )),
-              );
-            }
+            QuizLayout quizLayout = Provider.of<QuizLayout>(context, listen: false);
+            quizLayout.reset();
+            await quizLayout.loadQuizLayout(jsonResponse);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => QuizSolver(
+                        quizLayout: quizLayout,
+                        index: 0,
+                      )),
+            );
           },
           child: Card(
               elevation: 4.0,
@@ -82,7 +78,8 @@ class QuizCard extends StatelessWidget {
                       width: AppConfig.shortestSide / 6, // 이미지 너비
                       height: AppConfig.shortestSide / 6, // 이미지 높이
                       child: titleImagePath == null
-                          ? Image.asset('assets/images/question2.png') // 에셋 이미지 사용
+                          ? Image.asset(
+                              'assets/images/question2.png') // 에셋 이미지 사용
                           : Image.file(File(titleImagePath!)), // 파일 이미지 사용
                     ),
                     SizedBox(
@@ -102,11 +99,19 @@ class QuizCard extends StatelessWidget {
                                 fontSize: AppConfig.fontSize,
                                 fontWeight: FontWeight.bold),
                           ), // 제목 표시
-                          Text(
-                            tags,
-                            style:
-                                TextStyle(fontSize: AppConfig.fontSize * 0.8),
-                          ), // 태그 표시
+                          Container(
+                            height: 20.0,
+                            child: Wrap(
+                              alignment: WrapAlignment.start,
+                              spacing: 8.0, // 태그 사이의 가로 간격
+                              runSpacing: 4.0, // 태그 사이의 세로 간격
+                              children: tags.map((tag) {
+                                return Chip(
+                                  label: Text(tag),
+                                );
+                              }).toList(),
+                            ),
+                          ),
                           Text(
                             additionalData,
                             style:

@@ -28,31 +28,11 @@ class FilpStyle12 extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 5.0, 5.0, 5.0, flipStyle == 2 ? 5.0 : 5.0), // 조건에 따라 바닥 패딩 조정
-            child: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: quizLayout
-                    .getColorScheme()
-                    .primaryContainer, // Container의 배경색을 투명하게 설정
-                borderRadius: BorderRadius.circular(10.0), // 둥근 모서리 반경 설정
-                border: Border.all(
-                  width: 2.0, // 테두리 두께 설정
+            child: IconButton(
+                icon: Icon(Icons.arrow_back_ios_rounded), onPressed: onPressedBack,
+                iconSize: 20.0,
+                color: quizLayout.getColorScheme().primary
                 ),
-              ),
-              child: Align(
-                // IconButton을 중앙에 위치시키기 위해 Align 위젯 사용
-                alignment: Alignment.center, // 중앙 정렬
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios_rounded,
-                    size: 15.0,
-                    color: quizLayout.getColorScheme().onPrimaryContainer,
-                  ),
-                  onPressed: onPressedBack,
-                ),
-              ),
-            ),
           ),
         ),
         Align(
@@ -61,31 +41,10 @@ class FilpStyle12 extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(
                 5.0, 5.0, 5.0, flipStyle == 2 ? 5.0 : 5.0), // 조건에 따라 바닥 패딩 조정
-            child: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: quizLayout
-                    .getColorScheme()
-                    .primaryContainer, // Container의 배경색을 투명하게 설정
-                borderRadius: BorderRadius.circular(10.0), // 둥근 모서리 반경 설정
-                border: Border.all(
-                  width: 2.0, // 테두리 두께 설정
-                ),
-              ),
-              child: Align(
-                // IconButton을 중앙에 위치시키기 위해 Align 위젯 사용
-                alignment: Alignment.center, // 중앙 정렬
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 15.0,
-                    color: quizLayout.getColorScheme().onPrimaryContainer,
-                  ),
-                  onPressed: onPressedForward,
-                ),
-              ),
-            ),
+            child: IconButton(
+                icon: Icon(Icons.arrow_forward_ios_rounded), onPressed: onPressedForward,
+                color: quizLayout.getColorScheme().primary,
+                iconSize: 20.0),
           ),
         ),
       ],

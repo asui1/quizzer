@@ -27,7 +27,6 @@ class Logger {
     const int printLength = 1000; // Adjust this value as needed
     String contentString = content.toString();
     if (contentString.length <= printLength) {
-      Logger.log(contentString);
     } else {
       // If content is too long, split it into parts and log each part
       List<String> parts = [];

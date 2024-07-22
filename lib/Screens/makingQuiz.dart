@@ -308,11 +308,6 @@ class _MakingQuizState extends State<MakingQuiz> {
                     ),
                   ),
                 ),
-                FilpStyle12(
-                  quizLayout: quizLayout,
-                  onPressedBack: onPressedBack,
-                  onPressedForward: onPressedForward,
-                ),
                 Positioned(
                   top: 10.0, // Set to 0.0 to align at the top
                   left: 10.0, // Set to 0.0 to align at the left

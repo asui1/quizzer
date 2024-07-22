@@ -114,7 +114,6 @@ class _RegisterState extends State<Register> {
                               onSubmitted: (value) {
                                 if (textController.value.text.isEmpty) return;
                                 // 사용자가 키보드에서 '완료'를 눌렀을 때 실행
-                                Logger.log(value); // 닉네임 출력
                                 checkDuplicate(value, _streamController);
                               },
                             ),
@@ -123,7 +122,6 @@ class _RegisterState extends State<Register> {
                           TextButton(
                             onPressed: () {
                               if (textController.value.text.isEmpty) return;
-                              Logger.log(textController.value.text); // 닉네임 출력
                               checkDuplicate(
                                   textController.value.text, _streamController);
                             },

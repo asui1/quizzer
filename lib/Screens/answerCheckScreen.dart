@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/keys.dart';
+import 'package:quizzer/Functions/makeHash.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
+import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Screens/scoringScreen.dart';
@@ -53,7 +57,8 @@ class AnswerCheckScreen extends StatelessWidget {
                   if (actualIndex + 1 < quizCount) {
                     Color stateColor2 =
                         quizLayout.getQuiz(actualIndex + 1).getState();
-                    rowChildren.add(answerBox(actualIndex + 1, stateColor2, quizLayout));
+                    rowChildren.add(
+                        answerBox(actualIndex + 1, stateColor2, quizLayout));
                   } else {
                     // 홀수 번째 항목에 대해 눈에 보이지 않는 answerBox 추가
                     rowChildren.add(InvisibleAnswerBox());
@@ -75,14 +80,24 @@ class AnswerCheckScreen extends StatelessWidget {
         SizedBox(
           width: AppConfig.screenWidth * screenWidthModifier / 2, // 원하는 너비 설정
           child: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async {
+              int score = quizLayout.getScore();
+              sendResultToServer(score, quizLayout);
+              String userEmail = await UserPreferences.getUserEmail() ?? 'GUEST';
+              String userName = await UserPreferences.getUserName() ?? 'GUEST';
+              String resultUrl = quizzerDomain + "result/" + generateUniqueId(
+                  quizLayout.getUuid(), userEmail, quizLayout.getTitle());
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ScoringScreen(quizLayout: quizLayout,heightModifier: heightModifier),
+                  builder: (context) => ScoringScreen(
+                      quizLayout: quizLayout,
+                      heightModifier: heightModifier,
+                      score: score,
+                      resultUrl: resultUrl,
+                      userName: userName,),
                 ),
               );
-              
             },
             child: const Text("채점하기"),
             // FloatingActionButton의 기본 크기를 무시하고, SizedBox의 크기에 맞춰서 조절됩니다.
@@ -103,7 +118,8 @@ class AnswerCheckScreen extends StatelessWidget {
     );
   }
 
-  Widget answerBox(int index, Color stateColor, QuizLayout quizLayout, {bool isLast = false}) {
+  Widget answerBox(int index, Color stateColor, QuizLayout quizLayout,
+      {bool isLast = false}) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -135,7 +151,9 @@ class AnswerCheckScreen extends StatelessWidget {
               Container(
                 width: AppConfig.fontSize,
                 height: AppConfig.fontSize,
-                color: stateColor == MyColors().red ? quizLayout.getColorScheme().error : MyColors().green,
+                color: stateColor == MyColors().red
+                    ? quizLayout.getColorScheme().error
+                    : MyColors().green,
               ),
               SizedBox(width: AppConfig.padding), // Add space between columns
             ],

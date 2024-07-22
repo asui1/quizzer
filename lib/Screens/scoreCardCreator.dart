@@ -28,6 +28,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     scoreCard = quizLayout.getScoreCard();
+    scoreCard.initbackGroundImage(quizLayout);
     double heightModifier = (AppConfig.screenHeight -
             quizLayout.getAppBarHeight() -
             quizLayout.getBottomBarHeight()) /
