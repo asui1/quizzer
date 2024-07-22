@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path; // Add this line
 
 import 'package:flutter/cupertino.dart';
@@ -87,7 +88,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                     maxLength: 6,
                     decoration: InputDecoration(
                       labelText: 'Hex code',
-                      errorText: isHexCodeValid ? null : 'Invalid hex code',
+                      errorText: isHexCodeValid ? null : Intl.message("Invalid hex code"),
                     ),
                     onChanged: (value) {
                       try {
@@ -112,7 +113,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            'Current Path: ${imageFile == null ? 'No image selected' : lastTenChars}',
+                            Intl.message("Current Path: ")+'${imageFile == null ? Intl.message("No image selected") : lastTenChars}',
                             style: TextStyle(fontSize: 16),
                             maxLines: 1,
                           ),
@@ -123,7 +124,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                                 child: SizedBox.shrink(), // 정렬을 위한 자리 표시자
                               ),
                               ElevatedButton(
-                                child: Text('Pick Image'),
+                                child: Text(Intl.message("Pick Image")),
                                 onPressed: () async {
                                   final ImagePicker _picker = ImagePicker();
                                   final XFile? tempImageFile = await _picker
@@ -159,7 +160,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
       actions: <Widget>[
         TextButton(
           key: const ValueKey('ColorPickerConfirm'),
-          child: Text('확인'),
+          child: Text(Intl.message("OK")),
           onPressed: () async {
             if (widget.index > 2) {
               widget.quizLayout.setColor(widget.index, pickerColor);

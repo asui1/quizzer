@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -188,7 +189,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                               controller:
                                                   _controllersLeft[index],
                                               decoration: InputDecoration(
-                                                hintText: '답변 ${index + 1}',
+                                                hintText:
+                                                    Intl.message("Answer") +
+                                                        ' ${index + 1}',
                                               ),
                                               onChanged: (value) {
                                                 widget.quiz
@@ -279,7 +282,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                     child: Container(
                                                       height: 100.0,
                                                       child: Row(
-                                                        key: ValueKey('dots$index'),
+                                                        key: ValueKey(
+                                                            'dots$index'),
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .spaceBetween,
@@ -322,11 +326,14 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                           ),
                                           Expanded(
                                             child: TextField(
-                                              key: ValueKey('answerRight$index'),
+                                              key:
+                                                  ValueKey('answerRight$index'),
                                               controller:
                                                   _controllersRight[index],
                                               decoration: InputDecoration(
-                                                hintText: '연결된 답변 ${index + 1}',
+                                                hintText:
+                                                    Intl.message("Answer") +
+                                                        ' ${index + 1}',
                                               ),
                                               onChanged: (value) {
                                                 widget.quiz
@@ -336,7 +343,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                             ),
                                           ),
                                           IconButton(
-                                            key: ValueKey('removeAnswerButton$index'),
+                                            key: ValueKey(
+                                                'removeAnswerButton$index'),
                                             icon: Icon(
                                                 Icons.remove_circle_outline),
                                             onPressed: () {
@@ -348,7 +356,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                       .showSnackBar(
                                                     SnackBar(
                                                       content: Text(
-                                                          '최소 2개의 정답이 필요합니다.'),
+                                                        Intl.message(
+                                                            "At least 2 answers are required"),
+                                                      ),
                                                       duration:
                                                           Duration(seconds: 1),
                                                     ),

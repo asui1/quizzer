@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
@@ -78,7 +79,7 @@ Future<void> deleteTempFiles(String title) async {
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
-          title: Text('불러오기'),
+          title: Text(Intl.message("Load")),
         ),
         body: SafeArea(
           child: Center(

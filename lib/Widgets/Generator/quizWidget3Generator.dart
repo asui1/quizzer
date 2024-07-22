@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -164,7 +165,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                               filled: true,
                                               focusColor: textAnswerColor,
                                               fillColor: backgroundAnswerColor,
-                                              hintText: '답변 ${index + 1}',
+                                              hintText: Intl.message("Answer")+' ${index + 1}',
                                             ),
                                             onChanged: (value) {
                                               setState(() {
@@ -186,7 +187,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        '최소 3개의 정답이 필요합니다.'),
+                                                        Intl.message("At least 3 answers are required")),
                                                     duration:
                                                         Duration(seconds: 1),
                                                   ),

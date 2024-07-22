@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -148,7 +149,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           ElevatedButton(
                                             key: const ValueKey('add_answer'),
                                             child: Text(
-                                              '정답 추가.',
+                                              Intl.message("Add Answer"),
                                               style: TextStyle(
                                                 fontSize: AppConfig.fontSize,
                                               ),
@@ -193,7 +194,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     } else {
                                       return ListTile(
                                         leading: Checkbox(
-                                          key: ValueKey('answer_checkbox_$index'),
+                                          key: ValueKey(
+                                              'answer_checkbox_$index'),
                                           activeColor: Theme.of(context)
                                               .colorScheme
                                               .primary, // 체크박스 활성화 색상을 테마의 주 색상으로 설정
@@ -217,7 +219,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           },
                                         ),
                                         title: TextField(
-                                          key: ValueKey('answer_textfield_$index'),
+                                          key: ValueKey(
+                                              'answer_textfield_$index'),
                                           focusNode: _focusNodes[index],
                                           cursorColor: textAnswerColor,
                                           textInputAction:
@@ -275,7 +278,9 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        '최소 2개의 정답이 필요합니다.'),
+                                                      Intl.message(
+                                                          "At least 2 answers are required"),
+                                                    ),
                                                     duration:
                                                         Duration(seconds: 1),
                                                   ),
@@ -295,8 +300,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text(
-                                        '정답 섞기 여부 : ',
+                                      Text(
+                                        Intl.message("Shuffle Answers?"),
                                       ),
                                       Checkbox(
                                         value: shuffleAnswers,
@@ -309,7 +314,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           });
                                         },
                                       ),
-                                      const Text('선택 가능한 정답 수 : '),
+                                      Text(Intl.message("Number of possible selection : ")),
                                       Container(
                                         width: 50.0,
                                         child: TextField(

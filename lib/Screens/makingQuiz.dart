@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz.dart';
@@ -188,8 +189,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               SizedBox(
                                 width: AppConfig.largePadding,
                               ),
-                              Text(
-                                '퀴즈 : ${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
+                              Text(Intl.message("Quiz") +' : ${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
                                 style: TextStyle(
                                   fontFamily: MyFonts.gothicA1Bold,
                                   fontWeight: FontWeight.bold,
@@ -259,7 +259,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                     }
                                   });
                                 },
-                                child: Text('미리보기'),
+                                child: Text(Intl.message("Preview")),
                               ),
                               // 세 번째 버튼: 저장 버튼
                               IconButton(
@@ -360,7 +360,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         Expanded(
                           flex: 1,
                           child: Center(
-                            child: Text(stringResources['quizItem$index']!),
+                            child: Text(Intl.message('quizItem$index')),
                           ),
                         ),
                       ],
@@ -375,7 +375,7 @@ class _MakingQuizState extends State<MakingQuiz> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('닫기'),
+              child: Text(Intl.message("Close")),
             ),
           ],
         );

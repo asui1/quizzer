@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/makeHash.dart';
@@ -99,7 +100,7 @@ class AnswerCheckScreen extends StatelessWidget {
                 ),
               );
             },
-            child: const Text("채점하기"),
+            child: Text(Intl.message('Grade')),
             // FloatingActionButton의 기본 크기를 무시하고, SizedBox의 크기에 맞춰서 조절됩니다.
           ),
         ),
@@ -140,8 +141,8 @@ class AnswerCheckScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // Row의 크기를 내용물에 맞춤
             children: [
               SizedBox(width: AppConfig.padding), // Add space between columns
-              Text(
-                '문제 ${index + 1} : ',
+              Text(Intl.message("Prob.") +
+                ' ${index + 1} : ',
                 style: TextStyle(
                   fontFamily: quizLayout.getAnswerFont(),
                   fontSize: AppConfig.fontSize,

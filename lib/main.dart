@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz2.dart';
@@ -33,6 +34,7 @@ import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +63,7 @@ class UpdateApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('새로운 버전이 있습니다. 업데이트해주세요.'),
+          child: Text(Intl.message('There is a new version.\nPlease update.')),
         ),
       ),
     );
@@ -80,7 +82,16 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => QuizLayout(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', ''), // 영어
+          const Locale('ko', ''), // 한국어
+        ],
+        title: 'Quizzer',
         theme: ThemeData(
           // This is the theme of your application.
           //
@@ -104,8 +115,7 @@ class MyApp extends StatelessWidget {
 
           useMaterial3: true,
         ),
-        home: const MyHomePage(
-            title: 'Quizzer :  Customable Quiz App to Meet All Your Purposes'),
+        home: const MyHomePage(title: 'Quizzer'),
       ),
     );
   }
@@ -260,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: AbsorbPointer(
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'Search',
+                                hintText: Intl.message("Search"),
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     Navigator.push(
@@ -304,7 +314,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '문의: whwkd122@gmail.com',
+                              Intl.message("Contact") + ': whwkd122@gmail.com',
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
@@ -342,22 +352,22 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: Intl.message('Home'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_up),
-            label: 'Trending',
+            label: Intl.message('Trending'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.leaderboard),
-            label: 'Rank',
+            label: Intl.message('Rank'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'My Settings',
+            label: Intl.message('My Settings'),
           ),
         ],
         selectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -426,7 +436,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: <Widget>[
                   ListTile(
                     title: Text(
-                      '프로필',
+                      Intl.message("Profile"),
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 20,
@@ -439,7 +449,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   ListTile(
                     title: Text(
-                      '설정',
+                      Intl.message("Setting"),
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 20,
@@ -457,7 +467,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // This ListTile will be positioned at the bottom
             ListTile(
               title: Text(
-                '공지사항',
+                Intl.message("Announcement"),
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 20,
@@ -468,7 +478,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               title: Text(
-                '문의',
+                Intl.message("Inquiry"),
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -491,10 +501,15 @@ class _MyHomePageState extends State<MyHomePage> {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        List<String> items = ['버그 제보', '퀴즈 신고', '개발 일정 문의', '기타 문의'];
+        List<String> items = [
+          Intl.message("Bug Report"),
+          Intl.message("Report Quiz"),
+          Intl.message("Development Inquiry"),
+          Intl.message("Other Inquiry")
+        ];
         String dropdownValue = items[0]; // Default value for the dropdown
         return AlertDialog(
-          title: Text('문의하기'),
+          title: Text(Intl.message("Inquiry")),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
@@ -505,7 +520,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "이메일로 답변드립니다.",
+                        Intl.message("Response will be given by email"),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -533,7 +548,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     TextField(
                       controller: _emailContentController,
                       decoration: InputDecoration(
-                        hintText: '문의사항을 입력하세요',
+                        hintText: Intl.message("Enter Inquiry"),
                         border: OutlineInputBorder(
                           // Add an outline border
                           borderRadius: BorderRadius.circular(
@@ -550,13 +565,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('취소'),
+              child: Text(Intl.message("Cancel")),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('제출'),
+              child: Text(Intl.message("Submit")),
               onPressed: () async {
                 await sendEmail(
                     dropdownValue,
@@ -586,7 +601,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 width: double.infinity, // 버튼을 대화상자 너비에 맞춤
                 child: ElevatedButton(
-                  child: Text('로그인', style: TextStyle(fontSize: 20)),
+                  child: Text(Intl.message("Login"), style: TextStyle(fontSize: 20)),
                   onPressed: () async {
                     final account = await _googleSignIn.signIn();
                     if (account != null) {
@@ -597,7 +612,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (loginStatus == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('로그인에 성공하였습니다.'),
+                            content: Text(Intl.message("Successful Login")),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -607,14 +622,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       } else if (loginStatus == 400) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('등록되지 않은 사용자입니다.'),
+                            content: Text(Intl.message("Unregistered User")),
                             duration: Duration(seconds: 2),
                           ),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('로그인에 실패하였습니다.'),
+                            content: Text(Intl.message("Login Failed")),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -623,7 +638,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('구글 로그인에 실패하였습니다.'),
+                          content: Text(Intl.message("Google Login Failed")),
                           duration: Duration(seconds: 2),
                         ),
                       );
@@ -643,7 +658,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => Register()),
                   );
                 },
-                child: Text('회원가입',
+                child: Text(Intl.message("Registration"),
                     style: TextStyle(
                         fontSize: 16, decoration: TextDecoration.underline)),
               ),
@@ -864,21 +879,21 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text('로그아웃 하시겠습니까?'),
+          content: Text(Intl.message("Are you sure to Logout?")),
           actions: <Widget>[
             TextButton(
-              child: Text('아니오'),
+              child: Text(Intl.message("No")),
               onPressed: () {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
             TextButton(
-              child: Text('예'),
+              child: Text(Intl.message("Yes")),
               onPressed: () async {
                 UserPreferences.clear();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('로그아웃 되었습니다.'),
+                    content: Text(Intl.message("You are Logged out")),
                     duration: Duration(seconds: 2),
                   ),
                 );

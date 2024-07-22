@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class AppConfig {
   static double screenWidth = 0;
@@ -17,8 +18,8 @@ class AppConfig {
   static double iconSize = 0;
   static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans, MyFonts.maruBuriRegular, MyFonts.spoqaHanSansNeoRegular,
     MyFonts.diary, MyFonts.ongleYunu, MyFonts.ongleEuyen];
-  static List<String> borderType = ["테두리 없음", '밑줄', '네모 박스'];
-  static List<String> colorStyles = ["색 설정0", "색 설정1", "색 설정2", "색 설정3", "색 설정4", "색 설정5", "색 설정6", "색 설정7", "색 설정8", "색 설정9"];
+  static List<String> borderType = [Intl.message("No Borders"), Intl.message("Underline"), Intl.message("Box Border")];
+  static List<String> colorStyles = [Intl.message("Color Set") + "0", Intl.message("Color Set") + "1", Intl.message("Color Set") + "2", Intl.message("Color Set") + "3", Intl.message("Color Set") + "4", Intl.message("Color Set") + "5", Intl.message("Color Set") + "6", Intl.message("Color Set") + "7", Intl.message("Color Set") + "8", Intl.message("Color Set") + "9"];
   
 
   //ORDER IN QUESTION, BODY, ANSWER

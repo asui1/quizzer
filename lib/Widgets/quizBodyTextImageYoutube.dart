@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/fileSaveLoad.dart';
@@ -49,21 +50,21 @@ class _ContentWidgetState extends State<ContentWidget> {
     switch (widget.quiz1.getBodyType()) {
       case 0:
         return ElevatedButton(
-          child: Text('본문 추가.'),
+          child: Text(Intl.message("Add Text")),
           onPressed: () {
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text(
-                    '본문 추가',
+                    Intl.message("Add Text"),
                     textAlign: TextAlign.center,
                   ),
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       ElevatedButton(
-                        child: Text('텍스트'),
+                        child: Text(Intl.message("Text")),
                         onPressed: () {
                           widget.updateStateCallback(1);
                           Navigator.of(context).pop(); // 다이얼로그 종료
@@ -71,7 +72,7 @@ class _ContentWidgetState extends State<ContentWidget> {
                         },
                       ),
                       ElevatedButton(
-                        child: Text('사진'),
+                        child: Text(Intl.message("Photo")),
                         onPressed: () {
                           widget.updateStateCallback(2);
                           Navigator.of(context).pop(); // 다이얼로그 종료
@@ -188,7 +189,7 @@ class _ContentWidgetState extends State<ContentWidget> {
       case 3:
         //나중에 구현 예정.
         return ElevatedButton(
-          child: Text('Search Youtube'),
+          child: Text('Youtube'),
           onPressed: () {
             // Handle Youtube search
           },

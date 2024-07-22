@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 
@@ -10,25 +11,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   String _searchText = '';
-  List<QuizCard> _searchResults = [
-    QuizCard(
-      title: "loadQuizLayoutMaker",
-      uuid: "c2ce5a9b-bfcf-5699-9c02-bbf19bde2a5f",
-      titleImagePath: "assets/images/question2.png",
-      additionalData: "로드 후 QuizLayoutMaker로 이동.",
-    ),
-    QuizCard(
-      title: "loadQuizLayoutSolver",
-      uuid: "c2ce5a9b-bfcf-5699-9c02-bbf19bde2a5f",
-      titleImagePath: "assets/images/question2.png",
-      additionalData: "로드 후 QuizLayoutSolver로 이동.",
-    ),
-    QuizCard(
-      title: "emptyTest",
-      uuid: "9d6a4831-12f2-4fd7-b5b2-6df9aa3509a0",
-      titleImagePath: "assets/images/question2.png",
-    )
-  ];
+  List<QuizCard> _searchResults = [];
   FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
 
@@ -70,7 +53,7 @@ class _SearchScreenState extends State<SearchScreen> {
             _handleSearch(_searchText);
           },
           decoration: InputDecoration(
-            hintText: 'Search',
+            hintText: Intl.message("Search"),
             suffixIcon: IconButton(
               onPressed: () {
                 _handleSearch(_searchText);
@@ -100,7 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildSearchBody() {
     // Build your search body here
     return Center(
-      child: Text("Searching..."),
+      child: Text(Intl.message("Searching...")),
     );
   }
 

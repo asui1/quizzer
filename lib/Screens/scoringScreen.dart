@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -170,7 +171,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
                         onPressed: () {
                           _onPopInvoked(true);
                         },
-                        child: Text("돌아가기",
+                        child: Text(Intl.message("Move Home"),
                             style: TextStyle(
                               color: widget.quizLayout
                                   .getColorScheme()

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
@@ -22,7 +23,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('추가 설정'),
+          title: Text(Intl.message('Additional Setup')),
           backgroundColor: widget.quizLayout.getColorScheme().inversePrimary,
         ),
         body: Container(
@@ -50,8 +51,9 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                                       return StatefulBuilder(
                                         builder: (context, setState) {
                                           return AlertDialog(
-                                            title: Text(stringResources[
-                                                'quizLayoutSetup${index + 1}']!),
+                                            title: Text(Intl.message(
+                                                stringResources[
+                                                    'quizLayoutSetup${index + 1}']!)),
                                             content: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
@@ -151,8 +153,8 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                             child: TextStyleWidget(
                                 textStyle:
                                     widget.quizLayout.getTextStyle(index),
-                                text: stringResources[
-                                    'quizLayoutSetup${index + 1}']!,
+                                text:
+                                    Intl.message(stringResources['quizLayoutSetup${index + 1}']!),
                                 colorScheme:
                                     widget.quizLayout.getColorScheme()),
                           ),

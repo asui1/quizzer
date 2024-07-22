@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
@@ -32,7 +33,7 @@ class questionInputTextField extends StatelessWidget {
         filled: true,
         focusColor: textQuestionColor,
         fillColor: backgroundQuestionColor,
-        hintText: '질문을 입력해주세요.',
+        hintText: Intl.message("Enter Question"),
       ),
       style: getTextFieldTextStyle(
           quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme()),
@@ -53,7 +54,7 @@ class GeneratorDoneButton extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomRight,
         child: ElevatedButton(
-          child: Text('완료'),
+          child: Text(Intl.message("Done")),
           onPressed: onPressed,
         ),
       ),
@@ -67,7 +68,7 @@ ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
       onPressed: () async {
         if (quizLayout.getTitle() == '') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('제목없이 저장할 수 없습니다.'),
+            content: Text(Intl.message("Can't save without title")),
           ));
           return;
         }
@@ -77,5 +78,5 @@ ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
                   Navigator.of(context).popUntil((route) => route.isFirst);
 
       });}, 
-      child: Text('임시저장'),
+      child: Text(Intl.message("Temp Save")),
     );

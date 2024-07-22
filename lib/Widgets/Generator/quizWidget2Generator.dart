@@ -188,9 +188,8 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                           if (isHighlighted) {
                                             return Container(
                                               decoration: BoxDecoration(
-                                                color: quizLayout
-                                                    .getColor(
-                                                        6), // Highlight color
+                                                color: quizLayout.getColor(
+                                                    6), // Highlight color
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Center(
@@ -226,7 +225,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   //시작 날짜 ~ 끝나는 날 설정하도록 하기
                                   SizedBox(height: AppConfig.smallPadding),
                                   Text(
-                                    "중심 날짜를 선택하세요. ±20년",
+                                    Intl.message("Select Center Date. ±20Y"),
                                     style: textStyle,
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),
@@ -251,7 +250,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   ),
                                   SizedBox(height: AppConfig.padding),
                                   Text(
-                                    "정답인 날짜들을 입력해주세요.",
+                                    Intl.message("Enter Answer Dates"),
                                     style: textStyle,
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),
@@ -260,26 +259,25 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                     widget.quiz.getAnswerDate().length,
                                     (index) {
                                       return buildDatePicker(
-                                        context,
-                                        widget.quiz,
-                                        (List<int> date) {
-                                          setState(() {
-                                            widget.quiz.updateAnswerDateAt(
-                                                index, date);
-                                          });
-                                        },
-                                        false,
-                                        true,
-                                        () {
-                                          setState(() {
-                                            widget.quiz
-                                                .removeAnswerDateAt(index);
-                                          });
-                                        },
-                                        index,
-                                        textStyle,
-                                        uniqueId: index
-                                      );
+                                          context,
+                                          widget.quiz,
+                                          (List<int> date) {
+                                            setState(() {
+                                              widget.quiz.updateAnswerDateAt(
+                                                  index, date);
+                                            });
+                                          },
+                                          false,
+                                          true,
+                                          () {
+                                            setState(() {
+                                              widget.quiz
+                                                  .removeAnswerDateAt(index);
+                                            });
+                                          },
+                                          index,
+                                          textStyle,
+                                          uniqueId: index);
                                     },
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),

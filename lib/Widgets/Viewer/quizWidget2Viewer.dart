@@ -233,7 +233,7 @@ class _QuizView2State extends State<QuizView2> {
                           strongScreenWidthModifier), // 왼쪽에 16.0의 패딩 추가
                   child: TextStyleWidget(
                     textStyle: quizLayout.getTextStyle(1),
-                    text: "선택된 날짜들",
+                    text: Intl.message("Selected Dates"),
                     colorScheme: quizLayout.getColorScheme(),
                     modifier: widget.screenWidthModifier,
                   ),

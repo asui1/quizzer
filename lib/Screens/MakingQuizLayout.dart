@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -78,12 +79,14 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               }
             },
             child: AlertDialog(
-              title: Text('사용 동의서'),
+              title: Text(Intl.message("Terms of Use")),
               content: Text(
-                  '퀴즈를 작성함에 있어서 퀴즈의 내용이 비하, 조롱 등의 사회적 물의를 일으킬 수 있는 내용을 포함하고 있거나 저작권, 초상권, 음란물 등의 권리를 침해하는 내용을 포함하고 있을 경우, 해당 퀴즈는 제작자 동의 없이 삭제될 수 있습니다.\n또한, 작성한 퀴즈로 인해 발생하는 문제는 전적으로 사용자의 책임으로 quizzer는 이를 책임지지 않습니다.\n이에 동의하신다면 확인 버튼을 눌러주세요.'),
+                Intl.message(
+                    "When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user's responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button."),
+              ),
               actions: <Widget>[
                 TextButton(
-                  child: Text('확인'),
+                  child: Text(Intl.message("OK")),
                   onPressed: () {
                     isConfirm = true;
                     inCheckDialog = false;
@@ -251,7 +254,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CustomContainer(
-                          text: '1. 퀴즈 제목 설정.',
+                          text: Intl.message("1. Quiz Title"),
                           quizLayout: quizLayout,
                           index: 0,
                           onPressed: () async {
@@ -275,7 +278,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: '2. 넘기기 스타일 설정.',
+                          text: Intl.message("2. Flip Style"),
                           quizLayout: quizLayout,
                           index: 1,
                           onPressed: () async {
@@ -289,8 +292,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(
-                                      '넘기기 스타일 설정',
+                                        child: Text(Intl.message("Flip Style Setup")
                                     )),
                                     content: Container(
                                       // Set a fixed height to avoid layout issues in AlertDialog
@@ -351,7 +353,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: '3. 배경/색상 설정.',
+                          text: Intl.message("3. Color Setup"),
                           quizLayout: quizLayout,
                           index: 2,
                           onPressed: () async {
@@ -365,8 +367,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(
-                                      '배경/색상 설정',
+                                        child: Text(Intl.message("Color Setup"),
                                     )),
                                     content: SingleChildScrollView(
                                       child: ListBody(
@@ -401,9 +402,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                   isActive: quizLayout
                                                       .getVisibility(index),
                                                   quizLayout: quizLayout,
-                                                  buttonText: stringResources[
-                                                          'imageSet$index'] ??
-                                                      '',
+                                                  buttonText: Intl.message(stringResources[
+                                                          'imageSet$index']!),
                                                   image: quizLayout
                                                       .getImageColorNotNull(
                                                           index),
@@ -461,7 +461,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: '4. 기타 추가 설정.',
+                          text: '4. '+ Intl.message("Additional Setup"),
                           quizLayout: quizLayout,
                           index: 3,
                           onPressed: () async {
@@ -542,7 +542,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         return AlertDialog(
           title: Center(
             child: Text(
-              '퀴즈 제목 설정',
+              Intl.message("Quiz Title Setup"),
             ),
           ),
           backgroundColor: quizLayout.getColorScheme().surface,
@@ -560,7 +560,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     controller:
                         _titleController, // Bind the controller to the TextField
                     decoration: InputDecoration(
-                      labelText: '퀴즈 제목을 입력하세요.',
+                      labelText: Intl.message("Enter Quiz Title"),
                     ),
                     onChanged: (value) {
                       // Optionally update the title in real-time
@@ -572,7 +572,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     height: AppConfig.screenHeight * 0.02,
                   ),
                   Text(
-                    '표지 이미지를 선택하세요:',
+                    Intl.message("Set Title Image"),
                   ),
                   SizedBox(
                     height: AppConfig.screenHeight * 0.02,
@@ -664,19 +664,19 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("태그 추가"),
+                          title: Text(Intl.message("Add Tags")),
                           content: TextField(
                             controller: tagController,
                             autofocus: true,
                             decoration: InputDecoration(
-                              hintText: "태그를 입력하세요",
+                              hintText: Intl.message("Enter Tags"),
                             ),
                             onSubmitted: (value) => addTagAndCloseDialog(),
                           ),
                           actions: <Widget>[
                             TextButton(
                               child: Text(
-                                "취소",
+                                Intl.message("Cancel"),
                                 style: TextStyle(
                                     color: quizLayout.getColorScheme().error),
                               ),
@@ -685,7 +685,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                               },
                             ),
                             TextButton(
-                              child: Text("추가"),
+                              child: Text(Intl.message("Add")),
                               onPressed: () => addTagAndCloseDialog(),
                             ),
                           ],
@@ -694,7 +694,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     );
                   },
                   child: Text(
-                    "태그 추가",
+                    Intl.message("Add Tags"),
                     style: TextStyle(
                       color:
                           quizLayout.getColorScheme().primary, // 버튼 텍스트 색상 설정
@@ -721,12 +721,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
       showDialog<bool>(
         context: context1,
         builder: (context) => AlertDialog(
-          title: Text('주의'),
-          content: Text('이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?'),
+          title: Text(Intl.message("Warning")),
+          content: Text(Intl.message("Leaving this page will lose all unsaved contents. Will you continue?")),
           actions: <Widget>[
             TextButton(
               child: Text(
-                '나가기',
+                Intl.message("Exit"),
                 style: TextStyle(
                   color: quizLayout.getColorScheme().error,
                 ),
@@ -735,7 +735,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                   Navigator.of(context).popUntil((route) => route.isFirst),
             ),
             TextButton(
-                child: Text('취소'),
+                child: Text(Intl.message("Cancel")),
                 onPressed: () {
                   isDialogAlreadyPopped = false;
                   Navigator.of(context).pop(false); // Do not pop the screen.
@@ -758,7 +758,7 @@ class ConfirmButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text('확인'),
+      child: Text(Intl.message("OK")),
       onPressed: selection == 0 ? null : onPressed,
     );
   }
@@ -795,7 +795,7 @@ class LayoutOption extends StatelessWidget {
                 fit: BoxFit.fitHeight,
               )
             : Center(
-                child: Text("버튼 x\n 넘기기만"),
+                child: Text(Intl.message('No buttons\n Only Flip')),
               ),
         onTap: () {
           onSelected(layoutNumber);

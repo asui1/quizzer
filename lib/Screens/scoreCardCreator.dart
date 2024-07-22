@@ -1,5 +1,6 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
@@ -97,7 +98,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                       height: AppConfig.padding * heightModifier,
                     ),
                     Text(
-                      "사용자 닉네임",
+                      Intl.message("User Name"),
                       style: TextStyle(
                         fontSize: AppConfig.fontSize * 0.7,
                         fontWeight: FontWeight.w300,
@@ -135,7 +136,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                               Navigator.of(context).pop(savable);
                           }
                         },
-                        child: Text("업로드하기",
+                        child: Text(Intl.message("Upload"),
                             style: TextStyle(
                               color: quizLayout
                                   .getColorScheme()

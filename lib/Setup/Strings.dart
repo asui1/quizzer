@@ -1,15 +1,15 @@
 const Map<String, String> stringResources = {
-  'imageSet0': '배경 이미지 설정',
-  'imageSet1': '상단 바 이미지 설정',
-  'imageSet2': '하단 바 이미지 설정',
-  'imageSet3': '메인 색1',
-  'imageSet4': "메인 색2",
-  'imageSet5': '메인 색3',
-  'imageSet6': '채우기 색1',
-  'imageSet7': '채우기 색2',
-  'imageSet8': '채우기 색3',
-  'imageSet9': '오류 색',
-  'imageSet10': '오류 텍스트 색',
+  'imageSet0': 'BackGround Image Setup',
+  'imageSet1': 'TopBar Image Setup',
+  'imageSet2': 'BottomBar Image Setup',
+  'imageSet3': 'MainColor1',
+  'imageSet4': "MainColor2",
+  'imageSet5': 'MainColor3',
+  'imageSet6': 'FillColor1',
+  'imageSet7': 'FillColor2',
+  'imageSet8': 'FillColor3',
+  'imageSet9': 'ErrorColor',
+  'imageSet10': 'ErrorTextColor',
 
 
   
@@ -22,16 +22,16 @@ const Map<String, String> stringResources = {
   'quiz7' : '퀴즈 4 생성',
   'quiz8' : '퀴즈 4 뷰어',
 
-  'quizLayoutSetup1' : "질문 텍스트 설정",
-  'quizLayoutSetup2' : '예문 텍스트 설정',
-  'quizLayoutSetup3' : '본문 텍스트 설정',
-  'quizLayoutSetup4' : '넘기기 버튼 설정.',
-  'quizLayoutSetup5' : '이후 추가 예정입니다.',
+  'quizLayoutSetup1' : "Question Text Setup",
+  'quizLayoutSetup2' : 'Example Text Setup',
+  'quizLayoutSetup3' : 'Answer Text Setup',
+  'quizLayoutSetup4' : 'Flip Button Setup',
+  'quizLayoutSetup5' : 'Flip Button Setup',
 
-  'quizItem0' : '기본 선택형',
-  'quizItem1' : '날짜 선택형',
-  'quizItem2' : '순서 정렬형',
-  'quizItem3' : '정답 연결형',
+  'quizItem0' : 'Basic Selection',
+  'quizItem1' : 'Date Selection',
+  'quizItem2' : 'Order Sorting',
+  'quizItem3' : 'Answer Connecting',
 
 
 };

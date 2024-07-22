@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 
@@ -40,7 +41,7 @@ class _RegisterState extends State<Register> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Google Sign In Failed'),
+          content: Text(Intl.message('Google Sign In Failed')),
           duration: Duration(seconds: 2),
         ),
       );
@@ -58,13 +59,13 @@ class _RegisterState extends State<Register> {
                 builder: (context, snapshot) {
                   Color borderColor =
                       Theme.of(context).colorScheme.onSurface; // 기본 색상
-                  String labelText = '닉네임 설정';
+                  String labelText = Intl.message("Set Nickname");
                   Color textColor = Theme.of(context).colorScheme.onSurface;
                   if (snapshot.hasData) {
                     borderColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.error; // 조건에 따른 색상 변경
-                    labelText = snapshot.data! ? '사용 가능한 닉네임' : '중복된 닉네임';
+                    labelText = snapshot.data! ? Intl.message("Usable Nickname") : Intl.message("Duplicate Nickname");
                     textColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurface;
@@ -125,7 +126,7 @@ class _RegisterState extends State<Register> {
                               checkDuplicate(
                                   textController.value.text, _streamController);
                             },
-                            child: Text('중복 확인'),
+                            child: Text(Intl.message("Dup check")),
                           ),
                           SizedBox(
                             width: 20,
@@ -143,7 +144,7 @@ class _RegisterState extends State<Register> {
                             if (registerResult) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('가입에 성공했습니다.'),
+                                  content: Text(Intl.message("Register Success")),
                                   duration: Duration(seconds: 2),
                                 ),
                               );
@@ -155,7 +156,7 @@ class _RegisterState extends State<Register> {
                           }
                         },
                         child: Text(
-                          '등록',
+                          Intl.message("Register"),
                           style: TextStyle(
                             color: textColor,
                           ),
