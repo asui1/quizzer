@@ -1,13 +1,17 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
-// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -23,6 +27,7 @@ import 'package:quizzer/Screens/loadTemp.dart';
 import 'package:quizzer/Widgets/myColorPicker.dart';
 
 import '../Widgets/FlipWidgets.dart';
+import '../Widgets/myColorPicker.dart';
 
 class MakingQuizscreen extends StatefulWidget {
   MakingQuizscreen({Key? key}) : super(key: key);
@@ -291,8 +296,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(
-                                            Intl.message("Flip_Style_Setup"))),
+                                        child: Text(Intl.message("Flip_Style_Setup")
+                                    )),
                                     content: Container(
                                       // Set a fixed height to avoid layout issues in AlertDialog
                                       width: double
@@ -366,8 +371,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(
-                                      Intl.message("Color_Setup"),
+                                        child: Text(Intl.message("Color_Setup"),
                                     )),
                                     content: SingleChildScrollView(
                                       child: ListBody(
@@ -402,8 +406,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                   isActive: quizLayout
                                                       .getVisibility(index),
                                                   quizLayout: quizLayout,
-                                                  buttonText: Intl.message(
-                                                      stringResources[
+                                                  buttonText: Intl.message(stringResources[
                                                           'imageSet$index']!),
                                                   image: quizLayout
                                                       .getImageColorNotNull(
