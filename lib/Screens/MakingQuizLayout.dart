@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -406,10 +407,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       final XFile? tempImageFile =
                           await _picker.pickImage(source: ImageSource.gallery);
                       if (tempImageFile != null) {
-                        // 이미지 파일 처리
-                        final File? compressedFile =
-                            await checkCompressImage(tempImageFile, 50, 50);
-
+                        Uint8List file = await tempImageFile.readAsBytes();
+                        Uint8List compressedFileData = await compressImage(file);
+                        File? compressedFile = await saveFileToPermanentDirectory(
+                            XFile.fromData(compressedFileData));
                         if (compressedFile != null) {
                           setState(() {
                             quizLayout.setTitleImage(compressedFile.path);

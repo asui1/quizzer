@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path/path.dart' as path; // Add this line
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:image/image.dart' as img;
 
 Future<File?> checkCompressImage(
     XFile? tempImageFile, int width, int height) async {
@@ -76,4 +78,15 @@ Future<File> saveFileToPermanentDirectory(XFile xFile) async {
   await xFile.saveTo(permanentFile.path);
 
   return permanentFile;
+}
+
+Future<Uint8List> compressImage(Uint8List imageData, {int quality = 70}) async {
+  // Uint8List 형태의 이미지 데이터를 img.Image 객체로 디코딩합니다.
+  img.Image? image = img.decodeImage(imageData);
+
+  // 이미지를 압축합니다. quality는 0에서 100 사이의 값으로, 낮을수록 더 많이 압축됩니다.
+  img.Image compressedImage = img.copyResize(image!, width: 600); // 필요한 경우 크기 조정
+  Uint8List compressedImageData = Uint8List.fromList(img.encodeJpg(compressedImage, quality: quality));
+
+  return compressedImageData;
 }
