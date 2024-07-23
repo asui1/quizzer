@@ -1,14 +1,12 @@
-import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
-import 'package:quizzer/Functions/customScrollPhysic.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';

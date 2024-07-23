@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart'; // Import the material.dart package
-import 'package:flutter/widgets.dart';
 import 'package:material_theme_builder/material_theme_builder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -14,12 +13,12 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/scoreCard.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/colorGenerator.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:uuid/uuid.dart';
 
 class QuizLayout extends ChangeNotifier {
@@ -640,7 +639,7 @@ class QuizLayout extends ChangeNotifier {
     if (backgroundImage == null) {
       backgroundColorMain = colorScheme.surface;
     } else {
-      backgroundColorMain = await backgroundImage!.getMainColor() as Color;
+      backgroundColorMain = await backgroundImage!.getMainColor();
     }
     MaterialThemeBuilder temp = MaterialThemeBuilder(
       primary: colorScheme.primary,

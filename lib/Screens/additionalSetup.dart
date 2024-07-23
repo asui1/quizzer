@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -47,7 +46,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                                 ? showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      int selectedValue = 0; // 초기 선택값 설정
+// 초기 선택값 설정
                                       return StatefulBuilder(
                                         builder: (context, setState) {
                                           return AlertDialog(

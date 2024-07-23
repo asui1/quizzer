@@ -1,10 +1,7 @@
-import 'dart:convert';
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
-import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class ScoreCard {

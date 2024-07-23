@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter/src/widgets/image.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Setup/Colors.dart';

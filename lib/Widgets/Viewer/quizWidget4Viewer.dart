@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
@@ -35,7 +35,6 @@ class _QuizView4State extends State<QuizView4> {
   List<GlobalKey> rightKeys = [];
   List<GlobalKey> lineKeys = [];
   List<int> curAnswer = [];
-  late Future<void> _loadQuizFuture;
   List<Offset> leftDotGlobal = [];
   List<Offset> leftDotLinePaintLocal = [];
   List<Offset> rightDotGlobal = [];
@@ -66,7 +65,7 @@ class _QuizView4State extends State<QuizView4> {
       curAnswer.add(-1);
       isDragging.add(false);
     }
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setOffsets();
     });
   }

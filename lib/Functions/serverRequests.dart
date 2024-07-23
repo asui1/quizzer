@@ -10,7 +10,6 @@ import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 Future<void> downloadJson(Directory directory, String uuid) async {
   final url = serverUrl + 'getQuizData/?uuid=$uuid';

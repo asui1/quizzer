@@ -1,6 +1,4 @@
-import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz3.dart';
@@ -35,14 +33,13 @@ class _QuizView3State extends State<QuizView3> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
-    List<String> answers = widget.quiz.getAnswers();
+    widget.quiz.getAnswers();
     if (widget.quiz.shuffledAnswers.isEmpty) widget.quiz.setShuffledAnswers();
     _items = widget.quiz.getShuffledAnswers();
     return Theme(

@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path; // Add this line
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,7 +28,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.index > 2) {
       pickerColor = widget.quizLayout.getColor(widget.index);
@@ -184,7 +181,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                   widget.quizLayout.setImage(
                       widget.index,
                       ImageColor(
-                          imagePath: compressedImage!.path,
+                          imagePath: compressedImage.path,
                           color: pickerColor));
                 }
 

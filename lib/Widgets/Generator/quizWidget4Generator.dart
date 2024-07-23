@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/LinePainter.dart';
@@ -37,7 +37,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
     super.initState();
     questionController = TextEditingController(text: widget.quiz.getQuestion());
     _initControllers();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setOffsets();
     });
   }
@@ -167,7 +167,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                             leftKeys.add(GlobalKey());
                                             rightKeys.add(GlobalKey());
                                             lineKeys.add(GlobalKey());
-                                            WidgetsBinding.instance!
+                                            WidgetsBinding.instance
                                                 .addPostFrameCallback((_) {
                                               setOffsets();
                                             });
@@ -378,7 +378,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                   rightKeys.removeAt(index);
                                                   lineKeys.removeAt(index);
                                                   needUpdate = true;
-                                                  WidgetsBinding.instance!
+                                                  WidgetsBinding.instance
                                                       .addPostFrameCallback(
                                                           (_) {
                                                     setOffsets();
@@ -424,7 +424,6 @@ class _QuizWidget4State extends State<QuizWidget4> {
         continue;
       }
       int index = connectionAnswerIndex[i]!;
-      int newIndex;
       if (deletedIndex < index && i < deletedIndex) {
         int newIndex = index - 1;
         RenderBox rightDot =

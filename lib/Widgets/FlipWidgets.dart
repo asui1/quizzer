@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Class/ImageColor.dart';
 import '../Class/quizLayout.dart';
 
 class FilpStyle12 extends StatelessWidget {

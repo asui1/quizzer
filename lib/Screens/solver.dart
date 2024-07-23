@@ -4,7 +4,6 @@
 // 채점 후 점수를 가지고 결과 페이지로 이동.
 // Solver가 받을 입력 : Quizlayout, int index -> 몇 번째 퀴즈를 화면에 나타낼지.
 
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/ImageColor.dart';

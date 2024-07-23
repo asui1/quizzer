@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/DraggableTextWidget.dart';
@@ -21,7 +22,6 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

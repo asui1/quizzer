@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quizLayout.dart';
@@ -43,7 +41,6 @@ class _QuizWidget2State extends State<QuizWidget2> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     questionController.dispose();
     yearController.dispose();
@@ -54,9 +51,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
   @override
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
-    int maxAnswerSelection = widget.quiz.getMaxAnswerSelection();
-    TextEditingController controller =
-        TextEditingController(text: maxAnswerSelection.toString());
+    widget.quiz.getMaxAnswerSelection();
     bodyTextStyle = TextStyle(
       fontFamily: quizLayout.getBodyFont(),
       color: quizLayout.getColor(3),

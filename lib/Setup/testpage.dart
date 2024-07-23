@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 
 class TestScreen extends StatefulWidget {
   @override

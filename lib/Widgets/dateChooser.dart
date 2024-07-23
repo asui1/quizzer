@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Setup/config.dart'; // Add this line to import DateFormat
 

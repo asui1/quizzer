@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Setup/Colors.dart';
 

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Setup/config.dart';
@@ -171,9 +172,9 @@ PreferredSizeWidget? viewerAppBar(
                         )
                       : null,
                 )
-              : topBarImage!.isColor()
+              : topBarImage.isColor()
                   ? Container(
-                      color: topBarImage!.getColor(),
+                      color: topBarImage.getColor(),
                       height: quizLayout.getAppBarHeight(),
                       child: showDragHandle
                           ? Stack(
@@ -189,7 +190,7 @@ PreferredSizeWidget? viewerAppBar(
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: Image.file(File(
-                            topBarImage!.getImagePath(),
+                            topBarImage.getImagePath(),
                           )).image,
                           fit: BoxFit.fitWidth,
                         ),
@@ -230,9 +231,9 @@ Widget? viewerBottomBar({
                     showSwitchButton: showSwitchButton,
                   ),
                 )
-              : bottomBarImage!.isColor()
+              : bottomBarImage.isColor()
                   ? Container(
-                      color: bottomBarImage!.getColor(),
+                      color: bottomBarImage.getColor(),
                       height: quizLayout.getBottomBarHeight(),
                       child: BottomBarStack(
                         quizLayout: quizLayout,
@@ -247,7 +248,7 @@ Widget? viewerBottomBar({
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image: Image.file(
-                            File(bottomBarImage!.getImagePath()),
+                            File(bottomBarImage.getImagePath()),
                           ).image,
                           fit: BoxFit.fitWidth,
                         ),
