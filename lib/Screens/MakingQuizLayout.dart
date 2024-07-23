@@ -78,8 +78,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
             child: AlertDialog(
               title: Text(Intl.message("Terms_of_Use")),
               content: Text(
-                Intl.message(
-                    "User_Agreement_text"),
+                Intl.message("User_Agreement_text"),
               ),
               actions: <Widget>[
                 TextButton(
@@ -124,9 +123,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
   @override
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
-    quizLayout.getNextHighlightedIndex();
+    int highlightedIndex = quizLayout.getNextHighlightedIndex();
     if (quizLayout.getSelectedLayout() == 0) {
+      highlightedIndex = 0;
     }
+    if (quizLayout.getSelectedLayout() == 0) {}
     if (quizLayout.getSelectedLayout() == 3) {
       quizLayout.setBottomBarVisibility(true);
     }
@@ -254,6 +255,23 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           quizLayout: quizLayout,
                           index: 0,
                           onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return buildTitleAlertDialog(
+                                    context, quizLayout);
+                              },
+                            ).then(
+                              (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    quizLayout.setIsTitleSet(true);
+                                    highlightedIndex =
+                                        quizLayout.getNextHighlightedIndex();
+                                  });
+                                }
+                              },
+                            );
                           },
                         ),
                         CustomContainer(
@@ -261,10 +279,71 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           quizLayout: quizLayout,
                           index: 1,
                           onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(// Add this
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        quizLayout.getColorScheme().surface,
+                                    title: Center(
+                                        child: Text(
+                                            Intl.message("Flip_Style_Setup"))),
+                                    content: Container(
+                                      // Set a fixed height to avoid layout issues in AlertDialog
+                                      width: double
+                                          .maxFinite, // Use maximum width available
+                                      child: GridView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            4, // Adjust the item count as needed
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2, // 2 items per row
+                                          crossAxisSpacing:
+                                              10, // Spacing between items horizontally
+                                          mainAxisSpacing:
+                                              10, // Spacing between items vertically
+                                        ),
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return LayoutOption(
+                                            layoutNumber: index + 1,
+                                            quizLayout: quizLayout,
+                                            onSelected: (layoutNumber) {
+                                              setState(() {
+                                                quizLayout.setSelectedLayout(
+                                                    layoutNumber);
+                                              });
+                                            },
+                                            imagePath:
+                                                'assets/images/layoutOption${index + 1}.jpg',
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      ConfirmButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                              quizLayout.getSelectedLayout());
+                                        },
+                                        selection:
+                                            quizLayout.getSelectedLayout(),
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            );
                             if (quizLayout.getSelectedLayout() != 0) {
                               {
                                 setState(() {
                                   quizLayout.setIsFlipStyleSet(true);
+                                  highlightedIndex =
+                                      quizLayout.getNextHighlightedIndex();
                                 });
                               }
                             }
@@ -275,17 +354,113 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           quizLayout: quizLayout,
                           index: 2,
                           onPressed: () async {
+                            final layoutSelected = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(// Add this
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                  return AlertDialog(
+                                    backgroundColor:
+                                        quizLayout.getColorScheme().surface,
+                                    title: Center(
+                                        child: Text(
+                                      Intl.message("Color_Setup"),
+                                    )),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Column(
+                                            children:
+                                                List.generate(10, (index) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom:
+                                                        8.0), // Adjust the value as needed
+                                                child: CustomRow(
+                                                  onPressed: () async {
+                                                    // Show color picker
+                                                    final selectedColor =
+                                                        await showDialog<Color>(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return ColorPickerField(
+                                                          quizLayout:
+                                                              quizLayout,
+                                                          index: index,
+                                                        );
+                                                      },
+                                                    );
+
+                                                    if (selectedColor != null) {
+                                                      setState(() {});
+                                                    }
+                                                  },
+                                                  isActive: quizLayout
+                                                      .getVisibility(index),
+                                                  quizLayout: quizLayout,
+                                                  buttonText: Intl.message(
+                                                      stringResources[
+                                                          'imageSet$index']!),
+                                                  image: quizLayout
+                                                      .getImageColorNotNull(
+                                                          index),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceBetween, // 좌우 정렬
+                                        children: <Widget>[
+                                          IconButton(
+                                            key: const ValueKey(
+                                                "MakingQuizLayoutColorSchemeRefreshButton"),
+                                            onPressed: () {
+                                              quizLayout
+                                                  .generateAdequateColors();
+                                              setState(() {});
+                                            },
+                                            icon: Icon(Icons.autorenew),
+                                          ),
+                                          Expanded(
+                                              child:
+                                                  SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
+                                          ConfirmButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(1);
+                                            },
+                                            selection: 1,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                });
+                              },
+                            ).then((_) {
+                              setState(() {
+                                changeColorScheme(quizLayout.getColorScheme());
+                              });
+                            });
                             if (quizLayout.getSelectedLayout() != 0) {
                               {
                                 setState(() {
                                   quizLayout.setIsBackgroundImageSet(true);
+                                  highlightedIndex =
+                                      quizLayout.getNextHighlightedIndex();
                                 });
                               }
                             }
                           },
                         ),
                         CustomContainer(
-                          text: '4. '+ Intl.message("Additional_Setup"),
+                          text: '4. ' + Intl.message("Additional_Setup"),
                           quizLayout: quizLayout,
                           index: 3,
                           onPressed: () async {
@@ -408,9 +583,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           await _picker.pickImage(source: ImageSource.gallery);
                       if (tempImageFile != null) {
                         Uint8List file = await tempImageFile.readAsBytes();
-                        Uint8List compressedFileData = await compressImage(file);
-                        File? compressedFile = await saveFileToPermanentDirectory(
-                            XFile.fromData(compressedFileData));
+                        Uint8List compressedFileData =
+                            await compressImage(file);
+                        File? compressedFile =
+                            await saveFileToPermanentDirectory(
+                                XFile.fromData(compressedFileData));
                         if (compressedFile != null) {
                           setState(() {
                             quizLayout.setTitleImage(compressedFile.path);
