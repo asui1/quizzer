@@ -41,7 +41,7 @@ class _RegisterState extends State<Register> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(Intl.message('Google Sign In Failed')),
+          content: Text(Intl.message("Google_Sign_In_Failed")),
           duration: Duration(seconds: 2),
         ),
       );
@@ -59,13 +59,13 @@ class _RegisterState extends State<Register> {
                 builder: (context, snapshot) {
                   Color borderColor =
                       Theme.of(context).colorScheme.onSurface; // 기본 색상
-                  String labelText = Intl.message("Set Nickname");
+                  String labelText = Intl.message("Set_Nickname");
                   Color textColor = Theme.of(context).colorScheme.onSurface;
                   if (snapshot.hasData) {
                     borderColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.error; // 조건에 따른 색상 변경
-                    labelText = snapshot.data! ? Intl.message("Usable Nickname") : Intl.message("Duplicate Nickname");
+                    labelText = snapshot.data! ? Intl.message("Usable_Nickname") : Intl.message("Duplicate_Nickname");
                     textColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurface;
@@ -126,7 +126,7 @@ class _RegisterState extends State<Register> {
                               checkDuplicate(
                                   textController.value.text, _streamController);
                             },
-                            child: Text(Intl.message("Dup check")),
+                            child: Text(Intl.message("Dup_check")),
                           ),
                           SizedBox(
                             width: 20,
@@ -144,7 +144,7 @@ class _RegisterState extends State<Register> {
                             if (registerResult) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(Intl.message("Register Success")),
+                                  content: Text(Intl.message("Register_Success")),
                                   duration: Duration(seconds: 2),
                                 ),
                               );

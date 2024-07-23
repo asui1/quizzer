@@ -23,7 +23,7 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
       data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Intl.message('Additional Setup')),
+          title: Text(Intl.message("Additional_Setup")),
           backgroundColor: widget.quizLayout.getColorScheme().inversePrimary,
         ),
         body: Container(

@@ -357,7 +357,7 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                     SnackBar(
                                                       content: Text(
                                                         Intl.message(
-                                                            "At least 2 answers are required"),
+                                                            "At_least_2_answers_are_required"),
                                                       ),
                                                       duration:
                                                           Duration(seconds: 1),

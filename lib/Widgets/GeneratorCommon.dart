@@ -33,7 +33,7 @@ class questionInputTextField extends StatelessWidget {
         filled: true,
         focusColor: textQuestionColor,
         fillColor: backgroundQuestionColor,
-        hintText: Intl.message("Enter Question"),
+        hintText: Intl.message("Enter_Question"),
       ),
       style: getTextFieldTextStyle(
           quizLayout.getQuestionTextStyle(), quizLayout.getColorScheme()),
@@ -68,7 +68,7 @@ ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
       onPressed: () async {
         if (quizLayout.getTitle() == '') {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(Intl.message("Can't save without title")),
+            content: Text(Intl.message("Cant_save_without_title")),
           ));
           return;
         }
@@ -78,5 +78,5 @@ ElevatedButton tempSaveButton(BuildContext context, QuizLayout quizLayout) =>
                   Navigator.of(context).popUntil((route) => route.isFirst);
 
       });}, 
-      child: Text(Intl.message("Temp Save")),
+      child: Text(Intl.message("Temp_Save")),
     );

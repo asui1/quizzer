@@ -11,7 +11,7 @@ class NoInternet extends StatelessWidget {
     // Returning a Scaffold as a placeholder.
     return Scaffold(
       body: Center(
-        child: Text(Intl.message("Checking Internet Connection...")),
+        child: Text(Intl.message("Checking_Internet_Connection")),
       ),
     );
   }
@@ -21,18 +21,18 @@ class NoInternet extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(Intl.message("No Internet Connection")),
+          title: Text(Intl.message("No_Internet_Connection")),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(Intl.message('You are not connected to the internet.')),
-                Text(Intl.message('Please check your connection and try again.')),
+                Text(Intl.message("You_are_not_connected_to_Internet")),
+                Text(Intl.message("Please_check_your_connection_and_try_again")),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(Intl.message('OK')),
+              child: Text(Intl.message("OK")),
               onPressed: () {
                 SystemNavigator.pop(); // This exits the app.
               },

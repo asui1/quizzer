@@ -98,7 +98,7 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                       height: AppConfig.padding * heightModifier,
                     ),
                     Text(
-                      Intl.message("User Name"),
+                      Intl.message("User_Name"),
                       style: TextStyle(
                         fontSize: AppConfig.fontSize * 0.7,
                         fontWeight: FontWeight.w300,

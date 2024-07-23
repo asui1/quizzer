@@ -149,7 +149,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           ElevatedButton(
                                             key: const ValueKey('add_answer'),
                                             child: Text(
-                                              Intl.message("Add Answer"),
+                                              Intl.message("Add_Answer"),
                                               style: TextStyle(
                                                 fontSize: AppConfig.fontSize,
                                               ),
@@ -301,7 +301,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        Intl.message("Shuffle Answers?"),
+                                        Intl.message("Shuffle_Answers?"),
                                       ),
                                       Checkbox(
                                         value: shuffleAnswers,
@@ -314,7 +314,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           });
                                         },
                                       ),
-                                      Text(Intl.message("Number of possible selection : ")),
+                                      Text(Intl.message("Number_of_possible_selection")),
                                       Container(
                                         width: 50.0,
                                         child: TextField(

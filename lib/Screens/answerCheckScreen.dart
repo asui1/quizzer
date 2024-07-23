@@ -141,7 +141,7 @@ class AnswerCheckScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // Row의 크기를 내용물에 맞춤
             children: [
               SizedBox(width: AppConfig.padding), // Add space between columns
-              Text(Intl.message("Prob.") +
+              Text(Intl.message("Prob") +
                 ' ${index + 1} : ',
                 style: TextStyle(
                   fontFamily: quizLayout.getAnswerFont(),

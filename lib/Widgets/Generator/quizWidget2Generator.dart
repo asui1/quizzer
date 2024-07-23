@@ -225,7 +225,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   //시작 날짜 ~ 끝나는 날 설정하도록 하기
                                   SizedBox(height: AppConfig.smallPadding),
                                   Text(
-                                    Intl.message("Select Center Date. ±20Y"),
+                                    Intl.message("Select_Center_Date_20Y"),
                                     style: textStyle,
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),
@@ -250,7 +250,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
                                   ),
                                   SizedBox(height: AppConfig.padding),
                                   Text(
-                                    Intl.message("Enter Answer Dates"),
+                                    Intl.message("Enter_Answer_Dates"),
                                     style: textStyle,
                                   ),
                                   SizedBox(height: AppConfig.smallPadding),

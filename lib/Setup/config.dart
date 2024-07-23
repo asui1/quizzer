@@ -18,8 +18,8 @@ class AppConfig {
   static double iconSize = 0;
   static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans, MyFonts.maruBuriRegular, MyFonts.spoqaHanSansNeoRegular,
     MyFonts.diary, MyFonts.ongleYunu, MyFonts.ongleEuyen];
-  static List<String> borderType = [Intl.message("No Borders"), Intl.message("Underline"), Intl.message("Box Border")];
-  static List<String> colorStyles = [Intl.message("Color Set") + "0", Intl.message("Color Set") + "1", Intl.message("Color Set") + "2", Intl.message("Color Set") + "3", Intl.message("Color Set") + "4", Intl.message("Color Set") + "5", Intl.message("Color Set") + "6", Intl.message("Color Set") + "7", Intl.message("Color Set") + "8", Intl.message("Color Set") + "9"];
+  static List<String> borderType = [Intl.message("No_Borders"), Intl.message("Underline"), Intl.message("Box_Border")];
+  static List<String> colorStyles = [Intl.message("Color_Set") + "0", Intl.message("Color_Set") + "1", Intl.message("Color_Set") + "2", Intl.message("Color_Set") + "3", Intl.message("Color_Set") + "4", Intl.message("Color_Set") + "5", Intl.message("Color_Set") + "6", Intl.message("Color_Set") + "7", Intl.message("Color_Set") + "8", Intl.message("Color_Set") + "9"];
   
 
   //ORDER IN QUESTION, BODY, ANSWER

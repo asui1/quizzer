@@ -171,7 +171,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
                         onPressed: () {
                           _onPopInvoked(true);
                         },
-                        child: Text(Intl.message("Move Home"),
+                        child: Text(Intl.message("Move_Home"),
                             style: TextStyle(
                               color: widget.quizLayout
                                   .getColorScheme()

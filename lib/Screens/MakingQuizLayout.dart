@@ -79,10 +79,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
               }
             },
             child: AlertDialog(
-              title: Text(Intl.message("Terms of Use")),
+              title: Text(Intl.message("Terms_of_Use")),
               content: Text(
                 Intl.message(
-                    "When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user's responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button."),
+                    "User_Agreement_text"),
               ),
               actions: <Widget>[
                 TextButton(
@@ -254,7 +254,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CustomContainer(
-                          text: Intl.message("1. Quiz Title"),
+                          text: Intl.message("First_Quiz_Title"),
                           quizLayout: quizLayout,
                           index: 0,
                           onPressed: () async {
@@ -278,7 +278,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: Intl.message("2. Flip Style"),
+                          text: Intl.message("Second_Flip_Style"),
                           quizLayout: quizLayout,
                           index: 1,
                           onPressed: () async {
@@ -292,7 +292,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(Intl.message("Flip Style Setup")
+                                        child: Text(Intl.message("Flip_Style_Setup")
                                     )),
                                     content: Container(
                                       // Set a fixed height to avoid layout issues in AlertDialog
@@ -353,7 +353,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: Intl.message("3. Color Setup"),
+                          text: Intl.message("Thired_Color_Setup"),
                           quizLayout: quizLayout,
                           index: 2,
                           onPressed: () async {
@@ -367,7 +367,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(Intl.message("Color Setup"),
+                                        child: Text(Intl.message("Color_Setup"),
                                     )),
                                     content: SingleChildScrollView(
                                       child: ListBody(
@@ -461,7 +461,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: '4. '+ Intl.message("Additional Setup"),
+                          text: '4. '+ Intl.message("Additional_Setup"),
                           quizLayout: quizLayout,
                           index: 3,
                           onPressed: () async {
@@ -542,7 +542,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         return AlertDialog(
           title: Center(
             child: Text(
-              Intl.message("Quiz Title Setup"),
+              Intl.message("Quiz_Title_Setup"),
             ),
           ),
           backgroundColor: quizLayout.getColorScheme().surface,
@@ -560,7 +560,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     controller:
                         _titleController, // Bind the controller to the TextField
                     decoration: InputDecoration(
-                      labelText: Intl.message("Enter Quiz Title"),
+                      labelText: Intl.message("Enter_Quiz_Title"),
                     ),
                     onChanged: (value) {
                       // Optionally update the title in real-time
@@ -572,7 +572,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     height: AppConfig.screenHeight * 0.02,
                   ),
                   Text(
-                    Intl.message("Set Title Image"),
+                    Intl.message("Set_Title_Image"),
                   ),
                   SizedBox(
                     height: AppConfig.screenHeight * 0.02,
@@ -664,12 +664,12 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text(Intl.message("Add Tags")),
+                          title: Text(Intl.message("Add_Tags")),
                           content: TextField(
                             controller: tagController,
                             autofocus: true,
                             decoration: InputDecoration(
-                              hintText: Intl.message("Enter Tags"),
+                              hintText: Intl.message("Enter_Tags"),
                             ),
                             onSubmitted: (value) => addTagAndCloseDialog(),
                           ),
@@ -694,7 +694,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     );
                   },
                   child: Text(
-                    Intl.message("Add Tags"),
+                    Intl.message("Add_Tags"),
                     style: TextStyle(
                       color:
                           quizLayout.getColorScheme().primary, // 버튼 텍스트 색상 설정
@@ -722,7 +722,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
         context: context1,
         builder: (context) => AlertDialog(
           title: Text(Intl.message("Warning")),
-          content: Text(Intl.message("Leaving this page will lose all unsaved contents. Will you continue?")),
+          content: Text(Intl.message("Leaving_warning")),
           actions: <Widget>[
             TextButton(
               child: Text(
@@ -795,7 +795,7 @@ class LayoutOption extends StatelessWidget {
                 fit: BoxFit.fitHeight,
               )
             : Center(
-                child: Text(Intl.message('No buttons\n Only Flip')),
+                child: Text(Intl.message("No_buttons_Only_Flip")),
               ),
         onTap: () {
           onSelected(layoutNumber);

@@ -32,13 +32,23 @@ import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Setup/testpage.dart';
 import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
+import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:ui' as ui;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
+  List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
+  // 한국어 지원 여부 확인
+  String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
+  await initializeMessages(
+      locale);
+  String localeCode = (locale == 'ko') ? 'ko_KR' : 'en_US';
+  // Intl 패키지에 로케일 설정
+  Intl.defaultLocale = localeCode;
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     runApp(NoInternet());
@@ -63,7 +73,7 @@ class UpdateApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text(Intl.message('There is a new version.\nPlease update.')),
+          child: Text(Intl.message("There_is_a_new_version_Please_update")),
         ),
       ),
     );
@@ -88,8 +98,8 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
-          const Locale('en', ''), // 영어
           const Locale('ko', ''), // 한국어
+          const Locale('en', ''), // 영어
         ],
         title: 'Quizzer',
         theme: ThemeData(
@@ -355,19 +365,19 @@ class _MyHomePageState extends State<MyHomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: Intl.message('Home'),
+            label: Intl.message("Home"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_up),
-            label: Intl.message('Trending'),
+            label: Intl.message("Trending"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.leaderboard),
-            label: Intl.message('Rank'),
+            label: Intl.message("Rank"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: Intl.message('My Settings'),
+            label: Intl.message("My_Settings"),
           ),
         ],
         selectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -502,10 +512,10 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         List<String> items = [
-          Intl.message("Bug Report"),
-          Intl.message("Report Quiz"),
-          Intl.message("Development Inquiry"),
-          Intl.message("Other Inquiry")
+          Intl.message("Bug_Report"),
+          Intl.message("Report_Quiz"),
+          Intl.message("Development_Inquiry"),
+          Intl.message("Other_Inquiry")
         ];
         String dropdownValue = items[0]; // Default value for the dropdown
         return AlertDialog(
@@ -520,7 +530,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        Intl.message("Response will be given by email"),
+                        Intl.message("Response_will_be_given_by_email"),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -548,7 +558,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     TextField(
                       controller: _emailContentController,
                       decoration: InputDecoration(
-                        hintText: Intl.message("Enter Inquiry"),
+                        hintText: Intl.message("Enter_Inquiry"),
                         border: OutlineInputBorder(
                           // Add an outline border
                           borderRadius: BorderRadius.circular(
@@ -601,7 +611,8 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 width: double.infinity, // 버튼을 대화상자 너비에 맞춤
                 child: ElevatedButton(
-                  child: Text(Intl.message("Login"), style: TextStyle(fontSize: 20)),
+                  child: Text(Intl.message("Login"),
+                      style: TextStyle(fontSize: 20)),
                   onPressed: () async {
                     final account = await _googleSignIn.signIn();
                     if (account != null) {
@@ -612,7 +623,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (loginStatus == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(Intl.message("Successful Login")),
+                            content: Text(Intl.message("Successful_Login")),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -622,14 +633,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       } else if (loginStatus == 400) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(Intl.message("Unregistered User")),
+                            content: Text(Intl.message("Unregistered_User")),
                             duration: Duration(seconds: 2),
                           ),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(Intl.message("Login Failed")),
+                            content: Text(Intl.message("Login_Failed")),
                             duration: Duration(seconds: 2),
                           ),
                         );
@@ -638,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(Intl.message("Google Login Failed")),
+                          content: Text(Intl.message("Google_Login_Failed")),
                           duration: Duration(seconds: 2),
                         ),
                       );
@@ -879,7 +890,7 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(Intl.message("Are you sure to Logout?")),
+          content: Text(Intl.message("Are_you_sure_to_Logout")),
           actions: <Widget>[
             TextButton(
               child: Text(Intl.message("No")),
@@ -893,7 +904,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 UserPreferences.clear();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(Intl.message("You are Logged out")),
+                    content: Text(Intl.message("You_are_Logged_out")),
                     duration: Duration(seconds: 2),
                   ),
                 );

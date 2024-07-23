@@ -187,7 +187,7 @@ class _QuizWidget3State extends State<QuizWidget3> {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                        Intl.message("At least 3 answers are required")),
+                                                        Intl.message("At_least_3_answers_are_required")),
                                                     duration:
                                                         Duration(seconds: 1),
                                                   ),

@@ -88,7 +88,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                     maxLength: 6,
                     decoration: InputDecoration(
                       labelText: 'Hex code',
-                      errorText: isHexCodeValid ? null : Intl.message("Invalid hex code"),
+                      errorText: isHexCodeValid ? null : Intl.message("Invalid_hex_code"),
                     ),
                     onChanged: (value) {
                       try {
@@ -113,7 +113,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            Intl.message("Current Path: ")+'${imageFile == null ? Intl.message("No image selected") : lastTenChars}',
+                            Intl.message("Current_Path")+'${imageFile == null ? Intl.message("No_image_selected") : lastTenChars}',
                             style: TextStyle(fontSize: 16),
                             maxLines: 1,
                           ),
@@ -124,7 +124,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                                 child: SizedBox.shrink(), // 정렬을 위한 자리 표시자
                               ),
                               ElevatedButton(
-                                child: Text(Intl.message("Pick Image")),
+                                child: Text(Intl.message("Pick_Image")),
                                 onPressed: () async {
                                   final ImagePicker _picker = ImagePicker();
                                   final XFile? tempImageFile = await _picker

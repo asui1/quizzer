@@ -50,14 +50,14 @@ class _ContentWidgetState extends State<ContentWidget> {
     switch (widget.quiz1.getBodyType()) {
       case 0:
         return ElevatedButton(
-          child: Text(Intl.message("Add Text")),
+          child: Text(Intl.message("Add_Text")),
           onPressed: () {
             showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
                   title: Text(
-                    Intl.message("Add Text"),
+                    Intl.message("Add_Text"),
                     textAlign: TextAlign.center,
                   ),
                   content: Row(

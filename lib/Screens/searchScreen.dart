@@ -83,7 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildSearchBody() {
     // Build your search body here
     return Center(
-      child: Text(Intl.message("Searching...")),
+      child: Text(Intl.message("Searching")),
     );
   }
 
