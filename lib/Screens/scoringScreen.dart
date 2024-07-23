@@ -1,15 +1,10 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
-import 'package:quizzer/Functions/serverRequests.dart';
-import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Setup/config.dart';
-import 'package:quizzer/Widgets/FlipWidgets.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class ScoringScreen extends StatefulWidget {

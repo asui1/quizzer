@@ -1,9 +1,8 @@
 import 'dart:convert';
-
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> sendEmail(String subject, String body) async {
@@ -12,7 +11,7 @@ Future<void> sendEmail(String subject, String body) async {
     return;
   }
   final url = serverUrl + 'UserRequest/';
-  final response = http.post(
+  http.post(
     Uri.parse(url),
     headers: {'Content-Type': 'application/json', 'Authorization': serverAuth},
     body: jsonEncode({

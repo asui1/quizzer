@@ -7,7 +7,6 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
-import 'package:quizzer/Setup/config.dart';
 
 class ContentWidget extends StatefulWidget {
   final BuildContext context;

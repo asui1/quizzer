@@ -26,9 +26,9 @@ class ColorSchemeGenerator {
     if (luminance > 0.5) {
       // 배경색을 기반으로 사용자 정의 검은색을 생성합니다.
       // 여기서는 배경색의 RGB 값을 사용하여 약간 어두운 색상을 생성합니다.
-      int r = (complementaryColor.red * 100 / randomSeed1).toInt();
-      int g = (complementaryColor.green * 100 / randomSeed2).toInt();
-      int b = (complementaryColor.blue * 100 / randomSeed3).toInt();
+      int r = complementaryColor.red * 100 ~/ randomSeed1;
+      int g = complementaryColor.green * 100 ~/ randomSeed2;
+      int b = complementaryColor.blue * 100 ~/ randomSeed3;
       return Color.fromRGBO(r, g, b, 1.0);
     } else {
       // 배경색이 어둡다면, 사용자 정의 "whitish" 색상을 생성합니다.
@@ -52,9 +52,9 @@ class ColorSchemeGenerator {
     if (luminance > 0.5) {
       // 배경색을 기반으로 사용자 정의 검은색을 생성합니다.
       // 여기서는 배경색의 RGB 값을 사용하여 약간 어두운 색상을 생성합니다.
-      int r = (primaryColor.red * 100 / randomSeed1).toInt();
-      int g = (primaryColor.green * 100 / randomSeed2).toInt();
-      int b = (primaryColor.blue * 100 / randomSeed3).toInt();
+      int r = primaryColor.red * 100 ~/ randomSeed1;
+      int g = primaryColor.green * 100 ~/ randomSeed2;
+      int b = primaryColor.blue * 100 ~/ randomSeed3;
       return Color.fromRGBO(r, g, b, 1.0);
     } else {
       // 배경색이 어둡다면, 사용자 정의 "whitish" 색상을 생성합니다.
@@ -86,11 +86,9 @@ ColorScheme deepCopyColorScheme(ColorScheme original) {
     onError: original.onError,
     errorContainer: original.errorContainer,
     onErrorContainer: original.onErrorContainer,
-    background: original.background,
-    onBackground: original.onBackground,
     surface: original.surface,
     onSurface: original.onSurface,
-    surfaceVariant: original.surfaceVariant,
+    surfaceContainerHighest: original.surfaceContainerHighest,
     onSurfaceVariant: original.onSurfaceVariant,
     outline: original.outline,
     onInverseSurface: original.onInverseSurface,

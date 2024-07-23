@@ -6,9 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
-import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
 import 'package:quizzer/Screens/solver.dart';
@@ -37,7 +35,6 @@ class QuizCard extends StatelessWidget {
         child: InkWell(
           onTap: () async {
             String dataJson = "";
-            Map<String, dynamic> dataString;
             final directory = await getApplicationDocumentsDirectory();
             try {
               await downloadJson(directory, uuid);

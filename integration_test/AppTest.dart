@@ -177,7 +177,6 @@ void main() {
       await tester.tap(textButton3Finder);
       await tester.pumpAndSettle();
 
-      //TODO. 텍스트 설정에서 랜덤하게 수정하기.
       for (int i = 0; i < 3; i += 1) {
         final additionalSetupInkwell =
             find.byKey(ValueKey('quizLayoutAdditionalSetupInkWell$i'));

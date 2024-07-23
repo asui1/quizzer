@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:quizzer/Class/quiz2.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+// ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -19,7 +19,6 @@ import 'package:quizzer/Functions/versionCheck.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Setup/Colors.dart';
-import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
@@ -29,14 +28,10 @@ import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
-import 'package:quizzer/Setup/testpage.dart';
 import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:quizzer/generated/intl/messages_all.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math' as math;
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'dart:ui' as ui;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -160,10 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadPreferences();
-    final quizLayout = Provider.of<QuizLayout>(context, listen: false);
+    Provider.of<QuizLayout>(context, listen: false);
   }
 
   _loadPreferences() async {
@@ -741,7 +735,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void navigateToQuizPage(BuildContext context, int n) {
     // Navigator를 사용하여 QuizWidgetN 또는 QuizNPage로 이동
     // 예시로 QuizNPage로 이동하는 코드를 작성
-    QuizLayout quizLayout = QuizLayout();
 
     switch (n) {
       case 1:
