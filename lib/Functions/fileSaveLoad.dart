@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path/path.dart' as path; // Add this line
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:image/image.dart' as img;
+// import 'dart:html' as html;
 
 Future<File?> checkCompressImage(
     XFile? tempImageFile, int width, int height) async {
@@ -77,3 +81,51 @@ Future<File> saveFileToPermanentDirectory(XFile xFile) async {
 
   return permanentFile;
 }
+
+Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width, {int quality = 80}) async {
+  // Uint8List 형태의 이미지 데이터를 img.Image 객체로 디코딩합니다.
+
+  if(imageData.lengthInBytes < limitSize) {
+    return imageData;
+  }
+
+  img.Image? image = img.decodeImage(imageData);
+  if (image == null) {
+    throw Exception("이미지 디코딩 실패");
+  }
+
+  
+
+  // 필요한 경우 이미지 크기 조정
+  img.Image resizedImage = img.copyResize(image, width: width);
+  
+  Uint8List compressedImageData;
+  int currentSize;
+
+  do {
+    Logger.log("Quality: $quality");
+    // 이미지를 지정된 품질로 압축합니다.
+    compressedImageData = Uint8List.fromList(img.encodeJpg(resizedImage, quality: quality));
+    currentSize = compressedImageData.length;
+
+    // 파일 크기가 limitSize보다 크고 품질이 0보다 크면 품질을 10 감소시킵니다.
+    if (currentSize > limitSize && quality > 0) {
+      quality -= 15;
+    }
+  } while (currentSize > limitSize && quality > 0);
+
+  return compressedImageData;
+}
+
+// void saveFileToPermanentDirectoryWeb(String fileName, Uint8List fileContent) {
+//   // Blob 객체 생성
+//   final blob = html.Blob([fileContent]);
+//   // Blob 객체로부터 URL 생성
+//   final url = html.Url.createObjectUrlFromBlob(blob);
+//   // a 태그 생성 및 설정
+//   final anchor = html.AnchorElement(href: url)
+//     ..setAttribute("download", fileName)
+//     ..click();
+//   // 생성된 URL 해제
+//   html.Url.revokeObjectUrl(url);
+// }

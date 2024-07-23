@@ -84,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("구글 로그인에 실패했습니다"),
         "Grade": MessageLookupByLibrary.simpleMessage("채점하기"),
         "Home": MessageLookupByLibrary.simpleMessage("홈"),
+        "Image_selected": MessageLookupByLibrary.simpleMessage("이미지가 선택되었습니다."),
         "Inquiry": MessageLookupByLibrary.simpleMessage("문의"),
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("유효하지 않은 hex값"),

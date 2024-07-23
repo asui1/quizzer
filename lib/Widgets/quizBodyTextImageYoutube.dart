@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -146,9 +147,22 @@ class _ContentWidgetState extends State<ContentWidget> {
               height: 400,
               width: 400,
               child: widget.quiz1.isImageSet()
-                  ? Image.file(
-                      File(widget.quiz1.getImageFile().path),
-                      fit: BoxFit.contain,
+                  ? GestureDetector(
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final pickedFileTemp =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        if (pickedFileTemp != null) {
+                          Uint8List file = await pickedFileTemp.readAsBytes();
+                          Uint8List compressedFile =
+                              await compressImage(file, 500 * 1024, 400);
+                          setState(() {
+                            widget.quiz1.setImageByte(compressedFile);
+                          });
+                        }
+                      },
+                      child: Image.memory(widget.quiz1.getImageByte()),
+
                     )
                   : IconButton(
                       icon: Icon(Icons.image),
@@ -157,15 +171,11 @@ class _ContentWidgetState extends State<ContentWidget> {
                         final pickedFileTemp =
                             await picker.pickImage(source: ImageSource.gallery);
                         if (pickedFileTemp != null) {
-                          final File? compressedFile = await checkCompressImage(
-                              pickedFileTemp,
-                              600,
-                              600);
+                          Uint8List file = await pickedFileTemp.readAsBytes();
+                          Uint8List compressedFile =
+                              await compressImage(file, 500 * 1024, 400);
                           setState(() {
-                            if (compressedFile != null) {
-                              widget.quiz1
-                                  .setImageFile(compressedFile); // 상태 업데이트
-                            }
+                            widget.quiz1.setImageByte(compressedFile);
                           });
                         }
                       },

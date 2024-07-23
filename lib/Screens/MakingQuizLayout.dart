@@ -1,6 +1,7 @@
 // ignore_for_file: unused_local_variable
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'package:quizzer/Widgets/GeneratorCommon.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Screens/loadTemp.dart';
+import 'package:quizzer/Widgets/myColorPicker.dart';
 
 import '../Widgets/FlipWidgets.dart';
 import '../Widgets/myColorPicker.dart';
@@ -83,8 +85,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
             child: AlertDialog(
               title: Text(Intl.message("Terms_of_Use")),
               content: Text(
-                Intl.message(
-                    "User_Agreement_text"),
+                Intl.message("User_Agreement_text"),
               ),
               actions: <Widget>[
                 TextButton(
@@ -133,6 +134,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     if (quizLayout.getSelectedLayout() == 0) {
       highlightedIndex = 0;
     }
+    if (quizLayout.getSelectedLayout() == 0) {}
     if (quizLayout.getSelectedLayout() == 3) {
       quizLayout.setBottomBarVisibility(true);
     }
@@ -463,7 +465,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           },
                         ),
                         CustomContainer(
-                          text: '4. '+ Intl.message("Additional_Setup"),
+                          text: '4. ' + Intl.message("Additional_Setup"),
                           quizLayout: quizLayout,
                           index: 3,
                           onPressed: () async {
@@ -585,16 +587,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       final XFile? tempImageFile =
                           await _picker.pickImage(source: ImageSource.gallery);
                       if (tempImageFile != null) {
-                        // 이미지 파일 처리
-                        final File? compressedFile =
-                            await checkCompressImage(tempImageFile, 50, 50);
-
-                        if (compressedFile != null) {
-                          setState(() {
-                            quizLayout.setTitleImage(compressedFile.path);
-                          });
-                        }
-                        setState(() {});
+                        Uint8List file = await tempImageFile.readAsBytes();
+                        Uint8List compressedFile = await compressImage(file, 500 * 1024, 50);
+                        setState(() {
+                          quizLayout.setImageBytes(compressedFile);
+                        });
                       }
                       // Handle user upload with image picker
                     },
@@ -602,14 +599,16 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       decoration: BoxDecoration(
                         color: quizLayout.getColorScheme().primaryContainer,
                       ),
-                      width: AppConfig.screenWidth / 4,
+                      width: 50,
                       height:
-                          AppConfig.screenWidth / 4, // 가로 크기를 기준으로 정사각형 크기 설정
+                          50, // 가로 크기를 기준으로 정사각형 크기 설정
                       child: quizLayout.isTitleImageSet()
-                          ? quizLayout.getTitleImage()
+                          ? Image.memory(
+                              quizLayout.getTitleImageString(),
+                              fit: BoxFit.contain,
+                            )
                           : Icon(
                               Icons.add_a_photo,
-                              size: AppConfig.screenWidth / 4,
                               color: quizLayout
                                   .getColorScheme()
                                   .onPrimaryContainer,

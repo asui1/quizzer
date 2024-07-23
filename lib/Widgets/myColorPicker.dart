@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path; // Add this line
 
@@ -37,12 +38,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
               ? widget.quizLayout.getImageColorNotNull(widget.index).getColor()
               : Colors.white;
     }
-    imageFile =
-        widget.quizLayout.getImageColorNotNull(widget.index).imagePath == null
-            ? null
-            : XFile(widget.quizLayout
-                .getImageColorNotNull(widget.index)
-                .getImagePath());
     hexController.text = colorToHex(pickerColor, enableAlpha: false);
   }
 
@@ -50,10 +45,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
   Widget build(BuildContext context) {
     String lastTenChars = "";
 
-    if (imageFile != null) {
-      String path = imageFile!.path;
-      lastTenChars = path.length > 10 ? path.substring(path.length - 10) : path;
-    }
     return AlertDialog(
       backgroundColor: widget.quizLayout.getColorScheme().surface,
       content: SingleChildScrollView(
@@ -85,7 +76,9 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                     maxLength: 6,
                     decoration: InputDecoration(
                       labelText: 'Hex code',
-                      errorText: isHexCodeValid ? null : Intl.message("Invalid_hex_code"),
+                      errorText: isHexCodeValid
+                          ? null
+                          : Intl.message("Invalid_hex_code"),
                     ),
                     onChanged: (value) {
                       try {
@@ -110,7 +103,7 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            Intl.message("Current_Path")+'${imageFile == null ? Intl.message("No_image_selected") : lastTenChars}',
+                            '${imageFile == null ? Intl.message("No_image_selected") : Intl.message("Image_selected")}',
                             style: TextStyle(fontSize: 16),
                             maxLines: 1,
                           ),
@@ -127,7 +120,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                                   final XFile? tempImageFile = await _picker
                                       .pickImage(source: ImageSource.gallery);
                                   if (tempImageFile != null) {
-                                    // 이미지 파일 처리
                                     setState(() {
                                       imageFile = tempImageFile;
                                     });
@@ -175,20 +167,15 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                 } else {
                   height = widget.quizLayout.getBottomBarHeight();
                 }
-                final File? compressedImage = await checkCompressImage(
-                    imageFile, width.toInt(), height.toInt());
-                if (compressedImage != null) {
-                  widget.quizLayout.setImage(
-                      widget.index,
-                      ImageColor(
-                          imagePath: compressedImage.path,
-                          color: pickerColor));
-                }
-
+                Uint8List file = await imageFile!.readAsBytes();
+                Uint8List compressedFile = await compressImage(
+                    file, 500 * 1024, width.round());
+                widget.quizLayout.setImage(
+                    widget.index, ImageColor(imageByte: compressedFile));
                 Navigator.of(context).pop(pickerColor);
               } else {
                 widget.quizLayout.setImage(widget.index,
-                    ImageColor(imagePath: imageFile?.path, color: pickerColor));
+                    ImageColor(imageByte: null, color: pickerColor));
                 Navigator.of(context).pop(pickerColor);
               }
             }
@@ -197,8 +184,6 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
       ],
     );
   }
-
-  
 
   Future<File> saveFileToPermanentDirectory(XFile xFile) async {
     // 영구 저장소의 경로를 얻습니다.

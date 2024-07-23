@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -8,15 +9,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
 class ImageColor {
-  String? imagePath; //IMAGE NAME.
+  Uint8List? imageByte; //IMAGE NAME.
   Color? color;
   Color? mainColor = null;
   String? imageName;
 
-  ImageColor({this.imagePath, this.color});
+  ImageColor({this.imageByte, this.color});
 
-  void setImage(String imagePath) {
-    this.imagePath = imagePath;
+  void setImage(Uint8List imageByte) {
+    this.imageByte = imageByte;
     this.color = null;
     this.mainColor = null;
   }
@@ -28,23 +29,11 @@ class ImageColor {
   Future<ImageColor> fromJson(Map<String, dynamic> json) async {
     if (json.containsKey('imageData') && json['imageName'] != null) {
       // Decode the Base64 string to bytes
-      Uint8List bytes = base64Decode(json['imageData']);
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      String appDocPath = appDocDir.path;
-
-      // Use imageName for the file name, ensure imageName is not null
-      String fileName = json['imageName'];
-      String fullPath = path.join(appDocPath, fileName);
-
-      // Write the bytes to a file at the application directory with imageName
-      await File(fullPath).writeAsBytes(bytes);
-
-      // Update imagePath to the new path
-      imagePath = fullPath;
+      imageByte = base64Decode(json['imageData']);
     }
 
     return ImageColor(
-      imagePath: imagePath,
+      imageByte: imageByte,
       color: json['color'] != null ? Color(json['color']) : null,
     );
   }
@@ -54,7 +43,7 @@ class ImageColor {
       if (color != null) {
         return color!;
       } else {
-        mainColor = await getMainColorOfImage(imagePath!);
+        mainColor = await getMainColorOfImage(imageByte!);
         return mainColor!;
       }
     } else {
@@ -63,15 +52,15 @@ class ImageColor {
   }
 
   bool isColor() {
-    return imagePath == null;
+    return imageByte == null;
   }
 
   Color getColor() {
     return color!;
   }
 
-  String getImagePath() {
-    return imagePath!;
+  Uint8List getImagePath() {
+    return imageByte!;
   }
 
   Widget getImage(double width, double height) {
@@ -80,20 +69,40 @@ class ImageColor {
             size: Size(width, height),
             painter: ColorPainter(getColor()),
           )
-        : Image.file(File(getImagePath()), width: width, height: height);
+        : Image.memory(imageByte!, width: width, height: height);
   }
+ImageProvider getImageProvider() {
+  if (isColor()) {
+    ByteData byteData = ByteData(4); // 4 bytes for ARGB
+    byteData.setUint8(0, color!.alpha);
+    byteData.setUint8(1, color!.red);
+    byteData.setUint8(2, color!.green);
+    byteData.setUint8(3, color!.blue);
+    List<int> imageData = byteData.buffer.asUint8List();
+    // Use MemoryImage with the color image data
+    return MemoryImage(Uint8List.fromList(imageData));
+  } else {
+    // Directly use MemoryImage for the image byte array
+    return MemoryImage(imageByte!);
+  }
+}
+  Widget getImageNoSize() {
+    return isColor()
+        ? CustomPaint(
+            painter: ColorPainter(getColor()),
+          )
+        : Image.memory(imageByte!);
+  }
+  
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
-      'imagePath': imagePath,
       'color': color?.value,
       'imageName': imageName,
     };
 
-    if (imagePath != null) {
-      File imageFile = File(imagePath!);
-      String base64Image = base64Encode(imageFile.readAsBytesSync());
-      json['imageData'] = base64Image;
+    if (imageByte != null) {
+      json['imageData'] = imageByte;
     }
 
     return json;
@@ -120,9 +129,9 @@ class ColorPainter extends CustomPainter {
   }
 }
 
-Future<Color> getMainColorOfImage(String imagePath) async {
+Future<Color> getMainColorOfImage(Uint8List imageByte) async {
   // 이미지 파일을 로드합니다.
-  img.Image image = img.decodeImage(File(imagePath).readAsBytesSync())!;
+  img.Image image = img.decodeImage(imageByte)!;
 
   // 색상 빈도를 저장할 맵을 생성합니다.
   Map<int, int> colorFrequency = {};

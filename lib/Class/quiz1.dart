@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:quizzer/Class/quiz.dart';
@@ -7,11 +8,11 @@ import 'package:quizzer/Setup/Colors.dart';
 
 class Quiz1 extends AbstractQuiz {
   int bodyType = 0;
-  File? imageFile;
   String bodyText = '';
   bool shuffleAnswers = false;
   int maxAnswerSelection = 1;
-  var titleImageBytes = null;
+  Uint8List? titleImageBytes = Uint8List(0);
+  bool isTitleImageSet = false;
   ////////////// 뷰어용 변수들
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
@@ -22,11 +23,13 @@ class Quiz1 extends AbstractQuiz {
     required List<bool> ans,
     required String question,
     this.bodyType = 0,
-    this.imageFile,
     this.bodyText = '',
     this.shuffleAnswers = false,
     this.maxAnswerSelection = 1,
-  }) : super(
+    Uint8List? titleImageBytes,
+    this.isTitleImageSet = false,
+  })  : titleImageBytes = titleImageBytes ?? Uint8List(0),
+        super(
             layoutType: layoutType,
             answers: answers,
             ans: ans,
@@ -39,16 +42,16 @@ class Quiz1 extends AbstractQuiz {
             ans: List<bool>.from(original.ans),
             question: original.question) {
     bodyType = original.bodyType;
-    imageFile = original.imageFile;
     bodyText = original.bodyText;
     shuffleAnswers = original.shuffleAnswers;
     maxAnswerSelection = original.maxAnswerSelection;
+    titleImageBytes = original.titleImageBytes;
+    isTitleImageSet = original.isTitleImageSet;
   }
 
   void printQuiz1() {
     print('Layout Type: $layoutType');
     print('Body Type: $bodyType');
-    print('Image File: ${imageFile?.path}');
     print('Body Text: $bodyText');
     print('Shuffle Answers: $shuffleAnswers');
     print('Max Answer Selection: $maxAnswerSelection');
@@ -126,25 +129,20 @@ class Quiz1 extends AbstractQuiz {
         List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
     var titleImageBytes = jsonData['image'];
     if (titleImageBytes != null) {
-      final bytes = base64Decode(titleImageBytes);
-      // 이미지 파일 이름을 uuid와 count를 사용하여 지정합니다.
-      final imagePath = '${directory.path}/$uuid\_$count.jpg';
-      File(imagePath).writeAsBytesSync(bytes);
-      // imagePath를 사용하여 Quiz1 객체를 생성합니다.
+      isTitleImageSet = true;
     }
 
     return Quiz1(
       layoutType: 1,
       bodyType: jsonData['bodyType'],
-      imageFile: titleImageBytes != null
-          ? File('${directory.path}/$uuid\_$count.jpg')
-          : null, // 수정된 부분
       bodyText: jsonData['bodyText'],
       shuffleAnswers: jsonData['shuffleAnswers'],
       maxAnswerSelection: jsonData['maxAnswerSelection'],
       answers: answersList,
       ans: ansList,
       question: jsonData['question'],
+      titleImageBytes: titleImageBytes,
+      isTitleImageSet: isTitleImageSet,
     );
   }
 
@@ -185,11 +183,7 @@ class Quiz1 extends AbstractQuiz {
   }
 
   bool isImageSet() {
-    return imageFile != null;
-  }
-
-  File getImageFile() {
-    return imageFile!;
+    return isTitleImageSet;
   }
 
   String getBodyText() {
@@ -200,13 +194,9 @@ class Quiz1 extends AbstractQuiz {
     bodyText = newBodyText;
   }
 
-  void setImageFile(File newImageFile) {
-    imageFile = newImageFile;
-  }
-
   void removeImageFile() {
-    imageFile = null;
-    titleImageBytes = null;
+    titleImageBytes = Uint8List(0);
+    isTitleImageSet = false;
   }
 
   void setBodyType(int newBodyType) {
@@ -268,20 +258,13 @@ class Quiz1 extends AbstractQuiz {
     image = newImage;
   }
 
-  String getImageString() {
-    if (imageFile != null) {
-      return imageFile!.path;
-    }
-    return "";
+  void setImageByte(Uint8List newImageBytes) {
+    titleImageBytes = newImageBytes;
+    isTitleImageSet = true;
   }
 
-  Future<void> setImageString() async {
-    if (imageFile != null && bodyType == 2) {
-      final bytes = await File(imageFile!.path).readAsBytes();
-      titleImageBytes = base64Encode(bytes);
-      return;
-    }
-    return;
+  Uint8List getImageByte() {
+    return titleImageBytes!;
   }
 
   @override
@@ -291,7 +274,6 @@ class Quiz1 extends AbstractQuiz {
       "body": {
         "bodyType": bodyType,
         "image": titleImageBytes,
-        "imageFile": imageFile?.path,
         "bodyText": bodyText,
         "shuffleAnswers": shuffleAnswers,
         "maxAnswerSelection": maxAnswerSelection,
@@ -320,7 +302,7 @@ class Quiz1 extends AbstractQuiz {
     if (maxAnswerSelection < trueCount) {
       maxAnswerSelection = trueCount;
     }
-    if (bodyType == 2 && imageFile == null) {
+    if (bodyType == 2 && titleImageBytes!.length < 39) {
       setBodyType(0);
     }
 
