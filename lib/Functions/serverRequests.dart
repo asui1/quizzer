@@ -49,7 +49,7 @@ Future<http.Response> postJsonToFileOnServer(
     "id": uuid,
     'title': quizlayout.getTitle(),
     'tags': quizlayout.getTags(),
-    'image': quizlayout.getTitleImageNow(),
+    'image': quizlayout.getTitleImageString(),
     'creator': quizlayout.getCreator(),
     "data": jsonString,
   });

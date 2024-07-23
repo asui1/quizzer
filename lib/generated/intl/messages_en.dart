@@ -96,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Google Sign In Failed"),
         "Grade": MessageLookupByLibrary.simpleMessage("Grade"),
         "Home": MessageLookupByLibrary.simpleMessage("Home"),
+        "Image_selected":
+            MessageLookupByLibrary.simpleMessage("Image selected"),
         "Inquiry": MessageLookupByLibrary.simpleMessage("Inquiry"),
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("Invalid hex code"),

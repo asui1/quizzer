@@ -890,6 +890,16 @@ class S {
     );
   }
 
+  /// `Image selected`
+  String get Image_selected {
+    return Intl.message(
+      'Image selected',
+      name: 'Image_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `At least 2 answers are required`
   String get At_least_2_answers_are_required {
     return Intl.message(

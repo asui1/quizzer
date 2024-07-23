@@ -137,11 +137,10 @@ class _QuizView1State extends State<QuizView1> {
         );
       case 2:
         if (quiz.isImageSet()) {
-          return Image.file(
-            height: 400 * widget.screenWidthModifier,
-            width: 400 * widget.screenWidthModifier,
-            File(quiz.getImageFile().path),
-            fit: BoxFit.cover,
+          return Image.memory(
+            quiz.getImageByte(),
+            height: 400 * screenWidthModifier,
+            width: 400 * screenWidthModifier,
           );
         } else {
           return Container();

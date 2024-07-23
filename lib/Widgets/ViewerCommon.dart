@@ -44,7 +44,7 @@ BoxDecoration backgroundDecoration({required QuizLayout quizLayout}) {
             )
           : BoxDecoration(
               image: DecorationImage(
-                image: Image.file(File(backgroundImage.getImagePath())).image,
+                image: backgroundImage.getImageProvider(),
                 fit: BoxFit.cover,
               ),
             );
@@ -101,7 +101,7 @@ BoxDecoration backgroundDecorationWithBorder(
             )
           : BoxDecoration(
               image: DecorationImage(
-                image: Image.file(File(backgroundImage.getImagePath())).image,
+                image: backgroundImage.getImageProvider(),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(30), // 모서리 둥글기
@@ -119,8 +119,14 @@ BoxDecoration backgroundDecorationWithBorder(
             );
 }
 
-Widget setValueRow(List parent, int selectedValue, void Function()? prev,
-    void Function()? next, bool isColor, List<int> styleSet, QuizLayout quizLayout) {
+Widget setValueRow(
+    List parent,
+    int selectedValue,
+    void Function()? prev,
+    void Function()? next,
+    bool isColor,
+    List<int> styleSet,
+    QuizLayout quizLayout) {
   return Container(
     margin: EdgeInsets.symmetric(vertical: AppConfig.padding),
     height: AppConfig.screenHeight * 0.05,
@@ -189,10 +195,9 @@ PreferredSizeWidget? viewerAppBar(
                       height: quizLayout.getAppBarHeight(),
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: Image.file(File(
-                            topBarImage.getImagePath(),
-                          )).image,
-                          fit: BoxFit.fitWidth,
+                          image: topBarImage.getImageProvider(),
+                          fit: BoxFit
+                              .fitWidth, // Or any other BoxFit value as needed
                         ),
                       ),
                       child: showDragHandle
@@ -247,10 +252,9 @@ Widget? viewerBottomBar({
                       height: quizLayout.getBottomBarHeight(),
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: Image.file(
-                            File(bottomBarImage.getImagePath()),
-                          ).image,
-                          fit: BoxFit.fitWidth,
+                          image: bottomBarImage.getImageProvider(),
+                          fit: BoxFit
+                              .fitWidth, // Or any other BoxFit value as needed
                         ),
                       ),
                       child: BottomBarStack(

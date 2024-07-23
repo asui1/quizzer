@@ -50,8 +50,8 @@ class QuizLayout extends ChangeNotifier {
   String titleImagePath = 'assets/images/question2.png';
   String titleImageName = '';
   bool titleImageSet = false;
+  Uint8List titleImageBytes = Uint8List(0);
   String _creator = "GUEST";
-  String titleImageBytes = '';
   String? uuid = null;
   List<int> questionTextStyle = [0, 0, 1, 0];
   List<int> bodyTextStyle = [0, 0, 2, 1];
@@ -92,7 +92,7 @@ class QuizLayout extends ChangeNotifier {
     titleImageName = '';
     titleImageSet = false;
     _creator = "GUEST";
-    titleImageBytes = '';
+    titleImageBytes = Uint8List(0);
     uuid = null;
     questionTextStyle = [0, 0, 1, 0];
     bodyTextStyle = [0, 0, 2, 1];
@@ -442,21 +442,7 @@ class QuizLayout extends ChangeNotifier {
     return title;
   }
 
-  void setTitleImage(String path) {
-    titleImagePath = path;
-    titleImageSet = true;
-  }
-
-  Future<String?> getTitleImageString() async {
-    if (titleImageSet) {
-      final bytes = await File(titleImagePath).readAsBytes();
-      titleImageBytes = base64Encode(bytes);
-      return titleImageBytes;
-    }
-    return null;
-  }
-
-  String getTitleImageNow() {
+  Uint8List getTitleImageString() {
     return titleImageBytes;
   }
 
@@ -464,8 +450,17 @@ class QuizLayout extends ChangeNotifier {
     isTitleSet = value;
   }
 
-  Image getTitleImage() {
-    return Image.file(File(titleImagePath));
+  void setImageBytes(Uint8List bytes) {
+    titleImageBytes = bytes;
+    titleImageSet = true;
+  }
+
+  void setTopBarImageBytes(Uint8List bytes){
+    topBarImage = ImageColor(imageByte: bytes);
+  }
+
+  void setBottomBarImageBytes(Uint8List bytes){
+    bottomBarImage = ImageColor(imageByte: bytes);
   }
 
   Map<String, dynamic> toJson() {
@@ -493,7 +488,7 @@ class QuizLayout extends ChangeNotifier {
       'answerFont': answerFont,
       'colorScheme': colorSchemeToJson(colorScheme),
       'creator': _creator,
-      'titleImage': getTitleImageNow(),
+      'titleImage': getTitleImageString(),
       'titleImageName': titleImageName,
       'uuid': uuid,
       'questionTextStyle': questionTextStyle,
@@ -864,42 +859,6 @@ class QuizLayout extends ChangeNotifier {
       fileName = uuid!;
     }
     final directory = await getApplicationDocumentsDirectory();
-    List<Future> futures = [];
-
-    if (backgroundImage != null && backgroundImage!.isColor() == false) {
-      futures.add(copyImage(backgroundImage!.imagePath!,
-              '${directory.path}/$fileName-backgroundImage.png')
-          .then((newPath) =>
-              backgroundImage!.setImageName('$fileName-backgroundImage.png')));
-    }
-    if (topBarImage != null && topBarImage!.isColor() == false) {
-      futures.add(copyImage(topBarImage!.imagePath!,
-              '${directory.path}/$fileName-topBarImage.png')
-          .then((newPath) =>
-              topBarImage!.setImageName('$fileName-topBarImage.png')));
-    }
-    if (bottomBarImage != null && bottomBarImage!.isColor() == false) {
-      futures.add(copyImage(bottomBarImage!.imagePath!,
-              '${directory.path}/$fileName-bottomBarImage.png')
-          .then((newPath) =>
-              bottomBarImage!.setImageName('$fileName-bottomBarImage.png')));
-    }
-    if (titleImageSet == true) {
-      futures.add(copyImage(
-              titleImagePath, '${directory.path}/$fileName-titleImage.png')
-          .then((newPath) => titleImagePath = newPath));
-      titleImageName = '$fileName-titleImage.png';
-      futures.add(getTitleImageString());
-    }
-    for (AbstractQuiz quiz in quizzes) {
-      if (quiz is Quiz1) {
-        futures.add(quiz.setImageString());
-      }
-    }
-
-    // 모든 이미지 복사 작업이 완료될 때까지 기다립니다.
-    await Future.wait(futures);
-
     //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
     Map<String, dynamic> json = toJson();
     // 문서 디렉토리의 경로를 얻습니다.
