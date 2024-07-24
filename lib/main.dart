@@ -1,4 +1,3 @@
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +21,7 @@ import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
+import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget1Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
@@ -39,8 +39,7 @@ void main() async {
   List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
   // 한국어 지원 여부 확인
   String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
-  await initializeMessages(
-      locale);
+  await initializeMessages(locale);
   String localeCode = (locale == 'ko') ? 'ko_KR' : 'en_US';
   // Intl 패키지에 로케일 설정
   Intl.defaultLocale = localeCode;
@@ -152,12 +151,27 @@ class _MyHomePageState extends State<MyHomePage> {
   String userNickname = '';
   List<String> userTags = [];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<QuizCardVertical> quizCardList1 = [];
+  List<QuizCardVertical> quizCardList2 = [];
+  List<QuizCardVertical> quizCardList3 = [];
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
     Provider.of<QuizLayout>(context, listen: false);
+  }
+
+  Future<void> _loadDataFromServer() async {
+  List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
+  // 한국어 지원 여부 확인
+  String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
+    List<List<QuizCardVertical>> recommendations = await getRecommendations(locale);
+    quizCardList1 = recommendations[0]; // 가장 인기있는 5개
+    quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
+    quizCardList3 = recommendations[2]; // 최신 5개
+    setState(() {});
+    // 가장 인기있는 5개, 태그 기반 추천 5개, 최신 5개
   }
 
   _loadPreferences() async {
@@ -182,320 +196,335 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-          // TRY THIS: Try changing the color here to a specific color (to
-          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-          // change color while the other colors stay the same.
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Row(
-            children: <Widget>[
-              Spacer(
-                flex: 1,
-              ),
-            ],
-          ),
-          leading: IconButton(
-            iconSize: AppConfig.iconSize,
-            icon: ImageIcon(
-                AssetImage('assets/icon/quizzerImage.png')), // Example icon
-            onPressed: () {
-              //TODO : 홈 새로고침.
-            },
-          ),
-          actions: [
-            IconButton(
-              iconSize: AppConfig.iconSize * 0.8,
-              icon: Icon(Icons.search), // Example icon
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchScreen()),
-                );
-              },
-            ),
-            isLoggedIn
-                ? IconButton(
-                    iconSize: AppConfig.iconSize * 0.8,
-                    icon: ClipOval(
-                      child: Image.network(
-                        userImageName,
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Icon(
-                            Icons.person,
-                            color: Theme.of(context).colorScheme.primary,
-                          );
-                        },
-                      ),
-                    ), // ClipOval로 감싸서 이미지를 원형으로 만듦
-                    onPressed: () async {
-                      _scaffoldKey.currentState?.openEndDrawer();
-                    },
-                  )
-                : IconButton(
-                    iconSize: AppConfig.iconSize * 0.8,
-                    icon: Icon(Icons.person), // Example icon
-                    onPressed: () {
-                      _showLoginDialog(context);
-                    },
+    return FutureBuilder(
+      // Call _loadDataFromServer and wait for it to complete.
+      future: _loadDataFromServer(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        // You can check the snapshot state to show loading indicators or error messages
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while waiting
+        } else if (snapshot.hasError) {
+          return Text(
+              'Error: ${snapshot.error}'); // Show error message if something went wrong
+        }
+
+        return Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+              // TRY THIS: Try changing the color here to a specific color (to
+              // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+              // change color while the other colors stay the same.
+              // Here we take the value from the MyHomePage object that was created by
+              // the App.build method, and use it to set our appbar title.
+              title: Row(
+                children: <Widget>[
+                  Spacer(
+                    flex: 1,
                   ),
-          ]),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: screenHeight / 30,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SearchScreen()),
-                          );
+                ],
+              ),
+              leading: IconButton(
+                iconSize: AppConfig.iconSize,
+                icon: ImageIcon(
+                    AssetImage('assets/icon/quizzerImage.png')), // Example icon
+                onPressed: () {
+                  //TODO : 홈 새로고침.
+                },
+              ),
+              actions: [
+                IconButton(
+                  iconSize: AppConfig.iconSize * 0.8,
+                  icon: Icon(Icons.search), // Example icon
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchScreen()),
+                    );
+                  },
+                ),
+                isLoggedIn
+                    ? IconButton(
+                        iconSize: AppConfig.iconSize * 0.8,
+                        icon: ClipOval(
+                          child: Image.network(
+                            userImageName,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Icon(
+                                Icons.person,
+                                color: Theme.of(context).colorScheme.primary,
+                              );
+                            },
+                          ),
+                        ), // ClipOval로 감싸서 이미지를 원형으로 만듦
+                        onPressed: () async {
+                          _scaffoldKey.currentState?.openEndDrawer();
                         },
-                        child: Container(
-                          width: screenWidth * 0.7,
-                          child: AbsorbPointer(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText: Intl.message("Search"),
-                                suffixIcon: IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SearchScreen()),
-                                    );
-                                  },
-                                  icon: Icon(Icons.search),
+                      )
+                    : IconButton(
+                        iconSize: AppConfig.iconSize * 0.8,
+                        icon: Icon(Icons.person), // Example icon
+                        onPressed: () {
+                          _showLoginDialog(context);
+                        },
+                      ),
+              ]),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: SingleChildScrollView(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: screenHeight / 30,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchScreen()),
+                              );
+                            },
+                            child: Container(
+                              width: screenWidth * 0.7,
+                              child: AbsorbPointer(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    hintText: Intl.message("Search"),
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SearchScreen()),
+                                        );
+                                      },
+                                      icon: Icon(Icons.search),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      homeLists([
-                        "generator1",
-                        "generator2",
-                        "generator3",
-                        "generator4"
-                      ], "퀴즈 생성자 테스트."),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      homeLists(["viewer1", "viewer2", "viewer3", "viewer4"],
-                          "퀴즈 풀이 테스트"),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      homeLists(
-                          ["empty1", "empty2", "empty3", "empty4"], "빈 공간입니다."),
-                      SizedBox(
-                        height: AppConfig.largePadding * 2,
-                      ),
-                      Container(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              Intl.message("Contact") + ': whwkd122@gmail.com',
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondary
-                                    .withAlpha(130),
-                                fontSize: 12,
-                              ),
+                          SizedBox(
+                            height: AppConfig.largePadding,
+                          ),
+                          homeLists(quizCardList1, Intl.message("Popular_Quiz")),
+                          SizedBox(
+                            height: AppConfig.largePadding,
+                          ),
+                          homeLists(quizCardList2, Intl.message("Recommendation")),
+                          SizedBox(
+                            height: AppConfig.largePadding,
+                          ),
+                          homeLists(quizCardList3, Intl.message("Most_Recent")),
+                          SizedBox(
+                            height: AppConfig.largePadding * 2,
+                          ),
+                          Container(
+                            height: 50,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  Intl.message("Contact") +
+                                      ': whwkd122@gmail.com',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary
+                                        .withAlpha(130),
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 16, // Adjust the distance from the right as needed
+                  bottom: 16, // Adjust the distance from the bottom as needed
+                  child: FloatingActionButton(
+                    key: const ValueKey('moveToMakingQuizScreen'),
+                    onPressed: () {
+                      Provider.of<QuizLayout>(context, listen: false).reset();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MakingQuizscreen()),
+                      );
+                    },
+                    child: Icon(Icons.add), // "+" icon
+                  ),
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: Intl.message("Home"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.trending_up),
+                label: Intl.message("Trending"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.leaderboard),
+                label: Intl.message("Rank"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: Intl.message("My_Settings"),
+              ),
+            ],
+            selectedItemColor:
+                Theme.of(context).colorScheme.onSecondaryContainer,
+            unselectedItemColor: Theme.of(context)
+                .colorScheme
+                .onSecondaryContainer
+                .withAlpha(130),
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+          ),
+          endDrawer: Drawer(
+            child: Column(
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          ClipOval(
+                            child: Image.network(
+                              userImageName,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return Icon(
+                                  Icons.person,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            userNickname,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Spacer(),
+                          IconButton(
+                            icon: Icon(Icons.logout),
+                            onPressed: () {
+                              _showLogoutConfirmationDialog(context);
+                            },
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              right: 16, // Adjust the distance from the right as needed
-              bottom: 16, // Adjust the distance from the bottom as needed
-              child: FloatingActionButton(
-                key: const ValueKey('moveToMakingQuizScreen'),
-                onPressed: () {
-                  Provider.of<QuizLayout>(context, listen: false).reset();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MakingQuizscreen()),
-                  );
-                },
-                child: Icon(Icons.add), // "+" icon
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: Intl.message("Home"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            label: Intl.message("Trending"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.leaderboard),
-            label: Intl.message("Rank"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: Intl.message("My_Settings"),
-          ),
-        ],
-        selectedItemColor: Theme.of(context).colorScheme.onSecondaryContainer,
-        unselectedItemColor:
-            Theme.of(context).colorScheme.onSecondaryContainer.withAlpha(130),
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-      endDrawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      ClipOval(
-                        child: Image.network(
-                          userImageName,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Icon(
-                              Icons.person,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            );
-                          },
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          Intl.message("Profile"),
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        userNickname,
-                        style: TextStyle(
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Spacer(),
-                      IconButton(
-                        icon: Icon(Icons.logout),
-                        onPressed: () {
-                          _showLogoutConfirmationDialog(context);
+                        onTap: () {
+                          Navigator.pop(context);
                         },
                       ),
+                      ListTile(
+                        title: Text(
+                          Intl.message("Setting"),
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 20,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      // Other ListTiles can go here
                     ],
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      Intl.message("Profile"),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                  ListTile(
-                    title: Text(
-                      Intl.message("Setting"),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        decoration: TextDecoration.lineThrough,
-                      ),
+                ),
+                // This ListTile will be positioned at the bottom
+                ListTile(
+                  title: Text(
+                    Intl.message("Announcement"),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20,
+                      decoration: TextDecoration.lineThrough,
                     ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                  // Other ListTiles can go here
-                ],
-              ),
-            ),
-            // This ListTile will be positioned at the bottom
-            ListTile(
-              title: Text(
-                Intl.message("Announcement"),
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 20,
-                  decoration: TextDecoration.lineThrough,
+                  onTap: () {},
                 ),
-              ),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text(
-                Intl.message("Inquiry"),
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
+                ListTile(
+                  title: Text(
+                    Intl.message("Inquiry"),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                  onTap: () {
+                    _showRequestDialog(context);
+                    // Handle the tap
+                  },
                 ),
-              ),
-              onTap: () {
-                _showRequestDialog(context);
-                // Handle the tap
-              },
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -678,7 +707,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget homeLists(List<String> list, String title) {
+  Widget homeLists(List<QuizCardVertical> list, String title) {
     return Container(
       width: AppConfig.screenWidth * 0.9,
       // Adjust the height to accommodate the text label above the ListView
@@ -706,24 +735,7 @@ class _MyHomePageState extends State<MyHomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    if (list[index].contains('gen')) {
-                      navigateToQuizPage(context, 2 * index + 1);
-                    }
-                    if (list[index].contains('vie')) {
-                      navigateToQuizPage(context, 2 * index + 2);
-                    }
-                  },
-                  child: Container(
-                    width: AppConfig.screenWidth * 0.3,
-                    child: Card(
-                      child: Center(
-                        child: Text(list[index]),
-                      ),
-                    ),
-                  ),
-                );
+                return list[index];
               },
             ),
           ),

@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Inquiry": MessageLookupByLibrary.simpleMessage("문의"),
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("유효하지 않은 hex값"),
+        "Is_Searching": MessageLookupByLibrary.simpleMessage("검색중입니다."),
         "Leaving_warning": MessageLookupByLibrary.simpleMessage(
             "이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?"),
         "Load": MessageLookupByLibrary.simpleMessage("불러오기"),
@@ -107,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "No_buttons_Only_Flip":
             MessageLookupByLibrary.simpleMessage("버튼 없이\n넘기기만"),
         "No_image_selected": MessageLookupByLibrary.simpleMessage("선택되지 않았습니다"),
+        "No_results": MessageLookupByLibrary.simpleMessage("결과를 찾을 수 없습니다."),
         "Number_of_possible_selection":
             MessageLookupByLibrary.simpleMessage("선택 가능한 정답 수 : "),
         "OK": MessageLookupByLibrary.simpleMessage("확인"),
@@ -141,9 +143,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("표지 이미지를 선택하세요."),
         "Setting": MessageLookupByLibrary.simpleMessage("설정"),
         "Shuffle_Answers": MessageLookupByLibrary.simpleMessage("정답 섞기?"),
+        "Solved_num": MessageLookupByLibrary.simpleMessage("조회 수"),
         "Submit": MessageLookupByLibrary.simpleMessage("제출"),
         "Successful_Login":
             MessageLookupByLibrary.simpleMessage("로그인에 성공하였습니다."),
+        "Tag_Limit": MessageLookupByLibrary.simpleMessage("태그는 10개까지 가능합니다."),
         "Temp_Save": MessageLookupByLibrary.simpleMessage("임시저장"),
         "Terms_of_Use": MessageLookupByLibrary.simpleMessage("사용 동의서"),
         "Text": MessageLookupByLibrary.simpleMessage("텍스트"),

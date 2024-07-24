@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
@@ -296,8 +297,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(Intl.message("Flip_Style_Setup")
-                                    )),
+                                        child: Text(
+                                            Intl.message("Flip_Style_Setup"))),
                                     content: Container(
                                       // Set a fixed height to avoid layout issues in AlertDialog
                                       width: double
@@ -371,7 +372,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                     backgroundColor:
                                         quizLayout.getColorScheme().surface,
                                     title: Center(
-                                        child: Text(Intl.message("Color_Setup"),
+                                        child: Text(
+                                      Intl.message("Color_Setup"),
                                     )),
                                     content: SingleChildScrollView(
                                       child: ListBody(
@@ -406,7 +408,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                                   isActive: quizLayout
                                                       .getVisibility(index),
                                                   quizLayout: quizLayout,
-                                                  buttonText: Intl.message(stringResources[
+                                                  buttonText: Intl.message(
+                                                      stringResources[
                                                           'imageSet$index']!),
                                                   image: quizLayout
                                                       .getImageColorNotNull(
@@ -588,7 +591,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           await _picker.pickImage(source: ImageSource.gallery);
                       if (tempImageFile != null) {
                         Uint8List file = await tempImageFile.readAsBytes();
-                        Uint8List compressedFile = await compressImage(file, 500 * 1024, 50);
+                        Uint8List compressedFile =
+                            await compressImage(file, 500 * 1024, 50);
                         setState(() {
                           quizLayout.setImageBytes(compressedFile);
                         });
@@ -600,11 +604,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                         color: quizLayout.getColorScheme().primaryContainer,
                       ),
                       width: 50,
-                      height:
-                          50, // 가로 크기를 기준으로 정사각형 크기 설정
+                      height: 50, // 가로 크기를 기준으로 정사각형 크기 설정
                       child: quizLayout.isTitleImageSet()
                           ? Image.memory(
-                              quizLayout.getTitleImageString(),
+                              quizLayout.getTitleImageByte(),
                               fit: BoxFit.contain,
                             )
                           : Icon(
@@ -656,7 +659,17 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     void addTagAndCloseDialog() {
                       String tag = tagController.text;
                       if (tag.isNotEmpty) {
+                        if(quizLayout.getTags().length < 10) {
                         quizLayout.addTag(tag);
+                        }
+                        else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(Intl.message("Tag_Limit")),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        }
                       }
                       Navigator.of(context).pop();
                     }
@@ -667,6 +680,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                         return AlertDialog(
                           title: Text(Intl.message("Add_Tags")),
                           content: TextField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(
+                                  10), // 여기에서 최대 길이를 10으로 설정
+                            ],
                             controller: tagController,
                             autofocus: true,
                             decoration: InputDecoration(

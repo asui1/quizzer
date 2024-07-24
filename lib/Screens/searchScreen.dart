@@ -13,6 +13,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<QuizCard> _searchResults = [];
   FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
+  String _screeenText = Intl.message("Is_Searching");
 
   @override
   void initState() {
@@ -68,12 +69,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _handleSearch(String searchText) {
     setState(() {
+      _screeenText = Intl.message("Is_Searching");
       _searchResults = []; // 검색 결과를 비웁니다.
     });
 
     Future<List<QuizCard>> result = searchRequest(searchText);
     result.then((value) {
       setState(() {
+        _screeenText = Intl.message("No_Results");
         _searchResults = value;
       });
     });
@@ -89,18 +92,20 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _buildNormalBody() {
     // Build your normal body here
     return Center(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: _searchResults.length,
-              itemBuilder: (context, index) {
-                return _searchResults[index];
-              },
+      child: _searchResults.length == 0
+          ? Text(_screeenText)
+          : Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _searchResults.length,
+                    itemBuilder: (context, index) {
+                      return _searchResults[index];
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

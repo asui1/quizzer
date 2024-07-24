@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -66,7 +65,9 @@ class _ScoringScreenState extends State<ScoringScreen> {
           appBar: viewerAppBar(
               quizLayout: widget.quizLayout, showDragHandle: false),
           body: Container(
-            decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+            decoration: BoxDecoration(
+              color: widget.quizLayout.getColorScheme().surface,
+            ),
             child: Stack(
               children: [
                 Column(

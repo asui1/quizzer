@@ -600,6 +600,16 @@ class S {
     );
   }
 
+  /// `No results found`
+  String get No_results {
+    return Intl.message(
+      'No results found',
+      name: 'No_results',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Load`
   String get Load {
     return Intl.message(
@@ -645,6 +655,16 @@ class S {
     return Intl.message(
       'OK',
       name: 'OK',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Views`
+  String get Solved_num {
+    return Intl.message(
+      'Views',
+      name: 'Solved_num',
       desc: '',
       args: [],
     );
@@ -1100,6 +1120,16 @@ class S {
     );
   }
 
+  /// `Is Searching`
+  String get Is_Searching {
+    return Intl.message(
+      'Is Searching',
+      name: 'Is_Searching',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Text`
   String get Text {
     return Intl.message(
@@ -1205,6 +1235,16 @@ class S {
     return Intl.message(
       'Enter Youtube link.',
       name: 'Enter_Youtube_Link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag limit is 10`
+  String get Tag_Limit {
+    return Intl.message(
+      'Tag limit is 10',
+      name: 'Tag_Limit',
       desc: '',
       args: [],
     );
