@@ -75,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Enter_Quiz_Title":
             MessageLookupByLibrary.simpleMessage("Enter Quiz Title"),
         "Enter_Tags": MessageLookupByLibrary.simpleMessage("Enter Tags"),
+        "Enter_Youtube_Link":
+            MessageLookupByLibrary.simpleMessage("Enter Youtube link."),
         "ErrorColor": MessageLookupByLibrary.simpleMessage("ErrorColor"),
         "ErrorTextColor":
             MessageLookupByLibrary.simpleMessage("ErrorTextColor"),

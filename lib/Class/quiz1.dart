@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -16,6 +17,7 @@ class Quiz1 extends AbstractQuiz {
   ////////////// 뷰어용 변수들
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
+  String? youtubeId = null;
 
   Quiz1({
     int layoutType = 1,
@@ -28,6 +30,7 @@ class Quiz1 extends AbstractQuiz {
     this.maxAnswerSelection = 1,
     Uint8List? titleImageBytes,
     this.isTitleImageSet = false,
+    this.youtubeId = null,
   })  : titleImageBytes = titleImageBytes ?? Uint8List(0),
         super(
             layoutType: layoutType,
@@ -47,6 +50,7 @@ class Quiz1 extends AbstractQuiz {
     maxAnswerSelection = original.maxAnswerSelection;
     titleImageBytes = original.titleImageBytes;
     isTitleImageSet = original.isTitleImageSet;
+    youtubeId = original.youtubeId;
   }
 
   void printQuiz1() {
@@ -62,6 +66,15 @@ class Quiz1 extends AbstractQuiz {
     print('Viewer Correct Answers: $viewerAns');
   }
 
+  void validateBody(){
+    if(bodyType == 2 && titleImageBytes!.length < 39){
+      bodyType = 0;
+    }
+    if(bodyType == 3 && youtubeId == null){
+      bodyType = 0;
+    }
+  }
+
   void viewerInit() {
     if (viewerAnswers.length == 0) {
       viewerAnswers =
@@ -71,6 +84,18 @@ class Quiz1 extends AbstractQuiz {
         viewerAnswers.shuffle();
         shuffleAnswers = false;
       }
+    }
+  }
+
+  void setYoutubeId(String url){
+    youtubeId = url;
+  }
+
+  String getYoutubeId() {
+    if (youtubeId == null) {
+      return '';
+    } else {
+      return youtubeId!;
     }
   }
 
@@ -143,6 +168,7 @@ class Quiz1 extends AbstractQuiz {
       question: jsonData['question'],
       titleImageBytes: titleImageBytes,
       isTitleImageSet: isTitleImageSet,
+      youtubeId: jsonData['youtubeId'],
     );
   }
 
@@ -186,6 +212,10 @@ class Quiz1 extends AbstractQuiz {
     return isTitleImageSet;
   }
 
+  bool isYoutubeSet() {
+    return youtubeId != null;
+  }
+
   String getBodyText() {
     return bodyText;
   }
@@ -197,6 +227,10 @@ class Quiz1 extends AbstractQuiz {
   void removeImageFile() {
     titleImageBytes = Uint8List(0);
     isTitleImageSet = false;
+  }
+
+  void removeYoutube() {
+    youtubeId = null;
   }
 
   void setBodyType(int newBodyType) {
@@ -279,7 +313,8 @@ class Quiz1 extends AbstractQuiz {
         "maxAnswerSelection": maxAnswerSelection,
         "answers": answers,
         "ans": ans,
-        "question": question
+        "question": question,
+        "youtubeId": youtubeId,
       }
     };
   }

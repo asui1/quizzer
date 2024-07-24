@@ -299,7 +299,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        Intl.message("Shuffle_Answers?"),
+                                        Intl.message("Shuffle_Answers"),
                                       ),
                                       Checkbox(
                                         value: shuffleAnswers,
@@ -352,6 +352,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                     child: GeneratorDoneButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();
+                        widget.quiz.validateBody();
 
                         // Wait for the keyboard to close
                         Future.delayed(Duration(milliseconds: 100), () {

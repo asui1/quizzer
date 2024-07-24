@@ -9,6 +9,7 @@ import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class QuizView1 extends StatefulWidget {
   final Quiz1 quiz; // 퀴즈 태그
@@ -120,6 +121,12 @@ class _QuizView1State extends State<QuizView1> {
 
   Widget _buildQuizBody(
       Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
+    YoutubePlayerController _youtubeController =
+        YoutubePlayerController.fromVideoId(
+      videoId: quiz.getYoutubeId(),
+      autoPlay: false,
+      params: const YoutubePlayerParams(showFullscreenButton: true),
+    );
     switch (quiz.getBodyType()) {
       case 0:
         return Container();
@@ -141,6 +148,15 @@ class _QuizView1State extends State<QuizView1> {
             quiz.getImageByte(),
             height: 400 * screenWidthModifier,
             width: 400 * screenWidthModifier,
+          );
+        } else {
+          return Container();
+        }
+      case 3:
+        if (quiz.isYoutubeSet()) {
+          return YoutubePlayer(
+            controller: _youtubeController,
+            aspectRatio: 16 / 9,
           );
         } else {
           return Container();

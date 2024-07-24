@@ -67,6 +67,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Enter_Quiz_Title":
             MessageLookupByLibrary.simpleMessage("퀴즈 제목을 입력하세요."),
         "Enter_Tags": MessageLookupByLibrary.simpleMessage("태그를 입력하세요"),
+        "Enter_Youtube_Link":
+            MessageLookupByLibrary.simpleMessage("유튜브 링크를 입력하세요."),
         "ErrorColor": MessageLookupByLibrary.simpleMessage("오류 색"),
         "ErrorTextColor": MessageLookupByLibrary.simpleMessage("오류 텍스트 색"),
         "Example_Text_Setup": MessageLookupByLibrary.simpleMessage("예문 텍스트 설정"),

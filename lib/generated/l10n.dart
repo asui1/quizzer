@@ -1200,6 +1200,16 @@ class S {
     );
   }
 
+  /// `Enter Youtube link.`
+  String get Enter_Youtube_Link {
+    return Intl.message(
+      'Enter Youtube link.',
+      name: 'Enter_Youtube_Link',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter Inquiry`
   String get Enter_Inquiry {
     return Intl.message(

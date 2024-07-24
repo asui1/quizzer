@@ -6,8 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class ContentWidget extends StatefulWidget {
   final BuildContext context;
@@ -31,12 +33,24 @@ class ContentWidget extends StatefulWidget {
 
 class _ContentWidgetState extends State<ContentWidget> {
   late TextEditingController _bodyTextController;
+  late TextEditingController _youtubeController;
+
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
     _bodyTextController =
         TextEditingController(text: widget.quiz1.getBodyText());
+    _youtubeController = TextEditingController();
+    if (widget.quiz1.isYoutubeSet()) {
+      String videoId = widget.quiz1.getYoutubeId();
+      _controller = YoutubePlayerController.fromVideoId(
+        videoId: videoId,
+        autoPlay: false,
+        params: const YoutubePlayerParams(showFullscreenButton: true),
+      );
+    }
   }
 
   @override
@@ -79,18 +93,18 @@ class _ContentWidgetState extends State<ContentWidget> {
                           // Add your action for Image button here
                         },
                       ),
-                      // ElevatedButton(
-                      //   child: Text(
-                      //     '유튜브',
-                      //     style:
-                      //         TextStyle(decoration: TextDecoration.lineThrough),
-                      //   ),
-                      //   onPressed: () {
-                      //     widget.updateStateCallback(3);
-                      //     Navigator.of(context).pop(); // 다이얼로그 종료
-                      //     // Add your action for Youtube button here
-                      //   },
-                      // ),
+                      ElevatedButton(
+                        child: Text(
+                          '유튜브',
+                          style:
+                              TextStyle(decoration: TextDecoration.lineThrough),
+                        ),
+                        onPressed: () {
+                          widget.updateStateCallback(3);
+                          Navigator.of(context).pop(); // 다이얼로그 종료
+                          // Add your action for Youtube button here
+                        },
+                      ),
                     ],
                   ),
                 );
@@ -140,7 +154,6 @@ class _ContentWidgetState extends State<ContentWidget> {
           ],
         );
       case 2:
-        // 플러터 웹에서 테스트 불가. 실제 기기에서 테스트 필요
         return Stack(
           children: [
             Container(
@@ -162,7 +175,6 @@ class _ContentWidgetState extends State<ContentWidget> {
                         }
                       },
                       child: Image.memory(widget.quiz1.getImageByte()),
-
                     )
                   : IconButton(
                       icon: Icon(Icons.image),
@@ -194,18 +206,82 @@ class _ContentWidgetState extends State<ContentWidget> {
             ),
           ],
         );
-
       case 3:
-        //나중에 구현 예정.
-        return ElevatedButton(
-          child: Text('Youtube'),
-          onPressed: () {
-            // Handle Youtube search
-          },
+//  YoutubePlayerController(
+//     initialVideoId: extractVideoId(videoUrl),
+//     flags: YoutubePlayerFlags(
+//       autoPlay: true,
+//       mute: false,
+//     ),
+//   )
+        return Stack(
+          children: [
+            Container(
+              width: 400,
+              child: widget.quiz1.isYoutubeSet()
+                  ? YoutubePlayer(
+                      controller: _controller,
+                      aspectRatio: 16 / 9,
+                    )
+                  : TextField(
+                      controller: _youtubeController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (value) {
+                        // Handle what happens when the "Done" button is pressed
+                        // For example, you can close the keyboard
+                        Logger.log(value);
+                        String videoId = extractVideoId(value) ?? "";
+                        if (videoId == "") {
+                          return;
+                        }
+                        _controller = YoutubePlayerController.fromVideoId(
+                          videoId: videoId,
+                          autoPlay: false,
+                          params: const YoutubePlayerParams(
+                              showFullscreenButton: true),
+                        );
+                        widget.quiz1.setYoutubeId(videoId);
+                        FocusScope.of(context).unfocus();
+                        setState(() {});
+                      },
+                      decoration: InputDecoration(
+                        labelText: Intl.message("Enter_Youtube_Link"),
+                        // Add other decoration properties as needed
+                      ),
+                    ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  _youtubeController.clear();
+                  widget.quiz1.removeYoutube(); // 이미지 파일 초기화
+                  widget.updateStateCallback(0); // 상태 업데이트
+                },
+              ),
+            ),
+          ],
         );
       default:
         return SizedBox
             .shrink(); // Return an empty widget if input doesn't match any case
     }
+  }
+
+  String? extractVideoId(String url) {
+    RegExp regExp = RegExp(
+      r"^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    final matches = regExp.allMatches(url);
+    if (matches.isNotEmpty && matches.first.groupCount >= 1) {
+      return matches.first
+          .group(1); // Returns the first match group, the video ID.
+    }
+    return null; // Return null if the URL does not contain a valid YouTube video ID.
   }
 }
