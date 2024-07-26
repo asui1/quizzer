@@ -7,12 +7,12 @@ import 'dart:io';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:quizzer/Functions/Logger.dart';
 
 class ImageColor {
   Uint8List? imageByte; //IMAGE NAME.
   Color? color;
   Color? mainColor = null;
-  String? imageName;
 
   ImageColor({this.imageByte, this.color});
 
@@ -22,15 +22,14 @@ class ImageColor {
     this.mainColor = null;
   }
 
-  void setImageName(String imageName) {
-    this.imageName = imageName;
-  }
-
   Future<ImageColor> fromJson(Map<String, dynamic> json) async {
-    if (json.containsKey('imageData') && json['imageName'] != null) {
+    if (json.containsKey('imageData')) {
       // Decode the Base64 string to bytes
       imageByte = base64Decode(json['imageData']);
+      Logger.log("IS IMAGE BYTE NULL: ${imageByte == null}");
+      return ImageColor(imageByte: imageByte, color: null);
     }
+    Logger.log("IS IMAGE BYTE NULL: ${imageByte == null}");
 
     return ImageColor(
       imageByte: imageByte,
@@ -59,7 +58,7 @@ class ImageColor {
     return color!;
   }
 
-  Uint8List getImagePath() {
+  Uint8List getImageByte() {
     return imageByte!;
   }
 
@@ -71,21 +70,23 @@ class ImageColor {
           )
         : Image.memory(imageByte!, width: width, height: height);
   }
-ImageProvider getImageProvider() {
-  if (isColor()) {
-    ByteData byteData = ByteData(4); // 4 bytes for ARGB
-    byteData.setUint8(0, color!.alpha);
-    byteData.setUint8(1, color!.red);
-    byteData.setUint8(2, color!.green);
-    byteData.setUint8(3, color!.blue);
-    List<int> imageData = byteData.buffer.asUint8List();
-    // Use MemoryImage with the color image data
-    return MemoryImage(Uint8List.fromList(imageData));
-  } else {
-    // Directly use MemoryImage for the image byte array
-    return MemoryImage(imageByte!);
+
+  ImageProvider getImageProvider() {
+    if (isColor()) {
+      ByteData byteData = ByteData(4); // 4 bytes for ARGB
+      byteData.setUint8(0, color!.alpha);
+      byteData.setUint8(1, color!.red);
+      byteData.setUint8(2, color!.green);
+      byteData.setUint8(3, color!.blue);
+      List<int> imageData = byteData.buffer.asUint8List();
+      // Use MemoryImage with the color image data
+      return MemoryImage(Uint8List.fromList(imageData));
+    } else {
+      // Directly use MemoryImage for the image byte array
+      return MemoryImage(imageByte!);
+    }
   }
-}
+
   Widget getImageNoSize() {
     return isColor()
         ? CustomPaint(
@@ -93,16 +94,14 @@ ImageProvider getImageProvider() {
           )
         : Image.memory(imageByte!);
   }
-  
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
       'color': color?.value,
-      'imageName': imageName,
     };
 
     if (imageByte != null) {
-      json['imageData'] = imageByte;
+      json['imageData'] = base64Encode(imageByte!);
     }
 
     return json;
@@ -139,7 +138,7 @@ Future<Color> getMainColorOfImage(Uint8List imageByte) async {
   // 이미지의 각 픽셀을 순회하며 색상 빈도를 계산합니다.
   for (int y = 0; y < image.height; y++) {
     for (int x = 0; x < image.width; x++) {
-      int pixelColor = image.getPixel(x, y) as int;
+      int pixelColor = image.getPixelSafe(x, y).hashCode;
       colorFrequency[pixelColor] = (colorFrequency[pixelColor] ?? 0) + 1;
     }
   }

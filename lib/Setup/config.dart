@@ -33,6 +33,7 @@ class AppConfig {
     AppConfig.borderRadius = AppConfig.shortestSide / 20;
     AppConfig.padding = AppConfig.shortestSide / 40;
     AppConfig.smallPadding = AppConfig.padding / 2;
+    AppConfig.smallerPadding = AppConfig.smallPadding / 2;
     AppConfig.largePadding = AppConfig.padding * 2;
     AppConfig.iconSize = AppConfig.fontSize * 2;
     AppConfig.fontSizes = [AppConfig.fontSize* 1.3, AppConfig.fontSize, AppConfig.fontSize];

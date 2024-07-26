@@ -600,6 +600,16 @@ class S {
     );
   }
 
+  /// `No results found`
+  String get No_results {
+    return Intl.message(
+      'No results found',
+      name: 'No_results',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Load`
   String get Load {
     return Intl.message(
@@ -650,6 +660,26 @@ class S {
     );
   }
 
+  /// `I got {score} in {title}!`
+  String shareText(Object score, Object title) {
+    return Intl.message(
+      'I got $score in $title!',
+      name: 'shareText',
+      desc: '',
+      args: [score, title],
+    );
+  }
+
+  /// `Views`
+  String get Solved_num {
+    return Intl.message(
+      'Views',
+      name: 'Solved_num',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Flip Style Setup`
   String get Flip_Style_Setup {
     return Intl.message(
@@ -665,6 +695,36 @@ class S {
     return Intl.message(
       'Color Setup',
       name: 'Color_Setup',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Most Popular`
+  String get Popular_Quiz {
+    return Intl.message(
+      'Most Popular',
+      name: 'Popular_Quiz',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommendation`
+  String get Recommendation {
+    return Intl.message(
+      'Recommendation',
+      name: 'Recommendation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Most recently created`
+  String get Most_Recent {
+    return Intl.message(
+      'Most recently created',
+      name: 'Most_Recent',
       desc: '',
       args: [],
     );
@@ -1100,6 +1160,16 @@ class S {
     );
   }
 
+  /// `Is Searching`
+  String get Is_Searching {
+    return Intl.message(
+      'Is Searching',
+      name: 'Is_Searching',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Text`
   String get Text {
     return Intl.message(
@@ -1205,6 +1275,26 @@ class S {
     return Intl.message(
       'Enter Youtube link.',
       name: 'Enter_Youtube_Link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag limit is 10`
+  String get Tag_Limit {
+    return Intl.message(
+      'Tag limit is 10',
+      name: 'Tag_Limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading json failed`
+  String get JSON_DOWN_FAIL {
+    return Intl.message(
+      'Downloading json failed',
+      name: 'JSON_DOWN_FAIL',
       desc: '',
       args: [],
     );

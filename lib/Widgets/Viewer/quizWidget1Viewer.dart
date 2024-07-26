@@ -127,6 +127,7 @@ class _QuizView1State extends State<QuizView1> {
       autoPlay: false,
       params: const YoutubePlayerParams(showFullscreenButton: true),
     );
+    _youtubeController.seekTo(seconds: quiz.getYoutubeStartTime().toDouble());
     switch (quiz.getBodyType()) {
       case 0:
         return Container();

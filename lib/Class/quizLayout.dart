@@ -62,6 +62,7 @@ class QuizLayout extends ChangeNotifier {
     position: Offset(100, 100),
     backgroundImage: null,
   );
+  List<bool> solveResult = [];
   // -> FONT FAMILY, Color, BoderStyle, FontWeight
 
   QuizLayout({this.highlightedIndex = 0});
@@ -103,6 +104,10 @@ class QuizLayout extends ChangeNotifier {
       position: Offset(100, 100),
       backgroundImage: null,
     );
+  }
+
+  double getBodyHeight(){
+    return AppConfig.screenHeight - getAppBarHeight() - getBottomBarHeight();
   }
 
   ScoreCard getScoreCard() {
@@ -242,16 +247,21 @@ class QuizLayout extends ChangeNotifier {
 
     // Iterate through quizzes and adjust scores based on quiz.check()
     for (int i = 0; i < n; i++) {
-      if (quizzes[i].check()) {
+      bool result = quizzes[i].check();
+      solveResult.add(result);
+      if (result) {
         score += scores[i];
       }
     }
     return score;
   }
 
+  List<bool> getSolveResult(){
+    return solveResult;
+  }
+
   Future<void> loadQuizLayout(dynamic inputJson) async {
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
-    final directory = await getApplicationDocumentsDirectory();
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
     }
@@ -283,7 +293,7 @@ class QuizLayout extends ChangeNotifier {
 
         if (quiz['layoutType'] == 1) {
           quizzes.add(Quiz1(answers: [], ans: [], question: "")
-              .loadQuiz(quiz["body"], uuid?? "temp_$title", count, directory));
+              .loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 2) {
           quizzes.add(
               Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1)
@@ -313,8 +323,11 @@ class QuizLayout extends ChangeNotifier {
       isWidgetSizeSet = inputData['isWidgetSizeSet'];
     }
     if (inputData['backgroundImage'] != null) {
+      Logger.log("backgroundImage is not null");
       backgroundImage =
           await ImageColor().fromJson(inputData['backgroundImage']);
+    }else{
+      Logger.log("backgroundImage is null");
     }
     if (inputData['topBarImage'] != null) {
       topBarImage = await ImageColor().fromJson(inputData['topBarImage']);
@@ -338,19 +351,7 @@ class QuizLayout extends ChangeNotifier {
       titleImageSet = inputData['titleImageSet'];
     }
     if (titleImageSet == true && inputData['titleImage'] != null) {
-      Uint8List bytes = base64Decode(inputData['titleImage']);
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      String appDocPath = appDocDir.path;
-
-      // Use imageName for the file name, ensure imageName is not null
-      String fileName = inputData['titleImageName'];
-      String fullPath = path.join(appDocPath, fileName);
-
-      // Write the bytes to a file at the application directory with imageName
-      await File(fullPath).writeAsBytes(bytes);
-    }
-    if (inputData['titleImagePath'] != null) {
-      titleImagePath = inputData['titleImagePath'];
+      titleImageBytes = base64Decode(inputData['titleImage']);
     }
     if (inputData['colorScheme'] != null) {
       colorScheme = jsonToColorScheme(inputData['colorScheme']);
@@ -373,7 +374,8 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['scoreCard'] != null) {
       Map<String, dynamic> scoreCardData =
           inputData['scoreCard'] as Map<String, dynamic>;
-      _scoreCard = ScoreCard.fromJson(scoreCardData);
+
+      _scoreCard.fromJson(scoreCardData);
     }
     notifyListeners();
   }
@@ -442,7 +444,7 @@ class QuizLayout extends ChangeNotifier {
     return title;
   }
 
-  Uint8List getTitleImageString() {
+  Uint8List getTitleImageByte() {
     return titleImageBytes;
   }
 
@@ -488,7 +490,7 @@ class QuizLayout extends ChangeNotifier {
       'answerFont': answerFont,
       'colorScheme': colorSchemeToJson(colorScheme),
       'creator': _creator,
-      'titleImage': getTitleImageString(),
+      'titleImage': base64Encode(getTitleImageByte()),
       'titleImageName': titleImageName,
       'uuid': uuid,
       'questionTextStyle': questionTextStyle,

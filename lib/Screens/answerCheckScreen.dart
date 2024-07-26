@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/makeHash.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
@@ -15,6 +16,7 @@ class AnswerCheckScreen extends StatelessWidget {
   final double screenHeightModifier;
   final Function(int) moveToQuiz;
   final double heightModifier;
+  bool _isTapInProgress = false;
 
   AnswerCheckScreen({
     required this.quizLayout,
@@ -82,23 +84,31 @@ class AnswerCheckScreen extends StatelessWidget {
           width: AppConfig.screenWidth * screenWidthModifier / 2, // 원하는 너비 설정
           child: FloatingActionButton(
             onPressed: () async {
+              if (_isTapInProgress) return;
+              _isTapInProgress = true;
               int score = quizLayout.getScore();
               sendResultToServer(score, quizLayout);
-              String userEmail = await UserPreferences.getUserEmail() ?? 'GUEST';
+              String userEmail =
+                  await UserPreferences.getUserEmail() ?? 'GUEST';
               String userName = await UserPreferences.getUserName() ?? 'GUEST';
-              String resultUrl = quizzerDomain + "result/" + generateUniqueId(
-                  quizLayout.getUuid(), userEmail, quizLayout.getTitle());
+              String resultUrl = quizzerDomain +
+                  "result/" +
+                  generateUniqueId(
+                      quizLayout.getUuid(), userEmail, quizLayout.getTitle());
+              Logger.log(resultUrl);
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ScoringScreen(
-                      quizLayout: quizLayout,
-                      heightModifier: heightModifier,
-                      score: score,
-                      resultUrl: resultUrl,
-                      userName: userName,),
+                    quizLayout: quizLayout,
+                    heightModifier: heightModifier,
+                    score: score,
+                    resultUrl: resultUrl,
+                    userName: userName,
+                  ),
                 ),
               );
+              _isTapInProgress = false;
             },
             child: Text(Intl.message('Grade')),
             // FloatingActionButton의 기본 크기를 무시하고, SizedBox의 크기에 맞춰서 조절됩니다.
@@ -141,21 +151,25 @@ class AnswerCheckScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min, // Row의 크기를 내용물에 맞춤
             children: [
               SizedBox(width: AppConfig.padding), // Add space between columns
-              Text(Intl.message("Prob") +
-                ' ${index + 1} : ',
+              Text(
+                Intl.message("Prob") + ' ${index + 1} : ',
                 style: TextStyle(
                   fontFamily: quizLayout.getAnswerFont(),
                   fontSize: AppConfig.fontSize,
-                  color: quizLayout.getColorScheme().onSurface,
+                  color: quizLayout.getColorScheme().primary,
                 ),
               ), // Displaying quiz number
-              Container(
-                width: AppConfig.fontSize,
-                height: AppConfig.fontSize,
-                color: stateColor == MyColors().red
-                    ? quizLayout.getColorScheme().error
-                    : MyColors().green,
-              ),
+              stateColor == MyColors().red
+                  ? Icon(
+                      Icons.warning,
+                      color: quizLayout.getColorScheme().error,
+                      size: AppConfig.fontSize,
+                    )
+                  : Icon(
+                      Icons.check,
+                      color: quizLayout.getColorScheme().primary,
+                      size: AppConfig.fontSize,
+                    ),
               SizedBox(width: AppConfig.padding), // Add space between columns
             ],
           ),

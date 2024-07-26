@@ -26,37 +26,38 @@ class ScoreCard {
     };
   }
 
-  ScoreCard.fromJson(Map<String, dynamic> json)
-      : size = json['size'],
-        position = Offset(json['dx'], json['dy']),
-        imageState = json['imageState'];
+  Color getColorByState(QuizLayout quizLayout, int state) {
+    if (state == 1) {
+      return quizLayout.getColorScheme().primary;
+    } else if (state == 2) {
+      return quizLayout.getColorScheme().secondary;
+    } else if (state == 3) {
+      return quizLayout.getColorScheme().tertiary;
+    } else if (state == 4) {
+      return quizLayout.getColorScheme().primaryContainer;
+    } else if (state == 5) {
+      return quizLayout.getColorScheme().secondaryContainer;
+    } else if (state == 6) {
+      return quizLayout.getColorScheme().tertiaryContainer;
+    } else {
+      return quizLayout.getColorScheme().surface;
+    }
+  }
+
+  void fromJson(Map<String, dynamic> json) {
+    size = json['size'];
+    position = Offset(json['dx'], json['dy']);
+    imageState = json['imageState'];
+  }
+
   void initbackGroundImage(QuizLayout quizLayout) {
     if (backgroundImage != null) return;
     if (imageState == 0) {
       backgroundImage = backgroundDecorationWithBorder(quizLayout: quizLayout);
-    } else if (imageState == 1) {
-      backgroundImage = backgroundDecorationWithBorder(
-          quizLayout: quizLayout, color: quizLayout.getColorScheme().primary);
-    } else if (imageState == 2) {
-      backgroundImage = backgroundDecorationWithBorder(
-          quizLayout: quizLayout, color: quizLayout.getColorScheme().secondary);
-    } else if (imageState == 3) {
-      backgroundImage = backgroundDecorationWithBorder(
-          quizLayout: quizLayout, color: quizLayout.getColorScheme().tertiary);
-    } else if (imageState == 4) {
+    } else {
       backgroundImage = backgroundDecorationWithBorder(
           quizLayout: quizLayout,
-          color: quizLayout.getColorScheme().primaryContainer);
-    } else if (imageState == 5) {
-      backgroundImage = backgroundDecorationWithBorder(
-          quizLayout: quizLayout,
-          color: quizLayout.getColorScheme().secondaryContainer);
-    } else if (imageState == 6) {
-      backgroundImage = backgroundDecorationWithBorder(
-          quizLayout: quizLayout,
-          color: quizLayout.getColorScheme().tertiaryContainer);
-    } else if (imageState == 7) {
-      backgroundImage = backgroundDecorationWithBorder(quizLayout: quizLayout);
+          color: getColorByState(quizLayout, imageState));
     }
   }
 

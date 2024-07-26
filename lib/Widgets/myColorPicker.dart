@@ -168,8 +168,21 @@ class _ColorPickerFieldState extends State<ColorPickerField> {
                   height = widget.quizLayout.getBottomBarHeight();
                 }
                 Uint8List file = await imageFile!.readAsBytes();
+                int limitSize;
+                if (widget.index == 0) {
+                  limitSize = 2 * 1024 * 1024;
+                  height = widget.quizLayout.getBodyHeight();
+                } else {
+                  if(widget.index == 1){
+                    height = widget.quizLayout.getAppBarHeight();
+                  }
+                  else{
+                    height = widget.quizLayout.getBottomBarHeight();
+                  }
+                  limitSize = 500 * 1024;
+                }
                 Uint8List compressedFile = await compressImage(
-                    file, 500 * 1024, width.round());
+                    file, limitSize, width.round(), height.round());
                 widget.quizLayout.setImage(
                     widget.index, ImageColor(imageByte: compressedFile));
                 Navigator.of(context).pop(pickerColor);

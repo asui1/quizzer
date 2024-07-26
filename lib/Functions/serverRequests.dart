@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'dart:convert';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
+import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,15 +47,17 @@ Future<String> loadFileContent(Directory directory, String uuid) async {
 
 Future<http.Response> postJsonToFileOnServer(
     String uuid, String jsonString, QuizLayout quizlayout) async {
-
+  String imageBase64 = base64Encode(quizlayout.getTitleImageByte());
   final body = json.encode({
     "id": uuid,
     'title': quizlayout.getTitle(),
     'tags': quizlayout.getTags(),
-    'image': quizlayout.getTitleImageString(),
+    'image': imageBase64,
     'creator': quizlayout.getCreator(),
     "data": jsonString,
+    "scoreCard": makeScoreCardJson(quizlayout),
   });
+  Logger.log(body);
 
   final response = await http.post(
     Uri.parse(serverUrl + 'addQuiz/'),
@@ -70,6 +75,7 @@ void uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
     Logger.log("UPLOAD SUCCESS");
   } else {
     Logger.log('Failed to upload json. Status code: ${response.statusCode}');
+    Logger.log(response.body);
   }
 }
 
@@ -102,38 +108,32 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
       Map<String, dynamic> jsonItem = item;
 
       // Initialize filePath as null
-      String? filePath;
+      Uint8List imageBytes = Uint8List(0);
 
       // Check if 'image' is not null
       if (jsonItem['Image'] != null && jsonItem['Image'] != '') {
         // Decode the base64 image
-        List<int> imageBytes = base64.decode(jsonItem['Image']);
-
-        // Get the application documents directory
-        Directory directory = await getApplicationDocumentsDirectory();
-
-        // Create the file path
-        filePath = '${directory.path}/${jsonItem['ID']}-titleImage';
-
-        // Write the image file
-        await File(filePath).writeAsBytes(imageBytes);
+        imageBytes = base64.decode(jsonItem['Image']);
       }
       String tags = jsonItem['Tags'];
       if (tags.startsWith('[') && tags.endsWith(']')) {
         tags = tags.substring(1, tags.length - 1);
       }
+      tags = tags.replaceAll('"', '');
       List<String> tagsList;
       if (tags.isEmpty) {
         tagsList = [];
       } else {
         tagsList = tags.split(',').map((e) => e.trim()).toList();
       }
+      int counts = jsonItem['Count'];
       _searchResults.add(QuizCard(
         title: jsonItem['Title'],
         tags: tagsList,
-        additionalData: jsonItem['Creator'],
+        creator: jsonItem['Creator'],
         uuid: jsonItem['ID'],
-        titleImagePath: filePath,
+        titleImageByte: imageBytes,
+        counts: counts,
       ));
     }
     return _searchResults;
@@ -245,7 +245,6 @@ Future<int> loginCheck(String email, String image) async {
   var response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
   if (response.statusCode == 200) {
-
     // 응답 본문을 `,`로 분리하여 배열로 변환
     String decodedString = utf8.decode(response.bodyBytes);
     var responseBody = jsonDecode(decodedString);
@@ -306,4 +305,86 @@ Map<String, dynamic> offsetToJson(Offset offset) {
     'dx': offset.dx,
     'dy': offset.dy,
   };
+}
+
+Future<List<List<QuizCardVertical>>> getRecommendations(String lang) async {
+  final url = serverUrl + 'GetRecommendations/?language=$lang';
+  var response =
+      await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
+  Logger.log("GetRecommendations");
+  List<QuizCardVertical> mostView = [];
+  List<QuizCardVertical> recommended = [];
+  List<QuizCardVertical> mostRecent = [];
+
+  // Process the response
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    // Parse the response body
+    String decodedString = utf8.decode(response.bodyBytes);
+    Map<String, dynamic> jsonList = jsonDecode(decodedString);
+    List<String> filter = ["most_viewed", "similar_items", "most_recent_items"];
+    for (int i = 0; i < 3; i += 1) {
+      if(jsonList[filter[i]] == null) {
+        Logger.log("No data for ${filter[i]}");
+        continue;
+      }
+      List<dynamic> newJsonList = jsonList[filter[i]];
+      for (var item in newJsonList) {
+        Map<String, dynamic> jsonItem = item;
+
+        // Initialize filePath as null
+        Uint8List imageBytes = Uint8List(0);
+
+        // Check if 'image' is not null
+        if (jsonItem['Image'] != null && jsonItem['Image'] != '') {
+          // Decode the base64 image
+          imageBytes = base64.decode(jsonItem['Image']);
+        }
+        String tags = jsonItem['Tags'];
+        if (tags.startsWith('[') && tags.endsWith(']')) {
+          tags = tags.substring(1, tags.length - 1);
+        }
+        tags = tags.replaceAll('"', '');
+        List<String> tagsList;
+        if (tags.isEmpty) {
+          tagsList = [];
+        } else {
+          tagsList = tags.split(',').map((e) => e.trim()).toList();
+        }
+        int counts = jsonItem['Count'];
+        if (i == 0) {
+          mostRecent.add(QuizCardVertical(
+            title: jsonItem['Title'],
+            tags: tagsList,
+            creator: jsonItem['Creator'],
+            uuid: jsonItem['ID'],
+            titleImageByte: imageBytes,
+            counts: counts,
+          ));
+        } else if (i == 1) {
+          recommended.add(QuizCardVertical(
+            title: jsonItem['Title'],
+            tags: tagsList,
+            creator: jsonItem['Creator'],
+            uuid: jsonItem['ID'],
+            titleImageByte: imageBytes,
+            counts: counts,
+          ));
+        } else {
+          mostView.add(QuizCardVertical(
+            title: jsonItem['Title'],
+            tags: tagsList,
+            creator: jsonItem['Creator'],
+            uuid: jsonItem['ID'],
+            titleImageByte: imageBytes,
+            counts: counts,
+          ));
+        }
+      }
+    }
+    return [mostRecent, recommended, mostView];
+  } else {
+    // Handle error
+    Logger.log('Request failed with status: ${response.statusCode}');
+  }
+  return [];
 }

@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(score, title) => "I got ${score} in ${title}!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("AGREE"),
@@ -103,6 +105,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "Inquiry": MessageLookupByLibrary.simpleMessage("Inquiry"),
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("Invalid hex code"),
+        "Is_Searching": MessageLookupByLibrary.simpleMessage("Is Searching"),
+        "JSON_DOWN_FAIL":
+            MessageLookupByLibrary.simpleMessage("Downloading json failed"),
         "Leaving_warning": MessageLookupByLibrary.simpleMessage(
             "Leaving this page will lose all unsaved contents. Will you continue?"),
         "Load": MessageLookupByLibrary.simpleMessage("Load"),
@@ -111,6 +116,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "MainColor1": MessageLookupByLibrary.simpleMessage("MainColor1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("MainColor2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("MainColor3"),
+        "Most_Recent":
+            MessageLookupByLibrary.simpleMessage("Most recently created"),
         "Move_Home": MessageLookupByLibrary.simpleMessage("Move Home"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("My Settings"),
         "No": MessageLookupByLibrary.simpleMessage("No"),
@@ -121,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No buttons\n Only Flip"),
         "No_image_selected":
             MessageLookupByLibrary.simpleMessage("No image selected"),
+        "No_results": MessageLookupByLibrary.simpleMessage("No results found"),
         "Number_of_possible_selection": MessageLookupByLibrary.simpleMessage(
             "Number of possible selection : "),
         "OK": MessageLookupByLibrary.simpleMessage("OK"),
@@ -131,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Please_check_your_connection_and_try_again":
             MessageLookupByLibrary.simpleMessage(
                 "Please check your connection and try again."),
+        "Popular_Quiz": MessageLookupByLibrary.simpleMessage("Most Popular"),
         "Preview": MessageLookupByLibrary.simpleMessage("Preview"),
         "Prob": MessageLookupByLibrary.simpleMessage("Prob."),
         "Profile": MessageLookupByLibrary.simpleMessage("Profile"),
@@ -140,6 +149,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz_Title_Setup":
             MessageLookupByLibrary.simpleMessage("Quiz Title Setup"),
         "Rank": MessageLookupByLibrary.simpleMessage("Rank"),
+        "Recommendation":
+            MessageLookupByLibrary.simpleMessage("Recommendation"),
         "Register": MessageLookupByLibrary.simpleMessage("Register"),
         "Register_Success":
             MessageLookupByLibrary.simpleMessage("Register Success"),
@@ -161,9 +172,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "Setting": MessageLookupByLibrary.simpleMessage("Setting"),
         "Shuffle_Answers":
             MessageLookupByLibrary.simpleMessage("Shuffle Answers?"),
+        "Solved_num": MessageLookupByLibrary.simpleMessage("Views"),
         "Submit": MessageLookupByLibrary.simpleMessage("Submit"),
         "Successful_Login":
             MessageLookupByLibrary.simpleMessage("Successful Login"),
+        "Tag_Limit": MessageLookupByLibrary.simpleMessage("Tag limit is 10"),
         "Temp_Save": MessageLookupByLibrary.simpleMessage("Temp Save"),
         "Terms_of_Use": MessageLookupByLibrary.simpleMessage("Terms of Use"),
         "Text": MessageLookupByLibrary.simpleMessage("Text"),
@@ -193,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You are not connected to Internet"),
         "Your_email_is_already_registerd": MessageLookupByLibrary.simpleMessage(
             "Your email is already registerd"),
-        "languageCode": MessageLookupByLibrary.simpleMessage("en")
+        "languageCode": MessageLookupByLibrary.simpleMessage("en"),
+        "shareText": m0
       };
 }

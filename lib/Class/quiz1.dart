@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -18,6 +19,7 @@ class Quiz1 extends AbstractQuiz {
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
   String? youtubeId = null;
+  int? youtubeStartTime = null;
 
   Quiz1({
     int layoutType = 1,
@@ -31,6 +33,7 @@ class Quiz1 extends AbstractQuiz {
     Uint8List? titleImageBytes,
     this.isTitleImageSet = false,
     this.youtubeId = null,
+    this.youtubeStartTime = null,
   })  : titleImageBytes = titleImageBytes ?? Uint8List(0),
         super(
             layoutType: layoutType,
@@ -51,6 +54,7 @@ class Quiz1 extends AbstractQuiz {
     titleImageBytes = original.titleImageBytes;
     isTitleImageSet = original.isTitleImageSet;
     youtubeId = original.youtubeId;
+    youtubeStartTime = original.youtubeStartTime;
   }
 
   void printQuiz1() {
@@ -66,12 +70,24 @@ class Quiz1 extends AbstractQuiz {
     print('Viewer Correct Answers: $viewerAns');
   }
 
-  void validateBody(){
-    if(bodyType == 2 && titleImageBytes!.length < 39){
+  void validateBody() {
+    if (bodyType == 2 && titleImageBytes!.length < 39) {
       bodyType = 0;
     }
-    if(bodyType == 3 && youtubeId == null){
+    if (bodyType == 3 && youtubeId == null) {
       bodyType = 0;
+    }
+  }
+
+  void setYoutubeStartTime(int newStartTime) {
+    youtubeStartTime = newStartTime;
+  }
+
+  int getYoutubeStartTime() {
+    if (youtubeStartTime == null) {
+      return 0;
+    } else {
+      return youtubeStartTime!;
     }
   }
 
@@ -87,7 +103,7 @@ class Quiz1 extends AbstractQuiz {
     }
   }
 
-  void setYoutubeId(String url){
+  void setYoutubeId(String url) {
     youtubeId = url;
   }
 
@@ -143,7 +159,7 @@ class Quiz1 extends AbstractQuiz {
     answers[index] = newAnswer;
   }
 
-  Quiz1 loadQuiz(dynamic json, String uuid, int count, Directory directory) {
+  Quiz1 loadQuiz(dynamic json) {
     // JSON 데이터를 처리하는 로직을 구현합니다.
     // 예시에서는 json이 Map<String, dynamic> 타입이라고 가정합니다.
     // 실제로는 json 타입을 확인하고 적절히 변환하는 로직이 필요할 수 있습니다.
@@ -152,10 +168,10 @@ class Quiz1 extends AbstractQuiz {
         jsonData['answers'].map((answer) => answer.toString()));
     List<bool> ansList =
         List<bool>.from(jsonData['ans'].map((ans) => ans as bool));
-    var titleImageBytes = jsonData['image'];
-    if (titleImageBytes != null) {
-      isTitleImageSet = true;
-    }
+    String base64Image = jsonData['image'] as String? ?? '';
+    Uint8List titleImageBytes =
+        base64Image.isNotEmpty ? base64.decode(base64Image) : Uint8List(0);
+    bool isTitleImageSet = titleImageBytes.isNotEmpty;
 
     return Quiz1(
       layoutType: 1,
@@ -169,6 +185,7 @@ class Quiz1 extends AbstractQuiz {
       titleImageBytes: titleImageBytes,
       isTitleImageSet: isTitleImageSet,
       youtubeId: jsonData['youtubeId'],
+      youtubeStartTime: jsonData['youtubeStartTime'],
     );
   }
 
@@ -307,7 +324,7 @@ class Quiz1 extends AbstractQuiz {
       "layoutType": layoutType,
       "body": {
         "bodyType": bodyType,
-        "image": titleImageBytes,
+        "image": base64Encode(titleImageBytes!),
         "bodyText": bodyText,
         "shuffleAnswers": shuffleAnswers,
         "maxAnswerSelection": maxAnswerSelection,
@@ -315,6 +332,7 @@ class Quiz1 extends AbstractQuiz {
         "ans": ans,
         "question": question,
         "youtubeId": youtubeId,
+        "youtubeStartTime": youtubeStartTime,
       }
     };
   }

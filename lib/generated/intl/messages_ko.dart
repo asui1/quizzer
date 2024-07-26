@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ko';
 
+  static String m0(score, title) => "저는 ${title}에서 ${score}점을 받았습니다!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("동의"),
@@ -90,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Inquiry": MessageLookupByLibrary.simpleMessage("문의"),
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("유효하지 않은 hex값"),
+        "Is_Searching": MessageLookupByLibrary.simpleMessage("검색중입니다."),
         "Leaving_warning": MessageLookupByLibrary.simpleMessage(
             "이 화면에서 나가는 것은 저장되지 않은 내용을 잃을 수 있습니다. 나가시겠습니까?"),
         "Load": MessageLookupByLibrary.simpleMessage("불러오기"),
@@ -98,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "MainColor1": MessageLookupByLibrary.simpleMessage("메인 색1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("메인 색2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("메인 색3"),
+        "Most_Recent": MessageLookupByLibrary.simpleMessage("최근 생성된 퀴즈"),
         "Move_Home": MessageLookupByLibrary.simpleMessage("돌아가기"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("설정"),
         "No": MessageLookupByLibrary.simpleMessage("아니오"),
@@ -107,6 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "No_buttons_Only_Flip":
             MessageLookupByLibrary.simpleMessage("버튼 없이\n넘기기만"),
         "No_image_selected": MessageLookupByLibrary.simpleMessage("선택되지 않았습니다"),
+        "No_results": MessageLookupByLibrary.simpleMessage("결과를 찾을 수 없습니다."),
         "Number_of_possible_selection":
             MessageLookupByLibrary.simpleMessage("선택 가능한 정답 수 : "),
         "OK": MessageLookupByLibrary.simpleMessage("확인"),
@@ -116,6 +121,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Pick_Image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
         "Please_check_your_connection_and_try_again":
             MessageLookupByLibrary.simpleMessage("연결을 확인하고 다시 시도해주세요."),
+        "Popular_Quiz": MessageLookupByLibrary.simpleMessage("조회수순"),
         "Preview": MessageLookupByLibrary.simpleMessage("미리보기"),
         "Prob": MessageLookupByLibrary.simpleMessage("문제"),
         "Profile": MessageLookupByLibrary.simpleMessage("프로필"),
@@ -124,6 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz": MessageLookupByLibrary.simpleMessage("퀴즈"),
         "Quiz_Title_Setup": MessageLookupByLibrary.simpleMessage("퀴즈 제목 설정"),
         "Rank": MessageLookupByLibrary.simpleMessage("통계"),
+        "Recommendation": MessageLookupByLibrary.simpleMessage("추천 퀴즈"),
         "Register": MessageLookupByLibrary.simpleMessage("가입하기"),
         "Register_Success": MessageLookupByLibrary.simpleMessage("가입에 성공했습니다."),
         "Registration": MessageLookupByLibrary.simpleMessage("회원가입"),
@@ -141,9 +148,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("표지 이미지를 선택하세요."),
         "Setting": MessageLookupByLibrary.simpleMessage("설정"),
         "Shuffle_Answers": MessageLookupByLibrary.simpleMessage("정답 섞기?"),
+        "Solved_num": MessageLookupByLibrary.simpleMessage("조회 수"),
         "Submit": MessageLookupByLibrary.simpleMessage("제출"),
         "Successful_Login":
             MessageLookupByLibrary.simpleMessage("로그인에 성공하였습니다."),
+        "Tag_Limit": MessageLookupByLibrary.simpleMessage("태그는 10개까지 가능합니다."),
         "Temp_Save": MessageLookupByLibrary.simpleMessage("임시저장"),
         "Terms_of_Use": MessageLookupByLibrary.simpleMessage("사용 동의서"),
         "Text": MessageLookupByLibrary.simpleMessage("텍스트"),
@@ -170,6 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("인터넷에 연결되지 않았습니다."),
         "Your_email_is_already_registerd":
             MessageLookupByLibrary.simpleMessage("이미 등록된 이메일입니다."),
-        "languageCode": MessageLookupByLibrary.simpleMessage("ko")
+        "languageCode": MessageLookupByLibrary.simpleMessage("ko"),
+        "shareText": m0
       };
 }
