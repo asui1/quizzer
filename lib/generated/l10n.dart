@@ -660,6 +660,16 @@ class S {
     );
   }
 
+  /// `I got {score} in {title}!`
+  String shareText(Object score, Object title) {
+    return Intl.message(
+      'I got $score in $title!',
+      name: 'shareText',
+      desc: '',
+      args: [score, title],
+    );
+  }
+
   /// `Views`
   String get Solved_num {
     return Intl.message(
@@ -1275,6 +1285,16 @@ class S {
     return Intl.message(
       'Tag limit is 10',
       name: 'Tag_Limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Downloading json failed`
+  String get JSON_DOWN_FAIL {
+    return Intl.message(
+      'Downloading json failed',
+      name: 'JSON_DOWN_FAIL',
       desc: '',
       args: [],
     );

@@ -82,6 +82,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               fontSize:
                                   AppConfig.fontSize * 2, // Adjust as needed
                               fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Spacer(
@@ -189,7 +190,9 @@ class _MakingQuizState extends State<MakingQuiz> {
                               SizedBox(
                                 width: AppConfig.largePadding,
                               ),
-                              Text(Intl.message("Quiz") +' : ${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
+                              Text(
+                                Intl.message("Quiz") +
+                                    ' : ${min(curQuizIndex + 1, quizLayout.getQuizCount())} / ${quizLayout.getQuizCount()}',
                                 style: TextStyle(
                                   fontFamily: MyFonts.gothicA1Bold,
                                   fontWeight: FontWeight.bold,

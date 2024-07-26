@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(score, title) => "I got ${score} in ${title}!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("AGREE"),
@@ -104,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Invalid_hex_code":
             MessageLookupByLibrary.simpleMessage("Invalid hex code"),
         "Is_Searching": MessageLookupByLibrary.simpleMessage("Is Searching"),
+        "JSON_DOWN_FAIL":
+            MessageLookupByLibrary.simpleMessage("Downloading json failed"),
         "Leaving_warning": MessageLookupByLibrary.simpleMessage(
             "Leaving this page will lose all unsaved contents. Will you continue?"),
         "Load": MessageLookupByLibrary.simpleMessage("Load"),
@@ -202,6 +206,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "You are not connected to Internet"),
         "Your_email_is_already_registerd": MessageLookupByLibrary.simpleMessage(
             "Your email is already registerd"),
-        "languageCode": MessageLookupByLibrary.simpleMessage("en")
+        "languageCode": MessageLookupByLibrary.simpleMessage("en"),
+        "shareText": m0
       };
 }

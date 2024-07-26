@@ -62,6 +62,7 @@ class QuizLayout extends ChangeNotifier {
     position: Offset(100, 100),
     backgroundImage: null,
   );
+  List<bool> solveResult = [];
   // -> FONT FAMILY, Color, BoderStyle, FontWeight
 
   QuizLayout({this.highlightedIndex = 0});
@@ -246,11 +247,17 @@ class QuizLayout extends ChangeNotifier {
 
     // Iterate through quizzes and adjust scores based on quiz.check()
     for (int i = 0; i < n; i++) {
-      if (quizzes[i].check()) {
+      bool result = quizzes[i].check();
+      solveResult.add(result);
+      if (result) {
         score += scores[i];
       }
     }
     return score;
+  }
+
+  List<bool> getSolveResult(){
+    return solveResult;
   }
 
   Future<void> loadQuizLayout(dynamic inputJson) async {

@@ -61,6 +61,7 @@
     "Preview": "Preview",
     "Close": "Close",
     "OK": "OK",
+    "shareText": "I got {score} in {title}!",
     "Solved_num": "Views",
     "Flip_Style_Setup": "Flip Style Setup",
     "Color_Setup" : "Color Setup",

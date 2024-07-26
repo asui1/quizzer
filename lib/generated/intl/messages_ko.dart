@@ -20,6 +20,8 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ko';
 
+  static String m0(score, title) => "저는 ${title}에서 ${score}점을 받았습니다!";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("동의"),
@@ -177,6 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("인터넷에 연결되지 않았습니다."),
         "Your_email_is_already_registerd":
             MessageLookupByLibrary.simpleMessage("이미 등록된 이메일입니다."),
-        "languageCode": MessageLookupByLibrary.simpleMessage("ko")
+        "languageCode": MessageLookupByLibrary.simpleMessage("ko"),
+        "shareText": m0
       };
 }

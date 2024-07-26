@@ -112,16 +112,6 @@ class QuizCardVertical extends StatelessWidget {
                         fontSize: AppConfig.fontSize * 0.8,
                         fontWeight: FontWeight.w200), // 추가 데이터 표시
                   ), // 추가 데이터 표시
-                  Chip(
-                    padding: EdgeInsets.all(4),
-                    labelPadding: EdgeInsets.all(2),
-                    label: Text(
-                      tags.length == 0 ? "......" : tags[0],
-                      style: TextStyle(
-                          fontSize: AppConfig.fontSize * 0.6,
-                          fontWeight: FontWeight.w300),
-                    ),
-                  ),
                 ],
               ),
             ),
