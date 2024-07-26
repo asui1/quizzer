@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quiz1.dart';
@@ -11,6 +10,7 @@ import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
@@ -32,6 +32,9 @@ import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:html' as html;
+import 'package:google_sign_in_web/google_sign_in_web.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,21 +46,11 @@ void main() async {
   String localeCode = (locale == 'ko') ? 'ko_KR' : 'en_US';
   // Intl 패키지에 로케일 설정
   Intl.defaultLocale = localeCode;
-  var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult == ConnectivityResult.none) {
-    runApp(NoInternet());
-    return;
-  }
-  bool isUpdateAvailable = await VersionCheckService().checkForUpdate();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    if (isUpdateAvailable) {
-      runApp(UpdateApp()); // 업데이트 권장 앱 실행
-    } else {
-      runApp(MyApp()); // 메인 앱 실행
-    }
+    runApp(MyApp()); // 메인 앱 실행
   });
 }
 
@@ -155,6 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<QuizCardVertical> quizCardList2 = [];
   List<QuizCardVertical> quizCardList3 = [];
   late Future<void> _future;
+  GoogleSignInAccount? _currentUser;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: googleClientId,
+  );
 
   @override
   void initState() {
@@ -162,17 +159,28 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadPreferences();
     Provider.of<QuizLayout>(context, listen: false);
     _future = _loadDataFromServer();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        if (account != null) {
+          _currentUser = account;
+          String photoUrl = account.photoUrl ?? '';
+          Logger.log(account.email);
+          loginCheck(account.email, photoUrl);
+        }
+      });
+    });
+    _googleSignIn.signInSilently();
   }
 
   Future<void> _loadDataFromServer() async {
     List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
     // 한국어 지원 여부 확인
     String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
-    List<List<QuizCardVertical>> recommendations =
-        await getRecommendations(locale);
-    quizCardList1 = recommendations[0]; // 가장 인기있는 5개
-    quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
-    quizCardList3 = recommendations[2]; // 최신 5개
+    // List<List<QuizCardVertical>> recommendations =
+    //     await getRecommendations(locale);
+    // quizCardList1 = recommendations[0]; // 가장 인기있는 5개
+    // quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
+    // quizCardList3 = recommendations[2]; // 최신 5개
     setState(() {});
     // 가장 인기있는 5개, 태그 기반 추천 5개, 최신 5개
   }
@@ -632,8 +640,34 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future<void> _federatedSignIn() async {
+    try {
+      final credential = await html.window.navigator.credentials?.get({
+        'federated': {
+          'providers': [
+            {
+              'url': 'https://accounts.google.com',
+              'clientId': googleClientId,
+            }
+          ]
+        }
+      });
+
+      if (credential != null) {
+        final idToken = credential.idToken;
+        // ID 토큰을 서버로 보내거나 앱에서 사용
+        Logger.log('ID Token: $idToken');
+      }
+    } catch (error) {
+      Logger.log('FedCM Sign-In Error: $error');
+    }
+  }
+
   void _showLoginDialog(BuildContext context) async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId: googleClientId,
+    );
+    GoogleSignInAccount? account;
     bool _isTapInProgress = false;
 
     await showDialog(
@@ -652,12 +686,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () async {
                     if (_isTapInProgress) return;
                     _isTapInProgress = true;
-                    final account = await _googleSignIn.signIn();
+                    // FedCM을 사용하여 로그인
+                    await _federatedSignIn();
+
+                    // Google Sign-In을 사용하여 로그인
+                    account = await _googleSignIn.signInSilently();
+
                     if (account != null) {
-                      String photoUrl =
-                          account.photoUrl == null ? '' : account.photoUrl!;
+                      String photoUrl = account!.photoUrl ?? '';
                       int loginStatus =
-                          await loginCheck(account.email, photoUrl);
+                          await loginCheck(account!.email, photoUrl);
                       if (loginStatus == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -736,7 +774,8 @@ class _MyHomePageState extends State<MyHomePage> {
             CrossAxisAlignment.start, // Aligns children to the start (left)
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0,
+            padding: const EdgeInsets.only(
+                left: 16.0,
                 bottom: 8.0), // Add some space between the text and the list
             child: Text(
               title, // Use the title passed to the function
@@ -761,152 +800,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
-  }
-
-  void navigateToQuizPage(BuildContext context, int n) {
-    // Navigator를 사용하여 QuizWidgetN 또는 QuizNPage로 이동
-    // 예시로 QuizNPage로 이동하는 코드를 작성
-
-    switch (n) {
-      case 1:
-        Quiz1 quiz = Quiz1(
-            answers: ['', '', '', '', ''],
-            ans: [false, false, false, false, false],
-            question: '');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => QuizWidget1(
-              quiz: quiz,
-            ),
-          ),
-        );
-        break;
-      case 2:
-        Quiz1 quiz = Quiz1(
-          answers: ['11', '22', '33', '44', '55'],
-          ans: [true, false, false, false, false],
-          question: "11을 고르세요.",
-          bodyType: 1,
-          bodyText: "본문입니다.",
-          shuffleAnswers: true,
-          maxAnswerSelection: 1,
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizView1(
-                    quiz: quiz,
-                    screenHeightModifier: 1,
-                    screenWidthModifier: 1,
-                  )),
-        );
-        break;
-      case 3:
-        Quiz2 quiz = Quiz2(
-          answers: ['', '', '', '', ''],
-          ans: [],
-          question: '',
-          maxAnswerSelection: 1,
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizWidget2(
-                    quiz: quiz,
-                  )),
-        );
-        break;
-      case 4:
-        Quiz2 quiz = Quiz2(
-          answers: ['11', '22', '33', '44', '55'],
-          ans: [true, false, false, false, false],
-          question: "11을 고르세요.",
-          maxAnswerSelection: 1,
-          centerDate: [2024, 6, 22],
-          yearRange: 10,
-          answerDate: [
-            [2024, 6, 22],
-            [2024, 6, 20]
-          ],
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizView2(
-                    quiz: quiz,
-                  )),
-        );
-        break;
-      case 5:
-        Quiz3 quiz = Quiz3(
-          answers: ['', ''],
-          ans: [],
-          question: '',
-          maxAnswerSelection: 1,
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizWidget3(
-                    quiz: quiz,
-                  )),
-        );
-        break;
-      case 6:
-        Quiz3 quiz = Quiz3(
-          answers: ['111', '222', '333', '444', '555'],
-          ans: [true, false, false, false, false],
-          question: "11을 고르세요.",
-          maxAnswerSelection: 1,
-        );
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuizView3(
-                quiz: quiz,
-              ),
-            ));
-        break;
-      case 7:
-        Quiz4 quiz = Quiz4(
-          answers: ['', ''],
-          ans: [],
-          question: '',
-          maxAnswerSelection: 1,
-          connectionAnswers: ['', ''],
-          connectionAnswerIndex: [null, null],
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizWidget4(
-                    quiz: quiz,
-                  )),
-        );
-        break;
-      case 8:
-        Quiz4 quiz = Quiz4(
-          answers: ['11', '22', '33', '44', '55'],
-          ans: [true, false, false, false, false],
-          question: "11을 고르세요.",
-          maxAnswerSelection: 1,
-          connectionAnswers: ['C', 'E', 'A', 'B', 'D'],
-          connectionAnswerIndex: [2, 4, 0, 1, 3],
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => QuizView4(
-                    quiz: quiz,
-                    changePageViewState: (bool tint) {},
-                  )),
-        );
-      // Add more cases for other quiz pages
-      default:
-        // Handle the case when n is not matched with any of the cases
-        break;
-    }
   }
 
   void _showLogoutConfirmationDialog(BuildContext context) {
