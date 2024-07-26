@@ -19,6 +19,7 @@ class _RegisterState extends State<Register> {
   final StreamController<bool> _streamController = StreamController<bool>();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? account = null;
+  bool _isTapInProgress = false;
 
   @override
   void dispose() {
@@ -66,7 +67,9 @@ class _RegisterState extends State<Register> {
                     borderColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.error; // 조건에 따른 색상 변경
-                    labelText = snapshot.data! ? Intl.message("Usable_Nickname") : Intl.message("Duplicate_Nickname");
+                    labelText = snapshot.data!
+                        ? Intl.message("Usable_Nickname")
+                        : Intl.message("Duplicate_Nickname");
                     textColor = snapshot.data!
                         ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.onSurface;
@@ -136,6 +139,10 @@ class _RegisterState extends State<Register> {
                       ),
                       TextButton(
                         onPressed: () async {
+                          if (_isTapInProgress)
+                            return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+                          _isTapInProgress = true; // 탭 진행 중 상태로 설정
+
                           if (snapshot.hasData && snapshot.data!) {
                             bool registerResult = await registerUser(
                                 textController.value.text,
@@ -145,16 +152,20 @@ class _RegisterState extends State<Register> {
                             if (registerResult) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(Intl.message("Register_Success")),
+                                  content:
+                                      Text(Intl.message("Register_Success")),
                                   duration: Duration(seconds: 2),
                                 ),
                               );
 
                               Navigator.pop(context);
                               Navigator.pop(context);
+                              _isTapInProgress = false; // 탭 진행 중 상태 해제
                             } else {
+                              _isTapInProgress = false; // 탭 진행 중 상태 해제
                             }
                           }
+                          _isTapInProgress = false; // 탭 진행 중 상태 해제
                         },
                         child: Text(
                           Intl.message("Register"),

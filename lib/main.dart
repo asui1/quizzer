@@ -165,10 +165,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _loadDataFromServer() async {
-  List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
-  // 한국어 지원 여부 확인
-  String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
-    List<List<QuizCardVertical>> recommendations = await getRecommendations(locale);
+    List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
+    // 한국어 지원 여부 확인
+    String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
+    List<List<QuizCardVertical>> recommendations =
+        await getRecommendations(locale);
     quizCardList1 = recommendations[0]; // 가장 인기있는 5개
     quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
     quizCardList3 = recommendations[2]; // 최신 5개
@@ -204,7 +205,14 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         // You can check the snapshot state to show loading indicators or error messages
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading indicator while waiting
+          return Scaffold(
+            body: Center(
+              child: ImageIcon(
+                AssetImage('assets/icon/quizzerImage.png'), // Example icon
+                size: 100.0, // Adjust the size as needed
+              ),
+            ),
+          ); // Show empty screen with AppIcon at center while waiting
         } else if (snapshot.hasError) {
           return Text(
               'Error: ${snapshot.error}'); // Show error message if something went wrong
@@ -322,11 +330,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           SizedBox(
                             height: AppConfig.largePadding,
                           ),
-                          homeLists(quizCardList1, Intl.message("Popular_Quiz")),
+                          homeLists(
+                              quizCardList1, Intl.message("Popular_Quiz")),
                           SizedBox(
                             height: AppConfig.largePadding,
                           ),
-                          homeLists(quizCardList2, Intl.message("Recommendation")),
+                          homeLists(
+                              quizCardList2, Intl.message("Recommendation")),
                           SizedBox(
                             height: AppConfig.largePadding,
                           ),
@@ -624,6 +634,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _showLoginDialog(BuildContext context) async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
+    bool _isTapInProgress = false;
 
     await showDialog(
       context: context,
@@ -639,6 +650,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(Intl.message("Login"),
                       style: TextStyle(fontSize: 20)),
                   onPressed: () async {
+                    if (_isTapInProgress) return;
+                    _isTapInProgress = true;
                     final account = await _googleSignIn.signIn();
                     if (account != null) {
                       String photoUrl =
@@ -655,6 +668,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         _loadPreferences();
                         Navigator.of(context)
                             .popUntil((route) => route.isFirst);
+                        _isTapInProgress = false; // 탭 진행 중 상태 해제
                       } else if (loginStatus == 400) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -662,6 +676,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             duration: Duration(seconds: 2),
                           ),
                         );
+                        _isTapInProgress = false; // 탭 진행 중 상태 해제
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -670,6 +685,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         );
                         Navigator.pop(context);
+                        _isTapInProgress = false; // 탭 진행 중 상태 해제
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -679,6 +695,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                       Navigator.pop(context);
+                      _isTapInProgress = false; // 탭 진행 중 상태 해제
                     }
 
                     // 로그인 로직 구현

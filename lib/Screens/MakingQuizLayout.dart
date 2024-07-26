@@ -579,7 +579,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     height: AppConfig.screenHeight * 0.02,
                   ),
                   Text(
-                    Intl.message("Set_Title_Image") + "(2Mb)",
+                    Intl.message("Set_Title_Image") + "(500kb)",
                   ),
                   SizedBox(
                     height: AppConfig.screenHeight * 0.02,

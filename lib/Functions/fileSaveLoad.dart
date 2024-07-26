@@ -83,7 +83,8 @@ Future<File> saveFileToPermanentDirectory(XFile xFile) async {
   return permanentFile;
 }
 
-Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width, int height,
+Future<Uint8List> compressImage(
+    Uint8List imageData, int limitSize, int width, int height,
     {int quality = 100}) async {
   // Uint8List 형태의 이미지 데이터를 img.Image 객체로 디코딩합니다.
 
@@ -95,17 +96,40 @@ Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width, i
   if (image == null) {
     throw Exception("이미지 디코딩 실패");
   }
+  if(width == 150){
+    width = 450;
+    height = 450;
+  }
+  if(width == 400){
+    width = 800;
+    height = 800;
+  }
+  if (image.width > width|| image.height > height) {
+    image = img.copyResize(image, width: width * 3);
+  }
+
   // 원하는 비율로 중앙에서 자르기
   int originalWidth = image.width;
   int originalHeight = image.height;
+  int newWidth = width;
+  int newHeight = height;
 
-  int xOffset = (originalWidth - width) ~/ 2;
-  int yOffset = (originalHeight - height) ~/ 2;
+  if (newHeight > originalHeight) {
+    newWidth = originalWidth * originalHeight ~/ newHeight;
+    newHeight = originalHeight;
+  }
+  if (newWidth > originalWidth) {
+    newHeight = originalHeight * originalWidth ~/ newWidth;
+    newWidth = originalWidth;
+  }
 
-  img.Image croppedImage = img.copyCrop(image, x: xOffset, y: yOffset, width: width, height: height);
+  int xOffset = (originalWidth - newWidth) ~/ 2;
+  int yOffset = (originalHeight - newHeight) ~/ 2;
+
+  img.Image croppedImage = img.copyCrop(image,
+      x: xOffset, y: yOffset, width: newWidth, height: newHeight);
 
   Uint8List compressedImageData;
-
 
   int currentSize;
 
@@ -143,10 +167,10 @@ String makeScoreCardJson(QuizLayout quizLayout) {
         scoreCardJson['imageData'] = backgroundImage.imageByte;
       }
     }
-  }
-  else{
+  } else {
     scoreCardJson['isColor'] = true;
-    scoreCardJson['color'] = scoreCard.getColorByState(quizLayout, scoreCard.imageState).value;
+    scoreCardJson['color'] =
+        scoreCard.getColorByState(quizLayout, scoreCard.imageState).value;
   }
 
   return jsonEncode(scoreCardJson);

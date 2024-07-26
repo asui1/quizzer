@@ -123,5 +123,6 @@
     "Response_will_be_given_by_email": "Response will be given by email",
     "Enter_Youtube_Link": "Enter Youtube link.",
     "Tag_Limit": "Tag limit is 10",
+    "JSON_DOWN_FAIL": "Downloading json failed",
     "Enter_Inquiry": "Enter Inquiry"
 }

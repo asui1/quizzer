@@ -20,6 +20,7 @@ class QuizCard extends StatelessWidget {
   final String creator;
   final Uint8List titleImageByte;
   final int counts;
+  bool _isTapInProgress = false;
 
   QuizCard(
       {required this.uuid,
@@ -38,6 +39,8 @@ class QuizCard extends StatelessWidget {
             .transparency, // This makes the material widget transparent
         child: InkWell(
           onTap: () async {
+            if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+            _isTapInProgress = true; // 탭 진행 중 상태로 설정
             String dataJson = "";
             final directory = await getApplicationDocumentsDirectory();
             try {
@@ -45,28 +48,31 @@ class QuizCard extends StatelessWidget {
               String jsonString = await loadFileContent(directory, uuid);
               final jsonResponse = json.decode(jsonString);
               dataJson = jsonResponse['Data'];
+
+              final jsonResponse2 = json.decode(dataJson);
+
+              QuizLayout quizLayout =
+                  Provider.of<QuizLayout>(context, listen: false);
+              quizLayout.reset();
+              await quizLayout.loadQuizLayout(jsonResponse2);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => QuizSolver(
+                          quizLayout: quizLayout,
+                          index: 0,
+                        )),
+              );
+              _isTapInProgress = false; // 탭 진행 중 상태 해제
             } catch (e) {
               Logger.log("Error in downloadJson");
               Logger.log(e);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(Intl.message("JSON_DOWN_FAIL")),
+              ));
+              _isTapInProgress = false; // 탭 진행 중 상태 해제
               return;
             }
-            // Logger.log(dataJson);
-
-            final jsonResponse = json.decode(dataJson);
-            // jsonResponse를 사용하여 필요한 작업 수행
-
-            QuizLayout quizLayout =
-                Provider.of<QuizLayout>(context, listen: false);
-            quizLayout.reset();
-            await quizLayout.loadQuizLayout(jsonResponse);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => QuizSolver(
-                        quizLayout: quizLayout,
-                        index: 0,
-                      )),
-            );
           },
           child: Card(
               elevation: 4.0,

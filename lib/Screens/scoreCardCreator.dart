@@ -19,6 +19,7 @@ class ScoreCardGenerator extends StatefulWidget {
 
 class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
   late ScoreCard scoreCard;
+  bool _isTapInProgress = false;
 
   @override
   void initState() {
@@ -36,15 +37,14 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
         (AppConfig.screenHeight);
     scoreCard.initbackGroundImage(quizLayout);
     Widget card = Container(
-                        width: AppConfig.screenWidth * 0.8,
-                        height: AppConfig.screenHeight * 0.55 * heightModifier,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        decoration: scoreCard.getBackgroundImage(),
-                        child: DraggableTextWidget(
-                          scoreCard: scoreCard,
-                        ),
-                      );
+      width: AppConfig.screenWidth * 0.8,
+      height: AppConfig.screenHeight * 0.55 * heightModifier,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: scoreCard.getBackgroundImage(),
+      child: DraggableTextWidget(
+        scoreCard: scoreCard,
+      ),
+    );
 
     return Theme(
       data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
@@ -114,26 +114,34 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                         foregroundColor:
                             quizLayout.getColorScheme().secondaryContainer,
                         onPressed: () async {
+                          if (_isTapInProgress)
+                            return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+                          _isTapInProgress = true; // 탭 진행 중 상태로 설정
                           int savable = await quizLayout.checkSavable(context);
                           if (savable == -3) {
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
+                            _isTapInProgress = false; // 탭 진행 중 상태 해제
                           } else if (savable == -1) {
-                            quizLayout.saveQuizLayout(context, false); //실제 저장(업로드)가 이루어지는 함수.
+                            quizLayout.saveQuizLayout(
+                                context, false); //실제 저장(업로드)가 이루어지는 함수.
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
+                            _isTapInProgress = false; // 탭 진행 중 상태 해제
                           } else if (savable == -2) {
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop();
+                            _isTapInProgress = false; // 탭 진행 중 상태 해제
                           } else {
                             if (Navigator.of(context).canPop())
                               Navigator.of(context).pop(savable);
+                            _isTapInProgress = false; // 탭 진행 중 상태 해제
                           }
                         },
                         child: Text(Intl.message("Upload"),
