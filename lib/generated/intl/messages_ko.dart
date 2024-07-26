@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "MainColor1": MessageLookupByLibrary.simpleMessage("메인 색1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("메인 색2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("메인 색3"),
+        "Most_Recent": MessageLookupByLibrary.simpleMessage("최근 생성된 퀴즈"),
         "Move_Home": MessageLookupByLibrary.simpleMessage("돌아가기"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("설정"),
         "No": MessageLookupByLibrary.simpleMessage("아니오"),
@@ -118,6 +119,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Pick_Image": MessageLookupByLibrary.simpleMessage("이미지 선택"),
         "Please_check_your_connection_and_try_again":
             MessageLookupByLibrary.simpleMessage("연결을 확인하고 다시 시도해주세요."),
+        "Popular_Quiz": MessageLookupByLibrary.simpleMessage("조회수순"),
         "Preview": MessageLookupByLibrary.simpleMessage("미리보기"),
         "Prob": MessageLookupByLibrary.simpleMessage("문제"),
         "Profile": MessageLookupByLibrary.simpleMessage("프로필"),
@@ -126,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz": MessageLookupByLibrary.simpleMessage("퀴즈"),
         "Quiz_Title_Setup": MessageLookupByLibrary.simpleMessage("퀴즈 제목 설정"),
         "Rank": MessageLookupByLibrary.simpleMessage("통계"),
+        "Recommendation": MessageLookupByLibrary.simpleMessage("추천 퀴즈"),
         "Register": MessageLookupByLibrary.simpleMessage("가입하기"),
         "Register_Success": MessageLookupByLibrary.simpleMessage("가입에 성공했습니다."),
         "Registration": MessageLookupByLibrary.simpleMessage("회원가입"),

@@ -83,8 +83,8 @@ Future<File> saveFileToPermanentDirectory(XFile xFile) async {
   return permanentFile;
 }
 
-Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width,
-    {int quality = 80}) async {
+Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width, int height,
+    {int quality = 100}) async {
   // Uint8List 형태의 이미지 데이터를 img.Image 객체로 디코딩합니다.
 
   if (imageData.lengthInBytes < limitSize) {
@@ -95,23 +95,30 @@ Future<Uint8List> compressImage(Uint8List imageData, int limitSize, int width,
   if (image == null) {
     throw Exception("이미지 디코딩 실패");
   }
+  // 원하는 비율로 중앙에서 자르기
+  int originalWidth = image.width;
+  int originalHeight = image.height;
 
-  // 필요한 경우 이미지 크기 조정
-  img.Image resizedImage = img.copyResize(image, width: width);
+  int xOffset = (originalWidth - width) ~/ 2;
+  int yOffset = (originalHeight - height) ~/ 2;
+
+  img.Image croppedImage = img.copyCrop(image, x: xOffset, y: yOffset, width: width, height: height);
 
   Uint8List compressedImageData;
+
+
   int currentSize;
 
   do {
     Logger.log("Quality: $quality");
     // 이미지를 지정된 품질로 압축합니다.
     compressedImageData =
-        Uint8List.fromList(img.encodeJpg(resizedImage, quality: quality));
+        Uint8List.fromList(img.encodeJpg(croppedImage, quality: quality));
     currentSize = compressedImageData.length;
 
     // 파일 크기가 limitSize보다 크고 품질이 0보다 크면 품질을 10 감소시킵니다.
     if (currentSize > limitSize && quality > 0) {
-      quality -= 15;
+      quality -= 10;
     }
   } while (currentSize > limitSize && quality > 0);
 

@@ -690,6 +690,36 @@ class S {
     );
   }
 
+  /// `Most Popular`
+  String get Popular_Quiz {
+    return Intl.message(
+      'Most Popular',
+      name: 'Popular_Quiz',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommendation`
+  String get Recommendation {
+    return Intl.message(
+      'Recommendation',
+      name: 'Recommendation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Most recently created`
+  String get Most_Recent {
+    return Intl.message(
+      'Most recently created',
+      name: 'Most_Recent',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Quiz Title Setup`
   String get Quiz_Title_Setup {
     return Intl.message(

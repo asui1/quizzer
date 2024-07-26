@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,13 +18,13 @@ class QuizCard extends StatelessWidget {
   final String title;
   final List<String> tags;
   final String creator;
-  final String? titleImagePath;
+  final Uint8List titleImageByte;
   final int counts;
 
   QuizCard(
       {required this.uuid,
       required this.title,
-      required this.titleImagePath,
+      required this.titleImageByte,
       this.tags = const ['#테스트'],
       this.creator = '테스트를 위한 문구입니다.',
       this.counts = 0});
@@ -74,13 +75,19 @@ class QuizCard extends StatelessWidget {
                 child: Row(
                   // Row 위젯을 사용하여 이미지와 텍스트 열을 수평으로 배열
                   children: <Widget>[
-                    SizedBox(
-                      width: AppConfig.shortestSide / 5, // 이미지 너비
-                      height: AppConfig.shortestSide / 5, // 이미지 높이
-                      child: titleImagePath == null
-                          ? Image.asset(
-                              'assets/images/question2.png') // 에셋 이미지 사용
-                          : Image.file(File(titleImagePath!)), // 파일 이미지 사용
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
+                      child: SizedBox(
+                        width: AppConfig.screenHeight * 0.15, // 이미지 너비
+                        height: AppConfig.screenHeight * 0.15, // 이미지 높이
+                        child: titleImageByte.length < 30
+                            ? Image.asset('assets/images/question2.png',
+                                fit: BoxFit.cover) // 에셋 이미지 사용
+                            : Image.memory(
+                                titleImageByte,
+                                fit: BoxFit.cover,
+                              ), // 파일 이미지 사용
+                      ),
                     ),
                     SizedBox(
                       width: AppConfig.shortestSide * 0.05,

@@ -112,6 +112,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "MainColor1": MessageLookupByLibrary.simpleMessage("MainColor1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("MainColor2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("MainColor3"),
+        "Most_Recent":
+            MessageLookupByLibrary.simpleMessage("Most recently created"),
         "Move_Home": MessageLookupByLibrary.simpleMessage("Move Home"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("My Settings"),
         "No": MessageLookupByLibrary.simpleMessage("No"),
@@ -133,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Please_check_your_connection_and_try_again":
             MessageLookupByLibrary.simpleMessage(
                 "Please check your connection and try again."),
+        "Popular_Quiz": MessageLookupByLibrary.simpleMessage("Most Popular"),
         "Preview": MessageLookupByLibrary.simpleMessage("Preview"),
         "Prob": MessageLookupByLibrary.simpleMessage("Prob."),
         "Profile": MessageLookupByLibrary.simpleMessage("Profile"),
@@ -142,6 +145,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz_Title_Setup":
             MessageLookupByLibrary.simpleMessage("Quiz Title Setup"),
         "Rank": MessageLookupByLibrary.simpleMessage("Rank"),
+        "Recommendation":
+            MessageLookupByLibrary.simpleMessage("Recommendation"),
         "Register": MessageLookupByLibrary.simpleMessage("Register"),
         "Register_Success":
             MessageLookupByLibrary.simpleMessage("Register Success"),

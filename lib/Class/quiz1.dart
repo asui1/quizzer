@@ -19,6 +19,7 @@ class Quiz1 extends AbstractQuiz {
   List<String> viewerAnswers = [];
   List<bool> viewerAns = [];
   String? youtubeId = null;
+  int? youtubeStartTime = null;
 
   Quiz1({
     int layoutType = 1,
@@ -32,6 +33,7 @@ class Quiz1 extends AbstractQuiz {
     Uint8List? titleImageBytes,
     this.isTitleImageSet = false,
     this.youtubeId = null,
+    this.youtubeStartTime = null,
   })  : titleImageBytes = titleImageBytes ?? Uint8List(0),
         super(
             layoutType: layoutType,
@@ -52,6 +54,7 @@ class Quiz1 extends AbstractQuiz {
     titleImageBytes = original.titleImageBytes;
     isTitleImageSet = original.isTitleImageSet;
     youtubeId = original.youtubeId;
+    youtubeStartTime = original.youtubeStartTime;
   }
 
   void printQuiz1() {
@@ -73,6 +76,18 @@ class Quiz1 extends AbstractQuiz {
     }
     if (bodyType == 3 && youtubeId == null) {
       bodyType = 0;
+    }
+  }
+
+  void setYoutubeStartTime(int newStartTime) {
+    youtubeStartTime = newStartTime;
+  }
+
+  int getYoutubeStartTime() {
+    if (youtubeStartTime == null) {
+      return 0;
+    } else {
+      return youtubeStartTime!;
     }
   }
 
@@ -170,6 +185,7 @@ class Quiz1 extends AbstractQuiz {
       titleImageBytes: titleImageBytes,
       isTitleImageSet: isTitleImageSet,
       youtubeId: jsonData['youtubeId'],
+      youtubeStartTime: jsonData['youtubeStartTime'],
     );
   }
 
@@ -316,6 +332,7 @@ class Quiz1 extends AbstractQuiz {
         "ans": ans,
         "question": question,
         "youtubeId": youtubeId,
+        "youtubeStartTime": youtubeStartTime,
       }
     };
   }

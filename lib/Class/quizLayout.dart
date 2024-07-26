@@ -105,6 +105,10 @@ class QuizLayout extends ChangeNotifier {
     );
   }
 
+  double getBodyHeight(){
+    return AppConfig.screenHeight - getAppBarHeight() - getBottomBarHeight();
+  }
+
   ScoreCard getScoreCard() {
     return _scoreCard;
   }

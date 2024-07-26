@@ -168,7 +168,7 @@ class _ContentWidgetState extends State<ContentWidget> {
                         if (pickedFileTemp != null) {
                           Uint8List file = await pickedFileTemp.readAsBytes();
                           Uint8List compressedFile =
-                              await compressImage(file, 500 * 1024, 400);
+                              await compressImage(file, 1024 * 1024, 400, 400);
                           setState(() {
                             widget.quiz1.setImageByte(compressedFile);
                           });
@@ -185,7 +185,7 @@ class _ContentWidgetState extends State<ContentWidget> {
                         if (pickedFileTemp != null) {
                           Uint8List file = await pickedFileTemp.readAsBytes();
                           Uint8List compressedFile =
-                              await compressImage(file, 500 * 1024, 400);
+                              await compressImage(file, 1024 * 1024, 400, 400);
                           setState(() {
                             widget.quiz1.setImageByte(compressedFile);
                           });
@@ -231,17 +231,22 @@ class _ContentWidgetState extends State<ContentWidget> {
                         // Handle what happens when the "Done" button is pressed
                         // For example, you can close the keyboard
                         Logger.log(value);
-                        String videoId = extractVideoId(value) ?? "";
-                        if (videoId == "") {
+                        Map<String, dynamic> videoData =
+                            _extractVideoIdAndStartTime(value);
+                        if (value == "" || videoData['videoId'] == "") {
                           return;
                         }
                         _controller = YoutubePlayerController.fromVideoId(
-                          videoId: videoId,
+                          videoId: videoData['videoId'],
                           autoPlay: false,
                           params: const YoutubePlayerParams(
                               showFullscreenButton: true),
                         );
-                        widget.quiz1.setYoutubeId(videoId);
+                        if (videoData['startTime'] != null) {
+                          _controller.seekTo(seconds: videoData['startTime']);
+                          widget.quiz1.setYoutubeStartTime(videoData['startTime']);
+                        }
+                        widget.quiz1.setYoutubeId(videoData['videoId']);
                         FocusScope.of(context).unfocus();
                         setState(() {});
                       },
@@ -271,17 +276,28 @@ class _ContentWidgetState extends State<ContentWidget> {
     }
   }
 
-  String? extractVideoId(String url) {
-    RegExp regExp = RegExp(
-      r"^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})",
+  Map<String, dynamic> _extractVideoIdAndStartTime(String url) {
+    final RegExp regExp = RegExp(
+      r'^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\S+)?(?:[?&]t=(\d+))?',
       caseSensitive: false,
       multiLine: false,
     );
-    final matches = regExp.allMatches(url);
-    if (matches.isNotEmpty && matches.first.groupCount >= 1) {
-      return matches.first
-          .group(1); // Returns the first match group, the video ID.
+
+    final Match? match = regExp.firstMatch(url);
+    if (match != null) {
+      final String videoId = match.group(1)!;
+      final String? startTimeStr = match.group(2);
+      final int? startTime =
+          startTimeStr != null ? int.tryParse(startTimeStr) : null;
+
+      return {
+        'videoId': videoId,
+        'startTime': startTime,
+      };
     }
-    return null; // Return null if the URL does not contain a valid YouTube video ID.
+    return {
+      'videoId': '',
+      'startTime': 0,
+    };
   }
 }

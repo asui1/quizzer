@@ -154,12 +154,14 @@ class _MyHomePageState extends State<MyHomePage> {
   List<QuizCardVertical> quizCardList1 = [];
   List<QuizCardVertical> quizCardList2 = [];
   List<QuizCardVertical> quizCardList3 = [];
+  late Future<void> _future;
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
     Provider.of<QuizLayout>(context, listen: false);
+    _future = _loadDataFromServer();
   }
 
   Future<void> _loadDataFromServer() async {
@@ -198,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return FutureBuilder(
       // Call _loadDataFromServer and wait for it to complete.
-      future: _loadDataFromServer(),
+      future: _future,
       builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
         // You can check the snapshot state to show loading indicators or error messages
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -711,7 +713,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       width: AppConfig.screenWidth * 0.9,
       // Adjust the height to accommodate the text label above the ListView
-      height: AppConfig.screenHeight * 0.25,
+      height: AppConfig.screenHeight * 0.35,
       child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start, // Aligns children to the start (left)
