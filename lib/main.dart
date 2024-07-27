@@ -14,21 +14,11 @@ import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
-import 'package:quizzer/Functions/versionCheck.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Setup/Colors.dart';
-import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
-import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
-import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
-import 'package:quizzer/Widgets/Viewer/quizWidget1Viewer.dart';
-import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
-import 'package:quizzer/Widgets/Generator/quizWidget3Generator.dart';
-import 'package:quizzer/Widgets/Viewer/quizWidget3Viewer.dart';
-import 'package:quizzer/Widgets/Viewer/quizWidget4Viewer.dart';
 import 'package:quizzer/Setup/config.dart';
-import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -52,19 +42,6 @@ void main() async {
   ]).then((_) {
     runApp(MyApp()); // 메인 앱 실행
   });
-}
-
-class UpdateApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text(Intl.message("There_is_a_new_version_Please_update")),
-        ),
-      ),
-    );
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -155,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    Logger.log('Home Page Initialized');
     super.initState();
     _loadPreferences();
     Provider.of<QuizLayout>(context, listen: false);
@@ -656,10 +634,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (credential != null) {
         final idToken = credential.idToken;
         // ID 토큰을 서버로 보내거나 앱에서 사용
-        Logger.log('ID Token: $idToken');
+        print('ID Token: $idToken');
       }
     } catch (error) {
-      Logger.log('FedCM Sign-In Error: $error');
+      print('FedCM Sign-In Error: $error');
     }
   }
 
