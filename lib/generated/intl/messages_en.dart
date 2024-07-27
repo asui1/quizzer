@@ -132,6 +132,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Number_of_possible_selection": MessageLookupByLibrary.simpleMessage(
             "Number of possible selection : "),
         "OK": MessageLookupByLibrary.simpleMessage("OK"),
+        "Open_Google_Play":
+            MessageLookupByLibrary.simpleMessage("Move to Google Play Store"),
         "Order_Sorting": MessageLookupByLibrary.simpleMessage("Order Sorting"),
         "Other_Inquiry": MessageLookupByLibrary.simpleMessage("Other Inquiry"),
         "Photo": MessageLookupByLibrary.simpleMessage("Photo"),

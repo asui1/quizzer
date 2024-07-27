@@ -115,6 +115,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Number_of_possible_selection":
             MessageLookupByLibrary.simpleMessage("선택 가능한 정답 수 : "),
         "OK": MessageLookupByLibrary.simpleMessage("확인"),
+        "Open_Google_Play":
+            MessageLookupByLibrary.simpleMessage("구글 플레이스토어로 이동하기."),
         "Order_Sorting": MessageLookupByLibrary.simpleMessage("순서 정렬형"),
         "Other_Inquiry": MessageLookupByLibrary.simpleMessage("기타 문의"),
         "Photo": MessageLookupByLibrary.simpleMessage("사진"),

@@ -124,6 +124,7 @@
     "Is_Searching": "검색중입니다.",
     "Solved_num": "조회 수",
     "shareText": "저는 {title}에서 {score}점을 받았습니다!",
+    "Open_Google_Play": "구글 플레이스토어로 이동하기.",
     "Enter_Inquiry": "문의사항을 입력하세요"
 
 }

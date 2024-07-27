@@ -580,6 +580,16 @@ class S {
     );
   }
 
+  /// `Move to Google Play Store`
+  String get Open_Google_Play {
+    return Intl.message(
+      'Move to Google Play Store',
+      name: 'Open_Google_Play',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Grade`
   String get Grade {
     return Intl.message(

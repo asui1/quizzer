@@ -32,6 +32,7 @@ import 'package:quizzer/Widgets/noInternetDialog.dart';
 import 'package:quizzer/Widgets/register.dart';
 import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,11 +67,35 @@ class UpdateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text(Intl.message("There_is_a_new_version_Please_update")),
+        ),
         body: Center(
-          child: Text(Intl.message("There_is_a_new_version_Please_update")),
+          child: ElevatedButton(
+            onPressed: () {
+              _launchURL('com.asu1.quizzer'); // 패키지 이름을 여기에 입력하세요
+            },
+            child: Text(Intl.message("Open_Google_Play")),
+          ),
         ),
       ),
     );
+  }
+
+  void _launchURL(String packageName) async {
+    final url = Uri.parse('market://details?id=$packageName');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      // 만약 market:// URL을 열 수 없다면 웹 브라우저로 리디렉션
+      final webUrl = Uri.parse(
+          'https://play.google.com/store/apps/details?id=$packageName');
+      if (await canLaunchUrl(webUrl)) {
+        await launchUrl(webUrl);
+      } else {
+        throw 'Could not launch $webUrl';
+      }
+    }
   }
 }
 
@@ -736,7 +761,8 @@ class _MyHomePageState extends State<MyHomePage> {
             CrossAxisAlignment.start, // Aligns children to the start (left)
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 16.0,
+            padding: const EdgeInsets.only(
+                left: 16.0,
                 bottom: 8.0), // Add some space between the text and the list
             child: Text(
               title, // Use the title passed to the function
