@@ -59,7 +59,8 @@ class QuizLayout extends ChangeNotifier {
   List<String> tags = [];
   ScoreCard _scoreCard = ScoreCard(
     size: 100,
-    position: Offset(100, 100),
+    xRatio: 0.5,
+    yRatio: 0.5,
     backgroundImage: null,
   );
   List<bool> solveResult = [];
@@ -100,8 +101,9 @@ class QuizLayout extends ChangeNotifier {
     answerTextStyle = [0, 0, 0, 2];
     tags = [];
     _scoreCard = ScoreCard(
-      size: 100,
-      position: Offset(100, 100),
+      size: 0.3,
+      xRatio: 0.5,
+      yRatio: 0.5,
       backgroundImage: null,
     );
   }

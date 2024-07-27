@@ -225,35 +225,29 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       onPressed: () => navigateToMakingQuizPage(context),
                     ),
                   ),
-                  Positioned(
-                    key: const ValueKey('loadQuizLayoutButton'),
-                    right: 10.0, // Align to the right
-                    top: 10.0, // Align to the top
-                    child: IconButton(
-                      iconSize: AppConfig.fontSize * 1.5,
-                      icon: Icon(Icons.download_sharp,
-                          color: quizLayout.getColorScheme().primary),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                LoadTemp(quizLayout: quizLayout),
-                          ),
-                        ).then((_) {
-                          updateLoad();
-                          setState(() {});
-                        });
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    left: 10,
-                    bottom: quizLayout.getSelectedLayout() == 2
-                        ? 50
-                        : 10, // 하단에서의 거리
-                    child: tempSaveButton(context, quizLayout),
-                  ),
+                  // Positioned(
+                  //   key: const ValueKey('loadQuizLayoutButton'),
+                  //   right: 10.0, // Align to the right
+                  //   top: 10.0, // Align to the top
+                  //   child: IconButton(
+                  //     iconSize: AppConfig.fontSize * 1.5,
+                  //     icon: Icon(Icons.download_sharp,
+                  //         color: quizLayout.getColorScheme().primary),
+                  //     onPressed: () {
+                  //       Navigator.pushNamed(context, '/loadTemp').then((_) {
+                  //         updateLoad();
+                  //         setState(() {});
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   left: 10,
+                  //   bottom: quizLayout.getSelectedLayout() == 2
+                  //       ? 50
+                  //       : 10, // 하단에서의 거리
+                  //   child: tempSaveButton(context, quizLayout),
+                  // ),
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -301,8 +295,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                                             Intl.message("Flip_Style_Setup"))),
                                     content: Container(
                                       // Set a fixed height to avoid layout issues in AlertDialog
-                                      width: double
-                                          .maxFinite, // Use maximum width available
+                                      width: AppConfig.screenHeight >
+                                              AppConfig.screenWidth
+                                          ? double.maxFinite
+                                          : AppConfig.screenWidth /
+                                              2, // Use maximum width available
                                       child: GridView.builder(
                                         shrinkWrap: true,
                                         itemCount:
@@ -472,13 +469,8 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                           quizLayout: quizLayout,
                           index: 3,
                           onPressed: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => quizLayoutAdditionalSetup(
-                                    quizLayout: quizLayout),
-                              ),
-                            ).then((_) {
+                            Navigator.pushNamed(context, '/additionalSetup')
+                                .then((_) {
                               setState(() {});
                             });
                             // 버튼 3의 동작을 여기에 구현합니다.
@@ -807,20 +799,18 @@ class LayoutOption extends StatelessWidget {
             ? quizLayout.getColorScheme().secondaryContainer
             : Colors.transparent,
       ),
-      child: GestureDetector(
-        key: ValueKey("MakingQuizLayoutLayoutOption$layoutNumber"),
-        child: layoutNumber < 4
-            ? Image(
-                image: AssetImage(imagePath),
-                width: AppConfig.screenWidth / 5,
-                fit: BoxFit.fitHeight,
-              )
-            : Center(
-                child: Text(Intl.message("No_buttons_Only_Flip")),
-              ),
-        onTap: () {
-          onSelected(layoutNumber);
-        },
+      child: SizedBox.expand(
+        child: GestureDetector(
+          key: ValueKey("MakingQuizLayoutLayoutOption$layoutNumber"),
+          child: Image(
+            image: AssetImage(imagePath),
+            width: AppConfig.screenWidth / 5,
+            fit: BoxFit.fitHeight,
+          ),
+          onTap: () {
+            onSelected(layoutNumber);
+          },
+        ),
       ),
     );
   }
@@ -939,21 +929,5 @@ class CustomRow extends StatelessWidget {
 }
 
 void navigateToMakingQuizPage(BuildContext context) {
-  Navigator.of(context).push(PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        MakingQuiz(), // 여기서 NewPage()는 새로운 페이지 위젯입니다.
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
-      var end = Offset.zero;
-      var curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-      var offsetAnimation = animation.drive(tween);
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: child,
-      );
-    },
-  ));
+  Navigator.pushNamed(context, '/makingQuiz');
 }

@@ -129,7 +129,7 @@ Widget setValueRow(
     QuizLayout quizLayout) {
   return Container(
     margin: EdgeInsets.symmetric(vertical: AppConfig.padding),
-    height: AppConfig.screenHeight * 0.05,
+    height: isColor? AppConfig.screenHeight * 0.12 : AppConfig.screenHeight * 0.05,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,

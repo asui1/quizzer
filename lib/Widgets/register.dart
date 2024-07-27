@@ -1,14 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
+import 'package:google_sign_in_web/web_only.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+
+const List<String> scopes = <String>[
+  'email',
+  'https://www.googleapis.com/auth/contacts.readonly',
+];
+final GoogleSignInPlatform _platform = GoogleSignInPlatform.instance;
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  GoogleSignInUserData? account;
+
+  Register({required this.account, Key? key}) : super(key: key);
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -17,9 +26,9 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final TextEditingController textController = TextEditingController();
   final StreamController<bool> _streamController = StreamController<bool>();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount? account = null;
   bool _isTapInProgress = false;
+  GSIButtonConfiguration? _buttonConfiguration = GSIButtonConfiguration(
+      text: GSIButtonText.continueWith); // button configuration
 
   @override
   void dispose() {
@@ -31,31 +40,20 @@ class _RegisterState extends State<Register> {
   @override
   void initState() {
     super.initState();
-    _initGoogleSignIn();
-  }
-
-  Future<void> _initGoogleSignIn() async {
-    account = await _googleSignIn.signIn();
-    if (account != null) {
+    _platform.userDataEvents?.listen((GoogleSignInUserData? userData) {
       setState(() {
-        textController.value = TextEditingValue(text: account!.displayName!);
+        if (userData == null) return;
+        print('User Data: ${userData.email}, ${userData.photoUrl}');
+        widget.account = userData;
       });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(Intl.message("Google_Sign_In_Failed")),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      Navigator.pop(context);
-    }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: account != null
+        child: widget.account != null
             ? StreamBuilder<bool>(
                 stream: _streamController.stream,
                 builder: (context, snapshot) {
@@ -78,9 +76,9 @@ class _RegisterState extends State<Register> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (account!.photoUrl != null)
+                      if (widget.account!.photoUrl != null)
                         Image.network(
-                          account!.photoUrl!,
+                          widget.account!.photoUrl!,
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,
@@ -146,8 +144,8 @@ class _RegisterState extends State<Register> {
                           if (snapshot.hasData && snapshot.data!) {
                             bool registerResult = await registerUser(
                                 textController.value.text,
-                                account!.email,
-                                account!.photoUrl ?? '',
+                                widget.account!.email,
+                                widget.account!.photoUrl ?? '',
                                 context);
                             if (registerResult) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -178,7 +176,7 @@ class _RegisterState extends State<Register> {
                   );
                 },
               )
-            : Container(),
+            : renderButton(configuration: _buttonConfiguration),
       ),
     );
   }

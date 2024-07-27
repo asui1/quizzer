@@ -1,12 +1,14 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in_web/web_only.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:quizzer/Class/quiz1.dart';
-import 'package:quizzer/Class/quiz2.dart';
-import 'package:quizzer/Class/quiz3.dart';
-import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
@@ -15,7 +17,13 @@ import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/additionalSetup.dart';
+import 'package:quizzer/Screens/loadTemp.dart';
+import 'package:quizzer/Screens/makingQuiz.dart';
+import 'package:quizzer/Screens/scoreCardCreator.dart';
+import 'package:quizzer/Screens/scoringScreen.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
+import 'package:quizzer/Screens/solver.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Setup/config.dart';
@@ -23,8 +31,13 @@ import 'package:quizzer/Widgets/register.dart';
 import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:html' as html;
-import 'package:google_sign_in_web/google_sign_in_web.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+
+const List<String> scopes = <String>[
+  'email',
+  'https://www.googleapis.com/auth/contacts.readonly',
+];
+final GoogleSignInPlatform _platform = GoogleSignInPlatform.instance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,12 +49,16 @@ void main() async {
   String localeCode = (locale == 'ko') ? 'ko_KR' : 'en_US';
   // Intl 패키지에 로케일 설정
   Intl.defaultLocale = localeCode;
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(MyApp()); // 메인 앱 실행
-  });
+  await _platform.initWithParams(SignInInitParameters(
+    clientId: googleClientId,
+    scopes: scopes,
+  ));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => QuizLayout(),
+      child: MyApp(),
+    ),
+  ); // 메인 앱 실행
 }
 
 class MyApp extends StatelessWidget {
@@ -53,44 +70,123 @@ class MyApp extends StatelessWidget {
     AppConfig.setUp(context);
     var brightness = MediaQuery.of(context).platformBrightness;
 
-    return ChangeNotifierProvider(
-      create: (context) => QuizLayout(),
-      child: MaterialApp(
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('ko', ''), // 한국어
-          const Locale('en', ''), // 영어
-        ],
-        title: 'Quizzer',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: brightness == Brightness.light
-              ? MyLightColorScheme
-              : MyDarkColorScheme,
-          // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
+    return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('ko', ''), // 한국어
+        const Locale('en', ''), // 영어
+      ],
+      title: 'Quizzer',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // TRY THIS: Try running your application with "flutter run". You'll see
+        // the application has a purple toolbar. Then, without quitting the app,
+        // try changing the seedColor in the colorScheme below to Colors.green
+        // and then invoke "hot reload" (save your changes or press the "hot
+        // reload" button in a Flutter-supported IDE, or press "r" if you used
+        // the command line to start the app).
+        //
+        // Notice that the counter didn't reset back to zero; the application
+        // state is not lost during the reload. To reset the state, use hot
+        // restart instead.
+        //
+        // This works for code too, not just values: Most code changes can be
+        // tested with just a hot reload.
+        colorScheme: brightness == Brightness.light
+            ? MyLightColorScheme
+            : MyDarkColorScheme,
+        // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
 
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(title: 'Quizzer'),
+        useMaterial3: true,
       ),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        if (settings.name == '/makingQuiz') {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                MakingQuiz(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          );
+        }
+        if(settings.name == '/additionalSetup'){
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                quizLayoutAdditionalSetup(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          );
+        }
+        if(settings.name == '/scoreCardCreator'){
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                ScoreCardGenerator(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          );
+        }
+        // 다른 라우트 설정
+        return null;
+      },
+      routes: {
+        '/': (context) => const MyHomePage(title: 'Quizzer'),
+        '/register': (context) => Register(account: null),
+        '/makingQuizLayout': (context) => MakingQuizscreen(),
+        '/search': (context) => SearchScreen(),
+
+        // Result
+        // '/solver': (context) => QuizSolver(),
+
+        // Followings are not needed.
+        // '/additionalSetup': (context) => quizLayoutAdditionalSetup(),
+        // '/loadTemp': (context) => LoadTemp(),
+        // '/scoreCardCreator': (context) => ScoreCardGenerator(),
+        // '/scoringScreen': (context) => ScoringScreen(),
+      },
     );
   }
 }
@@ -125,10 +221,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<QuizCardVertical> quizCardList2 = [];
   List<QuizCardVertical> quizCardList3 = [];
   late Future<void> _future;
-  GoogleSignInAccount? _currentUser;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: googleClientId,
-  );
+  GSIButtonConfiguration? _buttonConfiguration; // button configuration
+  GoogleSignInUserData? _userData = null;
+  StreamSubscription? _userDataSubscription;
 
   @override
   void initState() {
@@ -137,17 +232,20 @@ class _MyHomePageState extends State<MyHomePage> {
     _loadPreferences();
     Provider.of<QuizLayout>(context, listen: false);
     _future = _loadDataFromServer();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+    _startUserDataSubscription();
+    _platform.signInSilently();
+  }
+
+  void _startUserDataSubscription() {
+    _userDataSubscription =
+        _platform.userDataEvents?.listen((GoogleSignInUserData? userData) {
       setState(() {
-        if (account != null) {
-          _currentUser = account;
-          String photoUrl = account.photoUrl ?? '';
-          Logger.log(account.email);
-          loginCheck(account.email, photoUrl);
-        }
+        if (userData == null) return;
+        print('User Data: ${userData.email}, ${userData.photoUrl}');
+        _userData = userData;
+        loginCheck(userData.email, userData.photoUrl ?? '');
       });
     });
-    _googleSignIn.signInSilently();
   }
 
   Future<void> _loadDataFromServer() async {
@@ -220,7 +318,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               leading: IconButton(
-                iconSize: AppConfig.iconSize,
                 icon: ImageIcon(
                     AssetImage('assets/icon/quizzerImage.png')), // Example icon
                 onPressed: () {
@@ -229,7 +326,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               actions: [
                 IconButton(
-                  iconSize: AppConfig.iconSize * 0.8,
                   icon: Icon(Icons.search), // Example icon
                   onPressed: () {
                     Navigator.push(
@@ -240,7 +336,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 isLoggedIn
                     ? IconButton(
-                        iconSize: AppConfig.iconSize * 0.8,
                         icon: ClipOval(
                           child: Image.network(
                             userImageName,
@@ -261,7 +356,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       )
                     : IconButton(
-                        iconSize: AppConfig.iconSize * 0.8,
                         icon: Icon(Icons.person), // Example icon
                         onPressed: () {
                           _showLoginDialog(context);
@@ -361,11 +455,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     key: const ValueKey('moveToMakingQuizScreen'),
                     onPressed: () {
                       Provider.of<QuizLayout>(context, listen: false).reset();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MakingQuizscreen()),
-                      );
+                      Navigator.pushNamed(context, '/makingQuizLayout');
                     },
                     child: Icon(Icons.add), // "+" icon
                   ),
@@ -618,36 +708,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> _federatedSignIn() async {
-    try {
-      final credential = await html.window.navigator.credentials?.get({
-        'federated': {
-          'providers': [
-            {
-              'url': 'https://accounts.google.com',
-              'clientId': googleClientId,
-            }
-          ]
-        }
-      });
-
-      if (credential != null) {
-        final idToken = credential.idToken;
-        // ID 토큰을 서버로 보내거나 앱에서 사용
-        print('ID Token: $idToken');
-      }
-    } catch (error) {
-      print('FedCM Sign-In Error: $error');
-    }
-  }
-
   void _showLoginDialog(BuildContext context) async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: googleClientId,
-    );
-    GoogleSignInAccount? account;
-    bool _isTapInProgress = false;
-
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -658,74 +719,23 @@ class _MyHomePageState extends State<MyHomePage> {
               // 로그인 버튼
               SizedBox(
                 width: double.infinity, // 버튼을 대화상자 너비에 맞춤
-                child: ElevatedButton(
-                  child: Text(Intl.message("Login"),
-                      style: TextStyle(fontSize: 20)),
-                  onPressed: () async {
-                    if (_isTapInProgress) return;
-                    _isTapInProgress = true;
-                    // FedCM을 사용하여 로그인
-                    await _federatedSignIn();
-
-                    // Google Sign-In을 사용하여 로그인
-                    account = await _googleSignIn.signInSilently();
-
-                    if (account != null) {
-                      String photoUrl = account!.photoUrl ?? '';
-                      int loginStatus =
-                          await loginCheck(account!.email, photoUrl);
-                      if (loginStatus == 200) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(Intl.message("Successful_Login")),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        _loadPreferences();
-                        Navigator.of(context)
-                            .popUntil((route) => route.isFirst);
-                        _isTapInProgress = false; // 탭 진행 중 상태 해제
-                      } else if (loginStatus == 400) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(Intl.message("Unregistered_User")),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        _isTapInProgress = false; // 탭 진행 중 상태 해제
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(Intl.message("Login_Failed")),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        Navigator.pop(context);
-                        _isTapInProgress = false; // 탭 진행 중 상태 해제
-                      }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(Intl.message("Google_Login_Failed")),
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
-                      Navigator.pop(context);
-                      _isTapInProgress = false; // 탭 진행 중 상태 해제
-                    }
-
-                    // 로그인 로직 구현
-                  },
-                ),
+                child: renderButton(configuration: _buttonConfiguration),
               ),
               SizedBox(height: 20), // 버튼 사이의 간격
               // 등록 텍스트 버튼
               GestureDetector(
                 onTap: () async {
+                  await _userDataSubscription?.cancel();
+                  //Listen
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Register()),
-                  );
+                    MaterialPageRoute(
+                        builder: (context) => Register(
+                              account: _userData,
+                            )),
+                  ).then((_) {
+                    _startUserDataSubscription();
+                  });
                 },
                 child: Text(Intl.message("Registration"),
                     style: TextStyle(

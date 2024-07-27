@@ -8,6 +8,7 @@ import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:math' as math;
 
 class ScoringScreen extends StatefulWidget {
   final QuizLayout quizLayout;
@@ -33,7 +34,8 @@ class _ScoringScreenState extends State<ScoringScreen> {
   late int score;
   late ScoreCard scoreCard;
   late double size;
-  late Offset position;
+  late double xRatio;
+  late double yRatio;
   String shareText = "";
 
   @override
@@ -44,7 +46,8 @@ class _ScoringScreenState extends State<ScoringScreen> {
     scoreCard = widget.quizLayout.getScoreCard();
     scoreCard.initbackGroundImage(widget.quizLayout);
     size = scoreCard.getSize();
-    position = scoreCard.getPosition();
+    xRatio = scoreCard.getXRatio();
+    yRatio = scoreCard.getYRatio();
     shareText = Intl.message(
       "I got {score} in {widget.quizLayout.getTitle()}!",
       name: 'shareText',
@@ -220,19 +223,29 @@ class _ScoringScreenState extends State<ScoringScreen> {
   }
 
   Widget makeScoreCard() {
+    double shortestSide = math.min(AppConfig.screenWidth * 0.8,
+        AppConfig.screenHeight * 0.55 * widget.heightModifier);
+    double size = scoreCard.getSize() * shortestSide;
     return Container(
       width: AppConfig.screenWidth * 0.8,
       height: AppConfig.screenHeight * 0.55 * widget.heightModifier,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: scoreCard.getBackgroundImage(),
       child: Container(
-        width: scoreCard.getSize(),
-        height: scoreCard.getSize(),
+        width: size,
+        height: size,
         child: Stack(
           children: [
             Positioned(
-              left: position.dx - size / 2 + 10,
-              top: position.dy - size / 2 + 10,
+              left: AppConfig.screenWidth * 0.8 * scoreCard.getXRatio() -
+                  size / 2 +
+                  10,
+              top: AppConfig.screenHeight *
+                      0.55 *
+                      widget.heightModifier *
+                      scoreCard.getYRatio() -
+                  size / 2 +
+                  10,
               child: Container(
                 alignment: Alignment.center,
                 width: size,

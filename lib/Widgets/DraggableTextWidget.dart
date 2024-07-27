@@ -3,23 +3,36 @@ import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Setup/config.dart';
+import 'dart:math' as math;
 
 class DraggableTextWidget extends StatefulWidget {
   ScoreCard scoreCard;
+  double parentWidth;
+  double parentHeight;
 
-  DraggableTextWidget({required this.scoreCard});
+  DraggableTextWidget(
+      {required this.scoreCard,
+      required this.parentWidth,
+      required this.parentHeight});
 
   @override
   _DraggableTextWidgetState createState() => _DraggableTextWidgetState();
 }
 
 class _DraggableTextWidgetState extends State<DraggableTextWidget> {
-
   @override
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
-    Offset position = widget.scoreCard.getPosition();
-    double size = widget.scoreCard.getSize();
+    double relativeSize = widget.scoreCard.getSize();
+    double xRatio = widget.scoreCard.getXRatio();
+    double yRatio = widget.scoreCard.getYRatio();
+    double shortestSide = math.min(widget.parentWidth, widget.parentHeight);
+
+    // 부모 크기에 상대적인 위치와 크기 계산
+    double size = shortestSide * relativeSize;
+    Offset position =
+        Offset(widget.parentWidth * xRatio, widget.parentHeight * yRatio);
+
     return Container(
       width: size,
       height: size,
@@ -33,7 +46,10 @@ class _DraggableTextWidgetState extends State<DraggableTextWidget> {
               child: GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
-                    widget.scoreCard.updatePosition(position + details.delta);
+                    widget.scoreCard.updateXRatio(
+                        (position.dx + details.delta.dx) / widget.parentWidth);
+                    widget.scoreCard.updateYRatio(
+                        (position.dy + details.delta.dy) / widget.parentHeight);
                   });
                 },
                 child: Container(
@@ -65,9 +81,10 @@ class _DraggableTextWidgetState extends State<DraggableTextWidget> {
               top: position.dy - size / 2,
               child: GestureDetector(
                 onPanUpdate: (details) {
-                  setState(() {                    
-                    size = (size - details.delta.dy).clamp(50.0, 1000.0);
-                    widget.scoreCard.updateSize(size);
+                  setState(() {
+                    relativeSize =
+                        (relativeSize - details.delta.dy / shortestSide);
+                    widget.scoreCard.updateSize(relativeSize);
                   });
                 },
                 child: _buildDragPoint(quizLayout),
@@ -79,8 +96,9 @@ class _DraggableTextWidgetState extends State<DraggableTextWidget> {
               child: GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
-                    size = (size - details.delta.dy).clamp(50.0, 500.0);
-                    widget.scoreCard.updateSize(size);
+                    relativeSize =
+                        (relativeSize - details.delta.dy / shortestSide);
+                    widget.scoreCard.updateSize(relativeSize);
                   });
                 },
                 child: _buildDragPoint(quizLayout),
@@ -92,8 +110,9 @@ class _DraggableTextWidgetState extends State<DraggableTextWidget> {
               child: GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
-                    size = (size + details.delta.dy).clamp(50.0, 500.0);
-                    widget.scoreCard.updateSize(size);
+                    relativeSize =
+                        (relativeSize + details.delta.dy / shortestSide);
+                    widget.scoreCard.updateSize(relativeSize);
                   });
                 },
                 child: _buildDragPoint(quizLayout),
@@ -105,8 +124,9 @@ class _DraggableTextWidgetState extends State<DraggableTextWidget> {
               child: GestureDetector(
                 onPanUpdate: (details) {
                   setState(() {
-                    size = (size + details.delta.dy).clamp(50.0, 500.0);
-                    widget.scoreCard.updateSize(size);
+                    relativeSize =
+                        (relativeSize + details.delta.dy / shortestSide);
+                    widget.scoreCard.updateSize(relativeSize);
                   });
                 },
                 child: _buildDragPoint(quizLayout),

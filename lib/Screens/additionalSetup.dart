@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Setup/Strings.dart';
 import 'package:quizzer/Setup/TextStyle.dart';
@@ -8,8 +9,9 @@ import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class quizLayoutAdditionalSetup extends StatefulWidget {
-  final QuizLayout quizLayout;
-  quizLayoutAdditionalSetup({required this.quizLayout});
+
+  quizLayoutAdditionalSetup({Key? key}) : super(key: key);
+
   @override
   _quizLayoutAdditionalSetup createState() => _quizLayoutAdditionalSetup();
 }
@@ -18,15 +20,16 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
   int itemCount = 4;
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
         appBar: AppBar(
           title: Text(Intl.message("Additional_Setup")),
-          backgroundColor: widget.quizLayout.getColorScheme().inversePrimary,
+          backgroundColor: quizLayout.getColorScheme().inversePrimary,
         ),
         body: Container(
-          decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+          decoration: backgroundDecoration(quizLayout: quizLayout),
           child: Column(
             children: [
               SizedBox(
@@ -58,73 +61,70 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                                               children: [
                                                 setValueRow(
                                                     AppConfig.fontFamilys,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index)[0],
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .decrementTextStyle(
                                                                     index, 0);
                                                           },
                                                         ),
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .incrementTextStyle(
                                                                     index, 0);
                                                           },
                                                         ),
                                                     false,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index),
-                                                    widget
-                                                        .quizLayout), //SET BORDER
+                                                    quizLayout), //SET BORDER
                                                 setValueRow(
                                                     AppConfig.colorStyles,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index)[1],
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .decrementTextStyle(
                                                                     index, 1);
                                                           },
                                                         ),
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .incrementTextStyle(
                                                                     index, 1);
                                                           },
                                                         ),
                                                     true,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index),
-                                                    widget
-                                                        .quizLayout), //SET BORDER
+                                                    quizLayout), //SET BORDER
                                                 setValueRow(
                                                     AppConfig.borderType,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index)[2],
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .decrementTextStyle(
                                                                     index, 2);
                                                           },
                                                         ), //SET BORDER
                                                     () => setState(
                                                           () {
-                                                            widget.quizLayout
+                                                            quizLayout
                                                                 .incrementTextStyle(
                                                                     index, 2);
                                                           },
                                                         ),
                                                     false,
-                                                    widget.quizLayout
+                                                    quizLayout
                                                         .getTextStyle(index),
-                                                    widget
-                                                        .quizLayout), //SET BORDER
+                                                    quizLayout), //SET BORDER
                                               ],
                                             ),
                                             actions: <Widget>[
@@ -151,11 +151,11 @@ class _quizLayoutAdditionalSetup extends State<quizLayoutAdditionalSetup> {
                                 vertical: AppConfig.padding),
                             child: TextStyleWidget(
                                 textStyle:
-                                    widget.quizLayout.getTextStyle(index),
+                                    quizLayout.getTextStyle(index),
                                 text:
                                     Intl.message(stringResources['quizLayoutSetup${index + 1}']!),
                                 colorScheme:
-                                    widget.quizLayout.getColorScheme()),
+                                    quizLayout.getColorScheme()),
                           ),
                         ),
                       ],

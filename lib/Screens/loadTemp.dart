@@ -4,14 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Setup/config.dart';
 
 class LoadTemp extends StatefulWidget {
-  final QuizLayout quizLayout;
-
-  LoadTemp({Key? key, required this.quizLayout}) : super(key: key);
+  LoadTemp({Key? key}) : super(key: key);
 
   @override
   _LoadTempState createState() => _LoadTempState();
@@ -74,9 +73,10 @@ class _LoadTempState extends State<LoadTemp> {
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     // Use widget.quizLayout to access the QuizLayout object passed from the parent
     return Theme(
-      data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
+      data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
         extendBodyBehindAppBar: false,
         appBar: AppBar(
@@ -92,7 +92,7 @@ class _LoadTempState extends State<LoadTemp> {
                   onTap: () async {
                     final content = json.decode(
                         await File(_items[index]['jsonPath']).readAsString());
-                    await widget.quizLayout.loadQuizLayout(content);
+                    await quizLayout.loadQuizLayout(content);
                     Navigator.pop(context);
                   },
                   leading: Row(
