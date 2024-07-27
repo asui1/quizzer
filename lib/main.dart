@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
             },
           );
         }
-        if(settings.name == '/additionalSetup'){
+        if (settings.name == '/additionalSetup') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 quizLayoutAdditionalSetup(),
@@ -148,7 +148,7 @@ class MyApp extends StatelessWidget {
             },
           );
         }
-        if(settings.name == '/scoreCardCreator'){
+        if (settings.name == '/scoreCardCreator') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ScoreCardGenerator(),
@@ -169,6 +169,13 @@ class MyApp extends StatelessWidget {
             },
           );
         }
+        if (settings.name != null && settings.name!.startsWith('/search')) {
+          final uri = Uri.parse(settings.name!);
+          final searchText = uri.queryParameters['searchText'];
+          return MaterialPageRoute(
+            builder: (context) => SearchScreen(searchText: searchText),
+          );
+        }
         // 다른 라우트 설정
         return null;
       },
@@ -177,9 +184,8 @@ class MyApp extends StatelessWidget {
         '/register': (context) => Register(account: null),
         '/makingQuizLayout': (context) => MakingQuizscreen(),
         '/search': (context) => SearchScreen(),
-
+        '/solver': (context) => QuizSolver(),
         // Result
-        // '/solver': (context) => QuizSolver(),
 
         // Followings are not needed.
         // '/additionalSetup': (context) => quizLayoutAdditionalSetup(),
@@ -328,10 +334,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                   icon: Icon(Icons.search), // Example icon
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SearchScreen()),
-                    );
+                    Navigator.pushNamed(context, '/search');
                   },
                 ),
                 isLoggedIn
@@ -379,11 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SearchScreen()),
-                              );
+                              Navigator.pushNamed(context, '/search');
                             },
                             child: Container(
                               width: screenWidth * 0.7,
@@ -393,12 +392,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     hintText: Intl.message("Search"),
                                     suffixIcon: IconButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SearchScreen()),
-                                        );
+                                        Navigator.pushNamed(context, '/search');
                                       },
                                       icon: Icon(Icons.search),
                                     ),

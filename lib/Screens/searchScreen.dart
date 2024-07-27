@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 
 class SearchScreen extends StatefulWidget {
+  String? searchText;
+
+  SearchScreen({Key? key, this.searchText}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _SearchScreenState();
 }
@@ -17,8 +21,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
+    Logger.log("SearchScreen initState");
     super.initState();
     _focusNode.addListener(_onFocusChange);
+    if (widget.searchText != null) {
+      _searchText = widget.searchText!;
+      searchServer(_searchText);
+    }
   }
 
   void _onFocusChange() {
@@ -43,7 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: TextField(
           focusNode: _focusNode,
-          autofocus: true,
+          autofocus: widget.searchText == null ? true : false,
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.search,
           onChanged: (value) {
@@ -67,18 +76,28 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void _handleSearch(String searchText) {
-    setState(() {
-      _screeenText = Intl.message("Is_Searching");
-      _searchResults = []; // 검색 결과를 비웁니다.
-    });
-
+  void searchServer(String searchText) {
     Future<List<QuizCard>> result = searchRequest(searchText);
     result.then((value) {
       setState(() {
         _screeenText = Intl.message("No_Results");
         _searchResults = value;
       });
+    });
+  }
+
+  void _handleSearch(String searchText) {
+    setState(() {
+      _screeenText = Intl.message("Is_Searching");
+      _searchResults = []; // 검색 결과를 비웁니다.
+    });
+    // URL을 변경합니다.
+    final Uri newUri = Uri(
+      path: '/search',
+      queryParameters: {'searchText': searchText},
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacementNamed(context, newUri.toString());
     });
   }
 

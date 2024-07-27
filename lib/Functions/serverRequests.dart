@@ -136,6 +136,7 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
         counts: counts,
       ));
     }
+    Logger.log("SEARCH SUCCESS");
     return _searchResults;
   } else {
     // Handle error

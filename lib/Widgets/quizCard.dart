@@ -40,6 +40,7 @@ class QuizCard extends StatelessWidget {
         child: InkWell(
           onTap: () async {
             if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+            // -> Solver에 uuid 제공하고, solver에서는 그 uuid로 로드하기.
             _isTapInProgress = true; // 탭 진행 중 상태로 설정
             String dataJson = "";
             final directory = await getApplicationDocumentsDirectory();
