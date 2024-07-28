@@ -42,10 +42,15 @@ class QuizCard extends StatelessWidget {
             if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
             _isTapInProgress = true; // 탭 진행 중 상태로 설정
             String dataJson = "";
-            final directory = await getApplicationDocumentsDirectory();
             try {
-              await downloadJson(directory, uuid);
-              String jsonString = await loadFileContent(directory, uuid);
+              String jsonString = await loadFileContent(uuid);
+              if (jsonString == "") {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(Intl.message("JSON_DOWN_FAIL")),
+                ));
+                _isTapInProgress = false; // 탭 진행 중 상태 해제
+                return;
+              }
               final jsonResponse = json.decode(jsonString);
               dataJson = jsonResponse['Data'];
 
