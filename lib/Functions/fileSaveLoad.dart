@@ -152,6 +152,7 @@ Future<Uint8List> compressImage(
 String makeScoreCardJson(QuizLayout quizLayout) {
   ScoreCard scoreCard = quizLayout.getScoreCard();
   Map<String, dynamic> scoreCardJson = scoreCard.toJson();
+  scoreCardJson['borderColor'] = quizLayout.getColorScheme().outline.value;
   if (scoreCard.imageState == 0) {
     ImageColor? backgroundImage = quizLayout.getImage(0);
     if (backgroundImage == null) {
