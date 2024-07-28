@@ -6,13 +6,15 @@ import 'package:quizzer/Widgets/ViewerCommon.dart';
 
 class ScoreCard {
   double size;
-  Offset position;
+  double xRatio;
+  double yRatio;
   int imageState = 0;
   BoxDecoration? backgroundImage;
 
   ScoreCard({
     required this.size,
-    required this.position,
+    required this.xRatio,
+    required this.yRatio,
     required this.backgroundImage,
     this.imageState = 0,
   });
@@ -20,8 +22,8 @@ class ScoreCard {
   Map<String, dynamic> toJson() {
     return {
       'size': size,
-      'dx': position.dx,
-      'dy': position.dy,
+      'dx': xRatio,
+      'dy': yRatio,
       'imageState': imageState,
     };
   }
@@ -46,7 +48,8 @@ class ScoreCard {
 
   void fromJson(Map<String, dynamic> json) {
     size = json['size'];
-    position = Offset(json['dx'], json['dy']);
+    xRatio = json['dx'];
+    yRatio = json['dy'];
     imageState = json['imageState'];
   }
 
@@ -61,12 +64,20 @@ class ScoreCard {
     }
   }
 
-  void updatePosition(Offset newPosition) {
-    position = newPosition;
+  double getXRatio() {
+    return xRatio;
   }
 
-  Offset getPosition() {
-    return position;
+  double getYRatio() {
+    return yRatio;
+  }
+
+  void updateXRatio(double newXRatio) {
+    xRatio = newXRatio;
+  }
+
+  void updateYRatio(double newYRatio) {
+    yRatio = newYRatio;
   }
 
   void updateSize(double newSize) {

@@ -58,8 +58,9 @@ class QuizLayout extends ChangeNotifier {
   List<int> answerTextStyle = [0, 0, 0, 2];
   List<String> tags = [];
   ScoreCard _scoreCard = ScoreCard(
-    size: 100,
-    position: Offset(100, 100),
+    size: 0.3,
+    xRatio: 0.5,
+    yRatio: 0.5,
     backgroundImage: null,
   );
   List<bool> solveResult = [];
@@ -100,13 +101,14 @@ class QuizLayout extends ChangeNotifier {
     answerTextStyle = [0, 0, 0, 2];
     tags = [];
     _scoreCard = ScoreCard(
-      size: 100,
-      position: Offset(100, 100),
+      size: 0.3,
+      xRatio: 0.5,
+      yRatio: 0.5,
       backgroundImage: null,
     );
   }
 
-  double getBodyHeight(){
+  double getBodyHeight() {
     return AppConfig.screenHeight - getAppBarHeight() - getBottomBarHeight();
   }
 
@@ -256,7 +258,7 @@ class QuizLayout extends ChangeNotifier {
     return score;
   }
 
-  List<bool> getSolveResult(){
+  List<bool> getSolveResult() {
     return solveResult;
   }
 
@@ -292,8 +294,8 @@ class QuizLayout extends ChangeNotifier {
         count += 1;
 
         if (quiz['layoutType'] == 1) {
-          quizzes.add(Quiz1(answers: [], ans: [], question: "")
-              .loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 2) {
           quizzes.add(
               Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1)
@@ -326,7 +328,7 @@ class QuizLayout extends ChangeNotifier {
       Logger.log("backgroundImage is not null");
       backgroundImage =
           await ImageColor().fromJson(inputData['backgroundImage']);
-    }else{
+    } else {
       Logger.log("backgroundImage is null");
     }
     if (inputData['topBarImage'] != null) {
@@ -457,11 +459,11 @@ class QuizLayout extends ChangeNotifier {
     titleImageSet = true;
   }
 
-  void setTopBarImageBytes(Uint8List bytes){
+  void setTopBarImageBytes(Uint8List bytes) {
     topBarImage = ImageColor(imageByte: bytes);
   }
 
-  void setBottomBarImageBytes(Uint8List bytes){
+  void setBottomBarImageBytes(Uint8List bytes) {
     bottomBarImage = ImageColor(imageByte: bytes);
   }
 

@@ -43,6 +43,8 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
       decoration: scoreCard.getBackgroundImage(),
       child: DraggableTextWidget(
         scoreCard: scoreCard,
+        parentWidth: AppConfig.screenWidth * 0.8,
+        parentHeight: AppConfig.screenHeight * 0.55 * heightModifier,
       ),
     );
 

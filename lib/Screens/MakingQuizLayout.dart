@@ -809,15 +809,11 @@ class LayoutOption extends StatelessWidget {
       ),
       child: GestureDetector(
         key: ValueKey("MakingQuizLayoutLayoutOption$layoutNumber"),
-        child: layoutNumber < 4
-            ? Image(
-                image: AssetImage(imagePath),
-                width: AppConfig.screenWidth / 5,
-                fit: BoxFit.fitHeight,
-              )
-            : Center(
-                child: Text(Intl.message("No_buttons_Only_Flip")),
-              ),
+        child: Image(
+          image: AssetImage(imagePath),
+          width: AppConfig.screenWidth / 5,
+          fit: BoxFit.fitHeight,
+        ),
         onTap: () {
           onSelected(layoutNumber);
         },
