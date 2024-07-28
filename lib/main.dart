@@ -9,6 +9,8 @@ import 'package:google_sign_in_web/web_only.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:quizzer/Class/myScroll.dart';
+import 'package:quizzer/Class/myTransition.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
@@ -17,6 +19,7 @@ import 'package:quizzer/Functions/requestEmail.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/QuizResultViewer.dart';
 import 'package:quizzer/Screens/additionalSetup.dart';
 import 'package:quizzer/Screens/loadTemp.dart';
 import 'package:quizzer/Screens/makingQuiz.dart';
@@ -71,6 +74,7 @@ class MyApp extends StatelessWidget {
     var brightness = MediaQuery.of(context).platformBrightness;
 
     return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -110,63 +114,21 @@ class MyApp extends StatelessWidget {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 MakingQuiz(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
-              var end = Offset.zero;
-              var curve = Curves.ease;
-
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
+            transitionsBuilder: mySlideTransition,
           );
         }
         if (settings.name == '/additionalSetup') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 quizLayoutAdditionalSetup(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
-              var end = Offset.zero;
-              var curve = Curves.ease;
-
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
+            transitionsBuilder: mySlideTransition,
           );
         }
         if (settings.name == '/scoreCardCreator') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ScoreCardGenerator(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
-              var end = Offset.zero;
-              var curve = Curves.ease;
-
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
+            transitionsBuilder: mySlideTransition,
           );
         }
         if (settings.name != null && settings.name!.startsWith('/search')) {
@@ -179,30 +141,32 @@ class MyApp extends StatelessWidget {
         if (settings.name != null && settings.name!.startsWith('/solver')) {
           final uri = Uri.parse(settings.name!);
           final uuid = uri.queryParameters['uuid'];
+          final index = int.parse(uri.queryParameters['index'] ?? '0');
+          final isPreview = uri.queryParameters['isPreview'] == 'true';
+
           Provider.of<QuizLayout>(context, listen: false).reset();
+
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => QuizSolver(
               uuid: uuid,
-              index: 0,
+              index: index,
+              isPreview: isPreview,
             ),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
-              var end = Offset.zero;
-              var curve = Curves.ease;
-
-              var tween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-              var offsetAnimation = animation.drive(tween);
-
-              return SlideTransition(
-                position: offsetAnimation,
-                child: child,
-              );
-            },
+            transitionsBuilder: mySlideTransition,
           );
         }
-        // 다른 라우트 설정
+        if (settings.name != null && settings.name!.startsWith('/result')) {
+          final uri = Uri.parse(settings.name!);
+          final resultId = uri.queryParameters['result'];
+          if (resultId == null) return null;
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                QuizResultViewer(
+              resultId: resultId,
+            ),
+            transitionsBuilder: mySlideTransition,
+          );
+        } // 다른 라우트 설정
         return null;
       },
       routes: {
@@ -270,11 +234,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void _startUserDataSubscription() {
     _userDataSubscription =
         _platform.userDataEvents?.listen((GoogleSignInUserData? userData) {
-      setState(() {
+      setState(() async {
         if (userData == null) return;
         print('User Data: ${userData.email}, ${userData.photoUrl}');
         _userData = userData;
-        loginCheck(userData.email, userData.photoUrl ?? '');
+        await loginCheck(userData.email, userData.photoUrl ?? '');
+        Navigator.of(context).popUntil((route) => route.isFirst);
       });
     });
   }
@@ -283,11 +248,11 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
     // 한국어 지원 여부 확인
     String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';
-    // List<List<QuizCardVertical>> recommendations =
-    //     await getRecommendations(locale);
-    // quizCardList1 = recommendations[0]; // 가장 인기있는 5개
-    // quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
-    // quizCardList3 = recommendations[2]; // 최신 5개
+    List<List<QuizCardVertical>> recommendations =
+        await getRecommendations(locale);
+    quizCardList1 = recommendations[0]; // 가장 인기있는 5개
+    quizCardList2 = recommendations[1]; // 태그 기반 추천 5개
+    quizCardList3 = recommendations[2]; // 최신 5개
     setState(() {});
     // 가장 인기있는 5개, 태그 기반 추천 5개, 최신 5개
   }
@@ -775,7 +740,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       width: AppConfig.screenWidth * 0.9,
       // Adjust the height to accommodate the text label above the ListView
-      height: AppConfig.screenHeight * 0.282,
+      height: AppConfig.screenHeight * 0.30 + AppConfig.fontSize * 2,
       child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start, // Aligns children to the start (left)
@@ -795,8 +760,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             // Wrap ListView.builder in an Expanded widget to take up remaining space
             child: ListView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
+              shrinkWrap: false,
+              physics:
+                  AlwaysScrollableScrollPhysics(), // Enable always scrollable physics
               scrollDirection: Axis.horizontal,
               itemCount: list.length,
               itemBuilder: (context, index) {

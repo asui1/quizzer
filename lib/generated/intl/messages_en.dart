@@ -85,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Example_Text_Setup":
             MessageLookupByLibrary.simpleMessage("Example Text Setup"),
         "Exit": MessageLookupByLibrary.simpleMessage("Exit"),
+        "Fail_Quiz_Load": MessageLookupByLibrary.simpleMessage(
+            "Failed to Load Quiz. Please try again later"),
         "FillColor1": MessageLookupByLibrary.simpleMessage("FillColor1"),
         "FillColor2": MessageLookupByLibrary.simpleMessage("FillColor2"),
         "FillColor3": MessageLookupByLibrary.simpleMessage("FillColor3"),

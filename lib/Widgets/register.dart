@@ -52,6 +52,9 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(), // 뒤로 가기 버튼 추가
+      ),
       body: Center(
         child: widget.account != null
             ? StreamBuilder<bool>(

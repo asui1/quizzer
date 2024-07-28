@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path; // Add this line
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +11,7 @@ import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:image/image.dart' as img;
 // import 'dart:html' as html;
@@ -96,15 +99,15 @@ Future<Uint8List> compressImage(
   if (image == null) {
     throw Exception("이미지 디코딩 실패");
   }
-  if(width == 150){
+  if (width == 150) {
     width = 450;
     height = 450;
   }
-  if(width == 400){
+  if (width == 400) {
     width = 800;
     height = 800;
   }
-  if (image.width > width|| image.height > height) {
+  if (image.width > width || image.height > height) {
     image = img.copyResize(image, width: width * 3);
   }
 
@@ -152,6 +155,7 @@ Future<Uint8List> compressImage(
 String makeScoreCardJson(QuizLayout quizLayout) {
   ScoreCard scoreCard = quizLayout.getScoreCard();
   Map<String, dynamic> scoreCardJson = scoreCard.toJson();
+  scoreCardJson['borderColor'] = quizLayout.getColorScheme().outline.value;
   if (scoreCard.imageState == 0) {
     ImageColor? backgroundImage = quizLayout.getImage(0);
     if (backgroundImage == null) {
@@ -176,6 +180,52 @@ String makeScoreCardJson(QuizLayout quizLayout) {
   return jsonEncode(scoreCardJson);
 }
 
+ScoreCard makeScoreCardFromJson(String json) {
+  Map<String, dynamic> scoreCardJson = jsonDecode(json);
+  BoxDecoration backgroundImage = BoxDecoration();
+  if (scoreCardJson['isColor']) {
+    backgroundImage = BoxDecoration(
+      color: stringToColor(scoreCardJson['color']),
+      borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+      boxShadow: [
+        BoxShadow(
+          color: stringToColor(scoreCardJson['borderColor'])
+              .withOpacity(0.5), // 그림자 색상
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 3), // 그림자 위치 조정
+        ),
+      ],
+    );
+  } else {
+    backgroundImage = BoxDecoration(
+      image: DecorationImage(
+        image: decodeImageFromString(scoreCardJson['imageData']),
+        fit: BoxFit.cover,
+      ),
+      borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+      boxShadow: [
+        BoxShadow(
+          color: stringToColor(scoreCardJson['borderColor'])
+              .withOpacity(0.5), // 그림자 색상
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 3), // 그림자 위치 조정
+        ),
+      ],
+    );
+  }
+  ScoreCard scoreCard = ScoreCard(
+    size: scoreCardJson['size'],
+    xRatio: scoreCardJson['dx'],
+    yRatio: scoreCardJson['dy'],
+    backgroundImage: backgroundImage,
+    imageState: int.parse(scoreCardJson['imageState']),
+  );
+
+  return scoreCard;
+}
+
 // void saveFileToPermanentDirectoryWeb(String fileName, Uint8List fileContent) {
 //   // Blob 객체 생성
 //   final blob = html.Blob([fileContent]);
@@ -188,3 +238,8 @@ String makeScoreCardJson(QuizLayout quizLayout) {
 //   // 생성된 URL 해제
 //   html.Url.revokeObjectUrl(url);
 // }
+
+ImageProvider decodeImageFromString(String imageData) {
+  Uint8List bytes = base64Decode(imageData);
+  return MemoryImage(bytes);
+}

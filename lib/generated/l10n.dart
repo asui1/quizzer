@@ -350,6 +350,16 @@ class S {
     );
   }
 
+  /// `Failed to Load Quiz. Please try again later`
+  String get Fail_Quiz_Load {
+    return Intl.message(
+      'Failed to Load Quiz. Please try again later',
+      name: 'Fail_Quiz_Load',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `1. Quiz Title`
   String get First_Quiz_Title {
     return Intl.message(

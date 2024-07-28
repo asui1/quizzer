@@ -4,7 +4,10 @@
 // 채점 후 점수를 가지고 결과 페이지로 이동.
 // Solver가 받을 입력 : Quizlayout, int index -> 몇 번째 퀴즈를 화면에 나타낼지.
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
@@ -12,6 +15,7 @@ import 'package:quizzer/Class/quiz1.dart';
 import 'package:quizzer/Class/quiz3.dart';
 import 'package:quizzer/Class/quiz4.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Widgets/FlipWidgets.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget1Viewer.dart';
 import 'package:quizzer/Widgets/Viewer/quizWidget2Viewer.dart';
@@ -48,6 +52,7 @@ class _QuizSolverState extends State<QuizSolver> {
   List<int> pageHistory = [];
   bool _pageScrollEnabled = true;
   late ImageColor? bottomBarImage;
+  int quizCount = 0;
 
   @override
   void initState() {
@@ -55,21 +60,57 @@ class _QuizSolverState extends State<QuizSolver> {
     curIndex = widget.index;
     pageHistory.add(widget.index);
     _pageController = PageController(initialPage: widget.index);
+    _initializeQuiz();
+  }
+
+  Future<void> _initializeQuiz() async {
     if (widget.uuid == null) {
       bottomBarImage =
           Provider.of<QuizLayout>(context, listen: false).getImage(2);
-    }
-    else{
-      
+      quizCount =
+          Provider.of<QuizLayout>(context, listen: false).getQuizCount();
+    } else {
+      String dataJson = "";
+      try {
+        String jsonString = await loadFileContent(widget.uuid!);
+        if (jsonString == "") {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(Intl.message("Fail_Quiz_Load")),
+          ));
+          Navigator.pop(context);
+          return;
+        }
+        final jsonResponse = json.decode(jsonString);
+        dataJson = jsonResponse['Data'];
+
+        final jsonResponse2 = json.decode(dataJson);
+
+        QuizLayout quizLayout = Provider.of<QuizLayout>(context, listen: false);
+        quizLayout.reset();
+        await quizLayout.loadQuizLayout(jsonResponse2);
+        bottomBarImage = quizLayout.getImage(2);
+        quizCount = quizLayout.getQuizCount();
+        if (mounted) {
+          setState(() {
+            // 상태를 업데이트하여 UI를 다시 빌드합니다.
+          });
+        }
+
+        // 비동기 작업이 완료된 후 UI를 업데이트합니다.
+      } catch (e) {
+        // 오류 처리
+        print("Error loading quiz: $e");
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     // 여기에서 widget.quizLayout과 widget.index를 사용하여 UI를 구성합니다.
     heightModifier = (AppConfig.screenHeight -
-            widget.quizLayout.getAppBarHeight() -
-            widget.quizLayout.getBottomBarHeight()) /
+            quizLayout.getAppBarHeight() -
+            quizLayout.getBottomBarHeight()) /
         (AppConfig.screenHeight);
     return PopScope(
       canPop: pageHistory.length <= 1,
@@ -79,11 +120,10 @@ class _QuizSolverState extends State<QuizSolver> {
         }
       },
       child: Scaffold(
-        appBar:
-            viewerAppBar(quizLayout: widget.quizLayout, showDragHandle: false),
+        appBar: viewerAppBar(quizLayout: quizLayout, showDragHandle: false),
         body: SafeArea(
           child: Container(
-            decoration: backgroundDecoration(quizLayout: widget.quizLayout),
+            decoration: backgroundDecoration(quizLayout: quizLayout),
             child: Stack(
               children: [
                 PageView.builder(
@@ -98,11 +138,11 @@ class _QuizSolverState extends State<QuizSolver> {
                     });
                   },
                   itemCount: widget.isPreview
-                      ? widget.quizLayout.getQuizCount()
-                      : widget.quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수
+                      ? quizLayout.getQuizCount()
+                      : quizLayout.getQuizCount() + 1, // 퀴즈의 총 개수
                   itemBuilder: (context, index) {
                     return QuizView(
-                      quizLayout: widget.quizLayout,
+                      quizLayout: quizLayout,
                       index: index, // 현재 페이지 인덱스를 QuizView에 전달
                       screenHeightModifier: heightModifier,
                       screenWidthModifier: 0.90,
@@ -110,7 +150,7 @@ class _QuizSolverState extends State<QuizSolver> {
                         setState(() {
                           if (_pageController.hasClients &&
                               _pageController.page! <
-                                  widget.quizLayout.getQuizCount() + 1) {
+                                  quizLayout.getQuizCount() + 1) {
                             _pageController.jumpToPage(newIndex);
                           }
                         });
@@ -124,37 +164,37 @@ class _QuizSolverState extends State<QuizSolver> {
                   },
                 ),
                 FilpStyle12(
-                  quizLayout: widget.quizLayout,
+                  quizLayout: quizLayout,
                   onPressedBack: onPressedBack,
                   onPressedForward: onPressedForward,
                 ),
-                curIndex == widget.quizLayout.getQuizCount()
+                curIndex == quizLayout.getQuizCount()
                     ? Container()
                     : Positioned(
-                        bottom: widget.quizLayout.getSelectedLayout() == 2
+                        bottom: quizLayout.getSelectedLayout() == 2
                             ? 50
                             : 10, // 하단에서의 거리
                         right: 10, // 오른쪽에서의 거리
                         child: Text(
-                          "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
+                          "${curIndex + 1}/${quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
                           style: TextStyle(
                             fontSize: AppConfig.fontSize * 0.7, // 텍스트 크기 조정
-                            color: widget.quizLayout.getColorScheme().primary,
+                            color: quizLayout.getColorScheme().primary,
                           ),
                         ),
                       ),
-                curIndex == widget.quizLayout.getQuizCount()
+                curIndex == quizLayout.getQuizCount()
                     ? Container()
                     : Positioned(
                         key: const ValueKey('solverBackbutton'),
-                        bottom: widget.quizLayout.getSelectedLayout() == 2
+                        bottom: quizLayout.getSelectedLayout() == 2
                             ? 50
                             : 10, // 하단에서의 거리
                         left: 10, // 오른쪽에서의 거리
                         child: IconButton(
                           icon: Icon(
                             Icons.arrow_back,
-                            color: widget.quizLayout.getColorScheme().primary,
+                            color: quizLayout.getColorScheme().primary,
                           ),
                           onPressed: () {
                             Navigator.pop(context, curIndex);
@@ -166,7 +206,7 @@ class _QuizSolverState extends State<QuizSolver> {
           ),
         ),
         bottomNavigationBar: viewerBottomBar(
-          quizLayout: widget.quizLayout,
+          quizLayout: quizLayout,
           onPressedForward: onPressedForward,
           onPressedBack: onPressedBack,
           showSwitchButton: true,
@@ -196,8 +236,7 @@ class _QuizSolverState extends State<QuizSolver> {
 
   void onPressedForward() {
     setState(() {
-      if (_pageController.hasClients &&
-          _pageController.page! < widget.quizLayout.getQuizCount() + 1) {
+      if (_pageController.hasClients && _pageController.page! < quizCount + 1) {
         _pageController.nextPage(
             duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }

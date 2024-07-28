@@ -75,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "ErrorTextColor": MessageLookupByLibrary.simpleMessage("오류 텍스트 색"),
         "Example_Text_Setup": MessageLookupByLibrary.simpleMessage("예문 텍스트 설정"),
         "Exit": MessageLookupByLibrary.simpleMessage("나가기"),
+        "Fail_Quiz_Load": MessageLookupByLibrary.simpleMessage(
+            "퀴즈 로딩에 실패했습니다. 나중에 다시 시도해주세요."),
         "FillColor1": MessageLookupByLibrary.simpleMessage("채우기 색1"),
         "FillColor2": MessageLookupByLibrary.simpleMessage("채우기 색2"),
         "FillColor3": MessageLookupByLibrary.simpleMessage("채우기 색3"),

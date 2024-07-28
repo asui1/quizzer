@@ -257,16 +257,16 @@ class _MakingQuizState extends State<MakingQuiz> {
                                 ElevatedButton(
                                   key: const ValueKey('previewButton'),
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => QuizSolver(
-                                          quizLayout: quizLayout,
-                                          index: curQuizIndex,
-                                          isPreview: true,
-                                        ),
-                                      ),
-                                    ).then((value) {
+                                    final Uri newUri = Uri(
+                                      path: '/solver',
+                                      queryParameters: {
+                                        'isPreview': 'true',
+                                        'index': curQuizIndex.toString(),
+                                      },
+                                    );
+                                    Navigator.pushNamed(
+                                            context, newUri.toString())
+                                        .then((value) {
                                       if (value is int) {
                                         setState(() {
                                           // curQuizIndex를 value로 업데이트
@@ -333,12 +333,12 @@ class _MakingQuizState extends State<MakingQuiz> {
       builder: (BuildContext context) {
         return AlertDialog(
           content: Container(
-            width: double.maxFinite,
+            width: AppConfig.screenWidth * 0.8,
             child: GridView.count(
               shrinkWrap: true,
               physics: ScrollPhysics(),
               crossAxisCount: 2,
-              childAspectRatio: 1 / 2,
+              childAspectRatio: 2 / 3,
               children: List.generate(4, (index) {
                 return GestureDetector(
                   key: ValueKey("quizSelectionDialog$index"),

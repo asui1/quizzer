@@ -42,37 +42,13 @@ class QuizCard extends StatelessWidget {
             if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
             // -> Solver에 uuid 제공하고, solver에서는 그 uuid로 로드하기.
             _isTapInProgress = true; // 탭 진행 중 상태로 설정
-            String dataJson = "";
-            final directory = await getApplicationDocumentsDirectory();
-            try {
-              String jsonString = await loadFileContent(uuid);
-              final jsonResponse = json.decode(jsonString);
-              dataJson = jsonResponse['Data'];
+            final Uri newUri = Uri(
+              path: '/solver',
+              queryParameters: {'uuid': uuid},
+            );
+            Navigator.pushNamed(context, newUri.toString());
 
-              final jsonResponse2 = json.decode(dataJson);
-
-              QuizLayout quizLayout =
-                  Provider.of<QuizLayout>(context, listen: false);
-              quizLayout.reset();
-              await quizLayout.loadQuizLayout(jsonResponse2);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => QuizSolver(
-                          quizLayout: quizLayout,
-                          index: 0,
-                        )),
-              );
-              _isTapInProgress = false; // 탭 진행 중 상태 해제
-            } catch (e) {
-              Logger.log("Error in downloadJson");
-              Logger.log(e);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(Intl.message("JSON_DOWN_FAIL")),
-              ));
-              _isTapInProgress = false; // 탭 진행 중 상태 해제
-              return;
-            }
+            _isTapInProgress = false;
           },
           child: Card(
               elevation: 4.0,

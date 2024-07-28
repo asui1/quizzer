@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'dart:convert';
@@ -13,23 +14,6 @@ import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-Future<void> downloadJson(Directory directory, String uuid) async {
-  final url = serverUrl + 'getQuizData/?uuid=$uuid';
-  final response =
-      await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
-
-  if (response.statusCode == 200) {
-    // 응답으로 받은 데이터를 파일에 저장
-    String decodedString = utf8.decode(response.bodyBytes);
-
-    final file = File('${directory.path}/$uuid.json');
-    await file.writeAsString(decodedString, encoding: utf8); // 인코딩을 utf8로 지정
-    Logger.log("JSON 파일 다운로드 성공");
-  } else {
-    Logger.log("JSON 파일 다운로드 실패");
-  }
-}
 
 Future<String> loadFileContent(String uuid) async {
   final url = serverUrl + 'getQuizData/?uuid=$uuid';
@@ -390,4 +374,36 @@ Future<List<List<QuizCardVertical>>> getRecommendations(String lang) async {
     Logger.log('Request failed with status: ${response.statusCode}');
   }
   return [];
+}
+
+//GET result by [String title, String Creator, int score, ScoreCard scoreCard, String Nickname]
+Future<List<dynamic>> loadResult(String resultId) {
+  final url = serverUrl + 'GetResult/?resultId=$resultId';
+  return http.get(Uri.parse(url), headers: {'Authorization': serverAuth}).then(
+      (response) {
+    if (response.statusCode == 200) {
+      // 응답으로 받은 데이터를 파일에 저장
+      String decodedString = utf8.decode(response.bodyBytes);
+      Logger.log("JSON 파일 다운로드 성공");
+      Map<String, dynamic> jsonMap = jsonDecode(decodedString);
+      ScoreCard _scoreCard = ScoreCard(
+        size: 100,
+        xRatio: 0.5,
+        yRatio: 0.5,
+        backgroundImage: null,
+      );
+      _scoreCard.fromJson(jsonMap['ScoreCard']);
+
+      return [
+        jsonMap['Title'],
+        jsonMap['Creator'],
+        int.parse(jsonMap['Score']),
+        _scoreCard,
+        jsonMap['Nickname']
+      ];
+    } else {
+      Logger.log("JSON 파일 다운로드 실패");
+      return [];
+    }
+  });
 }

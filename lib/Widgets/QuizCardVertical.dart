@@ -35,84 +35,64 @@ class QuizCardVertical extends StatelessWidget {
       child: Material(
         type: MaterialType
             .transparency, // This makes the material widget transparent
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
-            border:
-                Border.all(color: Theme.of(context).primaryColor), // 테두리 색상 설정
-            color: Colors.transparent, // 배경색 설정 (투명)
-          ),
-          child: InkWell(
-            onTap: () async {
-              if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
-              _isTapInProgress = true; // 탭 진행 중 상태로 설정
-              String dataJson = "";
-              final directory = await getApplicationDocumentsDirectory();
-              try {
-                await downloadJson(directory, uuid);
-                String jsonString = await loadFileContent(directory, uuid);
-                final jsonResponse = json.decode(jsonString);
-                dataJson = jsonResponse['Data'];
-
-                final jsonResponse2 = json.decode(dataJson);
-                // jsonResponse를 사용하여 필요한 작업 수행
-
-                QuizLayout quizLayout =
-                    Provider.of<QuizLayout>(context, listen: false);
-                quizLayout.reset();
-                await quizLayout.loadQuizLayout(jsonResponse2);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => QuizSolver(
-                            quizLayout: quizLayout,
-                            index: 0,
-                          )),
+        child: SizedBox(
+          width: AppConfig.screenHeight * 0.22,
+      height: AppConfig.screenHeight * 0.30 + AppConfig.fontSize * 2,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
+              border: Border.all(
+                  color: Theme.of(context).primaryColor), // 테두리 색상 설정
+              color: Colors.transparent, // 배경색 설정 (투명)
+            ),
+            child: InkWell(
+              onTap: () async {
+                if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+                _isTapInProgress = true; // 탭 진행 중 상태로 설정
+                final Uri newUri = Uri(
+                  path: '/solver',
+                  queryParameters: {'uuid': uuid},
                 );
-                _isTapInProgress = false; // 탭 진행 중 상태 해제
-              } catch (e) {
-                Logger.log("Error in downloadJson");
-                Logger.log(e);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(Intl.message("JSON_DOWN_FAIL")),
-                ));
-                _isTapInProgress = false; // 탭 진행 중 상태 해제
-                return;
-              }
-              // Logger.log(dataJson);
-            },
-            child: Padding(
-              padding: EdgeInsets.all(AppConfig.smallPadding), // Column에 패딩 추가
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
-                    child: SizedBox(
-                      width: AppConfig.screenHeight * 0.15, // 이미지 너비
-                      height: AppConfig.screenHeight * 0.15, // 이미지 높이
-                      child: titleImageByte.length < 30
-                          ? Image.asset('assets/images/question2.png',
-                              fit: BoxFit.cover) // 에셋 이미지 사용
-                          : Image.memory(
-                              titleImageByte,
-                              fit: BoxFit.cover,
-                            ), // 파일 이미지 사용
+                Navigator.pushNamed(context, newUri.toString());
+
+                _isTapInProgress = false;
+              },
+              child: Padding(
+                padding:
+                    EdgeInsets.all(AppConfig.smallPadding), // Column에 패딩 추가
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
+                      child: SizedBox(
+                        width: AppConfig.screenHeight * 0.20, // 이미지 너비
+                        height: AppConfig.screenHeight * 0.20, // 이미지 높이
+                        child: titleImageByte.length < 30
+                            ? Image.asset('assets/images/question2.png',
+                                fit: BoxFit.cover) // 에셋 이미지 사용
+                            : Image.memory(
+                                titleImageByte,
+                                fit: BoxFit.cover,
+                              ), // 파일 이미지 사용
+                      ),
                     ),
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        fontSize: AppConfig.fontSize,
-                        fontWeight: FontWeight.bold),
-                  ), // 제목 표시
-                  Text(
-                    creator,
-                    style: TextStyle(
-                        fontSize: AppConfig.fontSize * 0.8,
-                        fontWeight: FontWeight.w200), // 추가 데이터 표시
-                  ), // 추가 데이터 표시
-                ],
+                    Text(
+                      title,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: AppConfig.fontSize * 0.8,
+                          fontWeight: FontWeight.bold),
+                    ), // 제목 표시
+                    Text(
+                      creator,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: AppConfig.fontSize * 0.6,
+                          fontWeight: FontWeight.w200), // 추가 데이터 표시
+                    ), // 추가 데이터 표시
+                  ],
+                ),
               ),
             ),
           ),
