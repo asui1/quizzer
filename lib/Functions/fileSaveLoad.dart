@@ -9,6 +9,7 @@ import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:image/image.dart' as img;
 // import 'dart:html' as html;
@@ -153,6 +154,7 @@ String makeScoreCardJson(QuizLayout quizLayout) {
   ScoreCard scoreCard = quizLayout.getScoreCard();
   Map<String, dynamic> scoreCardJson = scoreCard.toJson();
   scoreCardJson['borderColor'] = quizLayout.getColorScheme().outline.value;
+  scoreCardJson['colorScheme'] = colorSchemeToJson(quizLayout.getColorScheme());
   if (scoreCard.imageState == 0) {
     ImageColor? backgroundImage = quizLayout.getImage(0);
     if (backgroundImage == null) {
