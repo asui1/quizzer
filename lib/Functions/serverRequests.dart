@@ -59,7 +59,7 @@ Future<http.Response> postJsonToFileOnServer(
     'creator': quizlayout.getCreator(),
     "data": jsonString,
     "scoreCard": makeScoreCardJson(quizlayout),
-    "colorScheme": colorSchemeToJson(quizlayout.getColorScheme()).toString(),
+    "colorScheme": colorSchemeToJson(quizlayout.getColorScheme()),
   });
 
   final response = await http.post(
