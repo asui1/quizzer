@@ -11,26 +11,30 @@ class QuizResultViewer extends StatefulWidget {
 }
 
 class _QuizResultViewerState extends State<QuizResultViewer> {
-
   @override
   void initState() {
     super.initState();
-    loadResult(widget.resultId).then((data) {
-      setState(() {
-        
-      });
-      print(data);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Quiz Result Viewer'),
-      ),
-      body: Center(
-        child: Text('Result ID: ${widget.resultId}'),
+      body: SafeArea(
+        child: FutureBuilder(
+          future: loadResult(widget.resultId),
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+
+              return Center(child: Text('Result: ${snapshot.data}'));
+            } else {
+              return Center(child: Text('No data found'));
+            }
+          },
+        ),
       ),
     );
   }

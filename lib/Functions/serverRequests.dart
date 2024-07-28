@@ -43,6 +43,7 @@ Future<http.Response> postJsonToFileOnServer(
     'creator': quizlayout.getCreator(),
     "data": jsonString,
     "scoreCard": makeScoreCardJson(quizlayout),
+    "colorScheme": colorSchemeToJson(quizlayout.getColorScheme()),
   });
   Logger.log(body);
 
@@ -388,7 +389,8 @@ Future<List<dynamic>> loadResult(String resultId) {
       Logger.log("JSON 파일 다운로드 성공");
       Map<String, dynamic> jsonMap = jsonDecode(decodedString);
       ScoreCard _scoreCard = makeScoreCardFromJson(jsonMap['ScoreCard']);
-      ColorScheme colorScheme = jsonToColorScheme(jsonMap['colorScheme']);
+      Logger.log(jsonMap['Title']);
+      ColorScheme colorScheme = jsonToColorScheme(jsonMap['ColorScheme']);
 
       return [
         jsonMap['Title'],

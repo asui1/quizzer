@@ -6,12 +6,9 @@ ubuntu server 설정하고, 개발환경 개발하기.
 - 앱 레벨
 
 7/24 목표: 
-!Flutter web에서 scorecard를 상대적 크기로 변경함 -> 모바일 버전도 마찬가지로 수정 필요.
-http://quizzer.co.kr/result/?resultId=c5351f32e205a8585fb64e2ae85389592039e403891fac74fc5493a127d964f3
-http://localhost:17544/#/result/?resultId=c5351f32e205a8585fb64e2ae85389592039e403891fac74fc5493a127d964f3
-
-화면 이동 방식을 바꿔야함.
-화면 이동을 위에 주소창 옮겨가는 형식으로 바꿔야함 아니면 뒤로가기가 이상하게되서.
+-> 이미지 받을 때 특정 크기 비율로 컷하기.
+http://quizzer.co.kr/result/?resultId=36ea1f2983572c39142db458588b84ed3585637c6a1c39869ee01fee7cadabf4
+http://localhost:17544/#/result/?resultId=36ea1f2983572c39142db458588b84ed3585637c6a1c39869ee01fee7cadabf4
 
 ?result=id -> 플러터 웹에서 스코아카드 볼 수 있게.
 ?quiz=uuid -> 플러터 웹에서 바로 퀴즈 풀 수 있게

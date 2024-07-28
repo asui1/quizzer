@@ -156,7 +156,6 @@ String makeScoreCardJson(QuizLayout quizLayout) {
   ScoreCard scoreCard = quizLayout.getScoreCard();
   Map<String, dynamic> scoreCardJson = scoreCard.toJson();
   scoreCardJson['borderColor'] = quizLayout.getColorScheme().outline.value;
-  scoreCardJson['colorScheme'] = colorSchemeToJson(quizLayout.getColorScheme());
   if (scoreCard.imageState == 0) {
     ImageColor? backgroundImage = quizLayout.getImage(0);
     if (backgroundImage == null) {
