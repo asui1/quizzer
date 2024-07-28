@@ -103,12 +103,14 @@ class QuizCardVertical extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
                         fontSize: AppConfig.fontSize,
                         fontWeight: FontWeight.bold),
                   ), // 제목 표시
                   Text(
                     creator,
                     style: TextStyle(
+                        overflow: TextOverflow.ellipsis,
                         fontSize: AppConfig.fontSize * 0.8,
                         fontWeight: FontWeight.w200), // 추가 데이터 표시
                   ), // 추가 데이터 표시

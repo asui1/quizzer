@@ -57,7 +57,6 @@ Future<http.Response> postJsonToFileOnServer(
     "data": jsonString,
     "scoreCard": makeScoreCardJson(quizlayout),
   });
-  Logger.log(body);
 
   final response = await http.post(
     Uri.parse(serverUrl + 'addQuiz/'),

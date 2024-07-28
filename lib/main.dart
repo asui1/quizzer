@@ -755,7 +755,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       width: AppConfig.screenWidth * 0.9,
       // Adjust the height to accommodate the text label above the ListView
-      height: AppConfig.screenHeight * 0.282,
+      height: AppConfig.screenHeight * 0.29,
       child: Column(
         crossAxisAlignment:
             CrossAxisAlignment.start, // Aligns children to the start (left)
