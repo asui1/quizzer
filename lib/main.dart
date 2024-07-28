@@ -116,29 +116,27 @@ class MyApp extends StatelessWidget {
                 MakingQuiz(),
             transitionsBuilder: mySlideTransition,
           );
-        }
-        if (settings.name == '/additionalSetup') {
+        } else if (settings.name == '/additionalSetup') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 quizLayoutAdditionalSetup(),
             transitionsBuilder: mySlideTransition,
           );
-        }
-        if (settings.name == '/scoreCardCreator') {
+        } else if (settings.name == '/scoreCardCreator') {
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ScoreCardGenerator(),
             transitionsBuilder: mySlideTransition,
           );
-        }
-        if (settings.name != null && settings.name!.startsWith('/search')) {
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/search')) {
           final uri = Uri.parse(settings.name!);
           final searchText = uri.queryParameters['searchText'];
           return MaterialPageRoute(
             builder: (context) => SearchScreen(searchText: searchText),
           );
-        }
-        if (settings.name != null && settings.name!.startsWith('/solver')) {
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/solver')) {
           final uri = Uri.parse(settings.name!);
           final uuid = uri.queryParameters['uuid'];
           final index = int.parse(uri.queryParameters['index'] ?? '0');
@@ -154,11 +152,13 @@ class MyApp extends StatelessWidget {
             ),
             transitionsBuilder: mySlideTransition,
           );
-        }
-        if (settings.name != null && settings.name!.startsWith('/result')) {
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/result')) {
           final uri = Uri.parse(settings.name!);
-          final resultId = uri.queryParameters['result'];
+          final resultId = uri.queryParameters['resultId'];
+          Logger.log(resultId);
           if (resultId == null) return null;
+
           return PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 QuizResultViewer(
@@ -166,21 +166,18 @@ class MyApp extends StatelessWidget {
             ),
             transitionsBuilder: mySlideTransition,
           );
-        } // 다른 라우트 설정
-        return null;
+        } else {
+          // 기본 경로 설정
+          return MaterialPageRoute(
+            builder: (context) => const MyHomePage(title: 'Quizzer'),
+          );
+        }
       },
       routes: {
         '/': (context) => const MyHomePage(title: 'Quizzer'),
         '/register': (context) => Register(account: null),
         '/makingQuizLayout': (context) => MakingQuizscreen(),
         '/search': (context) => SearchScreen(),
-        // Result
-
-        // Followings are not needed.
-        // '/additionalSetup': (context) => quizLayoutAdditionalSetup(),
-        // '/loadTemp': (context) => LoadTemp(),
-        // '/scoreCardCreator': (context) => ScoreCardGenerator(),
-        // '/scoringScreen': (context) => ScoringScreen(),
       },
     );
   }

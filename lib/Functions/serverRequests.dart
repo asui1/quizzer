@@ -386,13 +386,7 @@ Future<List<dynamic>> loadResult(String resultId) {
       String decodedString = utf8.decode(response.bodyBytes);
       Logger.log("JSON 파일 다운로드 성공");
       Map<String, dynamic> jsonMap = jsonDecode(decodedString);
-      ScoreCard _scoreCard = ScoreCard(
-        size: 100,
-        xRatio: 0.5,
-        yRatio: 0.5,
-        backgroundImage: null,
-      );
-      _scoreCard.fromJson(jsonMap['ScoreCard']);
+      ScoreCard _scoreCard = makeScoreCardFromJson(jsonMap['ScoreCard']);
 
       return [
         jsonMap['Title'],

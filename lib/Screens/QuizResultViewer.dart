@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quizzer/Functions/serverRequests.dart';
 
 class QuizResultViewer extends StatefulWidget {
   final String resultId;
@@ -14,6 +15,12 @@ class _QuizResultViewerState extends State<QuizResultViewer> {
   @override
   void initState() {
     super.initState();
+    loadResult(widget.resultId).then((data) {
+      setState(() {
+        
+      });
+      print(data);
+    });
   }
 
   @override
