@@ -11,6 +11,7 @@ import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'dart:convert';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -376,7 +377,7 @@ Future<List<List<QuizCardVertical>>> getRecommendations(String lang) async {
   return [];
 }
 
-//GET result by [String title, String Creator, int score, ScoreCard scoreCard, String Nickname]
+//GET result by [String title, String Creator, int score, ScoreCard scoreCard, String Nickname, colorScheme]
 Future<List<dynamic>> loadResult(String resultId) {
   final url = serverUrl + 'GetResult/?resultId=$resultId';
   return http.get(Uri.parse(url), headers: {'Authorization': serverAuth}).then(
@@ -387,13 +388,15 @@ Future<List<dynamic>> loadResult(String resultId) {
       Logger.log("JSON 파일 다운로드 성공");
       Map<String, dynamic> jsonMap = jsonDecode(decodedString);
       ScoreCard _scoreCard = makeScoreCardFromJson(jsonMap['ScoreCard']);
+      ColorScheme colorScheme = jsonToColorScheme(jsonMap['colorScheme']);
 
       return [
         jsonMap['Title'],
         jsonMap['Creator'],
-        int.parse(jsonMap['Score']),
+        jsonMap['Score'],
         _scoreCard,
-        jsonMap['Nickname']
+        jsonMap['Nickname'],
+        colorScheme,
       ];
     } else {
       Logger.log("JSON 파일 다운로드 실패");

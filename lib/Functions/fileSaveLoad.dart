@@ -156,6 +156,7 @@ String makeScoreCardJson(QuizLayout quizLayout) {
   ScoreCard scoreCard = quizLayout.getScoreCard();
   Map<String, dynamic> scoreCardJson = scoreCard.toJson();
   scoreCardJson['borderColor'] = quizLayout.getColorScheme().outline.value;
+  scoreCardJson['colorScheme'] = colorSchemeToJson(quizLayout.getColorScheme());
   if (scoreCard.imageState == 0) {
     ImageColor? backgroundImage = quizLayout.getImage(0);
     if (backgroundImage == null) {
@@ -182,14 +183,17 @@ String makeScoreCardJson(QuizLayout quizLayout) {
 
 ScoreCard makeScoreCardFromJson(String json) {
   Map<String, dynamic> scoreCardJson = jsonDecode(json);
+  Logger.log(scoreCardJson);
   BoxDecoration backgroundImage = BoxDecoration();
+  Logger.log(scoreCardJson['isColor']);
   if (scoreCardJson['isColor']) {
+    Logger.log("true");
     backgroundImage = BoxDecoration(
-      color: stringToColor(scoreCardJson['color']),
+      color: Color(scoreCardJson['color']),
       borderRadius: BorderRadius.circular(30), // 모서리 둥글기
       boxShadow: [
         BoxShadow(
-          color: stringToColor(scoreCardJson['borderColor'])
+          color: Color(scoreCardJson['borderColor'])
               .withOpacity(0.5), // 그림자 색상
           spreadRadius: 1,
           blurRadius: 5,
@@ -198,6 +202,7 @@ ScoreCard makeScoreCardFromJson(String json) {
       ],
     );
   } else {
+    Logger.log("false");
     backgroundImage = BoxDecoration(
       image: DecorationImage(
         image: decodeImageFromString(scoreCardJson['imageData']),
@@ -206,7 +211,7 @@ ScoreCard makeScoreCardFromJson(String json) {
       borderRadius: BorderRadius.circular(30), // 모서리 둥글기
       boxShadow: [
         BoxShadow(
-          color: stringToColor(scoreCardJson['borderColor'])
+          color: Color(scoreCardJson['borderColor'])
               .withOpacity(0.5), // 그림자 색상
           spreadRadius: 1,
           blurRadius: 5,
@@ -215,14 +220,15 @@ ScoreCard makeScoreCardFromJson(String json) {
       ],
     );
   }
+  Logger.log("Background done");
   ScoreCard scoreCard = ScoreCard(
     size: scoreCardJson['size'],
     xRatio: scoreCardJson['dx'],
     yRatio: scoreCardJson['dy'],
     backgroundImage: backgroundImage,
-    imageState: int.parse(scoreCardJson['imageState']),
+    imageState: scoreCardJson['imageState'],
   );
-
+  Logger.log("ScoreCard done");
   return scoreCard;
 }
 
