@@ -4,8 +4,8 @@
 // 채점 후 점수를 가지고 결과 페이지로 이동.
 // Solver가 받을 입력 : Quizlayout, int index -> 몇 번째 퀴즈를 화면에 나타낼지.
 
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quizzer/Class/ImageColor.dart';
 import 'package:quizzer/Class/quiz.dart';
 import 'package:quizzer/Class/quiz1.dart';
@@ -24,13 +24,13 @@ import 'package:quizzer/Screens/answerCheckScreen.dart';
 import '../Class/quiz2.dart';
 
 class QuizSolver extends StatefulWidget {
-  final QuizLayout quizLayout;
+  final String? uuid;
   final int index;
   final bool isPreview;
 
   const QuizSolver({
     Key? key,
-    required this.quizLayout,
+    required this.uuid,
     required this.index,
     this.isPreview = false,
   }) : super(key: key);
@@ -55,7 +55,13 @@ class _QuizSolverState extends State<QuizSolver> {
     curIndex = widget.index;
     pageHistory.add(widget.index);
     _pageController = PageController(initialPage: widget.index);
-    bottomBarImage = widget.quizLayout.getImage(2);
+    if (widget.uuid == null) {
+      bottomBarImage =
+          Provider.of<QuizLayout>(context, listen: false).getImage(2);
+    }
+    else{
+      
+    }
   }
 
   @override
@@ -125,7 +131,9 @@ class _QuizSolverState extends State<QuizSolver> {
                 curIndex == widget.quizLayout.getQuizCount()
                     ? Container()
                     : Positioned(
-                        bottom: widget.quizLayout.getSelectedLayout() == 2 ? 50:10, // 하단에서의 거리
+                        bottom: widget.quizLayout.getSelectedLayout() == 2
+                            ? 50
+                            : 10, // 하단에서의 거리
                         right: 10, // 오른쪽에서의 거리
                         child: Text(
                           "${curIndex + 1}/${widget.quizLayout.getQuizCount()}", // 예시로 '1/10'을 사용했습니다. 실제 인덱스/퀴즈 번호 변수로 대체해야 합니다.
@@ -138,8 +146,10 @@ class _QuizSolverState extends State<QuizSolver> {
                 curIndex == widget.quizLayout.getQuizCount()
                     ? Container()
                     : Positioned(
-                      key: const ValueKey('solverBackbutton'),
-                        bottom: widget.quizLayout.getSelectedLayout() == 2 ? 50:10, // 하단에서의 거리
+                        key: const ValueKey('solverBackbutton'),
+                        bottom: widget.quizLayout.getSelectedLayout() == 2
+                            ? 50
+                            : 10, // 하단에서의 거리
                         left: 10, // 오른쪽에서의 거리
                         child: IconButton(
                           icon: Icon(

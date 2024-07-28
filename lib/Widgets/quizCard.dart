@@ -45,8 +45,7 @@ class QuizCard extends StatelessWidget {
             String dataJson = "";
             final directory = await getApplicationDocumentsDirectory();
             try {
-              await downloadJson(directory, uuid);
-              String jsonString = await loadFileContent(directory, uuid);
+              String jsonString = await loadFileContent(uuid);
               final jsonResponse = json.decode(jsonString);
               dataJson = jsonResponse['Data'];
 

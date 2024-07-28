@@ -31,17 +31,19 @@ Future<void> downloadJson(Directory directory, String uuid) async {
   }
 }
 
-Future<String> loadFileContent(Directory directory, String uuid) async {
-  try {
-    final file = File('${directory.path}/$uuid.json');
-    if (await file.exists()) {
-      String contents = await file.readAsString(encoding: utf8);
-      return contents;
-    } else {
-      return 'File does not exist';
-    }
-  } catch (e) {
-    return 'Error loading file: $e';
+Future<String> loadFileContent(String uuid) async {
+  final url = serverUrl + 'getQuizData/?uuid=$uuid';
+  final response =
+      await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
+
+  if (response.statusCode == 200) {
+    // 응답으로 받은 데이터를 파일에 저장
+    String decodedString = utf8.decode(response.bodyBytes);
+    Logger.log("JSON 파일 다운로드 성공");
+    return decodedString;
+  } else {
+    Logger.log("JSON 파일 다운로드 실패");
+    return "";
   }
 }
 
@@ -324,7 +326,7 @@ Future<List<List<QuizCardVertical>>> getRecommendations(String lang) async {
     Map<String, dynamic> jsonList = jsonDecode(decodedString);
     List<String> filter = ["most_viewed", "similar_items", "most_recent_items"];
     for (int i = 0; i < 3; i += 1) {
-      if(jsonList[filter[i]] == null) {
+      if (jsonList[filter[i]] == null) {
         Logger.log("No data for ${filter[i]}");
         continue;
       }

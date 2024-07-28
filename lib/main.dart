@@ -176,6 +176,32 @@ class MyApp extends StatelessWidget {
             builder: (context) => SearchScreen(searchText: searchText),
           );
         }
+        if (settings.name != null && settings.name!.startsWith('/solver')) {
+          final uri = Uri.parse(settings.name!);
+          final uuid = uri.queryParameters['uuid'];
+          Provider.of<QuizLayout>(context, listen: false).reset();
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => QuizSolver(
+              uuid: uuid,
+              index: 0,
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var begin = Offset(1.0, 0.0); // 오른쪽에서 시작
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              var offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          );
+        }
         // 다른 라우트 설정
         return null;
       },
@@ -184,7 +210,6 @@ class MyApp extends StatelessWidget {
         '/register': (context) => Register(account: null),
         '/makingQuizLayout': (context) => MakingQuizscreen(),
         '/search': (context) => SearchScreen(),
-        '/solver': (context) => QuizSolver(),
         // Result
 
         // Followings are not needed.
