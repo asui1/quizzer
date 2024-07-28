@@ -10,6 +10,7 @@ import 'package:quizzer/Functions/fileSaveLoad.dart';
 import 'dart:convert';
 import 'package:quizzer/Functions/keys.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
+import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +59,7 @@ Future<http.Response> postJsonToFileOnServer(
     'creator': quizlayout.getCreator(),
     "data": jsonString,
     "scoreCard": makeScoreCardJson(quizlayout),
+    "colorScheme": colorSchemeToJson(quizlayout.getColorScheme()),
   });
 
   final response = await http.post(
