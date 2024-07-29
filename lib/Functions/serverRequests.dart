@@ -399,6 +399,7 @@ Future<List<dynamic>> loadResult(String resultId) {
         _scoreCard,
         jsonMap['Nickname'],
         colorScheme,
+        jsonMap['uuid'],
       ];
     } else {
       Logger.log("JSON 파일 다운로드 실패");

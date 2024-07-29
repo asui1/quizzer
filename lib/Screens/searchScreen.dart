@@ -18,15 +18,18 @@ class _SearchScreenState extends State<SearchScreen> {
   FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
   String _screeenText = Intl.message("Is_Searching");
+  late TextEditingController _searchController;
 
   @override
   void initState() {
     Logger.log("SearchScreen initState");
     super.initState();
     _focusNode.addListener(_onFocusChange);
+    _searchController = TextEditingController(text: widget.searchText);
     if (widget.searchText != null) {
       _searchText = widget.searchText!;
       searchServer(_searchText);
+
     }
   }
 
@@ -40,6 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -51,6 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: TextField(
+          controller: _searchController,
           focusNode: _focusNode,
           autofocus: widget.searchText == null ? true : false,
           keyboardType: TextInputType.text,
@@ -87,13 +92,16 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _handleSearch(String searchText) {
+    if(searchText.isEmpty) {
+      return;
+    }
     setState(() {
       _screeenText = Intl.message("Is_Searching");
       _searchResults = []; // 검색 결과를 비웁니다.
     });
     // URL을 변경합니다.
     final Uri newUri = Uri(
-      path: '/search',
+      path: '/searchResult',
       queryParameters: {'searchText': searchText},
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {

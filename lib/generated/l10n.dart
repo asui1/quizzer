@@ -320,6 +320,16 @@ class S {
     );
   }
 
+  /// `Go and Solve`
+  String get Go_Solve {
+    return Intl.message(
+      'Go and Solve',
+      name: 'Go_Solve',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user's responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button.`
   String get User_Agreement_text {
     return Intl.message(

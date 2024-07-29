@@ -51,7 +51,6 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
     return Theme(
       data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
       child: Scaffold(
-        appBar: viewerAppBar(quizLayout: quizLayout, showDragHandle: false),
         body: SafeArea(
           child: Container(
             decoration: BoxDecoration(
@@ -173,13 +172,6 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
               ],
             ),
           ),
-        ),
-        bottomNavigationBar: viewerBottomBar(
-          quizLayout: quizLayout,
-          onPressedForward: () {},
-          onPressedBack: () {},
-          showDragHandle: false,
-          showSwitchButton: false,
         ),
       ),
     );

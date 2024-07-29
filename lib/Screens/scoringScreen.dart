@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Class/scoreCard.dart';
 import 'package:quizzer/Functions/Logger.dart';
+import 'package:quizzer/Functions/shareResult.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/ViewerCommon.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -78,145 +79,141 @@ class _ScoringScreenState extends State<ScoringScreen> {
       child: Theme(
         data: ThemeData.from(colorScheme: widget.quizLayout.getColorScheme()),
         child: Scaffold(
-          appBar: viewerAppBar(
-              quizLayout: widget.quizLayout, showDragHandle: false),
-          body: Container(
-            decoration: BoxDecoration(
-              color: widget.quizLayout.getColorScheme().surface,
-            ),
-            child: SingleChildScrollView(
-              // SingleChildScrollView로 감싸기
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(height: AppConfig.largePadding * 3),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            widget.quizLayout.getTitle(),
-                            style: TextStyle(
-                              fontSize: AppConfig.fontSize * 1.3,
-                              fontWeight: FontWeight.bold,
-                              color: widget.quizLayout.getColorScheme().primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: AppConfig.padding,
-                      ),
-                      Text(
-                        widget.quizLayout.getCreator(),
-                        style: TextStyle(
-                          fontSize: AppConfig.fontSize * 0.7,
-                          fontWeight: FontWeight.w300,
-                          color: widget.quizLayout.getColorScheme().primary,
-                        ),
-                      ),
-                      SizedBox(
-                        height: AppConfig.padding,
-                      ),
-                      //TODO: 컨테이너 클릭하면 뒤집어지면서 틀린 문제 확인.
-                      FlipCard(front: makeScoreCard(), back: answerCheck()),
-
-                      //TODO : sns로 결과 공유하는 기능 만들어야하는데, 점수를 공유하고 웹사이트로 이동시킬 수 있어야하니까 이건 나중에 구현하는걸로 하고 지금은 점수 UI만 좀 예쁘게 만들어보는걸로.
-                      SizedBox(
-                        height: AppConfig.padding,
-                      ),
-                      Text(
-                        widget.userName,
-                        style: TextStyle(
-                          fontSize: AppConfig.fontSize * 0.7,
-                          fontWeight: FontWeight.w300,
-                          color: widget.quizLayout.getColorScheme().primary,
-                        ),
-                      ),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            child: GestureDetector(
-                              onTap: () {
-                                // Facebook 공유 링크
-                                _shareToFacebook(shareText, widget.resultUrl);
-                              },
-                              child: Image.asset(
-                                'assets/images/facebook.png',
-                                width: AppConfig.fontSize,
-                                height: AppConfig.fontSize,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: AppConfig.padding),
-                          CircleAvatar(
-                            child: GestureDetector(
-                              onTap: () {
-                                // Facebook 공유 링크
-                                _shareToTwitter(shareText, widget.resultUrl);
-                              },
-                              child: Image.asset(
-                                'assets/images/twitter.png',
-                                width: AppConfig.fontSize,
-                                height: AppConfig.fontSize,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: AppConfig.padding),
-                          CircleAvatar(
-                            backgroundColor: Colors.purple,
-                            child: IconButton(
-                              iconSize: AppConfig.fontSize,
-                              icon: Icon(Icons.copy),
-                              color: Colors.white,
-                              onPressed: () {
-                                // Instagram 공유 링크
-                                _copyToClipboard(widget.resultUrl);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      SizedBox(
-                        width: AppConfig.screenWidth * 0.8,
-                        child: FloatingActionButton(
-                          foregroundColor: widget.quizLayout
-                              .getColorScheme()
-                              .secondaryContainer,
-                          onPressed: () {
-                            _onPopInvoked(true);
-                          },
-                          child: Text(Intl.message("Move_Home"),
+          body: SafeArea(
+            child: Container(
+              decoration: BoxDecoration(
+                color: widget.quizLayout.getColorScheme().surface,
+              ),
+              child: SingleChildScrollView(
+                // SingleChildScrollView로 감싸기
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(height: AppConfig.largePadding * 3),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.quizLayout.getTitle(),
                               style: TextStyle(
-                                color: widget.quizLayout
-                                    .getColorScheme()
-                                    .onSecondaryContainer,
-                              )),
+                                fontSize: AppConfig.fontSize * 1.3,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    widget.quizLayout.getColorScheme().primary,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        height: AppConfig.largePadding,
-                      ),
-                      SizedBox(height: AppConfig.largePadding * 3),
-                    ],
-                  ),
-                ],
+                        SizedBox(
+                          height: AppConfig.padding,
+                        ),
+                        Text(
+                          widget.quizLayout.getCreator(),
+                          style: TextStyle(
+                            fontSize: AppConfig.fontSize * 0.7,
+                            fontWeight: FontWeight.w300,
+                            color: widget.quizLayout.getColorScheme().primary,
+                          ),
+                        ),
+                        SizedBox(
+                          height: AppConfig.padding,
+                        ),
+                        //TODO: 컨테이너 클릭하면 뒤집어지면서 틀린 문제 확인.
+                        FlipCard(front: makeScoreCard(), back: answerCheck()),
+
+                        //TODO : sns로 결과 공유하는 기능 만들어야하는데, 점수를 공유하고 웹사이트로 이동시킬 수 있어야하니까 이건 나중에 구현하는걸로 하고 지금은 점수 UI만 좀 예쁘게 만들어보는걸로.
+                        SizedBox(
+                          height: AppConfig.padding,
+                        ),
+                        Text(
+                          widget.userName,
+                          style: TextStyle(
+                            fontSize: AppConfig.fontSize * 0.7,
+                            fontWeight: FontWeight.w300,
+                            color: widget.quizLayout.getColorScheme().primary,
+                          ),
+                        ),
+                        SizedBox(
+                          height: AppConfig.largePadding,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Facebook 공유 링크
+                                  shareToFacebook(
+                                      context, shareText, widget.resultUrl);
+                                },
+                                child: Image.asset(
+                                  'assets/images/facebook.png',
+                                  width: AppConfig.fontSize,
+                                  height: AppConfig.fontSize,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: AppConfig.padding),
+                            CircleAvatar(
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Facebook 공유 링크
+                                  shareToTwitter(
+                                      context, shareText, widget.resultUrl);
+                                },
+                                child: Image.asset(
+                                  'assets/images/twitter.png',
+                                  width: AppConfig.fontSize,
+                                  height: AppConfig.fontSize,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: AppConfig.padding),
+                            CircleAvatar(
+                              backgroundColor: Colors.purple,
+                              child: IconButton(
+                                iconSize: AppConfig.fontSize,
+                                icon: Icon(Icons.copy),
+                                color: Colors.white,
+                                onPressed: () {
+                                  // Instagram 공유 링크
+                                  copyToClipboard(context, widget.resultUrl);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: AppConfig.largePadding,
+                        ),
+                        SizedBox(
+                          width: AppConfig.screenWidth * 0.8,
+                          child: FloatingActionButton(
+                            foregroundColor: widget.quizLayout
+                                .getColorScheme()
+                                .secondaryContainer,
+                            onPressed: () {
+                              _onPopInvoked(true);
+                            },
+                            child: Text(Intl.message("Move_Home"),
+                                style: TextStyle(
+                                  color: widget.quizLayout
+                                      .getColorScheme()
+                                      .onSecondaryContainer,
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          height: AppConfig.largePadding,
+                        ),
+                        SizedBox(height: AppConfig.largePadding * 3),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          bottomNavigationBar: viewerBottomBar(
-            quizLayout: widget.quizLayout,
-            onPressedForward: () {},
-            onPressedBack: () {},
-            showDragHandle: false,
-            showSwitchButton: false,
           ),
         ),
       ),
@@ -224,12 +221,12 @@ class _ScoringScreenState extends State<ScoringScreen> {
   }
 
   Widget makeScoreCard() {
-    double shortestSide = math.min(AppConfig.screenWidth * 0.8,
-        AppConfig.screenHeight * 0.55 * widget.heightModifier);
+    double shortestSide =
+        math.min(AppConfig.screenWidth * 0.8, AppConfig.screenHeight * 0.55);
     double size = scoreCard.getSize() * shortestSide;
     return Container(
       width: AppConfig.screenWidth * 0.8,
-      height: AppConfig.screenHeight * 0.55 * widget.heightModifier,
+      height: AppConfig.screenHeight * 0.55,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: scoreCard.getBackgroundImage(),
       child: Container(
@@ -241,10 +238,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
               left: AppConfig.screenWidth * 0.8 * scoreCard.getXRatio() -
                   size / 2 +
                   10,
-              top: AppConfig.screenHeight *
-                      0.55 *
-                      widget.heightModifier *
-                      scoreCard.getYRatio() -
+              top: AppConfig.screenHeight * 0.55 * scoreCard.getYRatio() -
                   size / 2 +
                   10,
               child: Container(
@@ -276,7 +270,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
     List<bool> answerCheckList = widget.quizLayout.getSolveResult();
     return Container(
       width: AppConfig.screenWidth * 0.8,
-      height: AppConfig.screenHeight * 0.55 * widget.heightModifier,
+      height: AppConfig.screenHeight * 0.55,
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       decoration: scoreCard.getBackgroundImage(),
       child: ListView.builder(
@@ -355,48 +349,5 @@ class _ScoringScreenState extends State<ScoringScreen> {
 
   void _onPopInvoked(bool didPop) {
     Navigator.of(context).popUntil((route) => route.isFirst);
-  }
-
-  void _shareToTwitter(String title, String resultUrl) async {
-    Logger.log(title);
-    Logger.log(resultUrl);
-    final Uri twitterUrl = Uri.parse(
-      'https://twitter.com/intent/tweet?text=${Uri.encodeComponent(title)}&url=${Uri.encodeComponent(resultUrl)}',
-    );
-
-    if (await canLaunchUrl(twitterUrl)) {
-      await launchUrl(twitterUrl);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not launch twitter.'),
-        ),
-      );
-    }
-  }
-
-  void _shareToFacebook(String title, String resultUrl) async {
-    final Uri facebookUrl = Uri.parse(
-      'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(resultUrl)}&quote=${Uri.encodeComponent(title)}',
-    );
-
-    if (await canLaunchUrl(facebookUrl)) {
-      await launchUrl(facebookUrl);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Could not launch Facebook.'),
-        ),
-      );
-    }
-  }
-
-  void _copyToClipboard(String resultUrl) {
-    Clipboard.setData(ClipboardData(text: resultUrl));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('URL copied to clipboard.'),
-      ),
-    );
   }
 }

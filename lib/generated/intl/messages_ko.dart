@@ -84,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Flip_Button_Setup":
             MessageLookupByLibrary.simpleMessage("이후 추가 예정입니다."),
         "Flip_Style_Setup": MessageLookupByLibrary.simpleMessage("넘기기 스타일 설정"),
+        "Go_Solve": MessageLookupByLibrary.simpleMessage("풀어보기"),
         "Google_Login_Failed":
             MessageLookupByLibrary.simpleMessage("구글 로그인에 실패하였습니다."),
         "Google_Sign_In_Failed":
@@ -104,7 +105,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "MainColor2": MessageLookupByLibrary.simpleMessage("메인 색2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("메인 색3"),
         "Most_Recent": MessageLookupByLibrary.simpleMessage("최근 생성된 퀴즈"),
-        "Move_Home": MessageLookupByLibrary.simpleMessage("돌아가기"),
+        "Move_Home": MessageLookupByLibrary.simpleMessage("메인으로"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("설정"),
         "No": MessageLookupByLibrary.simpleMessage("아니오"),
         "No_Borders": MessageLookupByLibrary.simpleMessage("테두리 없음"),

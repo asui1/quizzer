@@ -41,6 +41,7 @@ const List<String> scopes = <String>[
   'https://www.googleapis.com/auth/contacts.readonly',
 ];
 final GoogleSignInPlatform _platform = GoogleSignInPlatform.instance;
+GoogleSignInUserData? _userData = null;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -129,7 +130,7 @@ class MyApp extends StatelessWidget {
             transitionsBuilder: mySlideTransition,
           );
         } else if (settings.name != null &&
-            settings.name!.startsWith('/search')) {
+            settings.name!.startsWith('/searchResult')) {
           final uri = Uri.parse(settings.name!);
           final searchText = uri.queryParameters['searchText'];
           return MaterialPageRoute(
@@ -168,16 +169,17 @@ class MyApp extends StatelessWidget {
           );
         } else {
           // 기본 경로 설정
-          return MaterialPageRoute(
-            builder: (context) => const MyHomePage(title: 'Quizzer'),
-          );
+          return null;
         }
       },
       routes: {
         '/': (context) => const MyHomePage(title: 'Quizzer'),
-        '/register': (context) => Register(account: null),
-        '/makingQuizLayout': (context) => MakingQuizscreen(),
-        '/search': (context) => SearchScreen(),
+        '/register': (context) => Register(account: _userData),
+        '/makingQuizLayout': (context) {
+          Provider.of<QuizLayout>(context, listen: false).reset();
+          return MakingQuizscreen();
+        },
+        '/search': (context) => SearchScreen(searchText: null),
       },
     );
   }
@@ -214,7 +216,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<QuizCardVertical> quizCardList3 = [];
   late Future<void> _future;
   GSIButtonConfiguration? _buttonConfiguration; // button configuration
-  GoogleSignInUserData? _userData = null;
   StreamSubscription? _userDataSubscription;
 
   @override
@@ -435,7 +436,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: FloatingActionButton(
                     key: const ValueKey('moveToMakingQuizScreen'),
                     onPressed: () {
-                      Provider.of<QuizLayout>(context, listen: false).reset();
                       Navigator.pushNamed(context, '/makingQuizLayout');
                     },
                     child: Icon(Icons.add), // "+" icon
@@ -707,14 +707,8 @@ class _MyHomePageState extends State<MyHomePage> {
               GestureDetector(
                 onTap: () async {
                   await _userDataSubscription?.cancel();
-                  //Listen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Register(
-                              account: _userData,
-                            )),
-                  ).then((_) {
+
+                  Navigator.pushNamed(context, '/register').then((_) {
                     _startUserDataSubscription();
                   });
                 },

@@ -96,6 +96,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Flip Button Setup"),
         "Flip_Style_Setup":
             MessageLookupByLibrary.simpleMessage("Flip Style Setup"),
+        "Go_Solve": MessageLookupByLibrary.simpleMessage("Go and Solve"),
         "Google_Login_Failed":
             MessageLookupByLibrary.simpleMessage("Google Login Failed"),
         "Google_Sign_In_Failed":
