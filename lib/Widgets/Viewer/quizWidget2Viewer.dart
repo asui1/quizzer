@@ -8,8 +8,6 @@ import 'package:quizzer/Setup/config.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
-double fontSizeBase = 10.0;
-
 class QuizView2 extends StatefulWidget {
   final Quiz2 quiz; // 퀴즈 태그
   final double screenWidthModifier;

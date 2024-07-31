@@ -1,3 +1,4 @@
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
@@ -15,33 +16,77 @@ class AppConfig {
   static double largerPadding = 0;
   static double largestPadding = 0;
   static double iconSize = 0;
-  static List<String> fontFamilys = [MyFonts.gothicA1, MyFonts.notoSans, MyFonts.maruBuriRegular, MyFonts.spoqaHanSansNeoRegular,
-    MyFonts.diary, MyFonts.ongleYunu, MyFonts.ongleEuyen];
-  static List<String> borderType = [Intl.message("No_Borders"), Intl.message("Underline"), Intl.message("Box_Border")];
-  static List<String> colorStyles = [Intl.message("Color_Set") + "0", Intl.message("Color_Set") + "1", Intl.message("Color_Set") + "2", Intl.message("Color_Set") + "3", Intl.message("Color_Set") + "4", Intl.message("Color_Set") + "5", Intl.message("Color_Set") + "6", Intl.message("Color_Set") + "7", Intl.message("Color_Set") + "8", Intl.message("Color_Set") + "9"];
-  
+  static List<String> fontFamilys = [
+    MyFonts.gothicA1,
+    MyFonts.notoSans,
+    MyFonts.maruBuriRegular,
+    MyFonts.spoqaHanSansNeoRegular,
+    MyFonts.diary,
+    MyFonts.ongleYunu,
+    MyFonts.ongleEuyen
+  ];
+  static List<String> borderType = [
+    Intl.message("No_Borders"),
+    Intl.message("Underline"),
+    Intl.message("Box_Border")
+  ];
+  static List<String> colorStyles = [
+    Intl.message("Color_Set") + "0",
+    Intl.message("Color_Set") + "1",
+    Intl.message("Color_Set") + "2",
+    Intl.message("Color_Set") + "3",
+    Intl.message("Color_Set") + "4",
+    Intl.message("Color_Set") + "5",
+    Intl.message("Color_Set") + "6",
+    Intl.message("Color_Set") + "7",
+    Intl.message("Color_Set") + "8",
+    Intl.message("Color_Set") + "9"
+  ];
 
   //ORDER IN QUESTION, BODY, ANSWER
   static List<double> fontSizes = [];
-  static List<FontWeight> fontWeights = [FontWeight.w500, FontWeight.w700, FontWeight.w300];
+  static List<FontWeight> fontWeights = [
+    FontWeight.w500,
+    FontWeight.w700,
+    FontWeight.w300
+  ];
 
   static void setUp(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     shortestSide = MediaQuery.of(context).size.shortestSide;
-    AppConfig.fontSize = AppConfig.shortestSide / 20;
-    AppConfig.borderRadius = AppConfig.shortestSide / 20;
-    AppConfig.padding = AppConfig.shortestSide / 40;
-    AppConfig.smallPadding = AppConfig.padding / 2;
-    AppConfig.smallerPadding = AppConfig.smallPadding / 2;
-    AppConfig.largePadding = AppConfig.padding * 2;
-    AppConfig.iconSize = AppConfig.fontSize * 2;
-    AppConfig.fontSizes = [AppConfig.fontSize* 1.3, AppConfig.fontSize, AppConfig.fontSize];
+    double maxFontSize = 24.0; // 최대 폰트 크기 설정
+    if (screenWidth > screenHeight) {
+      AppConfig.fontSize = min(AppConfig.shortestSide / 20 / 2, maxFontSize* 1.5);
+      AppConfig.borderRadius = AppConfig.shortestSide / 20 / 2;
+      AppConfig.padding = AppConfig.shortestSide / 40 / 2;
+      AppConfig.smallPadding = AppConfig.padding / 2;
+      AppConfig.smallerPadding = AppConfig.smallPadding / 2;
+      AppConfig.largePadding = AppConfig.padding * 2;
+      AppConfig.iconSize = AppConfig.fontSize * 2;
+      AppConfig.fontSizes = [
+        AppConfig.fontSize * 1.3,
+        AppConfig.fontSize,
+        AppConfig.fontSize
+      ];
+    } else {
+      AppConfig.fontSize = min(shortestSide / 20, maxFontSize);
+      AppConfig.borderRadius = AppConfig.shortestSide / 20;
+      AppConfig.padding = AppConfig.shortestSide / 40;
+      AppConfig.smallPadding = AppConfig.padding / 2;
+      AppConfig.smallerPadding = AppConfig.smallPadding / 2;
+      AppConfig.largePadding = AppConfig.padding * 2;
+      AppConfig.iconSize = AppConfig.fontSize * 2;
+      AppConfig.fontSizes = [
+        AppConfig.fontSize * 1.3,
+        AppConfig.fontSize,
+        AppConfig.fontSize
+      ];
+    }
   }
 }
 
-
-class MyFonts{
+class MyFonts {
   static const count = 13;
   static String getFontByIndex(int index) {
     switch (index) {
@@ -108,6 +153,4 @@ class MyFonts{
   static const ongleYunu = 'OngleYunu';
 
   static const ongleEuyen = 'OngleEuyen';
-
-
 }

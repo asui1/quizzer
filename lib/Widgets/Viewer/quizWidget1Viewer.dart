@@ -121,13 +121,6 @@ class _QuizView1State extends State<QuizView1> {
 
   Widget _buildQuizBody(
       Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
-    YoutubePlayerController _youtubeController =
-        YoutubePlayerController.fromVideoId(
-      videoId: quiz.getYoutubeId(),
-      autoPlay: false,
-      params: const YoutubePlayerParams(showFullscreenButton: true),
-    );
-    _youtubeController.seekTo(seconds: quiz.getYoutubeStartTime().toDouble());
     switch (quiz.getBodyType()) {
       case 0:
         return Container();
@@ -155,6 +148,14 @@ class _QuizView1State extends State<QuizView1> {
         }
       case 3:
         if (quiz.isYoutubeSet()) {
+          YoutubePlayerController _youtubeController =
+              YoutubePlayerController.fromVideoId(
+            videoId: quiz.getYoutubeId(),
+            autoPlay: false,
+            params: const YoutubePlayerParams(showFullscreenButton: true),
+          );
+          _youtubeController.seekTo(
+              seconds: quiz.getYoutubeStartTime().toDouble());
           return YoutubePlayer(
             controller: _youtubeController,
             aspectRatio: 16 / 9,

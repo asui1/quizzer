@@ -92,7 +92,7 @@ class AnswerCheckScreen extends StatelessWidget {
                   await UserPreferences.getUserEmail() ?? 'GUEST';
               String userName = await UserPreferences.getUserName() ?? 'GUEST';
               String resultUrl = quizzerDomain +
-                  "result/?resultId=" +
+                  "#/result/?resultId=" +
                   generateUniqueId(
                       quizLayout.getUuid(), userEmail, quizLayout.getTitle());
               Logger.log(resultUrl);

@@ -15,23 +15,6 @@ import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> downloadJson(Directory directory, String uuid) async {
-  final url = serverUrl + 'getQuizData/?uuid=$uuid';
-  final response =
-      await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
-
-  if (response.statusCode == 200) {
-    // 응답으로 받은 데이터를 파일에 저장
-    String decodedString = utf8.decode(response.bodyBytes);
-
-    final file = File('${directory.path}/$uuid.json');
-    await file.writeAsString(decodedString, encoding: utf8); // 인코딩을 utf8로 지정
-    Logger.log("JSON 파일 다운로드 성공");
-  } else {
-    Logger.log("JSON 파일 다운로드 실패");
-  }
-}
-
 Future<String> loadFileContent(String uuid) async {
   final url = serverUrl + 'getQuizData/?uuid=$uuid';
   final response =

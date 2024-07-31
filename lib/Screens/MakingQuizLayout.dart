@@ -895,7 +895,8 @@ class CustomContainer extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 20.0, fontFamily: MyFonts.notoSans),
+          style: TextStyle(
+              fontSize: AppConfig.fontSize * 0.9, fontFamily: MyFonts.notoSans),
         ),
         onPressed: () => onPressed(),
       ),

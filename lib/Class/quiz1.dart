@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -71,8 +69,10 @@ class Quiz1 extends AbstractQuiz {
   }
 
   void validateBody() {
-    if (bodyType == 2 && titleImageBytes!.length < 39) {
-      bodyType = 0;
+    if (bodyType == 2 && titleImageBytes != null) {
+      if (titleImageBytes!.length < 39) {
+        bodyType = 0;
+      }
     }
     if (bodyType == 3 && youtubeId == null) {
       bodyType = 0;
@@ -315,7 +315,11 @@ class Quiz1 extends AbstractQuiz {
   }
 
   Uint8List getImageByte() {
-    return titleImageBytes!;
+    if (titleImageBytes == null) {
+      return Uint8List(0);
+    } else {
+      return titleImageBytes!;
+    }
   }
 
   @override
@@ -324,7 +328,7 @@ class Quiz1 extends AbstractQuiz {
       "layoutType": layoutType,
       "body": {
         "bodyType": bodyType,
-        "image": base64Encode(titleImageBytes!),
+        "image": base64Encode(getImageByte()),
         "bodyText": bodyText,
         "shuffleAnswers": shuffleAnswers,
         "maxAnswerSelection": maxAnswerSelection,
@@ -355,8 +359,10 @@ class Quiz1 extends AbstractQuiz {
     if (maxAnswerSelection < trueCount) {
       maxAnswerSelection = trueCount;
     }
-    if (bodyType == 2 && titleImageBytes!.length < 39) {
+    if (bodyType == 2 &&
+        (titleImageBytes == null || titleImageBytes!.length < 39)) {
       setBodyType(0);
+      titleImageBytes = Uint8List(0);
     }
 
     return "ok";
