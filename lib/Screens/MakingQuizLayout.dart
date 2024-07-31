@@ -139,397 +139,405 @@ class _MakingQuizState extends State<MakingQuizscreen> {
     if (quizLayout.getSelectedLayout() == 3) {
       quizLayout.setBottomBarVisibility(true);
     }
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) async {
-        if (!isDialogAlreadyPopped && !inCheckDialog && !didPop) {
-          popDialog(context, quizLayout);
-        }
-      },
-      child: Theme(
-        data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
-        child: Scaffold(
-          extendBodyBehindAppBar: false,
-          appBar: quizLayout.getIsTopBarVisible()
-              ? PreferredSize(
-                  // 상단 바 추가
-                  preferredSize: Size.fromHeight(quizLayout.getAppBarHeight()),
-                  child: GestureDetector(
-                    onVerticalDragUpdate: (DragUpdateDetails details) {
-                      setState(() {
-                        tempAppBarHeight +=
-                            details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
-                        tempAppBarHeight = tempAppBarHeight.clamp(
-                            AppConfig.screenHeight * 0.075,
-                            AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
-                        quizLayout.setAppBarHeight(tempAppBarHeight);
-                      });
-                    },
-                    child: viewerAppBar(
-                        quizLayout: quizLayout, showDragHandle: true),
-                  ),
-                )
-              : null,
-          body: SafeArea(
-            child: Container(
-              decoration: backgroundDecoration(quizLayout: quizLayout),
-              child: Stack(
-                children: [
-                  FilpStyle12(
-                    quizLayout: quizLayout,
-                    onPressedBack: () {},
-                    onPressedForward: () {},
-                  ),
-                  Positioned(
-                    top: 30.0,
-                    left: AppConfig.screenWidth / 2 -
-                        28, // Subtract half the width of the button to center it
-                    child: FloatingActionButton(
-                      key: const ValueKey('MakingQuizLayoutTopBarToggle'),
-                      foregroundColor: quizLayout.getColorScheme().primary,
-                      heroTag: 'topBarToggle',
-                      child: Icon(
-                        quizLayout.getIsTopBarVisible()
-                            ? Icons.remove
-                            : Icons.add,
-                        color: quizLayout.getColorScheme().onPrimary,
-                      ),
-                      onPressed: () {
+    return CustomBackButtonDispatcher(
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (!isDialogAlreadyPopped && !inCheckDialog && !didPop) {
+            popDialog(context, quizLayout);
+          }
+        },
+        child: Theme(
+          data: ThemeData.from(colorScheme: quizLayout.getColorScheme()),
+          child: Scaffold(
+            extendBodyBehindAppBar: false,
+            appBar: quizLayout.getIsTopBarVisible()
+                ? PreferredSize(
+                    // 상단 바 추가
+                    preferredSize:
+                        Size.fromHeight(quizLayout.getAppBarHeight()),
+                    child: GestureDetector(
+                      onVerticalDragUpdate: (DragUpdateDetails details) {
                         setState(() {
-                          quizLayout.toggleTopBarVisibility();
+                          tempAppBarHeight +=
+                              details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                          tempAppBarHeight = tempAppBarHeight.clamp(
+                              AppConfig.screenHeight * 0.075,
+                              AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
+                          quizLayout.setAppBarHeight(tempAppBarHeight);
                         });
                       },
+                      child: viewerAppBar(
+                          quizLayout: quizLayout, showDragHandle: true),
                     ),
-                  ),
-                  Positioned(
-                    top: 10.0, // Set to 0.0 to align at the top
-                    left: 10.0, // Set to 0.0 to align at the left
-                    child: IconButton(
-                      iconSize: AppConfig.fontSize * 1.5,
-                      icon: Icon(Icons.arrow_back_ios,
-                          color: quizLayout.getColorScheme().primary),
-                      onPressed: () {
-                        popDialog(context, quizLayout);
-                      },
+                  )
+                : null,
+            body: SafeArea(
+              child: Container(
+                decoration: backgroundDecoration(quizLayout: quizLayout),
+                child: Stack(
+                  children: [
+                    FilpStyle12(
+                      quizLayout: quizLayout,
+                      onPressedBack: () {},
+                      onPressedForward: () {},
                     ),
-                  ),
-                  Positioned(
-                    right: 10.0, // Align to the right
-                    bottom: quizLayout.getSelectedLayout() == 2
-                        ? 50
-                        : 10, // 하단에서의 거리
-                    child: IconButton(
-                      iconSize: AppConfig.fontSize * 1.5,
-                      icon: Icon(Icons.arrow_forward,
-                          color: quizLayout.getColorScheme().primary),
-                      onPressed: () => navigateToMakingQuizPage(context),
+                    Positioned(
+                      top: 30.0,
+                      left: AppConfig.screenWidth / 2 -
+                          28, // Subtract half the width of the button to center it
+                      child: FloatingActionButton(
+                        key: const ValueKey('MakingQuizLayoutTopBarToggle'),
+                        foregroundColor: quizLayout.getColorScheme().primary,
+                        heroTag: 'topBarToggle',
+                        child: Icon(
+                          quizLayout.getIsTopBarVisible()
+                              ? Icons.remove
+                              : Icons.add,
+                          color: quizLayout.getColorScheme().onPrimary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            quizLayout.toggleTopBarVisibility();
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  // Positioned(
-                  //   key: const ValueKey('loadQuizLayoutButton'),
-                  //   right: 10.0, // Align to the right
-                  //   top: 10.0, // Align to the top
-                  //   child: IconButton(
-                  //     iconSize: AppConfig.fontSize * 1.5,
-                  //     icon: Icon(Icons.download_sharp,
-                  //         color: quizLayout.getColorScheme().primary),
-                  //     onPressed: () {
-                  //       Navigator.pushNamed(context, '/loadTemp').then((_) {
-                  //         updateLoad();
-                  //         setState(() {});
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   left: 10,
-                  //   bottom: quizLayout.getSelectedLayout() == 2
-                  //       ? 50
-                  //       : 10, // 하단에서의 거리
-                  //   child: tempSaveButton(context, quizLayout),
-                  // ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        CustomContainer(
-                          text: Intl.message("First_Quiz_Title"),
-                          quizLayout: quizLayout,
-                          index: 0,
-                          onPressed: () async {
-                            final layoutSelected = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return buildTitleAlertDialog(
-                                    context, quizLayout);
-                              },
-                            ).then(
-                              (value) {
-                                if (value != null) {
+                    Positioned(
+                      top: 10.0, // Set to 0.0 to align at the top
+                      left: 10.0, // Set to 0.0 to align at the left
+                      child: IconButton(
+                        iconSize: AppConfig.fontSize * 1.5,
+                        icon: Icon(Icons.arrow_back_ios,
+                            color: quizLayout.getColorScheme().primary),
+                        onPressed: () {
+                          popDialog(context, quizLayout);
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      right: 10.0, // Align to the right
+                      bottom: quizLayout.getSelectedLayout() == 2
+                          ? 50
+                          : 10, // 하단에서의 거리
+                      child: IconButton(
+                        iconSize: AppConfig.fontSize * 1.5,
+                        icon: Icon(Icons.arrow_forward,
+                            color: quizLayout.getColorScheme().primary),
+                        onPressed: () => navigateToMakingQuizPage(context),
+                      ),
+                    ),
+                    // Positioned(
+                    //   key: const ValueKey('loadQuizLayoutButton'),
+                    //   right: 10.0, // Align to the right
+                    //   top: 10.0, // Align to the top
+                    //   child: IconButton(
+                    //     iconSize: AppConfig.fontSize * 1.5,
+                    //     icon: Icon(Icons.download_sharp,
+                    //         color: quizLayout.getColorScheme().primary),
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(context, '/loadTemp').then((_) {
+                    //         updateLoad();
+                    //         setState(() {});
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
+                    // Positioned(
+                    //   left: 10,
+                    //   bottom: quizLayout.getSelectedLayout() == 2
+                    //       ? 50
+                    //       : 10, // 하단에서의 거리
+                    //   child: tempSaveButton(context, quizLayout),
+                    // ),
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          CustomContainer(
+                            text: Intl.message("First_Quiz_Title"),
+                            quizLayout: quizLayout,
+                            index: 0,
+                            onPressed: () async {
+                              final layoutSelected = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return buildTitleAlertDialog(
+                                      context, quizLayout);
+                                },
+                              ).then(
+                                (value) {
+                                  if (value != null) {
+                                    setState(() {
+                                      quizLayout.setIsTitleSet(true);
+                                      highlightedIndex =
+                                          quizLayout.getNextHighlightedIndex();
+                                    });
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                          CustomContainer(
+                            text: Intl.message("Second_Flip_Style"),
+                            quizLayout: quizLayout,
+                            index: 1,
+                            onPressed: () async {
+                              final layoutSelected = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(// Add this
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          quizLayout.getColorScheme().surface,
+                                      title: Center(
+                                          child: Text(Intl.message(
+                                              "Flip_Style_Setup"))),
+                                      content: Container(
+                                        // Set a fixed height to avoid layout issues in AlertDialog
+                                        width: AppConfig.screenHeight >
+                                                AppConfig.screenWidth
+                                            ? double.maxFinite
+                                            : AppConfig.screenWidth /
+                                                2, // Use maximum width available
+                                        child: GridView.builder(
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              4, // Adjust the item count as needed
+                                          gridDelegate:
+                                              SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount:
+                                                2, // 2 items per row
+                                            crossAxisSpacing:
+                                                10, // Spacing between items horizontally
+                                            mainAxisSpacing:
+                                                10, // Spacing between items vertically
+                                          ),
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return LayoutOption(
+                                              layoutNumber: index + 1,
+                                              quizLayout: quizLayout,
+                                              onSelected: (layoutNumber) {
+                                                setState(() {
+                                                  quizLayout.setSelectedLayout(
+                                                      layoutNumber);
+                                                });
+                                              },
+                                              imagePath:
+                                                  'assets/images/layoutOption${index + 1}.jpg',
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        ConfirmButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(
+                                                quizLayout.getSelectedLayout());
+                                          },
+                                          selection:
+                                              quizLayout.getSelectedLayout(),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                                },
+                              );
+                              if (quizLayout.getSelectedLayout() != 0) {
+                                {
                                   setState(() {
-                                    quizLayout.setIsTitleSet(true);
+                                    quizLayout.setIsFlipStyleSet(true);
                                     highlightedIndex =
                                         quizLayout.getNextHighlightedIndex();
                                   });
                                 }
-                              },
-                            );
-                          },
-                        ),
-                        CustomContainer(
-                          text: Intl.message("Second_Flip_Style"),
-                          quizLayout: quizLayout,
-                          index: 1,
-                          onPressed: () async {
-                            final layoutSelected = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(// Add this
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                  return AlertDialog(
-                                    backgroundColor:
-                                        quizLayout.getColorScheme().surface,
-                                    title: Center(
-                                        child: Text(
-                                            Intl.message("Flip_Style_Setup"))),
-                                    content: Container(
-                                      // Set a fixed height to avoid layout issues in AlertDialog
-                                      width: AppConfig.screenHeight >
-                                              AppConfig.screenWidth
-                                          ? double.maxFinite
-                                          : AppConfig.screenWidth /
-                                              2, // Use maximum width available
-                                      child: GridView.builder(
-                                        shrinkWrap: true,
-                                        itemCount:
-                                            4, // Adjust the item count as needed
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2, // 2 items per row
-                                          crossAxisSpacing:
-                                              10, // Spacing between items horizontally
-                                          mainAxisSpacing:
-                                              10, // Spacing between items vertically
-                                        ),
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return LayoutOption(
-                                            layoutNumber: index + 1,
-                                            quizLayout: quizLayout,
-                                            onSelected: (layoutNumber) {
-                                              setState(() {
-                                                quizLayout.setSelectedLayout(
-                                                    layoutNumber);
-                                              });
-                                            },
-                                            imagePath:
-                                                'assets/images/layoutOption${index + 1}.jpg',
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      ConfirmButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(
-                                              quizLayout.getSelectedLayout());
-                                        },
-                                        selection:
-                                            quizLayout.getSelectedLayout(),
-                                      ),
-                                    ],
-                                  );
-                                });
-                              },
-                            );
-                            if (quizLayout.getSelectedLayout() != 0) {
-                              {
-                                setState(() {
-                                  quizLayout.setIsFlipStyleSet(true);
-                                  highlightedIndex =
-                                      quizLayout.getNextHighlightedIndex();
-                                });
                               }
-                            }
-                          },
-                        ),
-                        CustomContainer(
-                          text: Intl.message("Thired_Color_Setup"),
-                          quizLayout: quizLayout,
-                          index: 2,
-                          onPressed: () async {
-                            final layoutSelected = await showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(// Add this
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                  return AlertDialog(
-                                    backgroundColor:
-                                        quizLayout.getColorScheme().surface,
-                                    title: Center(
-                                        child: Text(
-                                      Intl.message("Color_Setup"),
-                                    )),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Column(
-                                            children:
-                                                List.generate(10, (index) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom:
-                                                        8.0), // Adjust the value as needed
-                                                child: CustomRow(
-                                                  onPressed: () async {
-                                                    // Show color picker
-                                                    final selectedColor =
-                                                        await showDialog<Color>(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return ColorPickerField(
-                                                          quizLayout:
-                                                              quizLayout,
-                                                          index: index,
-                                                        );
-                                                      },
-                                                    );
+                            },
+                          ),
+                          CustomContainer(
+                            text: Intl.message("Thired_Color_Setup"),
+                            quizLayout: quizLayout,
+                            index: 2,
+                            onPressed: () async {
+                              final layoutSelected = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(// Add this
+                                      builder: (BuildContext context,
+                                          StateSetter setState) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          quizLayout.getColorScheme().surface,
+                                      title: Center(
+                                          child: Text(
+                                        Intl.message("Color_Setup"),
+                                      )),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Column(
+                                              children:
+                                                  List.generate(10, (index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .only(
+                                                      bottom:
+                                                          8.0), // Adjust the value as needed
+                                                  child: CustomRow(
+                                                    onPressed: () async {
+                                                      // Show color picker
+                                                      final selectedColor =
+                                                          await showDialog<
+                                                              Color>(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return ColorPickerField(
+                                                            quizLayout:
+                                                                quizLayout,
+                                                            index: index,
+                                                          );
+                                                        },
+                                                      );
 
-                                                    if (selectedColor != null) {
-                                                      setState(() {});
-                                                    }
-                                                  },
-                                                  isActive: quizLayout
-                                                      .getVisibility(index),
-                                                  quizLayout: quizLayout,
-                                                  buttonText: Intl.message(
-                                                      stringResources[
-                                                          'imageSet$index']!),
-                                                  image: quizLayout
-                                                      .getImageColorNotNull(
-                                                          index),
-                                                ),
-                                              );
-                                            }),
-                                          ),
-                                        ],
+                                                      if (selectedColor !=
+                                                          null) {
+                                                        setState(() {});
+                                                      }
+                                                    },
+                                                    isActive: quizLayout
+                                                        .getVisibility(index),
+                                                    quizLayout: quizLayout,
+                                                    buttonText: Intl.message(
+                                                        stringResources[
+                                                            'imageSet$index']!),
+                                                    image: quizLayout
+                                                        .getImageColorNotNull(
+                                                            index),
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    actions: <Widget>[
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .spaceBetween, // 좌우 정렬
-                                        children: <Widget>[
-                                          IconButton(
-                                            key: const ValueKey(
-                                                "MakingQuizLayoutColorSchemeRefreshButton"),
-                                            onPressed: () {
-                                              quizLayout
-                                                  .generateAdequateColors();
-                                              setState(() {});
-                                            },
-                                            icon: Icon(Icons.autorenew),
-                                          ),
-                                          Expanded(
-                                              child:
-                                                  SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
-                                          ConfirmButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(1);
-                                            },
-                                            selection: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                });
-                              },
-                            ).then((_) {
-                              setState(() {
-                                changeColorScheme(quizLayout.getColorScheme());
-                              });
-                            });
-                            if (quizLayout.getSelectedLayout() != 0) {
-                              {
+                                      actions: <Widget>[
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween, // 좌우 정렬
+                                          children: <Widget>[
+                                            IconButton(
+                                              key: const ValueKey(
+                                                  "MakingQuizLayoutColorSchemeRefreshButton"),
+                                              onPressed: () {
+                                                quizLayout
+                                                    .generateAdequateColors();
+                                                setState(() {});
+                                              },
+                                              icon: Icon(Icons.autorenew),
+                                            ),
+                                            Expanded(
+                                                child:
+                                                    SizedBox()), // IconButton과 ConfirmButton 사이의 공간을 채움
+                                            ConfirmButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(1);
+                                              },
+                                              selection: 1,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  });
+                                },
+                              ).then((_) {
                                 setState(() {
-                                  quizLayout.setIsBackgroundImageSet(true);
-                                  highlightedIndex =
-                                      quizLayout.getNextHighlightedIndex();
+                                  changeColorScheme(
+                                      quizLayout.getColorScheme());
                                 });
+                              });
+                              if (quizLayout.getSelectedLayout() != 0) {
+                                {
+                                  setState(() {
+                                    quizLayout.setIsBackgroundImageSet(true);
+                                    highlightedIndex =
+                                        quizLayout.getNextHighlightedIndex();
+                                  });
+                                }
                               }
-                            }
-                          },
-                        ),
-                        CustomContainer(
-                          text: '4. ' + Intl.message("Additional_Setup"),
-                          quizLayout: quizLayout,
-                          index: 3,
-                          onPressed: () async {
-                            Navigator.pushNamed(context, '/additionalSetup')
-                                .then((_) {
-                              setState(() {});
-                            });
-                            // 버튼 3의 동작을 여기에 구현합니다.
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 30.0,
-                    left: AppConfig.screenWidth / 2 -
-                        28, // Subtract half the width of the button to center it
-                    child: FloatingActionButton(
-                      key: const ValueKey('MakingQuizLayoutBottomBarToggle'),
-                      foregroundColor: quizLayout.getColorScheme().primary,
-                      heroTag: 'bottomBarToggle',
-                      child: Icon(
-                        quizLayout.getIsBottomBarVisible()
-                            ? Icons.remove
-                            : Icons.add,
-                        color: quizLayout.getColorScheme().onPrimary,
+                            },
+                          ),
+                          CustomContainer(
+                            text: '4. ' + Intl.message("Additional_Setup"),
+                            quizLayout: quizLayout,
+                            index: 3,
+                            onPressed: () async {
+                              Navigator.pushNamed(context, '/additionalSetup')
+                                  .then((_) {
+                                setState(() {});
+                              });
+                              // 버튼 3의 동작을 여기에 구현합니다.
+                            },
+                          ),
+                        ],
                       ),
-                      onPressed: () {
-                        setState(() {
-                          quizLayout.toggleBottomBarVisibility();
-                        });
-                      },
                     ),
-                  ),
-                ],
+                    Positioned(
+                      bottom: 30.0,
+                      left: AppConfig.screenWidth / 2 -
+                          28, // Subtract half the width of the button to center it
+                      child: FloatingActionButton(
+                        key: const ValueKey('MakingQuizLayoutBottomBarToggle'),
+                        foregroundColor: quizLayout.getColorScheme().primary,
+                        heroTag: 'bottomBarToggle',
+                        child: Icon(
+                          quizLayout.getIsBottomBarVisible()
+                              ? Icons.remove
+                              : Icons.add,
+                          color: quizLayout.getColorScheme().onPrimary,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            quizLayout.toggleBottomBarVisibility();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          bottomNavigationBar: quizLayout.getIsBottomBarVisible()
-              ? PreferredSize(
-                  // 하단 바 추가
-                  preferredSize:
-                      Size.fromHeight(quizLayout.getBottomBarHeight()),
-                  child: GestureDetector(
-                    onVerticalDragUpdate: (DragUpdateDetails details) {
-                      setState(() {
-                        tempBottomBarHeight -=
-                            details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
-                        tempBottomBarHeight = tempBottomBarHeight.clamp(
-                            AppConfig.screenHeight / 40,
-                            AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
-                        quizLayout.setBottomBarHeight(tempBottomBarHeight);
-                      });
-                    },
-                    child: viewerBottomBar(
-                      quizLayout: quizLayout,
-                      onPressedBack: () {},
-                      onPressedForward: () {},
-                      showDragHandle: true,
-                      showSwitchButton: true,
+            bottomNavigationBar: quizLayout.getIsBottomBarVisible()
+                ? PreferredSize(
+                    // 하단 바 추가
+                    preferredSize:
+                        Size.fromHeight(quizLayout.getBottomBarHeight()),
+                    child: GestureDetector(
+                      onVerticalDragUpdate: (DragUpdateDetails details) {
+                        setState(() {
+                          tempBottomBarHeight -=
+                              details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                          tempBottomBarHeight = tempBottomBarHeight.clamp(
+                              AppConfig.screenHeight / 40,
+                              AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
+                          quizLayout.setBottomBarHeight(tempBottomBarHeight);
+                        });
+                      },
+                      child: viewerBottomBar(
+                        quizLayout: quizLayout,
+                        onPressedBack: () {},
+                        onPressedForward: () {},
+                        showDragHandle: true,
+                        showSwitchButton: true,
+                      ),
                     ),
-                  ),
-                )
-              : null,
+                  )
+                : null,
+          ),
         ),
       ),
     );
@@ -745,7 +753,7 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                 ),
               ),
               onPressed: () =>
-                  Navigator.of(context).popUntil((route) => route.isFirst),
+                Navigator.of(context).pop(true), // true 값을 반환하여 onPopPage가 true가 되도록 함
             ),
             TextButton(
                 child: Text(Intl.message("Cancel")),
@@ -930,4 +938,47 @@ class CustomRow extends StatelessWidget {
 
 void navigateToMakingQuizPage(BuildContext context) {
   Navigator.pushNamed(context, '/makingQuiz');
+}
+
+class CustomBackButtonDispatcher extends StatelessWidget {
+  final Widget child;
+
+  CustomBackButtonDispatcher({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Router(
+      backButtonDispatcher: RootBackButtonDispatcher(),
+      routerDelegate: CustomRouterDelegate(child: child),
+    );
+  }
+}
+
+class CustomRouterDelegate extends RouterDelegate
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+  final Widget child;
+
+  CustomRouterDelegate({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: navigatorKey,
+      pages: [
+        MaterialPage(child: child),
+      ],
+      onPopPage: (route, result) {
+        // 뒤로 가기 동작을 차단하고 URL 변경을 방지합니다.
+        return false;
+      },
+    );
+  }
+
+  @override
+  GlobalKey<NavigatorState> get navigatorKey => GlobalKey<NavigatorState>();
+
+  @override
+  Future<void> setNewRoutePath(configuration) async {
+    // 새로운 경로 설정
+  }
 }

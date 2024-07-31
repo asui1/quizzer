@@ -109,22 +109,24 @@ class MyApp extends StatelessWidget {
 
         useMaterial3: true,
       ),
-      initialRoute: '/',
       onGenerateRoute: (settings) {
         if (settings.name == '/makingQuiz') {
           return PageRouteBuilder(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 MakingQuiz(),
             transitionsBuilder: mySlideTransition,
           );
         } else if (settings.name == '/additionalSetup') {
           return PageRouteBuilder(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 quizLayoutAdditionalSetup(),
             transitionsBuilder: mySlideTransition,
           );
         } else if (settings.name == '/scoreCardCreator') {
           return PageRouteBuilder(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ScoreCardGenerator(),
             transitionsBuilder: mySlideTransition,
@@ -134,6 +136,7 @@ class MyApp extends StatelessWidget {
           final uri = Uri.parse(settings.name!);
           final searchText = uri.queryParameters['searchText'];
           return MaterialPageRoute(
+            settings: settings,
             builder: (context) => SearchScreen(searchText: searchText),
           );
         } else if (settings.name != null &&
@@ -143,9 +146,12 @@ class MyApp extends StatelessWidget {
           final index = int.parse(uri.queryParameters['index'] ?? '0');
           final isPreview = uri.queryParameters['isPreview'] == 'true';
 
-          Provider.of<QuizLayout>(context, listen: false).reset();
+          if (!isPreview) {
+            Provider.of<QuizLayout>(context, listen: false).reset();
+          }
 
           return PageRouteBuilder(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) => QuizSolver(
               uuid: uuid,
               index: index,
@@ -161,10 +167,20 @@ class MyApp extends StatelessWidget {
           if (resultId == null) return null;
 
           return PageRouteBuilder(
+            settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 QuizResultViewer(
               resultId: resultId,
             ),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name!.startsWith('/makingQuizLayout')) {
+          Provider.of<QuizLayout>(context, listen: false).reset();
+
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                MakingQuizscreen(),
             transitionsBuilder: mySlideTransition,
           );
         } else {
@@ -175,10 +191,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const MyHomePage(title: 'Quizzer'),
         '/register': (context) => Register(account: _userData),
-        '/makingQuizLayout': (context) {
-          Provider.of<QuizLayout>(context, listen: false).reset();
-          return MakingQuizscreen();
-        },
         '/search': (context) => SearchScreen(searchText: null),
       },
     );

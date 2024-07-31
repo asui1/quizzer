@@ -31,6 +31,8 @@ class _QuizWidget4State extends State<QuizWidget4> {
   List<Offset> leftDotLinePaintLocal = [];
   List<Offset> rightDotGlobal = [];
   bool needUpdate = true;
+  Offset _initialPosition = Offset.zero;
+  Offset _correctedPosition = Offset.zero;
 
   @override
   void initState() {
@@ -212,14 +214,17 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                           index];
                                                   starts[index] =
                                                       position; // 드래그 시작 시 시작점 업데이트
+                                                  ends[index] = position;
+                                                  _initialPosition = details
+                                                      .localPosition; // 드래그 시작 시 초기 위치 저장
                                                 });
                                               },
                                               onPanUpdate: (details) {
                                                 if (isDragging[index] == false)
                                                   return;
                                                 setState(() {
-                                                  ends[index] = details
-                                                      .localPosition; // 드래그하는 동안 끝점 업데이트
+                                                  ends[index] = starts[index]! + details
+                                                      .localPosition - _initialPosition; // 드래그하는 동안 끝점 업데이트
                                                 });
                                               },
                                               onPanEnd: (details) {

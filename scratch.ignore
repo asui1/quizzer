@@ -5,10 +5,10 @@ ubuntu server 설정하고, 개발환경 개발하기.
 
 - 앱 레벨
 
-7/24 목표: 
 -> 이미지 받을 때 특정 크기 비율로 컷하기.
-http://quizzer.co.kr/result/?resultId=04de70e9cfa7285f713f8f4762e64d8b6e5166c5a62b8ec3c12ea2d5cdd2be39
-http://localhost:17544/#/result/?resultId=04de70e9cfa7285f713f8f4762e64d8b6e5166c5a62b8ec3c12ea2d5cdd2be39
+nginx에서 올렸을 때 오류가 많이 발생함.
+-> Viewer1 생성 못함.
+-> 미리보기 버튼 기능 안함.
 
 ?result=id -> 플러터 웹에서 스코아카드 볼 수 있게.
 ?quiz=uuid -> 플러터 웹에서 바로 퀴즈 풀 수 있게
@@ -16,6 +16,8 @@ http://localhost:17544/#/result/?resultId=04de70e9cfa7285f713f8f4762e64d8b6e5166
 
 웹버전 -> 구글 로그인 수정. -> 구글 oauth 추가해야함.
 
+웹버전에서 타입 4 선 그려지는게 이상함.
++ 엔터 눌러서 완료했을 때 화면이 업데이트가 안됨.
 
 이후 공지사항 추가.
 공지사항 : {title: "", body: ""} 형태로 기록해서 불러올 수 있게 제작.

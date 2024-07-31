@@ -129,6 +129,7 @@ class QuizLayout extends ChangeNotifier {
     if (newTags == '') return;
     if (tags.contains(newTags)) return;
     tags.add(newTags);
+    notifyListeners();
   }
 
   void removeTags(String newTags) {
