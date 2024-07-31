@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
@@ -53,6 +55,8 @@ class AppConfig {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     shortestSide = MediaQuery.of(context).size.shortestSide;
+    double maxFontSize = 24.0; // 최대 폰트 크기 설정
+
     if (screenWidth > screenHeight) {
       AppConfig.fontSize = AppConfig.shortestSide / 20 /2;
       AppConfig.borderRadius = AppConfig.shortestSide / 20 /2;
@@ -67,7 +71,7 @@ class AppConfig {
         AppConfig.fontSize
       ];
     } else {
-      AppConfig.fontSize = AppConfig.shortestSide / 20;
+      AppConfig.fontSize = min(shortestSide / 20, maxFontSize);
       AppConfig.borderRadius = AppConfig.shortestSide / 20;
       AppConfig.padding = AppConfig.shortestSide / 40;
       AppConfig.smallPadding = AppConfig.padding / 2;

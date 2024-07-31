@@ -528,13 +528,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       Row(
                         children: [
                           Spacer(),
-                          if (isLoggedIn)
-                            IconButton(
-                              icon: Icon(Icons.logout),
-                              onPressed: () {
-                                _showLogoutConfirmationDialog(context);
-                              },
-                            ),
+                          isLoggedIn
+                              ? IconButton(
+                                  icon: Icon(Icons.logout),
+                                  onPressed: () {
+                                    _showLogoutConfirmationDialog(context);
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.person), // Example icon
+                                  onPressed: () {
+                                    _showLoginDialog(context);
+                                  },
+                                ),
                         ],
                       )
                     ],
@@ -752,7 +758,8 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text(
               title, // Use the title passed to the function
               style: TextStyle(
-                fontSize: AppConfig.fontSize * 0.8, // Adjust the font size as needed
+                fontSize:
+                    AppConfig.fontSize * 0.8, // Adjust the font size as needed
                 fontWeight: FontWeight.bold, // Make the title bold
               ),
             ),
