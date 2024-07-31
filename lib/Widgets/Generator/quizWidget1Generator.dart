@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -312,7 +311,8 @@ class _QuizWidget1State extends State<QuizWidget1> {
                                           });
                                         },
                                       ),
-                                      Text(Intl.message("Number_of_possible_selection")),
+                                      Text(Intl.message(
+                                          "Number_of_possible_selection")),
                                       Container(
                                         width: 50.0,
                                         child: TextField(
@@ -353,6 +353,7 @@ class _QuizWidget1State extends State<QuizWidget1> {
                       onPressed: () {
                         FocusScope.of(context).unfocus();
                         widget.quiz.validateBody();
+                        widget.quiz.viewerInit();
 
                         // Wait for the keyboard to close
                         Future.delayed(Duration(milliseconds: 100), () {

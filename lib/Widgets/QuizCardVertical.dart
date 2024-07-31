@@ -37,7 +37,7 @@ class QuizCardVertical extends StatelessWidget {
             .transparency, // This makes the material widget transparent
         child: SizedBox(
           width: AppConfig.screenHeight * 0.22,
-      height: AppConfig.screenHeight * 0.30 + AppConfig.fontSize * 2,
+      height: AppConfig.screenHeight * 0.24 + AppConfig.fontSize * 2,
           child: Ink(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
@@ -77,18 +77,19 @@ class QuizCardVertical extends StatelessWidget {
                               ), // 파일 이미지 사용
                       ),
                     ),
+                    SizedBox(height: AppConfig.smallPadding), // 간격 조정
                     Text(
                       title,
                       style: TextStyle(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: AppConfig.fontSize * 0.8,
+                          fontSize: AppConfig.fontSize,
                           fontWeight: FontWeight.bold),
                     ), // 제목 표시
                     Text(
                       creator,
                       style: TextStyle(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: AppConfig.fontSize * 0.6,
+                          fontSize: AppConfig.fontSize * 0.8,
                           fontWeight: FontWeight.w200), // 추가 데이터 표시
                     ), // 추가 데이터 표시
                   ],

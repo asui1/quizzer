@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:quizzer/Class/myScroll.dart';
 import 'package:quizzer/Class/myTransition.dart';
 import 'package:quizzer/Class/quizLayout.dart';
+import 'package:quizzer/Functions/CustomNavigatorObserver.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/keys.dart';
@@ -28,6 +29,8 @@ import 'package:quizzer/Screens/scoringScreen.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Screens/solver.dart';
 import 'package:quizzer/Setup/Colors.dart';
+import 'package:quizzer/Theme/theme.dart';
+import 'package:quizzer/Theme/util.dart';
 import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'package:quizzer/Widgets/register.dart';
@@ -42,6 +45,8 @@ const List<String> scopes = <String>[
 ];
 final GoogleSignInPlatform _platform = GoogleSignInPlatform.instance;
 GoogleSignInUserData? _userData = null;
+final CustomNavigatorObserver customNavigatorObserver =
+    CustomNavigatorObserver();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,7 +77,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppConfig.setUp(context);
-    var brightness = MediaQuery.of(context).platformBrightness;
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = createTextTheme(context, "Noto Sans", "Gothic A1");
+
+    MaterialTheme theme = MaterialTheme(textTheme);
 
     return MaterialApp(
       scrollBehavior: MyCustomScrollBehavior(),
@@ -86,45 +94,29 @@ class MyApp extends StatelessWidget {
         const Locale('en', ''), // 영어
       ],
       title: 'Quizzer',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: brightness == Brightness.light
-            ? MyLightColorScheme
-            : MyDarkColorScheme,
-        // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
-
-        useMaterial3: true,
-      ),
+      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      navigatorObservers: [customNavigatorObserver],
       onGenerateRoute: (settings) {
-        if (settings.name == '/makingQuiz') {
+        bool isMakingQuizscreenInStack =
+            customNavigatorObserver.isPageInStack('/makingQuizLayout');
+
+        if (settings.name == '/makingQuiz' && isMakingQuizscreenInStack) {
           return PageRouteBuilder(
             settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 MakingQuiz(),
             transitionsBuilder: mySlideTransition,
           );
-        } else if (settings.name == '/additionalSetup') {
+        } else if (settings.name == '/additionalSetup' &&
+            isMakingQuizscreenInStack) {
           return PageRouteBuilder(
             settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
                 quizLayoutAdditionalSetup(),
             transitionsBuilder: mySlideTransition,
           );
-        } else if (settings.name == '/scoreCardCreator') {
+        } else if (settings.name == '/scoreCardCreator' &&
+            isMakingQuizscreenInStack) {
           return PageRouteBuilder(
             settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) =>
@@ -148,6 +140,8 @@ class MyApp extends StatelessWidget {
 
           if (!isPreview) {
             Provider.of<QuizLayout>(context, listen: false).reset();
+          } else if (isPreview && !isMakingQuizscreenInStack) {
+            return null;
           }
 
           return PageRouteBuilder(
@@ -185,7 +179,9 @@ class MyApp extends StatelessWidget {
           );
         } else {
           // 기본 경로 설정
-          return null;
+          return MaterialPageRoute(
+            builder: (context) => const MyHomePage(title: 'Quizzer'),
+          );
         }
       },
       routes: {
@@ -532,12 +528,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       Row(
                         children: [
                           Spacer(),
-                          IconButton(
-                            icon: Icon(Icons.logout),
-                            onPressed: () {
-                              _showLogoutConfirmationDialog(context);
-                            },
-                          ),
+                          if (isLoggedIn)
+                            IconButton(
+                              icon: Icon(Icons.logout),
+                              onPressed: () {
+                                _showLogoutConfirmationDialog(context);
+                              },
+                            ),
                         ],
                       )
                     ],
@@ -755,7 +752,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text(
               title, // Use the title passed to the function
               style: TextStyle(
-                fontSize: 16, // Adjust the font size as needed
+                fontSize: AppConfig.fontSize * 0.8, // Adjust the font size as needed
                 fontWeight: FontWeight.bold, // Make the title bold
               ),
             ),

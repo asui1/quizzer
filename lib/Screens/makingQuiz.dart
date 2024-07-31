@@ -247,13 +247,12 @@ class _MakingQuizState extends State<MakingQuiz> {
                               ],
                             ),
                             SizedBox(
-                              height: AppConfig.largerPadding * 6,
+                              height: AppConfig.largePadding * 2,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment
                                   .spaceEvenly, // 버튼들 사이에 균등한 공간 배분
                               children: <Widget>[
-                                tempSaveButton(context, quizLayout),
                                 ElevatedButton(
                                   key: const ValueKey('previewButton'),
                                   onPressed: () {
@@ -276,7 +275,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                                       }
                                     });
                                   },
-                                  child: Text(Intl.message("Preview")),
+                                  child: Text(Intl.message("Preview"),
+                                      style: TextStyle(
+                                        fontSize: AppConfig.fontSize * 1.5,
+                                      )),
                                 ),
                                 IconButton(
                                   iconSize: AppConfig.fontSize * 1.5,
@@ -396,6 +398,7 @@ class _MakingQuizState extends State<MakingQuiz> {
             ),
           ),
         ).then((result) {
+          Logger.log(result);
           if (result is Quiz1) {
             quizLayout.setQuiz1At(result, index);
           }
@@ -467,6 +470,7 @@ class _MakingQuizState extends State<MakingQuiz> {
           ),
         ).then((result) {
           if (result is Quiz1) {
+            result.viewerInit();
             setState(() {
               quizLayout.addQuizAt(result, quizIndex);
             });

@@ -31,12 +31,13 @@ class _QuizView1State extends State<QuizView1> {
   @override
   void initState() {
     super.initState();
+    widget.quiz.viewerInit();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<bool> currentAnswer = widget.quiz.getViewerAns();
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
+    List<bool> currentAnswer = widget.quiz.getViewerAns();
 
     // Future가 완료되면 UI 빌드
     return Theme(
@@ -121,13 +122,6 @@ class _QuizView1State extends State<QuizView1> {
 
   Widget _buildQuizBody(
       Quiz1 quiz, double screenWidthModifier, QuizLayout quizLayout) {
-    YoutubePlayerController _youtubeController =
-        YoutubePlayerController.fromVideoId(
-      videoId: quiz.getYoutubeId(),
-      autoPlay: false,
-      params: const YoutubePlayerParams(showFullscreenButton: true),
-    );
-    _youtubeController.seekTo(seconds: quiz.getYoutubeStartTime().toDouble());
     switch (quiz.getBodyType()) {
       case 0:
         return Container();
@@ -154,6 +148,14 @@ class _QuizView1State extends State<QuizView1> {
           return Container();
         }
       case 3:
+        YoutubePlayerController _youtubeController =
+            YoutubePlayerController.fromVideoId(
+          videoId: quiz.getYoutubeId(),
+          autoPlay: false,
+          params: const YoutubePlayerParams(showFullscreenButton: true),
+        );
+        _youtubeController.seekTo(
+            seconds: quiz.getYoutubeStartTime().toDouble());
         if (quiz.isYoutubeSet()) {
           return YoutubePlayer(
             controller: _youtubeController,

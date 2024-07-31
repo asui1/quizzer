@@ -32,7 +32,6 @@ class _QuizWidget4State extends State<QuizWidget4> {
   List<Offset> rightDotGlobal = [];
   bool needUpdate = true;
   Offset _initialPosition = Offset.zero;
-  Offset _correctedPosition = Offset.zero;
 
   @override
   void initState() {

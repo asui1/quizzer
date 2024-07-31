@@ -156,11 +156,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     // 상단 바 추가
                     preferredSize:
                         Size.fromHeight(quizLayout.getAppBarHeight()),
-                    child: GestureDetector(
-                      onVerticalDragUpdate: (DragUpdateDetails details) {
+                    child: Listener(
+                      onPointerMove: (PointerMoveEvent event) {
                         setState(() {
                           tempAppBarHeight +=
-                              details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                              event.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
                           tempAppBarHeight = tempAppBarHeight.clamp(
                               AppConfig.screenHeight * 0.075,
                               AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
@@ -516,11 +516,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                     // 하단 바 추가
                     preferredSize:
                         Size.fromHeight(quizLayout.getBottomBarHeight()),
-                    child: GestureDetector(
-                      onVerticalDragUpdate: (DragUpdateDetails details) {
+                    child: Listener(
+                      onPointerMove: (PointerMoveEvent event) {
                         setState(() {
                           tempBottomBarHeight -=
-                              details.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
+                              event.delta.dy; // 드래그 이벤트에 따라 하단 바의 높이를 변경
                           tempBottomBarHeight = tempBottomBarHeight.clamp(
                               AppConfig.screenHeight / 40,
                               AppConfig.screenHeight / 4); // 화면 높이의 1/4로 제한
@@ -752,8 +752,10 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                   color: quizLayout.getColorScheme().error,
                 ),
               ),
-              onPressed: () =>
-                Navigator.of(context).pop(true), // true 값을 반환하여 onPopPage가 true가 되도록 함
+              onPressed: () {
+                Navigator.of(context).pop(true); // true 값을 반환하여 onPopPage가 true가 되도록 함
+                Navigator.of(context).pop(true); // true 값을 반환하여 onPopPage가 true가 되도록 함
+              }
             ),
             TextButton(
                 child: Text(Intl.message("Cancel")),
@@ -897,7 +899,7 @@ class CustomContainer extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 20.0, fontFamily: MyFonts.notoSans),
+          style: TextStyle(fontSize: AppConfig.fontSize * 0.9, fontFamily: MyFonts.notoSans),
         ),
         onPressed: () => onPressed(),
       ),
@@ -968,6 +970,11 @@ class CustomRouterDelegate extends RouterDelegate
         MaterialPage(child: child),
       ],
       onPopPage: (route, result) {
+        Logger.log(route);
+        Logger.log(result);
+        if (result == true) {
+          return route.didPop(result);
+        }
         // 뒤로 가기 동작을 차단하고 URL 변경을 방지합니다.
         return false;
       },
