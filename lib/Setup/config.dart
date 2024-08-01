@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:quizzer/Functions/Logger.dart';
 
 class AppConfig {
   static double screenWidth = 0;
@@ -52,6 +53,7 @@ class AppConfig {
   ];
 
   static void setUp(BuildContext context) {
+    Logger.log("Setting up AppConfig");
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     shortestSide = MediaQuery.of(context).size.shortestSide;

@@ -361,96 +361,105 @@ class _MyHomePageState extends State<MyHomePage> {
                         },
                       ),
               ]),
-          body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: screenHeight / 30,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, '/search');
-                            },
-                            child: Container(
-                              width: screenWidth * 0.7,
-                              child: AbsorbPointer(
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: Intl.message("Search"),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, '/search');
-                                      },
-                                      icon: Icon(Icons.search),
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              // 화면 크기 변경 시 AppConfig.setUp(context) 호출
+              AppConfig.setUp(context);
+              return GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: SingleChildScrollView(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: screenHeight / 30,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/search');
+                                },
+                                child: Container(
+                                  width: screenWidth * 0.7,
+                                  child: AbsorbPointer(
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        hintText: Intl.message("Search"),
+                                        suffixIcon: IconButton(
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, '/search');
+                                          },
+                                          icon: Icon(Icons.search),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: AppConfig.largePadding,
-                          ),
-                          homeLists(
-                              quizCardList1, Intl.message("Popular_Quiz")),
-                          SizedBox(
-                            height: AppConfig.largePadding,
-                          ),
-                          homeLists(
-                              quizCardList2, Intl.message("Recommendation")),
-                          SizedBox(
-                            height: AppConfig.largePadding,
-                          ),
-                          homeLists(quizCardList3, Intl.message("Most_Recent")),
-                          SizedBox(
-                            height: AppConfig.largePadding * 2,
-                          ),
-                          Container(
-                            height: 50,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  Intl.message("Contact") +
-                                      ': whwkd122@gmail.com',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary
-                                        .withAlpha(130),
-                                    fontSize: 12,
-                                  ),
+                              SizedBox(
+                                height: AppConfig.largePadding,
+                              ),
+                              homeLists(
+                                  quizCardList1, Intl.message("Popular_Quiz")),
+                              SizedBox(
+                                height: AppConfig.largePadding,
+                              ),
+                              homeLists(quizCardList2,
+                                  Intl.message("Recommendation")),
+                              SizedBox(
+                                height: AppConfig.largePadding,
+                              ),
+                              homeLists(
+                                  quizCardList3, Intl.message("Most_Recent")),
+                              SizedBox(
+                                height: AppConfig.largePadding * 2,
+                              ),
+                              Container(
+                                height: 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      Intl.message("Contact") +
+                                          ': whwkd122@gmail.com',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withAlpha(130),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      right: 16, // Adjust the distance from the right as needed
+                      bottom:
+                          16, // Adjust the distance from the bottom as needed
+                      child: FloatingActionButton(
+                        key: const ValueKey('moveToMakingQuizScreen'),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/makingQuizLayout');
+                        },
+                        child: Icon(Icons.add), // "+" icon
+                      ),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  right: 16, // Adjust the distance from the right as needed
-                  bottom: 16, // Adjust the distance from the bottom as needed
-                  child: FloatingActionButton(
-                    key: const ValueKey('moveToMakingQuizScreen'),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/makingQuizLayout');
-                    },
-                    child: Icon(Icons.add), // "+" icon
-                  ),
-                ),
-              ],
-            ),
+              );
+            },
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
