@@ -53,7 +53,6 @@ class AppConfig {
   ];
 
   static void setUp(BuildContext context) {
-    Logger.log("Setting up AppConfig");
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
     shortestSide = MediaQuery.of(context).size.shortestSide;

@@ -20,6 +20,4 @@ Future<void> sendEmail(String subject, String body) async {
       'body': body,
     }),
   );
-
-
 }
