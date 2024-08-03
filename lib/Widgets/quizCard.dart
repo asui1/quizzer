@@ -20,6 +20,7 @@ class QuizCard extends StatelessWidget {
   final String creator;
   final Uint8List titleImageByte;
   final int counts;
+  final bool isOwner;
   bool _isTapInProgress = false;
 
   QuizCard(
@@ -28,6 +29,7 @@ class QuizCard extends StatelessWidget {
       required this.titleImageByte,
       this.tags = const ['#테스트'],
       this.creator = '테스트를 위한 문구입니다.',
+      this.isOwner = false,
       this.counts = 0});
 
   @override

@@ -106,46 +106,118 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppConfig.setUp(context);
-    var brightness = MediaQuery.of(context).platformBrightness;
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = createTextTheme(context, "Noto Sans", "Gothic A1");
 
-    return ChangeNotifierProvider(
-      create: (context) => QuizLayout(),
-      child: MaterialApp(
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('ko', ''), // 한국어
-          const Locale('en', ''), // 영어
-        ],
-        title: 'Quizzer',
-        theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: brightness == Brightness.light
-              ? MyLightColorScheme
-              : MyDarkColorScheme,
-          // ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 86, 119, 149)),
+    MaterialTheme theme = MaterialTheme(textTheme);
 
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(title: 'Quizzer'),
-      ),
+    return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('ko', ''), // 한국어
+        const Locale('en', ''), // 영어
+      ],
+      title: 'Quizzer',
+      theme: brightness == Brightness.light ? theme.light() : theme.dark(),
+      navigatorObservers: [customNavigatorObserver],
+      onGenerateRoute: (settings) {
+        bool isMakingQuizscreenInStack =
+            customNavigatorObserver.isPageInStack('/makingQuizLayout');
+
+        if (settings.name == '/makingQuiz' && isMakingQuizscreenInStack) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                MakingQuiz(),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name == '/additionalSetup' &&
+            isMakingQuizscreenInStack) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                quizLayoutAdditionalSetup(),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name == '/scoreCardCreator' &&
+            isMakingQuizscreenInStack) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                ScoreCardGenerator(),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/searchResult')) {
+          final uri = Uri.parse(settings.name!);
+          final searchText = uri.queryParameters['searchText'];
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => SearchScreen(searchText: searchText),
+          );
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/solver')) {
+          final uri = Uri.parse(settings.name!);
+          final uuid = uri.queryParameters['uuid'];
+          final index = int.parse(uri.queryParameters['index'] ?? '0');
+          final isPreview = uri.queryParameters['isPreview'] == 'true';
+
+          if (!isPreview) {
+            Provider.of<QuizLayout>(context, listen: false).reset();
+          } else if (isPreview && !isMakingQuizscreenInStack) {
+            return null;
+          }
+
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) => QuizSolver(
+              uuid: uuid,
+              index: index,
+              isPreview: isPreview,
+            ),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name != null &&
+            settings.name!.startsWith('/result')) {
+          final uri = Uri.parse(settings.name!);
+          final resultId = uri.queryParameters['resultId'];
+          Logger.log(resultId);
+          if (resultId == null) return null;
+
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                QuizResultViewer(
+              resultId: resultId,
+            ),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name!.startsWith('/makingQuizLayout')) {
+          Provider.of<QuizLayout>(context, listen: false).reset();
+
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                MakingQuizscreen(),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else {
+          // 기본 경로 설정
+          return MaterialPageRoute(
+            builder: (context) => const MyHomePage(title: 'Quizzer'),
+          );
+        }
+      },
+      routes: {
+        '/': (context) => const MyHomePage(title: 'Quizzer'),
+        '/register': (context) => Register(account: _userData),
+        '/search': (context) => SearchScreen(searchText: null),
+      },
     );
   }
 }
@@ -502,32 +574,48 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                   child: ListView(
                     children: <Widget>[
-                      ListTile(
-                        title: Text(
-                          Intl.message("Profile"),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20,
-                            decoration: TextDecoration.lineThrough,
+                      if (isLoggedIn)
+                        ListTile(
+                          title: Text(
+                            Intl.message("myQuiz"),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
                           ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(context, '/myQuiz');
+                          },
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      ListTile(
-                        title: Text(
-                          Intl.message("Setting"),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 20,
-                            decoration: TextDecoration.lineThrough,
+                      if (isLoggedIn)
+                        ListTile(
+                          title: Text(
+                            Intl.message("Profile"),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 20,
+                              decoration: TextDecoration.lineThrough,
+                            ),
                           ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+                      if (isLoggedIn)
+                        ListTile(
+                          title: Text(
+                            Intl.message("Setting"),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 20,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                       // Other ListTiles can go here
                     ],
                   ),
@@ -557,9 +645,97 @@ class _MyHomePageState extends State<MyHomePage> {
                     // Handle the tap
                   },
                 ),
+                ListTile(
+                  title: Text(
+                    Intl.message("DeleteAccount"),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 10,
+                    ),
+                  ),
+                  onTap: () {
+                    _showRequestDialog(context);
+                    // Handle the tap
+                  },
+                ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteAccount(BuildContext context) async {
+    final TextEditingController _exitTextController = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Intl.message("DeleteAccount")),
+          content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              width: AppConfig.screenWidth * 0.5,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    Intl.message("Delete_guide"),
+                    textAlign: TextAlign.start,
+                  ),
+                  TextField(
+                    controller: _exitTextController,
+                    decoration: InputDecoration(
+                      hintText: Intl.message("Check_Delete"),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    obscureText: true,
+                  ),
+                ],
+              ),
+            );
+          }),
+          actions: <Widget>[
+            TextButton(
+              child: Text(Intl.message("Cancel")),
+              onPressed: () {
+                _scaffoldKey.currentState?.closeEndDrawer();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+            TextButton(
+              child: Text(Intl.message("Delete")),
+              onPressed: () async {
+                if (_exitTextController.text != "계정삭제" ||
+                    _exitTextController.text != "Delete Account") {
+                  return;
+                }
+                bool deleted = await deleteAccount();
+                if (deleted) {
+                  UserPreferences.clear();
+                  _loadPreferences(); // 상태를 새로고침합니다.
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(Intl.message("Account_Deleted")),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(Intl.message("Failed_to_Delete_Account")),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                }
+                _scaffoldKey.currentState?.closeEndDrawer();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+          ],
         );
       },
     );
@@ -583,7 +759,7 @@ class _MyHomePageState extends State<MyHomePage> {
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Container(
-                width: double.infinity,
+                width: AppConfig.screenWidth * 0.5,
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // Use minimum space
                   children: <Widget>[

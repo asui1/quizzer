@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path; // Add this line
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
@@ -135,7 +136,6 @@ Future<Uint8List> compressImage(
   int currentSize;
 
   do {
-    Logger.log("Quality: $quality");
     // 이미지를 지정된 품질로 압축합니다.
     compressedImageData =
         Uint8List.fromList(img.encodeJpg(croppedImage, quality: quality));
@@ -176,6 +176,51 @@ String makeScoreCardJson(QuizLayout quizLayout) {
   }
 
   return jsonEncode(scoreCardJson);
+}
+
+ScoreCard makeScoreCardFromJson(String json) {
+  Map<String, dynamic> scoreCardJson = jsonDecode(json);
+  BoxDecoration backgroundImage = BoxDecoration();
+  if (scoreCardJson['isColor']) {
+    backgroundImage = BoxDecoration(
+      color: Color(scoreCardJson['color']),
+      borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+      boxShadow: [
+        BoxShadow(
+          color: Color(scoreCardJson['borderColor'])
+              .withOpacity(0.5), // 그림자 색상
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 3), // 그림자 위치 조정
+        ),
+      ],
+    );
+  } else {
+    backgroundImage = BoxDecoration(
+      image: DecorationImage(
+        image: decodeImageFromString(scoreCardJson['imageData']),
+        fit: BoxFit.cover,
+      ),
+      borderRadius: BorderRadius.circular(30), // 모서리 둥글기
+      boxShadow: [
+        BoxShadow(
+          color: Color(scoreCardJson['borderColor'])
+              .withOpacity(0.5), // 그림자 색상
+          spreadRadius: 1,
+          blurRadius: 5,
+          offset: Offset(0, 3), // 그림자 위치 조정
+        ),
+      ],
+    );
+  }
+  ScoreCard scoreCard = ScoreCard(
+    size: scoreCardJson['size'],
+    xRatio: scoreCardJson['dx'],
+    yRatio: scoreCardJson['dy'],
+    backgroundImage: backgroundImage,
+    imageState: scoreCardJson['imageState'],
+  );
+  return scoreCard;
 }
 
 // void saveFileToPermanentDirectoryWeb(String fileName, Uint8List fileContent) {
