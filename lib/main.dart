@@ -16,8 +16,11 @@ import 'package:quizzer/Functions/serverRequests.dart';
 import 'package:quizzer/Functions/sharedPreferences.dart';
 import 'package:quizzer/Functions/versionCheck.dart';
 import 'package:quizzer/Screens/MakingQuizLayout.dart';
+import 'package:quizzer/Screens/myQuiz.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Setup/Colors.dart';
+import 'package:quizzer/Theme/theme.dart';
+import 'package:quizzer/Theme/util.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget1Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget2Generator.dart';
 import 'package:quizzer/Widgets/Generator/quizWidget4Generator.dart';
@@ -57,7 +60,12 @@ void main() async {
     if (isUpdateAvailable) {
       runApp(UpdateApp()); // 업데이트 권장 앱 실행
     } else {
-      runApp(MyApp()); // 메인 앱 실행
+      runApp(
+        ChangeNotifierProvider(
+          create: (context) => QuizLayout(),
+          child: MyApp(),
+        ),
+      );
     }
   });
 }
@@ -112,7 +120,6 @@ class MyApp extends StatelessWidget {
     MaterialTheme theme = MaterialTheme(textTheme);
 
     return MaterialApp(
-      scrollBehavior: MyCustomScrollBehavior(),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -124,100 +131,7 @@ class MyApp extends StatelessWidget {
       ],
       title: 'Quizzer',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      navigatorObservers: [customNavigatorObserver],
-      onGenerateRoute: (settings) {
-        bool isMakingQuizscreenInStack =
-            customNavigatorObserver.isPageInStack('/makingQuizLayout');
-
-        if (settings.name == '/makingQuiz' && isMakingQuizscreenInStack) {
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                MakingQuiz(),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else if (settings.name == '/additionalSetup' &&
-            isMakingQuizscreenInStack) {
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                quizLayoutAdditionalSetup(),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else if (settings.name == '/scoreCardCreator' &&
-            isMakingQuizscreenInStack) {
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                ScoreCardGenerator(),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else if (settings.name != null &&
-            settings.name!.startsWith('/searchResult')) {
-          final uri = Uri.parse(settings.name!);
-          final searchText = uri.queryParameters['searchText'];
-          return MaterialPageRoute(
-            settings: settings,
-            builder: (context) => SearchScreen(searchText: searchText),
-          );
-        } else if (settings.name != null &&
-            settings.name!.startsWith('/solver')) {
-          final uri = Uri.parse(settings.name!);
-          final uuid = uri.queryParameters['uuid'];
-          final index = int.parse(uri.queryParameters['index'] ?? '0');
-          final isPreview = uri.queryParameters['isPreview'] == 'true';
-
-          if (!isPreview) {
-            Provider.of<QuizLayout>(context, listen: false).reset();
-          } else if (isPreview && !isMakingQuizscreenInStack) {
-            return null;
-          }
-
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) => QuizSolver(
-              uuid: uuid,
-              index: index,
-              isPreview: isPreview,
-            ),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else if (settings.name != null &&
-            settings.name!.startsWith('/result')) {
-          final uri = Uri.parse(settings.name!);
-          final resultId = uri.queryParameters['resultId'];
-          Logger.log(resultId);
-          if (resultId == null) return null;
-
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                QuizResultViewer(
-              resultId: resultId,
-            ),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else if (settings.name!.startsWith('/makingQuizLayout')) {
-          Provider.of<QuizLayout>(context, listen: false).reset();
-
-          return PageRouteBuilder(
-            settings: settings,
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                MakingQuizscreen(),
-            transitionsBuilder: mySlideTransition,
-          );
-        } else {
-          // 기본 경로 설정
-          return MaterialPageRoute(
-            builder: (context) => const MyHomePage(title: 'Quizzer'),
-          );
-        }
-      },
-      routes: {
-        '/': (context) => const MyHomePage(title: 'Quizzer'),
-        '/register': (context) => Register(account: _userData),
-        '/search': (context) => SearchScreen(searchText: null),
-      },
+      home: const MyHomePage(title: 'Quizzer'),
     );
   }
 }
@@ -560,12 +474,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       Row(
                         children: [
                           Spacer(),
-                          IconButton(
-                            icon: Icon(Icons.logout),
-                            onPressed: () {
-                              _showLogoutConfirmationDialog(context);
-                            },
-                          ),
+                          isLoggedIn
+                              ? IconButton(
+                                  icon: Icon(Icons.logout),
+                                  onPressed: () {
+                                    _showLogoutConfirmationDialog(context);
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.person), // Example icon
+                                  onPressed: () {
+                                    _showLoginDialog(context);
+                                  },
+                                ),
                         ],
                       )
                     ],
@@ -585,7 +506,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           onTap: () {
                             Navigator.pop(context);
-                            Navigator.pushNamed(context, '/myQuiz');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyQuiz()),
+                            );
                           },
                         ),
                       if (isLoggedIn)

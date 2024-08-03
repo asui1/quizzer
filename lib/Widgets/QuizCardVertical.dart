@@ -48,24 +48,19 @@ class QuizCardVertical extends StatelessWidget {
               _isTapInProgress = true; // 탭 진행 중 상태로 설정
               String dataJson = "";
               try {
-                String jsonString = await loadFileContent(uuid);
-                if (jsonString == "") {
+                Map<String, dynamic> jsonString = await loadFileContent(uuid);
+                if (jsonString.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(Intl.message("JSON_DOWN_FAIL")),
+                    content: Text(Intl.message("Fail_Quiz_Load")),
                   ));
+                  Navigator.pop(context);
                   _isTapInProgress = false; // 탭 진행 중 상태 해제
                   return;
                 }
-                final jsonResponse = json.decode(jsonString);
-                dataJson = jsonResponse['Data'];
-
-                final jsonResponse2 = json.decode(dataJson);
-                // jsonResponse를 사용하여 필요한 작업 수행
-
                 QuizLayout quizLayout =
                     Provider.of<QuizLayout>(context, listen: false);
                 quizLayout.reset();
-                await quizLayout.loadQuizLayout(jsonResponse2);
+                await quizLayout.loadQuizLayout(jsonString);
                 Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/serverRequests.dart';
+import 'package:quizzer/Screens/MakingQuizLayout.dart';
 import 'package:quizzer/Setup/config.dart';
 import 'dart:convert';
 
@@ -43,33 +44,37 @@ class QuizCard extends StatelessWidget {
           onTap: () async {
             if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
             _isTapInProgress = true; // 탭 진행 중 상태로 설정
-            String dataJson = "";
             try {
-              String jsonString = await loadFileContent(uuid);
-              if (jsonString == "") {
+              Map<String, dynamic> jsonString = await loadFileContent(uuid);
+              if (jsonString.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(Intl.message("JSON_DOWN_FAIL")),
+                  content: Text(Intl.message("Fail_Quiz_Load")),
                 ));
+                Navigator.pop(context);
                 _isTapInProgress = false; // 탭 진행 중 상태 해제
                 return;
               }
-              final jsonResponse = json.decode(jsonString);
-              dataJson = jsonResponse['Data'];
-
-              final jsonResponse2 = json.decode(dataJson);
-
               QuizLayout quizLayout =
                   Provider.of<QuizLayout>(context, listen: false);
               quizLayout.reset();
-              await quizLayout.loadQuizLayout(jsonResponse2);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => QuizSolver(
-                          quizLayout: quizLayout,
-                          index: 0,
-                        )),
-              );
+              await quizLayout.loadQuizLayout(jsonString);
+              if (isOwner) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MakingQuizscreen(),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => QuizSolver(
+                            quizLayout: quizLayout,
+                            index: 0,
+                          )),
+                );
+              }
               _isTapInProgress = false; // 탭 진행 중 상태 해제
             } catch (e) {
               Logger.log("Error in downloadJson");

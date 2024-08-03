@@ -25,6 +25,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("AGREE"),
+        "Account_deleted":
+            MessageLookupByLibrary.simpleMessage("Account deleted"),
         "Add": MessageLookupByLibrary.simpleMessage("Add"),
         "Add_Answer": MessageLookupByLibrary.simpleMessage("Add Answer"),
         "Add_Tags": MessageLookupByLibrary.simpleMessage("Add Tags"),
@@ -54,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "Cant_save_without_title":
             MessageLookupByLibrary.simpleMessage("Can\'t save without title"),
+        "Check_Delete": MessageLookupByLibrary.simpleMessage(
+            "To delete account, enter \'Delete Account\'"),
         "Checking_Internet_Connection": MessageLookupByLibrary.simpleMessage(
             "Checking Internet Connection..."),
         "Close": MessageLookupByLibrary.simpleMessage("Close"),
@@ -63,6 +67,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Current_Path": MessageLookupByLibrary.simpleMessage("Current Path: "),
         "Date_Selection":
             MessageLookupByLibrary.simpleMessage("Date Selection"),
+        "Delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "DeleteAccount": MessageLookupByLibrary.simpleMessage("Delete account"),
+        "Delete_guide": MessageLookupByLibrary.simpleMessage(
+            "On deleting account, all your quizzes and activities will be deleted. Even if you re-register, your data will not be restored."),
         "Development_Inquiry":
             MessageLookupByLibrary.simpleMessage("Development Inquiry"),
         "Done": MessageLookupByLibrary.simpleMessage("Done"),
@@ -85,6 +93,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Example_Text_Setup":
             MessageLookupByLibrary.simpleMessage("Example Text Setup"),
         "Exit": MessageLookupByLibrary.simpleMessage("Exit"),
+        "Fail_Quiz_Load": MessageLookupByLibrary.simpleMessage(
+            "Failed to Load Quiz. Please try again later"),
+        "Failed_to_Delete_Account": MessageLookupByLibrary.simpleMessage(
+            "Failed to delete account due to server error. Please try later."),
         "FillColor1": MessageLookupByLibrary.simpleMessage("FillColor1"),
         "FillColor2": MessageLookupByLibrary.simpleMessage("FillColor2"),
         "FillColor3": MessageLookupByLibrary.simpleMessage("FillColor3"),
@@ -94,6 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Flip Button Setup"),
         "Flip_Style_Setup":
             MessageLookupByLibrary.simpleMessage("Flip Style Setup"),
+        "Go_Solve": MessageLookupByLibrary.simpleMessage("Go and Solve"),
         "Google_Login_Failed":
             MessageLookupByLibrary.simpleMessage("Google Login Failed"),
         "Google_Sign_In_Failed":
@@ -113,6 +126,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Load": MessageLookupByLibrary.simpleMessage("Load"),
         "Login": MessageLookupByLibrary.simpleMessage("Login"),
         "Login_Failed": MessageLookupByLibrary.simpleMessage("Login Failed"),
+        "Login_to_see_your_quiz_data": MessageLookupByLibrary.simpleMessage(
+            "Please login to check your quizzes."),
         "MainColor1": MessageLookupByLibrary.simpleMessage("MainColor1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("MainColor2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("MainColor3"),
@@ -126,14 +141,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No Internet Connection"),
         "No_buttons_Only_Flip":
             MessageLookupByLibrary.simpleMessage("No buttons\n Only Flip"),
+        "No_data_found": MessageLookupByLibrary.simpleMessage("No quiz found."),
         "No_image_selected":
             MessageLookupByLibrary.simpleMessage("No image selected"),
         "No_results": MessageLookupByLibrary.simpleMessage("No results found"),
         "Number_of_possible_selection": MessageLookupByLibrary.simpleMessage(
             "Number of possible selection : "),
         "OK": MessageLookupByLibrary.simpleMessage("OK"),
-        "Open_Google_Play":
-            MessageLookupByLibrary.simpleMessage("Move to Google Play Store"),
         "Order_Sorting": MessageLookupByLibrary.simpleMessage("Order Sorting"),
         "Other_Inquiry": MessageLookupByLibrary.simpleMessage("Other Inquiry"),
         "Photo": MessageLookupByLibrary.simpleMessage("Photo"),
@@ -150,6 +164,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz": MessageLookupByLibrary.simpleMessage("Quiz"),
         "Quiz_Title_Setup":
             MessageLookupByLibrary.simpleMessage("Quiz Title Setup"),
+        "Quiz_delete_fail":
+            MessageLookupByLibrary.simpleMessage("Quiz delete failed"),
+        "Quiz_delete_success":
+            MessageLookupByLibrary.simpleMessage("Quiz delete successful"),
         "Rank": MessageLookupByLibrary.simpleMessage("Rank"),
         "Recommendation":
             MessageLookupByLibrary.simpleMessage("Recommendation"),
@@ -159,7 +177,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "Registration": MessageLookupByLibrary.simpleMessage("Registration"),
         "Report_Quiz": MessageLookupByLibrary.simpleMessage("Report Quiz"),
         "Response_will_be_given_by_email": MessageLookupByLibrary.simpleMessage(
-            "Response will be given by email"),
+            "Response will be given by email. Therefore if you\'re not logged in please write email address to reply, otherwise it would be hard to answer you."),
+        "Saved": MessageLookupByLibrary.simpleMessage("Save success"),
+        "Savefailed": MessageLookupByLibrary.simpleMessage("Save Failed"),
         "Search": MessageLookupByLibrary.simpleMessage("Search"),
         "Searching": MessageLookupByLibrary.simpleMessage("Searching..."),
         "Second_Flip_Style":
@@ -168,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Center Date. ±20Y"),
         "Selected_Dates":
             MessageLookupByLibrary.simpleMessage("Selected Dates"),
+        "Server_Error":
+            MessageLookupByLibrary.simpleMessage("Server is not accessable"),
         "Set_Nickname": MessageLookupByLibrary.simpleMessage("Set Nickname"),
         "Set_Title_Image":
             MessageLookupByLibrary.simpleMessage("Set Title Image"),
@@ -194,11 +216,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "Unregistered_User":
             MessageLookupByLibrary.simpleMessage("Unregistered User"),
         "Upload": MessageLookupByLibrary.simpleMessage("Upload"),
+        "Uploaded": MessageLookupByLibrary.simpleMessage("Upload Success"),
         "Usable_Nickname":
             MessageLookupByLibrary.simpleMessage("Usable Nickname"),
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
             "When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user\'s responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button."),
         "User_Name": MessageLookupByLibrary.simpleMessage("User Name"),
+        "User_Not_Registered":
+            MessageLookupByLibrary.simpleMessage("User not registered"),
         "Warning": MessageLookupByLibrary.simpleMessage("Warning"),
         "Yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "You_are_Logged_out":
@@ -209,6 +234,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Your_email_is_already_registerd": MessageLookupByLibrary.simpleMessage(
             "Your email is already registerd"),
         "languageCode": MessageLookupByLibrary.simpleMessage("en"),
+        "myQuiz": MessageLookupByLibrary.simpleMessage("My Quiz"),
         "shareText": m0
       };
 }

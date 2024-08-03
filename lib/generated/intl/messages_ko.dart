@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("동의"),
+        "Account_deleted": MessageLookupByLibrary.simpleMessage("계정이 삭제되었습니다."),
         "Add": MessageLookupByLibrary.simpleMessage("추가"),
         "Add_Answer": MessageLookupByLibrary.simpleMessage("정답 추가"),
         "Add_Tags": MessageLookupByLibrary.simpleMessage("태그 추가"),
@@ -50,6 +51,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Cancel": MessageLookupByLibrary.simpleMessage("취소"),
         "Cant_save_without_title":
             MessageLookupByLibrary.simpleMessage("제목없이 저장할 수 없습니다."),
+        "Check_Delete":
+            MessageLookupByLibrary.simpleMessage("삭제하시려면 \'계정삭제\'를 입력해주세요."),
         "Checking_Internet_Connection":
             MessageLookupByLibrary.simpleMessage("인터넷 연결을 확인중입니다..."),
         "Close": MessageLookupByLibrary.simpleMessage("닫기"),
@@ -58,6 +61,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Contact": MessageLookupByLibrary.simpleMessage("문의"),
         "Current_Path": MessageLookupByLibrary.simpleMessage("현재 파일: "),
         "Date_Selection": MessageLookupByLibrary.simpleMessage("날짜 선택형"),
+        "Delete": MessageLookupByLibrary.simpleMessage("삭제하기"),
+        "DeleteAccount": MessageLookupByLibrary.simpleMessage("탈퇴하기"),
+        "Delete_guide": MessageLookupByLibrary.simpleMessage(
+            "회원 탈퇴할 경우 작성한 모든 퀴즈와 활동 기록은 삭제됩니다. 만약 이후 재가입을 하더라도 이 데이터는 복구되지 않습니다."),
         "Development_Inquiry": MessageLookupByLibrary.simpleMessage("개발 일정 문의"),
         "Done": MessageLookupByLibrary.simpleMessage("완료"),
         "Dup_check": MessageLookupByLibrary.simpleMessage("중복 확인"),
@@ -75,6 +82,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "ErrorTextColor": MessageLookupByLibrary.simpleMessage("오류 텍스트 색"),
         "Example_Text_Setup": MessageLookupByLibrary.simpleMessage("예문 텍스트 설정"),
         "Exit": MessageLookupByLibrary.simpleMessage("나가기"),
+        "Fail_Quiz_Load": MessageLookupByLibrary.simpleMessage(
+            "퀴즈 로딩에 실패했습니다. 나중에 다시 시도해주세요."),
+        "Failed_to_Delete_Account": MessageLookupByLibrary.simpleMessage(
+            "서버 문제로 계정 삭제에 실패하였습니다. 나중에 다시 시도해주세요."),
         "FillColor1": MessageLookupByLibrary.simpleMessage("채우기 색1"),
         "FillColor2": MessageLookupByLibrary.simpleMessage("채우기 색2"),
         "FillColor3": MessageLookupByLibrary.simpleMessage("채우기 색3"),
@@ -82,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Flip_Button_Setup":
             MessageLookupByLibrary.simpleMessage("이후 추가 예정입니다."),
         "Flip_Style_Setup": MessageLookupByLibrary.simpleMessage("넘기기 스타일 설정"),
+        "Go_Solve": MessageLookupByLibrary.simpleMessage("풀어보기"),
         "Google_Login_Failed":
             MessageLookupByLibrary.simpleMessage("구글 로그인에 실패하였습니다."),
         "Google_Sign_In_Failed":
@@ -98,11 +110,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "Load": MessageLookupByLibrary.simpleMessage("불러오기"),
         "Login": MessageLookupByLibrary.simpleMessage("로그인"),
         "Login_Failed": MessageLookupByLibrary.simpleMessage("로그인에 실패하였습니다."),
+        "Login_to_see_your_quiz_data":
+            MessageLookupByLibrary.simpleMessage("퀴즈를 확인하시려면 로그인해주세요."),
         "MainColor1": MessageLookupByLibrary.simpleMessage("메인 색1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("메인 색2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("메인 색3"),
         "Most_Recent": MessageLookupByLibrary.simpleMessage("최근 생성된 퀴즈"),
-        "Move_Home": MessageLookupByLibrary.simpleMessage("돌아가기"),
+        "Move_Home": MessageLookupByLibrary.simpleMessage("메인으로"),
         "My_Settings": MessageLookupByLibrary.simpleMessage("설정"),
         "No": MessageLookupByLibrary.simpleMessage("아니오"),
         "No_Borders": MessageLookupByLibrary.simpleMessage("테두리 없음"),
@@ -110,13 +124,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("인터넷 없음."),
         "No_buttons_Only_Flip":
             MessageLookupByLibrary.simpleMessage("버튼 없이\n넘기기만"),
+        "No_data_found": MessageLookupByLibrary.simpleMessage("퀴즈가 없습니다."),
         "No_image_selected": MessageLookupByLibrary.simpleMessage("선택되지 않았습니다"),
         "No_results": MessageLookupByLibrary.simpleMessage("결과를 찾을 수 없습니다."),
         "Number_of_possible_selection":
             MessageLookupByLibrary.simpleMessage("선택 가능한 정답 수 : "),
         "OK": MessageLookupByLibrary.simpleMessage("확인"),
-        "Open_Google_Play":
-            MessageLookupByLibrary.simpleMessage("구글 플레이스토어로 이동하기."),
         "Order_Sorting": MessageLookupByLibrary.simpleMessage("순서 정렬형"),
         "Other_Inquiry": MessageLookupByLibrary.simpleMessage("기타 문의"),
         "Photo": MessageLookupByLibrary.simpleMessage("사진"),
@@ -131,20 +144,25 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("질문 텍스트 설정"),
         "Quiz": MessageLookupByLibrary.simpleMessage("퀴즈"),
         "Quiz_Title_Setup": MessageLookupByLibrary.simpleMessage("퀴즈 제목 설정"),
+        "Quiz_delete_fail": MessageLookupByLibrary.simpleMessage("퀴즈 삭제 실패"),
+        "Quiz_delete_success":
+            MessageLookupByLibrary.simpleMessage("퀴즈가 삭제되었습니다."),
         "Rank": MessageLookupByLibrary.simpleMessage("통계"),
         "Recommendation": MessageLookupByLibrary.simpleMessage("추천 퀴즈"),
         "Register": MessageLookupByLibrary.simpleMessage("가입하기"),
         "Register_Success": MessageLookupByLibrary.simpleMessage("가입에 성공했습니다."),
         "Registration": MessageLookupByLibrary.simpleMessage("회원가입"),
         "Report_Quiz": MessageLookupByLibrary.simpleMessage("퀴즈 신고"),
-        "Response_will_be_given_by_email":
-            MessageLookupByLibrary.simpleMessage("이메일로 답변드릴 예정입니다."),
+        "Response_will_be_given_by_email": MessageLookupByLibrary.simpleMessage(
+            "이메일로 답변드리기 때문에 비로그인시 메일 주소를 적어주시지 않으면 답변드리기 어렵습니다."),
+        "Savefailed": MessageLookupByLibrary.simpleMessage("저장에 실패했습니다."),
         "Search": MessageLookupByLibrary.simpleMessage("검색"),
         "Searching": MessageLookupByLibrary.simpleMessage("검색중..."),
         "Second_Flip_Style": MessageLookupByLibrary.simpleMessage("2. 넘기기 스타일"),
         "Select_Center_Date_20Y":
             MessageLookupByLibrary.simpleMessage("중심 날짜를 선택하세요. ±20년"),
         "Selected_Dates": MessageLookupByLibrary.simpleMessage("선택된 날들"),
+        "Server_Error": MessageLookupByLibrary.simpleMessage("서버에 접속할 수 없습니다."),
         "Set_Nickname": MessageLookupByLibrary.simpleMessage("닉네임 설정"),
         "Set_Title_Image":
             MessageLookupByLibrary.simpleMessage("표지 이미지를 선택하세요."),
@@ -173,6 +191,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
             "퀴즈를 작성함에 있어서 퀴즈의 내용이 비하, 조롱 등의 사회적 물의를 일으킬 수 있는 내용을 포함하고 있거나 저작권, 초상권, 음란물 등의 권리를 침해하는 내용을 포함하고 있을 경우, 해당 퀴즈는 제작자 동의 없이 삭제될 수 있습니다.\n또한, 작성한 퀴즈로 인해 발생하는 문제는 전적으로 사용자의 책임으로 quizzer는 이를 책임지지 않습니다.\n이에 동의하신다면 동의 버튼을 눌러주세요."),
         "User_Name": MessageLookupByLibrary.simpleMessage("사용자 닉네임"),
+        "User_Not_Registered":
+            MessageLookupByLibrary.simpleMessage("등록되지 않은 사용자입니다."),
         "Warning": MessageLookupByLibrary.simpleMessage("주의"),
         "Yes": MessageLookupByLibrary.simpleMessage("예"),
         "You_are_Logged_out":
@@ -182,6 +202,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Your_email_is_already_registerd":
             MessageLookupByLibrary.simpleMessage("이미 등록된 이메일입니다."),
         "languageCode": MessageLookupByLibrary.simpleMessage("ko"),
+        "myQuiz": MessageLookupByLibrary.simpleMessage("내 퀴즈"),
         "shareText": m0
       };
 }

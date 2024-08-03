@@ -320,6 +320,26 @@ class S {
     );
   }
 
+  /// `Failed to delete account due to server error. Please try later.`
+  String get Failed_to_Delete_Account {
+    return Intl.message(
+      'Failed to delete account due to server error. Please try later.',
+      name: 'Failed_to_Delete_Account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Go and Solve`
+  String get Go_Solve {
+    return Intl.message(
+      'Go and Solve',
+      name: 'Go_Solve',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user's responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button.`
   String get User_Agreement_text {
     return Intl.message(
@@ -350,6 +370,56 @@ class S {
     );
   }
 
+  /// `Delete`
+  String get Delete {
+    return Intl.message(
+      'Delete',
+      name: 'Delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On deleting account, all your quizzes and activities will be deleted. Even if you re-register, your data will not be restored.`
+  String get Delete_guide {
+    return Intl.message(
+      'On deleting account, all your quizzes and activities will be deleted. Even if you re-register, your data will not be restored.',
+      name: 'Delete_guide',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quiz delete successful`
+  String get Quiz_delete_success {
+    return Intl.message(
+      'Quiz delete successful',
+      name: 'Quiz_delete_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quiz delete failed`
+  String get Quiz_delete_fail {
+    return Intl.message(
+      'Quiz delete failed',
+      name: 'Quiz_delete_fail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to Load Quiz. Please try again later`
+  String get Fail_Quiz_Load {
+    return Intl.message(
+      'Failed to Load Quiz. Please try again later',
+      name: 'Fail_Quiz_Load',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `1. Quiz Title`
   String get First_Quiz_Title {
     return Intl.message(
@@ -365,6 +435,56 @@ class S {
     return Intl.message(
       '2. Flip Style',
       name: 'Second_Flip_Style',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Quiz`
+  String get myQuiz {
+    return Intl.message(
+      'My Quiz',
+      name: 'myQuiz',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To delete account, enter 'Delete Account'`
+  String get Check_Delete {
+    return Intl.message(
+      'To delete account, enter \'Delete Account\'',
+      name: 'Check_Delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete account`
+  String get DeleteAccount {
+    return Intl.message(
+      'Delete account',
+      name: 'DeleteAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No quiz found.`
+  String get No_data_found {
+    return Intl.message(
+      'No quiz found.',
+      name: 'No_data_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please login to check your quizzes.`
+  String get Login_to_see_your_quiz_data {
+    return Intl.message(
+      'Please login to check your quizzes.',
+      name: 'Login_to_see_your_quiz_data',
       desc: '',
       args: [],
     );
@@ -575,16 +695,6 @@ class S {
     return Intl.message(
       'Answer Connecting',
       name: 'Answer_Connecting',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Move to Google Play Store`
-  String get Open_Google_Play {
-    return Intl.message(
-      'Move to Google Play Store',
-      name: 'Open_Google_Play',
       desc: '',
       args: [],
     );
@@ -825,6 +935,26 @@ class S {
     return Intl.message(
       'Warning',
       name: 'Warning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save success`
+  String get Saved {
+    return Intl.message(
+      'Save success',
+      name: 'Saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload Success`
+  String get Uploaded {
+    return Intl.message(
+      'Upload Success',
+      name: 'Uploaded',
       desc: '',
       args: [],
     );
@@ -1325,6 +1455,16 @@ class S {
     return Intl.message(
       'Tag limit is 10',
       name: 'Tag_Limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Failed`
+  String get Savefailed {
+    return Intl.message(
+      'Save Failed',
+      name: 'Savefailed',
       desc: '',
       args: [],
     );
