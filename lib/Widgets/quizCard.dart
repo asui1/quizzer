@@ -20,6 +20,7 @@ class QuizCard extends StatelessWidget {
   final String creator;
   final Uint8List titleImageByte;
   final int counts;
+  final bool isOwner;
   bool _isTapInProgress = false;
 
   QuizCard(
@@ -28,6 +29,7 @@ class QuizCard extends StatelessWidget {
       required this.titleImageByte,
       this.tags = const ['#테스트'],
       this.creator = '테스트를 위한 문구입니다.',
+      this.isOwner = false,
       this.counts = 0});
 
   @override
@@ -42,11 +44,20 @@ class QuizCard extends StatelessWidget {
             if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
             // -> Solver에 uuid 제공하고, solver에서는 그 uuid로 로드하기.
             _isTapInProgress = true; // 탭 진행 중 상태로 설정
-            final Uri newUri = Uri(
-              path: '/solver',
-              queryParameters: {'uuid': uuid},
-            );
-            Navigator.pushNamed(context, newUri.toString());
+
+            if (isOwner) {
+              final Uri newUri = Uri(
+                path: '/editor',
+                queryParameters: {'uuid': uuid},
+              );
+              Navigator.pushNamed(context, newUri.toString());
+            } else {
+              final Uri newUri = Uri(
+                path: '/solver',
+                queryParameters: {'uuid': uuid},
+              );
+              Navigator.pushNamed(context, newUri.toString());
+            }
 
             _isTapInProgress = false;
           },

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:quizzer/Functions/Logger.dart';
 
 class CustomNavigatorObserver extends NavigatorObserver {
   final List<Route<dynamic>> _stack = [];
 
   bool isPageInStack(String pageName) {
+    printStack();
     return _stack.any((route) => route.settings.name == pageName);
   }
 
   void printStack() {
     print('Current stack:');
     for (var route in _stack) {
-      print(route.settings.name);
+      Logger.log(route.settings.name);
     }
   }
 

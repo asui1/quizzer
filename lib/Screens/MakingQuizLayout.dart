@@ -664,7 +664,11 @@ class _MakingQuizState extends State<MakingQuizscreen> {
                       String tag = tagController.text;
                       if (tag.isNotEmpty) {
                         if (quizLayout.getTags().length < 10) {
+
                           quizLayout.addTag(tag);
+                          setState(() {
+                            tagController.clear();
+                          });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

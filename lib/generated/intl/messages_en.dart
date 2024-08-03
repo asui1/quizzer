@@ -54,6 +54,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "Cant_save_without_title":
             MessageLookupByLibrary.simpleMessage("Can\'t save without title"),
+        "Check_Delete": MessageLookupByLibrary.simpleMessage(
+            "To delete account, enter \'Delete Account\'"),
         "Checking_Internet_Connection": MessageLookupByLibrary.simpleMessage(
             "Checking Internet Connection..."),
         "Close": MessageLookupByLibrary.simpleMessage("Close"),
@@ -63,6 +65,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Current_Path": MessageLookupByLibrary.simpleMessage("Current Path: "),
         "Date_Selection":
             MessageLookupByLibrary.simpleMessage("Date Selection"),
+        "Delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "DeleteAccount": MessageLookupByLibrary.simpleMessage("Delete account"),
+        "Delete_guide": MessageLookupByLibrary.simpleMessage(
+            "On deleting account, all your quizzes and activities will be deleted. Even if you re-register, your data will not be restored."),
         "Development_Inquiry":
             MessageLookupByLibrary.simpleMessage("Development Inquiry"),
         "Done": MessageLookupByLibrary.simpleMessage("Done"),
@@ -87,6 +93,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Exit": MessageLookupByLibrary.simpleMessage("Exit"),
         "Fail_Quiz_Load": MessageLookupByLibrary.simpleMessage(
             "Failed to Load Quiz. Please try again later"),
+        "Failed_to_Delete_Account": MessageLookupByLibrary.simpleMessage(
+            "Failed to delete account due to server error. Please try later."),
         "FillColor1": MessageLookupByLibrary.simpleMessage("FillColor1"),
         "FillColor2": MessageLookupByLibrary.simpleMessage("FillColor2"),
         "FillColor3": MessageLookupByLibrary.simpleMessage("FillColor3"),
@@ -116,6 +124,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Load": MessageLookupByLibrary.simpleMessage("Load"),
         "Login": MessageLookupByLibrary.simpleMessage("Login"),
         "Login_Failed": MessageLookupByLibrary.simpleMessage("Login Failed"),
+        "Login_to_see_your_quiz_data": MessageLookupByLibrary.simpleMessage(
+            "Please login to check your quizzes."),
         "MainColor1": MessageLookupByLibrary.simpleMessage("MainColor1"),
         "MainColor2": MessageLookupByLibrary.simpleMessage("MainColor2"),
         "MainColor3": MessageLookupByLibrary.simpleMessage("MainColor3"),
@@ -129,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No Internet Connection"),
         "No_buttons_Only_Flip":
             MessageLookupByLibrary.simpleMessage("No buttons\n Only Flip"),
+        "No_data_found": MessageLookupByLibrary.simpleMessage("No quiz found."),
         "No_image_selected":
             MessageLookupByLibrary.simpleMessage("No image selected"),
         "No_results": MessageLookupByLibrary.simpleMessage("No results found"),
@@ -151,6 +162,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "Quiz": MessageLookupByLibrary.simpleMessage("Quiz"),
         "Quiz_Title_Setup":
             MessageLookupByLibrary.simpleMessage("Quiz Title Setup"),
+        "Quiz_delete_fail":
+            MessageLookupByLibrary.simpleMessage("Quiz delete failed"),
+        "Quiz_delete_success":
+            MessageLookupByLibrary.simpleMessage("Quiz delete successful"),
         "Rank": MessageLookupByLibrary.simpleMessage("Rank"),
         "Recommendation":
             MessageLookupByLibrary.simpleMessage("Recommendation"),
@@ -161,6 +176,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Report_Quiz": MessageLookupByLibrary.simpleMessage("Report Quiz"),
         "Response_will_be_given_by_email": MessageLookupByLibrary.simpleMessage(
             "Response will be given by email"),
+        "Saved": MessageLookupByLibrary.simpleMessage("Save success"),
+        "Savefailed": MessageLookupByLibrary.simpleMessage("Save Failed"),
         "Search": MessageLookupByLibrary.simpleMessage("Search"),
         "Searching": MessageLookupByLibrary.simpleMessage("Searching..."),
         "Second_Flip_Style":
@@ -195,6 +212,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Unregistered_User":
             MessageLookupByLibrary.simpleMessage("Unregistered User"),
         "Upload": MessageLookupByLibrary.simpleMessage("Upload"),
+        "Uploaded": MessageLookupByLibrary.simpleMessage("Upload Success"),
         "Usable_Nickname":
             MessageLookupByLibrary.simpleMessage("Usable Nickname"),
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
@@ -210,6 +228,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Your_email_is_already_registerd": MessageLookupByLibrary.simpleMessage(
             "Your email is already registerd"),
         "languageCode": MessageLookupByLibrary.simpleMessage("en"),
+        "myQuiz": MessageLookupByLibrary.simpleMessage("My Quiz"),
         "shareText": m0
       };
 }

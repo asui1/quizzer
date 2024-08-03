@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart'; // Import the material.dart package
+import 'package:intl/intl.dart';
 import 'package:material_theme_builder/material_theme_builder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -108,7 +109,7 @@ class QuizLayout extends ChangeNotifier {
     );
   }
 
-  double getBodyHeight(){
+  double getBodyHeight() {
     return AppConfig.screenHeight - getAppBarHeight() - getBottomBarHeight();
   }
 
@@ -259,7 +260,7 @@ class QuizLayout extends ChangeNotifier {
     return score;
   }
 
-  List<bool> getSolveResult(){
+  List<bool> getSolveResult() {
     return solveResult;
   }
 
@@ -295,8 +296,8 @@ class QuizLayout extends ChangeNotifier {
         count += 1;
 
         if (quiz['layoutType'] == 1) {
-          quizzes.add(Quiz1(answers: [], ans: [], question: "")
-              .loadQuiz(quiz["body"]));
+          quizzes.add(
+              Quiz1(answers: [], ans: [], question: "").loadQuiz(quiz["body"]));
         } else if (quiz['layoutType'] == 2) {
           quizzes.add(
               Quiz2(answers: [], ans: [], question: "", maxAnswerSelection: 1)
@@ -326,12 +327,9 @@ class QuizLayout extends ChangeNotifier {
       isWidgetSizeSet = inputData['isWidgetSizeSet'];
     }
     if (inputData['backgroundImage'] != null) {
-      Logger.log("backgroundImage is not null");
       backgroundImage =
           await ImageColor().fromJson(inputData['backgroundImage']);
-    }else{
-      Logger.log("backgroundImage is null");
-    }
+    } else {}
     if (inputData['topBarImage'] != null) {
       topBarImage = await ImageColor().fromJson(inputData['topBarImage']);
     }
@@ -460,11 +458,11 @@ class QuizLayout extends ChangeNotifier {
     titleImageSet = true;
   }
 
-  void setTopBarImageBytes(Uint8List bytes){
+  void setTopBarImageBytes(Uint8List bytes) {
     topBarImage = ImageColor(imageByte: bytes);
   }
 
-  void setBottomBarImageBytes(Uint8List bytes){
+  void setBottomBarImageBytes(Uint8List bytes) {
     bottomBarImage = ImageColor(imageByte: bytes);
   }
 
@@ -853,7 +851,7 @@ class QuizLayout extends ChangeNotifier {
     selectedLayout = layout;
   }
 
-  Future<void> saveQuizLayout(BuildContext context, bool isTemp) async {
+  Future<bool> saveQuizLayout(BuildContext context, bool isTemp) async {
     String fileName = '';
     if (uuid == null && !isTemp) {
       uuid = generateUuid();
@@ -863,23 +861,33 @@ class QuizLayout extends ChangeNotifier {
     } else {
       fileName = uuid!;
     }
-    final directory = await getApplicationDocumentsDirectory();
-    //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
-    Map<String, dynamic> json = toJson();
-    // 문서 디렉토리의 경로를 얻습니다.
-    // JSON 파일을 저장할 경로를 생성합니다.
-    final file = File('${directory.path}/$fileName.json');
+      Map<String, dynamic> json = toJson();
+    if (isTemp) {
+      final directory = await getApplicationDocumentsDirectory();
+      //toJSON() 메서드를 사용하여 QuizLayout 객체를 JSON 형식으로 변환합니다.
+      // 문서 디렉토리의 경로를 얻습니다.
+      // JSON 파일을 저장할 경로를 생성합니다.
+      final file = File('${directory.path}/$fileName.json');
+      // 파일이 이미 존재하는 경우 삭제합니다.
+      if (await file.exists()) {
+        await file.delete();
+      }
 
-    // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
-    await file.writeAsString(jsonEncode(json));
+      // JSON 데이터를 문자열로 변환하고 파일에 씁니다.
+      await file.writeAsString(jsonEncode(json));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(Intl.message("Saved")),
+        ),
+      );
+      return true;
+    }
     // 이미지들 전부 이름을 바꾸어 저장합니다.
-    if (!isTemp) await uploadFile(fileName, this);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: isTemp ? Text('저장되었습니다.') : Text('업로드되었습니다.'),
-      ),
-    );
+    else {
+      Logger.log("Saving quiz layout");
+      var result = await uploadJson(fileName, jsonEncode(json), this);
+      return result;
+    }
   }
 
   copyImage(String s, String t) {

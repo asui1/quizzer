@@ -70,24 +70,18 @@ class _QuizSolverState extends State<QuizSolver> {
       quizCount =
           Provider.of<QuizLayout>(context, listen: false).getQuizCount();
     } else {
-      String dataJson = "";
       try {
-        String jsonString = await loadFileContent(widget.uuid!);
-        if (jsonString == "") {
+        Map<String, dynamic> jsonString = await loadFileContent(widget.uuid!);
+        if (jsonString.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(Intl.message("Fail_Quiz_Load")),
           ));
           Navigator.pop(context);
           return;
         }
-        final jsonResponse = json.decode(jsonString);
-        dataJson = jsonResponse['Data'];
-
-        final jsonResponse2 = json.decode(dataJson);
-
         QuizLayout quizLayout = Provider.of<QuizLayout>(context, listen: false);
         quizLayout.reset();
-        await quizLayout.loadQuizLayout(jsonResponse2);
+        await quizLayout.loadQuizLayout(jsonString);
         bottomBarImage = quizLayout.getImage(2);
         quizCount = quizLayout.getQuizCount();
         if (mounted) {

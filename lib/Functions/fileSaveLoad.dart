@@ -137,7 +137,6 @@ Future<Uint8List> compressImage(
   int currentSize;
 
   do {
-    Logger.log("Quality: $quality");
     // 이미지를 지정된 품질로 압축합니다.
     compressedImageData =
         Uint8List.fromList(img.encodeJpg(croppedImage, quality: quality));
@@ -182,11 +181,8 @@ String makeScoreCardJson(QuizLayout quizLayout) {
 
 ScoreCard makeScoreCardFromJson(String json) {
   Map<String, dynamic> scoreCardJson = jsonDecode(json);
-  Logger.log(scoreCardJson);
   BoxDecoration backgroundImage = BoxDecoration();
-  Logger.log(scoreCardJson['isColor']);
   if (scoreCardJson['isColor']) {
-    Logger.log("true");
     backgroundImage = BoxDecoration(
       color: Color(scoreCardJson['color']),
       borderRadius: BorderRadius.circular(30), // 모서리 둥글기
@@ -201,7 +197,6 @@ ScoreCard makeScoreCardFromJson(String json) {
       ],
     );
   } else {
-    Logger.log("false");
     backgroundImage = BoxDecoration(
       image: DecorationImage(
         image: decodeImageFromString(scoreCardJson['imageData']),
@@ -219,7 +214,6 @@ ScoreCard makeScoreCardFromJson(String json) {
       ],
     );
   }
-  Logger.log("Background done");
   ScoreCard scoreCard = ScoreCard(
     size: scoreCardJson['size'],
     xRatio: scoreCardJson['dx'],
@@ -227,7 +221,6 @@ ScoreCard makeScoreCardFromJson(String json) {
     backgroundImage: backgroundImage,
     imageState: scoreCardJson['imageState'],
   );
-  Logger.log("ScoreCard done");
   return scoreCard;
 }
 

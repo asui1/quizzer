@@ -26,10 +26,8 @@ class ImageColor {
     if (json.containsKey('imageData')) {
       // Decode the Base64 string to bytes
       imageByte = base64Decode(json['imageData']);
-      Logger.log("IS IMAGE BYTE NULL: ${imageByte == null}");
       return ImageColor(imageByte: imageByte, color: null);
     }
-    Logger.log("IS IMAGE BYTE NULL: ${imageByte == null}");
 
     return ImageColor(
       imageByte: imageByte,

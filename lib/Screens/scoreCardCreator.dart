@@ -126,14 +126,26 @@ class _ScoreCardGeneratorState extends State<ScoreCardGenerator> {
                               Navigator.of(context).pop();
                             _isTapInProgress = false; // 탭 진행 중 상태 해제
                           } else if (savable == -1) {
-                            quizLayout.saveQuizLayout(
+                            bool result = await quizLayout.saveQuizLayout(
                                 context, false); //실제 저장(업로드)가 이루어지는 함수.
-                            if (Navigator.of(context).canPop())
-                              Navigator.of(context).pop();
-                            if (Navigator.of(context).canPop())
-                              Navigator.of(context).pop();
-                            if (Navigator.of(context).canPop())
-                              Navigator.of(context).pop();
+                            if (result) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(Intl.message("Uploaded")),
+                                ),
+                              );
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(Intl.message("Savefailed")),
+                              ));
+                            }
                             _isTapInProgress = false; // 탭 진행 중 상태 해제
                           } else if (savable == -2) {
                             if (Navigator.of(context).canPop())
