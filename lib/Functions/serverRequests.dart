@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quizzer/Class/quizLayout.dart';
 import 'package:quizzer/Functions/Logger.dart';
@@ -15,20 +16,47 @@ import 'package:quizzer/Widgets/QuizCardVertical.dart';
 import 'package:quizzer/Widgets/quizCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<String> loadFileContent(String uuid) async {
+Future<Map<String, dynamic>> loadFileContent(String uuid) async {
   final url = serverUrl + 'getQuizData/?uuid=$uuid';
   final response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
 
   if (response.statusCode == 200) {
     // 응답으로 받은 데이터를 파일에 저장
-    String decodedString = utf8.decode(response.bodyBytes);
-    Logger.log("JSON 파일 다운로드 성공");
-    return decodedString;
+    try {
+      String decodedString = utf8.decode(response.bodyBytes);
+      Logger.log("JSON 파일 다운로드 성공");
+      final jsonResponse = json.decode(decodedString);
+      Logger.log("JSON 파일 다운로드 성공");
+      var dataJson = jsonResponse['Data'];
+      Logger.log("JSON 파일 다운로드 성공");
+
+      final jsonResponse2 = json.decode(dataJson);
+      Logger.log("JSON 파일 다운로드 성공");
+      return jsonResponse2;
+    } catch (e) {
+      Logger.log(e);
+      Logger.log("JSON 파일 다운로드 실패");
+      return {};
+    }
   } else {
     Logger.log("JSON 파일 다운로드 실패");
-    return "";
+    return {};
   }
+}
+
+Future<bool> deleteAccount() async {
+  String? email = await UserPreferences.getUserEmail();
+  return http.delete(Uri.parse(serverUrl + 'DeleteUser/?email=$email'),
+      headers: {'Authorization': serverAuth}).then((response) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Logger.log("DELETE ACCOUNT SUCCESS");
+      return true;
+    } else {
+      Logger.log("DELETE ACCOUNT FAILED");
+      return false;
+    }
+  });
 }
 
 Future<http.Response> postJsonToFileOnServer(
@@ -54,27 +82,17 @@ Future<http.Response> postJsonToFileOnServer(
   return response;
 }
 
-void uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
+Future<bool> uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
+  Logger.log("UPLOADING JSON");
   final response = await postJsonToFileOnServer(uuid, jsonString, quizLayout);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     Logger.log("UPLOAD SUCCESS");
+    return true;
   } else {
     Logger.log('Failed to upload json. Status code: ${response.statusCode}');
     Logger.log(response.body);
-  }
-}
-
-Future<void> uploadFile(String uuid, QuizLayout quizLayout) async {
-  final directory = await getApplicationDocumentsDirectory();
-  final filePath = '${directory.path}/$uuid.json';
-  final file = File(filePath);
-
-  if (await file.exists()) {
-    final jsonString = await file.readAsString(encoding: utf8); // 인코딩을 utf8로 지정
-    uploadJson(uuid, jsonString, quizLayout);
-  } else {
-    Logger.log("File does not exist");
+    return false;
   }
 }
 
@@ -128,6 +146,85 @@ Future<List<QuizCard>> searchRequest(String searchText) async {
     Logger.log('Request failed with status: ${response.statusCode}');
   }
   return [];
+}
+
+Future<List<QuizCard>> searchMyQuiz(String email) async {
+  // Send GET request to server with query parameter
+  final url = serverUrl + 'getMyQuiz/?email=$email';
+  var response =
+      await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
+  List<QuizCard> _searchResults = [];
+
+  // Process the response
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    // Parse the response body
+    String decodedString = utf8.decode(response.bodyBytes);
+    List<dynamic> jsonList = jsonDecode(decodedString);
+    for (var item in jsonList) {
+      Map<String, dynamic> jsonItem = item;
+
+      // Initialize filePath as null
+      Uint8List imageBytes = Uint8List(0);
+
+      // Check if 'image' is not null
+      if (jsonItem['Image'] != null && jsonItem['Image'] != '') {
+        // Decode the base64 image
+        imageBytes = base64.decode(jsonItem['Image']);
+      }
+      String tags = jsonItem['Tags'];
+      if (tags.startsWith('[') && tags.endsWith(']')) {
+        tags = tags.substring(1, tags.length - 1);
+      }
+      tags = tags.replaceAll('"', '');
+      List<String> tagsList;
+      if (tags.isEmpty) {
+        tagsList = [];
+      } else {
+        tagsList = tags.split(',').map((e) => e.trim()).toList();
+      }
+      int counts = jsonItem['Count'];
+      _searchResults.add(QuizCard(
+        title: jsonItem['Title'],
+        tags: tagsList,
+        creator: jsonItem['Creator'],
+        uuid: jsonItem['ID'],
+        titleImageByte: imageBytes,
+        counts: counts,
+        isOwner: true,
+      ));
+    }
+    Logger.log("SEARCH SUCCESS");
+    return _searchResults;
+  } else {
+    // Handle error
+    Logger.log('Request failed with status: ${response.statusCode}');
+  }
+  return [];
+}
+
+Future<bool> deleteQuiz(String uuid, BuildContext context) async {
+  final url = serverUrl + 'deleteQuiz/?uuid=$uuid';
+  var response =
+      await http.delete(Uri.parse(url), headers: {'Authorization': serverAuth});
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(Intl.message("Quiz_delete_success")),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    Logger.log("DELETE SUCCESS");
+    return true;
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(Intl.message("Quiz_delete_fail")),
+        duration: Duration(seconds: 1),
+      ),
+    );
+    Logger.log("DELETE FAILED");
+    return false;
+  }
 }
 
 Future<void> checkDuplicate(
