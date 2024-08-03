@@ -82,7 +82,8 @@ Future<http.Response> postJsonToFileOnServer(
   return response;
 }
 
-Future<bool> uploadJson(String uuid, String jsonString, QuizLayout quizLayout) async {
+Future<bool> uploadJson(
+    String uuid, String jsonString, QuizLayout quizLayout) async {
   Logger.log("UPLOADING JSON");
   final response = await postJsonToFileOnServer(uuid, jsonString, quizLayout);
 
@@ -327,6 +328,7 @@ Future<int> loginCheck(String email, String image) async {
   final url = serverUrl + 'login/' + '?email=$email';
   var response =
       await http.get(Uri.parse(url), headers: {'Authorization': serverAuth});
+  Logger.log(response.statusCode);
   if (response.statusCode == 200) {
     // 응답 본문을 `,`로 분리하여 배열로 변환
     String decodedString = utf8.decode(response.bodyBytes);
@@ -351,10 +353,8 @@ Future<int> loginCheck(String email, String image) async {
     UserPreferences.loggedIn = true;
     return 200;
   } else if (response.statusCode == 400) {
-    if (response.body.contains("Not registered")) {
-      Logger.log("User Not Registered");
-      return 400;
-    }
+    Logger.log("User Not Registered");
+    return 400;
   }
   Logger.log("SERVER COMMUNICATION FAILED");
   return 401;

@@ -645,19 +645,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     // Handle the tap
                   },
                 ),
-                ListTile(
-                  title: Text(
-                    Intl.message("DeleteAccount"),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
+                if (isLoggedIn)
+                  ListTile(
+                    title: Text(
+                      Intl.message("DeleteAccount"),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10,
+                      ),
                     ),
+                    onTap: () {
+                      _showDeleteAccount(context);
+                      // Handle the tap
+                    },
                   ),
-                  onTap: () {
-                    _showRequestDialog(context);
-                    // Handle the tap
-                  },
-                ),
               ],
             ),
           ),
@@ -684,15 +685,18 @@ class _MyHomePageState extends State<MyHomePage> {
                     Intl.message("Delete_guide"),
                     textAlign: TextAlign.start,
                   ),
-                  TextField(
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
                     controller: _exitTextController,
                     decoration: InputDecoration(
-                      hintText: Intl.message("Check_Delete"),
+                      labelText: Intl.message("Check_Delete"),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                     ),
-                    obscureText: true,
                   ),
                 ],
               ),
@@ -707,10 +711,17 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             TextButton(
-              child: Text(Intl.message("Delete")),
+              child: Text(Intl.message("Delete"),
+                  style: TextStyle(color: Colors.red)),
               onPressed: () async {
-                if (_exitTextController.text != "계정삭제" ||
+                if (_exitTextController.text != "계정삭제" &&
                     _exitTextController.text != "Delete Account") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(Intl.message("Check_Delete")),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
                   return;
                 }
                 bool deleted = await deleteAccount();
