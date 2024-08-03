@@ -25,6 +25,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("AGREE"),
+        "Account_deleted":
+            MessageLookupByLibrary.simpleMessage("Account deleted"),
         "Add": MessageLookupByLibrary.simpleMessage("Add"),
         "Add_Answer": MessageLookupByLibrary.simpleMessage("Add Answer"),
         "Add_Tags": MessageLookupByLibrary.simpleMessage("Add Tags"),
@@ -175,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Registration": MessageLookupByLibrary.simpleMessage("Registration"),
         "Report_Quiz": MessageLookupByLibrary.simpleMessage("Report Quiz"),
         "Response_will_be_given_by_email": MessageLookupByLibrary.simpleMessage(
-            "Response will be given by email"),
+            "Response will be given by email. Therefore if you\'re not logged in please write email address to reply, otherwise it would be hard to answer you."),
         "Saved": MessageLookupByLibrary.simpleMessage("Save success"),
         "Savefailed": MessageLookupByLibrary.simpleMessage("Save Failed"),
         "Search": MessageLookupByLibrary.simpleMessage("Search"),
@@ -186,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Center Date. ±20Y"),
         "Selected_Dates":
             MessageLookupByLibrary.simpleMessage("Selected Dates"),
+        "Server_Error":
+            MessageLookupByLibrary.simpleMessage("Server is not accessable"),
         "Set_Nickname": MessageLookupByLibrary.simpleMessage("Set Nickname"),
         "Set_Title_Image":
             MessageLookupByLibrary.simpleMessage("Set Title Image"),
@@ -218,6 +222,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
             "When creating a quiz, if the content of the quiz contains content that may cause social controversy such as disparagement or ridicule, or if it contains content that infringes on rights such as copyright, portrait rights, or pornography, the quiz may be deleted without the consent of the creator.\nIn addition, problems arising from the quizzes you have created are entirely the user\'s responsibility and quizzer is not responsible for them.\nIf you agree to this, please click the AGREE button."),
         "User_Name": MessageLookupByLibrary.simpleMessage("User Name"),
+        "User_Not_Registered":
+            MessageLookupByLibrary.simpleMessage("User not registered"),
         "Warning": MessageLookupByLibrary.simpleMessage("Warning"),
         "Yes": MessageLookupByLibrary.simpleMessage("Yes"),
         "You_are_Logged_out":

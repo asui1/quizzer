@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "AGREE": MessageLookupByLibrary.simpleMessage("동의"),
+        "Account_deleted": MessageLookupByLibrary.simpleMessage("계정이 삭제되었습니다."),
         "Add": MessageLookupByLibrary.simpleMessage("추가"),
         "Add_Answer": MessageLookupByLibrary.simpleMessage("정답 추가"),
         "Add_Tags": MessageLookupByLibrary.simpleMessage("태그 추가"),
@@ -152,8 +153,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "Register_Success": MessageLookupByLibrary.simpleMessage("가입에 성공했습니다."),
         "Registration": MessageLookupByLibrary.simpleMessage("회원가입"),
         "Report_Quiz": MessageLookupByLibrary.simpleMessage("퀴즈 신고"),
-        "Response_will_be_given_by_email":
-            MessageLookupByLibrary.simpleMessage("이메일로 답변드릴 예정입니다."),
+        "Response_will_be_given_by_email": MessageLookupByLibrary.simpleMessage(
+            "이메일로 답변드리기 때문에 비로그인시 메일 주소를 적어주시지 않으면 답변드리기 어렵습니다."),
         "Savefailed": MessageLookupByLibrary.simpleMessage("저장에 실패했습니다."),
         "Search": MessageLookupByLibrary.simpleMessage("검색"),
         "Searching": MessageLookupByLibrary.simpleMessage("검색중..."),
@@ -161,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Select_Center_Date_20Y":
             MessageLookupByLibrary.simpleMessage("중심 날짜를 선택하세요. ±20년"),
         "Selected_Dates": MessageLookupByLibrary.simpleMessage("선택된 날들"),
+        "Server_Error": MessageLookupByLibrary.simpleMessage("서버에 접속할 수 없습니다."),
         "Set_Nickname": MessageLookupByLibrary.simpleMessage("닉네임 설정"),
         "Set_Title_Image":
             MessageLookupByLibrary.simpleMessage("표지 이미지를 선택하세요."),
@@ -189,6 +191,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
             "퀴즈를 작성함에 있어서 퀴즈의 내용이 비하, 조롱 등의 사회적 물의를 일으킬 수 있는 내용을 포함하고 있거나 저작권, 초상권, 음란물 등의 권리를 침해하는 내용을 포함하고 있을 경우, 해당 퀴즈는 제작자 동의 없이 삭제될 수 있습니다.\n또한, 작성한 퀴즈로 인해 발생하는 문제는 전적으로 사용자의 책임으로 quizzer는 이를 책임지지 않습니다.\n이에 동의하신다면 동의 버튼을 눌러주세요."),
         "User_Name": MessageLookupByLibrary.simpleMessage("사용자 닉네임"),
+        "User_Not_Registered":
+            MessageLookupByLibrary.simpleMessage("등록되지 않은 사용자입니다."),
         "Warning": MessageLookupByLibrary.simpleMessage("주의"),
         "Yes": MessageLookupByLibrary.simpleMessage("예"),
         "You_are_Logged_out":

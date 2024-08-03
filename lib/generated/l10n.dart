@@ -1370,6 +1370,36 @@ class S {
     );
   }
 
+  /// `Account deleted`
+  String get Account_deleted {
+    return Intl.message(
+      'Account deleted',
+      name: 'Account_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User not registered`
+  String get User_Not_Registered {
+    return Intl.message(
+      'User not registered',
+      name: 'User_Not_Registered',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Server is not accessable`
+  String get Server_Error {
+    return Intl.message(
+      'Server is not accessable',
+      name: 'Server_Error',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Report Quiz`
   String get Report_Quiz {
     return Intl.message(
@@ -1400,10 +1430,10 @@ class S {
     );
   }
 
-  /// `Response will be given by email`
+  /// `Response will be given by email. Therefore if you're not logged in please write email address to reply, otherwise it would be hard to answer you.`
   String get Response_will_be_given_by_email {
     return Intl.message(
-      'Response will be given by email',
+      'Response will be given by email. Therefore if you\'re not logged in please write email address to reply, otherwise it would be hard to answer you.',
       name: 'Response_will_be_given_by_email',
       desc: '',
       args: [],
