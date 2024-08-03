@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 // ignore: unused_import
 import 'package:quizzer/Functions/Logger.dart';
 import 'package:quizzer/Functions/keys.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 class VersionCheckService {
   // Replace with the URL of your version info API or static file
@@ -31,7 +32,10 @@ class VersionCheckService {
 
       final String latestVersion = await _fetchLatestVersion();
 
-      if (currentVersion != latestVersion) {
+      final Version current = Version.parse(currentVersion);
+      final Version latest = Version.parse(latestVersion);
+
+      if (current < latest) {
         // Version mismatch, update available
         return true;
       }
