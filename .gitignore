@@ -50,3 +50,4 @@ android/app/google-services.json
 android/gradle.properties
 android/app/build.gradle
 assets/jsons/.env
+퀴즈 질문 정답 파일.txt
