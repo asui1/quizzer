@@ -157,6 +157,8 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Please check your connection and try again."),
         "Popular_Quiz": MessageLookupByLibrary.simpleMessage("Most Popular"),
         "Preview": MessageLookupByLibrary.simpleMessage("Preview"),
+        "Privacy_Policy":
+            MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "Prob": MessageLookupByLibrary.simpleMessage("Prob."),
         "Profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "Question_Text_Setup":

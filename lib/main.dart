@@ -29,6 +29,7 @@ import 'package:quizzer/Screens/scoreCardCreator.dart';
 import 'package:quizzer/Screens/scoringScreen.dart';
 import 'package:quizzer/Screens/searchScreen.dart';
 import 'package:quizzer/Screens/solver.dart';
+import 'package:quizzer/Screens/usageAgreement.dart';
 import 'package:quizzer/Setup/Colors.dart';
 import 'package:quizzer/Theme/theme.dart';
 import 'package:quizzer/Theme/util.dart';
@@ -227,6 +228,13 @@ class MyApp extends StatelessWidget {
           return PageRouteBuilder(
             settings: settings,
             pageBuilder: (context, animation, secondaryAnimation) => MyQuiz(),
+            transitionsBuilder: mySlideTransition,
+          );
+        } else if (settings.name!.startsWith('/privacyPolicy')) {
+          return PageRouteBuilder(
+            settings: settings,
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                UsageAgreementScreen(),
             transitionsBuilder: mySlideTransition,
           );
         } else {
@@ -491,6 +499,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, '/privacyPolicy');
+                                      },
+                                      child: Text(
+                                        Intl.message("Privacy_Policy"),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withAlpha(130),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 16),
                                     Text(
                                       Intl.message("Contact") +
                                           ': whwkd122@gmail.com',
