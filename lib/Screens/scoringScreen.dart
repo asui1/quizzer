@@ -57,7 +57,6 @@ class _ScoringScreenState extends State<ScoringScreen> {
     )
         .replaceAll('{score}', score.toString())
         .replaceAll('{title}', widget.quizLayout.getTitle());
-    Logger.log(shareText);
   }
 
   @override

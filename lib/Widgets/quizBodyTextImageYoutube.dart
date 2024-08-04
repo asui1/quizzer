@@ -230,7 +230,6 @@ class _ContentWidgetState extends State<ContentWidget> {
                       onSubmitted: (value) {
                         // Handle what happens when the "Done" button is pressed
                         // For example, you can close the keyboard
-                        Logger.log(value);
                         Map<String, dynamic> videoData =
                             _extractVideoIdAndStartTime(value);
                         if (value == "" || videoData['videoId'] == "") {

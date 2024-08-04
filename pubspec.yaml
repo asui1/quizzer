@@ -58,6 +58,7 @@ dependencies:
   youtube_player_iframe: ^5.1.3
   google_sign_in_web: ^0.12.4+1
   google_fonts: ^6.2.1
+  flutter_dotenv: ^5.1.0
   flutter_localizations:
     sdk: flutter
   url_strategy: ^0.2.0
@@ -97,7 +98,6 @@ flutter:
   assets:
     - assets/images/question2.png
     - assets/images/
-    - assets/jsons/test.json
     - assets/jsons/
     - assets/icon/
 

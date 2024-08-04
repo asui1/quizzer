@@ -5,7 +5,6 @@ class CustomNavigatorObserver extends NavigatorObserver {
   final List<Route<dynamic>> _stack = [];
 
   bool isPageInStack(String pageName) {
-    printStack();
     return _stack.any((route) => route.settings.name == pageName);
   }
 

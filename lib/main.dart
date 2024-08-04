@@ -40,6 +40,7 @@ import 'package:quizzer/generated/intl/messages_all.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:html' as html;
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 const List<String> scopes = <String>[
   'email',
@@ -53,6 +54,7 @@ final CustomNavigatorObserver customNavigatorObserver =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
+  await dotenv.load(fileName: "assets/jsons/.env");
   List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
   // 한국어 지원 여부 확인
   String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';

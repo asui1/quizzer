@@ -74,7 +74,6 @@ Future<http.Response> postJsonToFileOnServer(
     "colorScheme": colorSchemeToJson(quizlayout.getColorScheme()),
   });
 
-  Logger.log(serverUrl + 'addQuiz/');
 
   final response = await http.post(
     Uri.parse(serverUrl + 'addQuiz/'),
@@ -87,15 +86,12 @@ Future<http.Response> postJsonToFileOnServer(
 
 Future<bool> uploadJson(
     String uuid, String jsonString, QuizLayout quizLayout) async {
-  Logger.log("UPLOADING JSON");
   final response = await postJsonToFileOnServer(uuid, jsonString, quizLayout);
 
   if (response.statusCode == 200 || response.statusCode == 201) {
     Logger.log("UPLOAD SUCCESS");
     return true;
   } else {
-    Logger.log('Failed to upload json. Status code: ${response.statusCode}');
-    Logger.log(response.body);
     return false;
   }
 }
