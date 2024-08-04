@@ -140,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("연결을 확인하고 다시 시도해주세요."),
         "Popular_Quiz": MessageLookupByLibrary.simpleMessage("조회수순"),
         "Preview": MessageLookupByLibrary.simpleMessage("미리보기"),
+        "Privacy_Policy": MessageLookupByLibrary.simpleMessage("개인정보처리방침"),
         "Prob": MessageLookupByLibrary.simpleMessage("문제"),
         "Profile": MessageLookupByLibrary.simpleMessage("프로필"),
         "Question_Text_Setup":

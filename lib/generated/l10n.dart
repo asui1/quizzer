@@ -1380,6 +1380,16 @@ class S {
     );
   }
 
+  /// `Privacy Policy`
+  String get Privacy_Policy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'Privacy_Policy',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Account deleted`
   String get Account_deleted {
     return Intl.message(
