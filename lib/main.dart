@@ -363,8 +363,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               children: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, '/privacyPolicy');
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return UsageAgreementScreen();
+                                    }));
                                   },
                                   child: Text(
                                     Intl.message("Privacy_Policy"),
