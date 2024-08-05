@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,7 @@ import 'package:url_launcher/url_launcher.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UserPreferences.init();
+  await dotenv.load(fileName: "assets/jsons/.env");
   List<Locale> locales = WidgetsBinding.instance.platformDispatcher.locales;
   // 한국어 지원 여부 확인
   String locale = locales.contains(const Locale('ko', "KR")) ? 'ko' : 'en';

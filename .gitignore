@@ -49,3 +49,5 @@ android/gradle.properties
 android/app/google-services.json
 android/gradle.properties
 android/app/build.gradle
+퀴즈 질문 정답 파일.txt
+assets/jsons/.env

@@ -60,11 +60,6 @@ abstract class AbstractQuiz {
     return directory.path;
   }
 
-  Future<File> getlocalFile() async {
-    final path = await getLocalPath();
-    return File('$path/test.json');
-  }
-
   void setQuestion(String newQuestion) {
     question = newQuestion;
   }
@@ -72,19 +67,6 @@ abstract class AbstractQuiz {
   String getQuestion() {
     return question;
   }
-
-  Future<File> saveQuiz(int tag) async {
-    final file = await getlocalFile();
-    String contents = await file.readAsString();
-    Map<String, dynamic> quizzes =
-        contents.isNotEmpty ? json.decode(contents) : {};
-    quizzes[tag.toString()] = {
-      'layoutType': layoutType,
-      'Quiz': toJson(),
-    };
-    return file.writeAsString(json.encode(quizzes));
-  }
-
 
   Map<String, dynamic> toJson();
   
