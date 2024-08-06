@@ -190,6 +190,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "Unregistered_User":
             MessageLookupByLibrary.simpleMessage("등록되지 않은 사용자입니다"),
         "Upload": MessageLookupByLibrary.simpleMessage("업로드하기"),
+        "Uploaded": MessageLookupByLibrary.simpleMessage("업로드 성공하였습니다."),
         "Usable_Nickname": MessageLookupByLibrary.simpleMessage("사용 가능한 닉네임"),
         "User_Agreement_text": MessageLookupByLibrary.simpleMessage(
             "퀴즈를 작성함에 있어서 퀴즈의 내용이 비하, 조롱 등의 사회적 물의를 일으킬 수 있는 내용을 포함하고 있거나 저작권, 초상권, 음란물 등의 권리를 침해하는 내용을 포함하고 있을 경우, 해당 퀴즈는 제작자 동의 없이 삭제될 수 있습니다.\n또한, 작성한 퀴즈로 인해 발생하는 문제는 전적으로 사용자의 책임으로 quizzer는 이를 책임지지 않습니다.\n이에 동의하신다면 동의 버튼을 눌러주세요."),
