@@ -192,7 +192,15 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                 hintText:
                                                     Intl.message("Answer") +
                                                         ' ${index + 1}',
+                                                hintStyle: TextStyle(
+                                                    color: quizLayout
+                                                        .getColorScheme()
+                                                        .primary), // 힌트 텍스트 색상
                                               ),
+                                              style: TextStyle(
+                                                  color: quizLayout
+                                                      .getColorScheme()
+                                                      .primary),
                                               onChanged: (value) {
                                                 widget.quiz
                                                     .setAnswerAt(index, value);

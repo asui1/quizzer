@@ -121,9 +121,9 @@ Color? getBackGroundColor(List<int> textStyle, ColorScheme colorScheme)
   return backgroundColor;
 }
 
-Color? getTextColor(List<int> textStyle, ColorScheme colorScheme){
+Color getTextColor(List<int> textStyle, ColorScheme colorScheme){
 
-  Color? textColor;
+  Color textColor;
     switch (textStyle[1]) {
       case 0: // Example case
         textColor = colorScheme.primary;
