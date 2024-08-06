@@ -12,7 +12,7 @@ UI 커스텀이 가능한 퀴즈 플랫폼을 제작 연습겸 제작하고 있�
 
 Android : (스토어 심사 중)
 
-Web : [웹 버전](quizzer.co.kr)
+Web : [웹 버전](https://www.quizzer.co.kr)
 
 I'm planning to making a quiz platform that can customize all UIs.
 My aim is to first make quiz generators and viewers 1~4. Then I'll make add server to it and make search, recommendation algorithm.
@@ -22,4 +22,4 @@ You can checkout how it runs on following links.
 
 Android : (In Playstore audit)
 
-Web : [Web Version](quizzer.co.kr)
+Web : [Web Version](https://www.quizzer.co.kr)
