@@ -93,13 +93,25 @@ class _ScoringScreenState extends State<ScoringScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            widget.quizLayout.getTitle(),
-                            style: TextStyle(
-                              fontSize: AppConfig.fontSize * 1.3,
-                              fontWeight: FontWeight.bold,
-                              color: widget.quizLayout.getColorScheme().primary,
+                          SizedBox(
+                            width: AppConfig.padding,
+                          ),
+                          Flexible(
+                            child: Text(
+                              widget.quizLayout.getTitle(),
+                              style: TextStyle(
+                                fontSize: AppConfig.fontSize * 1.3,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    widget.quizLayout.getColorScheme().primary,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
                             ),
+                          ),
+                          SizedBox(
+                            width: AppConfig.padding,
                           ),
                         ],
                       ),
@@ -307,7 +319,7 @@ class _ScoringScreenState extends State<ScoringScreen> {
   Widget answerBox(int index, bool answer, {bool isLast = false}) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(8.0), // InkWell 내부 여백
+        padding: const EdgeInsets.all(4.0), // InkWell 내부 여백
         child: Row(
           mainAxisSize: MainAxisSize.min, // Row의 크기를 내용물에 맞춤
           children: [

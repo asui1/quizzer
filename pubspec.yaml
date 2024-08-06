@@ -97,7 +97,6 @@ flutter:
   assets:
     - assets/images/question2.png
     - assets/images/
-    - assets/jsons/test.json
     - assets/jsons/
     - assets/icon/
 

@@ -80,7 +80,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: AppConfig.largePadding,
+                              height: AppConfig.padding,
                             ),
                             Text(
                               quizLayout.getTitle(),
@@ -92,7 +92,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               ),
                             ),
                             SizedBox(
-                              height: AppConfig.largePadding * 2,
+                              height: AppConfig.padding,
                             ),
                             Container(
                               height: AppConfig.screenHeight * 0.6,
@@ -176,7 +176,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                   }),
                             ),
                             SizedBox(
-                              height: AppConfig.largePadding,
+                              height: AppConfig.padding,
                             ),
                             Row(
                               mainAxisAlignment:
@@ -193,7 +193,10 @@ class _MakingQuizState extends State<MakingQuiz> {
                                     });
                                     // Delete current quiz logic here
                                   },
-                                  icon: Icon(Icons.delete),
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: quizLayout.getColorScheme().primary,
+                                  ),
                                 ),
                                 SizedBox(
                                   width: AppConfig.largePadding,
@@ -206,6 +209,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppConfig.fontSize *
                                         1.5, // Adjust as needed
+                                    color: quizLayout.getColorScheme().primary,
                                   ),
                                 ),
                                 SizedBox(
@@ -216,6 +220,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                   icon: Icon(
                                     Icons.edit,
                                     size: AppConfig.fontSize * 1.5,
+                                    color: quizLayout.getColorScheme().primary,
                                   ), // "+" 아이콘과 크기 설정
                                   onPressed: () {
                                     if (curQuizIndex <
@@ -234,6 +239,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                                   icon: Icon(
                                     Icons.add_circle,
                                     size: AppConfig.fontSize * 1.5,
+                                    color: quizLayout.getColorScheme().primary,
                                   ), // "+" 아이콘과 크기 설정
                                   onPressed: () {
                                     showQuizSelectionDialog(
@@ -244,7 +250,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               ],
                             ),
                             SizedBox(
-                              height: AppConfig.largePadding * 3,
+                              height: AppConfig.largePadding,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment
@@ -318,7 +324,7 @@ class _MakingQuizState extends State<MakingQuiz> {
                               ],
                             ),
                             SizedBox(
-                              height: AppConfig.largePadding* 3,
+                              height: AppConfig.largePadding,
                             ),
                           ],
                         ),

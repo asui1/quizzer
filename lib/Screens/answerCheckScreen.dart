@@ -132,12 +132,6 @@ class AnswerCheckScreen extends StatelessWidget {
   Widget answerBox(int index, Color stateColor, QuizLayout quizLayout,
       {bool isLast = false}) {
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: quizLayout.getColorScheme().onSurface,
-          width: 2.0, // 테두리 두께
-        ),
-      ),
       child: InkWell(
         onTap: () {
           isLast

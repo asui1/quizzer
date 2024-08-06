@@ -265,6 +265,7 @@ class QuizLayout extends ChangeNotifier {
   }
 
   Future<void> loadQuizLayout(dynamic inputJson) async {
+    Logger.log("QuizLayout load start");
     Map<String, dynamic> inputData = inputJson as Map<String, dynamic>;
     if (inputData['isTopBarVisible'] != null) {
       isTopBarVisible = inputData['isTopBarVisible'];
@@ -272,15 +273,17 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['isBottomBarVisible'] != null) {
       isBottomBarVisible = inputData['isBottomBarVisible'];
     }
-    if (inputData['appBarHeight'] != null) {
-      appBarHeight = inputData['appBarHeight'];
+    if (inputData['appBarHeight'] != null && isTopBarVisible) {
+      appBarHeight = (inputData['appBarHeight'] as int).toDouble();
     }
-    if (inputData['bottomBarHeight'] != null) {
-      bottomBarHeight = inputData['bottomBarHeight'];
+    if (inputData['bottomBarHeight'] != null && isBottomBarVisible) {
+      bottomBarHeight = (inputData['bottomBarHeight'] as int).toDouble();
     }
+    Logger.log("QuizLayout load start");
     if (inputData['highlightedIndex'] != null) {
       highlightedIndex = inputData['highlightedIndex'];
     }
+    Logger.log("QuizLayout load start");
     if (inputData['selectedLayout'] != null) {
       selectedLayout = inputData['selectedLayout'];
     }
@@ -290,10 +293,9 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['title'] != null) {
       title = inputData['title'];
     }
+    Logger.log("QuizLayout load start");
     if (inputData['quizzes'] != null) {
-      int count = 0;
       for (var quiz in inputData['quizzes']) {
-        count += 1;
 
         if (quiz['layoutType'] == 1) {
           quizzes.add(
@@ -311,6 +313,7 @@ class QuizLayout extends ChangeNotifier {
         }
       }
     }
+    Logger.log("QuizLayout load start");
     if (inputData['curQuizIndex'] != null) {
       curQuizIndex = inputData['curQuizIndex'];
     }
@@ -326,6 +329,7 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['isWidgetSizeSet'] != null) {
       isWidgetSizeSet = inputData['isWidgetSizeSet'];
     }
+    Logger.log("QuizLayout load start");
     if (inputData['backgroundImage'] != null) {
       backgroundImage =
           await ImageColor().fromJson(inputData['backgroundImage']);
@@ -339,6 +343,7 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['shuffleQuestions'] != null) {
       shuffleQuestions = inputData['shuffleQuestions'];
     }
+    Logger.log("QuizLayout load start");
     if (inputData['questionFont'] != null) {
       questionFont = inputData['questionFont'];
     }
@@ -354,6 +359,7 @@ class QuizLayout extends ChangeNotifier {
     if (titleImageSet == true && inputData['titleImage'] != null) {
       titleImageBytes = base64Decode(inputData['titleImage']);
     }
+    Logger.log("QuizLayout load start");
     if (inputData['colorScheme'] != null) {
       colorScheme = jsonToColorScheme(inputData['colorScheme']);
     }
@@ -366,6 +372,7 @@ class QuizLayout extends ChangeNotifier {
     if (inputData['bodyTextStyle'] != null) {
       bodyTextStyle = List<int>.from(inputData['bodyTextStyle']);
     }
+    Logger.log("QuizLayout load start");
     if (inputData['answerTextStyle'] != null) {
       answerTextStyle = List<int>.from(inputData['answerTextStyle']);
     }
@@ -379,6 +386,7 @@ class QuizLayout extends ChangeNotifier {
       _scoreCard.fromJson(scoreCardData);
     }
     notifyListeners();
+    Logger.log("QuizLayout loaded");
   }
 
   void setCreator(String creator) {

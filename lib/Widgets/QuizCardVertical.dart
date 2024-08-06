@@ -35,86 +35,90 @@ class QuizCardVertical extends StatelessWidget {
       child: Material(
         type: MaterialType
             .transparency, // This makes the material widget transparent
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
-            border:
-                Border.all(color: Theme.of(context).primaryColor), // 테두리 색상 설정
-            color: Colors.transparent, // 배경색 설정 (투명)
-          ),
-          child: InkWell(
-            onTap: () async {
-              if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
-              _isTapInProgress = true; // 탭 진행 중 상태로 설정
-              String dataJson = "";
-              try {
-                Map<String, dynamic> jsonString = await loadFileContent(uuid);
-                if (jsonString.isEmpty) {
+        child: SizedBox(
+          width: AppConfig.screenHeight * 0.165,
+          height: AppConfig.screenHeight * 0.24 + AppConfig.fontSize * 2,
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
+              border: Border.all(
+                  color: Theme.of(context).primaryColor), // 테두리 색상 설정
+              color: Colors.transparent, // 배경색 설정 (투명)
+            ),
+            child: InkWell(
+              onTap: () async {
+                if (_isTapInProgress) return; // 이미 탭이 진행 중이면 아무 작업도 하지 않음
+                _isTapInProgress = true; // 탭 진행 중 상태로 설정
+                try {
+                  Map<String, dynamic> jsonString = await loadFileContent(uuid);
+                  if (jsonString.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(Intl.message("Fail_Quiz_Load")),
+                    ));
+                    Navigator.pop(context);
+                    _isTapInProgress = false; // 탭 진행 중 상태 해제
+                    return;
+                  }
+                  QuizLayout quizLayout =
+                      Provider.of<QuizLayout>(context, listen: false);
+                  quizLayout.reset();
+                  await quizLayout.loadQuizLayout(jsonString);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => QuizSolver(
+                              quizLayout: quizLayout,
+                              index: 0,
+                            )),
+                  );
+                  _isTapInProgress = false; // 탭 진행 중 상태 해제
+                } catch (e) {
+                  Logger.log("Error in downloadJson");
+                  Logger.log(e);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(Intl.message("Fail_Quiz_Load")),
+                    content: Text(Intl.message("JSON_DOWN_FAIL")),
                   ));
-                  Navigator.pop(context);
                   _isTapInProgress = false; // 탭 진행 중 상태 해제
                   return;
                 }
-                QuizLayout quizLayout =
-                    Provider.of<QuizLayout>(context, listen: false);
-                quizLayout.reset();
-                await quizLayout.loadQuizLayout(jsonString);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => QuizSolver(
-                            quizLayout: quizLayout,
-                            index: 0,
-                          )),
-                );
-                _isTapInProgress = false; // 탭 진행 중 상태 해제
-              } catch (e) {
-                Logger.log("Error in downloadJson");
-                Logger.log(e);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(Intl.message("JSON_DOWN_FAIL")),
-                ));
-                _isTapInProgress = false; // 탭 진행 중 상태 해제
-                return;
-              }
-              // Logger.log(dataJson);
-            },
-            child: Padding(
-              padding: EdgeInsets.all(AppConfig.smallPadding), // Column에 패딩 추가
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
-                    child: SizedBox(
-                      width: AppConfig.screenHeight * 0.15, // 이미지 너비
-                      height: AppConfig.screenHeight * 0.15, // 이미지 높이
-                      child: titleImageByte.length < 30
-                          ? Image.asset('assets/images/question2.png',
-                              fit: BoxFit.cover) // 에셋 이미지 사용
-                          : Image.memory(
-                              titleImageByte,
-                              fit: BoxFit.cover,
-                            ), // 파일 이미지 사용
+                // Logger.log(dataJson);
+              },
+              child: Padding(
+                padding:
+                    EdgeInsets.all(AppConfig.smallPadding), // Column에 패딩 추가
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0), // 둥근 모서리 반경 설정
+                      child: SizedBox(
+                        width: AppConfig.screenHeight * 0.15, // 이미지 너비
+                        height: AppConfig.screenHeight * 0.15, // 이미지 높이
+                        child: titleImageByte.length < 30
+                            ? Image.asset('assets/images/question2.png',
+                                fit: BoxFit.cover) // 에셋 이미지 사용
+                            : Image.memory(
+                                titleImageByte,
+                                fit: BoxFit.cover,
+                              ), // 파일 이미지 사용
+                      ),
                     ),
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                        overflow: TextOverflow.ellipsis,
-                        fontSize: AppConfig.fontSize,
-                        fontWeight: FontWeight.bold),
-                  ), // 제목 표시
-                  Text(
-                    creator,
-                    style: TextStyle(
-                        overflow: TextOverflow.ellipsis,
-                        fontSize: AppConfig.fontSize * 0.8,
-                        fontWeight: FontWeight.w200), // 추가 데이터 표시
-                  ), // 추가 데이터 표시
-                ],
+                    Text(
+                      title,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: AppConfig.fontSize,
+                          fontWeight: FontWeight.bold),
+                    ), // 제목 표시
+                    Text(
+                      creator,
+                      style: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                          fontSize: AppConfig.fontSize * 0.8,
+                          fontWeight: FontWeight.w200), // 추가 데이터 표시
+                    ), // 추가 데이터 표시
+                  ],
+                ),
               ),
             ),
           ),
