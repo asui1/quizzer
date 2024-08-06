@@ -193,7 +193,15 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                 hintText:
                                                     Intl.message("Answer") +
                                                         ' ${index + 1}',
+                                                hintStyle: TextStyle(
+                                                    color: quizLayout
+                                                        .getColorScheme()
+                                                        .primary), // 힌트 텍스트 색상
                                               ),
+                                              style: TextStyle(
+                                                  color: quizLayout
+                                                      .getColorScheme()
+                                                      .primary),
                                               onChanged: (value) {
                                                 widget.quiz
                                                     .setAnswerAt(index, value);
@@ -222,8 +230,9 @@ class _QuizWidget4State extends State<QuizWidget4> {
                                                 if (isDragging[index] == false)
                                                   return;
                                                 setState(() {
-                                                  ends[index] = starts[index]! + details
-                                                      .localPosition - _initialPosition; // 드래그하는 동안 끝점 업데이트
+                                                  ends[index] = starts[index]! +
+                                                      details.localPosition -
+                                                      _initialPosition; // 드래그하는 동안 끝점 업데이트
                                                 });
                                               },
                                               onPanEnd: (details) {

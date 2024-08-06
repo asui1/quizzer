@@ -26,6 +26,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
   late TextStyle textStyle;
   double deltaY = 0;
   ScrollController scrollController = ScrollController();
+  late Color textColor;
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _QuizWidget2State extends State<QuizWidget2> {
   Widget build(BuildContext context) {
     QuizLayout quizLayout = Provider.of<QuizLayout>(context);
     widget.quiz.getMaxAnswerSelection();
+    textColor = quizLayout.getColorScheme().onSurface;
     bodyTextStyle = TextStyle(
       fontFamily: quizLayout.getBodyFont(),
       color: quizLayout.getColor(3),

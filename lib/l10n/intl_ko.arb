@@ -47,6 +47,7 @@
     "FillColor3": "채우기 색3",
     "Check_Delete": "삭제하시려면 '계정삭제'를 입력해주세요.",
     "myQuiz": "내 퀴즈",
+    "Uploaded": 업로드 성공하였습니다.",
     "Failed_to_Delete_Account": "서버 문제로 계정 삭제에 실패하였습니다. 나중에 다시 시도해주세요.",
     "DeleteAccount": "탈퇴하기",
     "ErrorColor": "오류 색",
