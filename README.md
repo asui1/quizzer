@@ -10,7 +10,7 @@ UI 커스텀이 가능한 퀴즈 플랫폼을 제작 연습겸 제작하고 있�
 
 코드가 실행중인 모습은 다음 링크에서 확인해보실 수 있습니다.
 
-Android : (스토어 심사 중)
+Android : https://github.com/asui1/quizzerAndroid : kotlin jetpack compose로 이전중.
 
 Web : [웹 버전](https://www.quizzer.co.kr)
 
@@ -20,6 +20,6 @@ After adding servers, I'll make all UI shapes, text fonts, sizes, etc...
 
 You can checkout how it runs on following links.
 
-Android : (In Playstore audit)
+Android : https://github.com/asui1/quizzerAndroid : Migrating to kotlin jetpack compose.
 
 Web : [Web Version](https://www.quizzer.co.kr)
